@@ -169,12 +169,13 @@
         \centering \doccol \Large \textit{\@subtitle}
       \end{minipage} \par
       \vfill
-      \begin{minipage}[b]{0.2\textwidth}
+      \begin{minipage}[b]{0.3\textwidth}
         \doccol
         \textbf{Author:} \\
         \textbf{Academic year:}
       \end{minipage}
-      \begin{minipage}[b]{0.8\textwidth}
+      \hspace{0.05\textwidth}
+      \begin{minipage}[b]{0.65\textwidth}
         \doccol
         \@author \\
         \@academicyear
@@ -209,7 +210,7 @@
     V Praze dne \@date
   \end{minipage}
   \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}%
-    \centering ~ \\ \dotfill \\ \@author
+    \centering ~ \\ \textbf{\dotfill} \\ \@author
   \end{minipage}
   \cleardoublepage
   % Czech abstract
@@ -316,7 +317,7 @@
   \vfill
   \cleardoublepage
   \hypersetup{pageanchor=true}
-  \pagestyle{headings}
+  \pagestyle{fancy}
   \mainmatter
 }
 
@@ -395,6 +396,7 @@
 % Theorems
 % ------------------------------------------------------------------------------
 \RequirePackage{mdframed}
+\RequirePackage{xifthen}
 
 % theorem style
 \mdfdefinestyle{theoremstyle}{
@@ -407,10 +409,11 @@
   skipbelow                 = 5pt,
 }
 \newmdtheoremenv[style = theoremstyle]{thm}{Theorem}[chapter]
-\mdtheorem[style = theoremstyle]{theorem}[thm]{Věta}
+\mdtheorem[style = theoremstyle]{theorem}[thm]{Theorem}
 \mdtheorem[style = theoremstyle]{lemma}[thm]{Lemma}
-\mdtheorem[style = theoremstyle]{claim}[thm]{Tvrzení}
-\mdtheorem[style = theoremstyle]{corollary}[thm]{Důsledek}
+
+\renewcommand\qedsymbol{{\doccol $\blacksquare$}}
+\renewenvironment{proof}[1][]{{\noindent \doccol \ifthenelse{\isempty{#1}}{\textbf{Proof:}}{\textbf{Proof of #1:}}}\par}{\qed}
 
 % definition style
 \mdfdefinestyle{definitionstyle}{
@@ -422,7 +425,7 @@
   skipabove                 = 5pt,
   skipbelow                 = 5pt,
 }
-\mdtheorem[style = definitionstyle]{definition}[thm]{Definice}
+\mdtheorem[style = definitionstyle]{definition}[thm]{Definition}
 
 % example style
 \mdfdefinestyle{examplestyle}{
@@ -434,13 +437,9 @@
   skipabove                 = 5pt,
   skipbelow                 = 5pt,
 }
-\mdtheorem[style = examplestyle]{example}[thm]{Příklad}
+\mdtheorem[style = examplestyle]{example}[thm]{Example}
 
 % remark and solution style
 \theoremstyle{definition}
-\newtheorem{remark}[thm]{Poznámka}
-\newtheorem*{remark*}{Poznámka}
-
-\newenvironment{solution}
-  {\begin{proof}[\textbf{Řešení}]}
-  {\end{proof}}
+\newtheorem{remark}[thm]{Remark}
+\newtheorem*{remark*}{Remark}
