@@ -319,8 +319,11 @@
   \end{minipage} \par
   \vfill
   \cleardoublepage
-  \mainmatter
   \hypersetup{pageanchor=true}
+  \tableofcontents
+  \cleardoublepage
+  \mainmatter
+  
 }
 
 
