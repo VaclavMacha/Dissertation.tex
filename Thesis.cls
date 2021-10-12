@@ -157,8 +157,9 @@
     \begin{minipage}[b][\textheight]{0.7\textwidth}
       \begin{minipage}[b]{\textwidth}
         \centering \doccol \Large
-        Czech Technical University in Prague \\
-        Faculty of Nuclear Sciences and \\ Physical Engineering
+        Czech Technical University in Prague \par
+        Faculty of Nuclear Sciences and \par
+        Physical Engineering
       \end{minipage} \par
       \vfill
       \begin{minipage}[b]{\textwidth}
@@ -171,20 +172,20 @@
       \vfill
       \begin{minipage}[b]{0.3\textwidth}
         \doccol
-        \textbf{Author:} \\
+        \textbf{Author:} \par
         \textbf{Academic year:}
       \end{minipage}
       \hspace{0.05\textwidth}
       \begin{minipage}[b]{0.65\textwidth}
         \doccol
-        \@author \\
+        \@author \par
         \@academicyear
       \end{minipage}
     \end{minipage}
   \end{titlepage}
   \cleardoublepage
-  \pagestyle{plain}
   % Thanks ...
+  \thispagestyle{plain}
   \noindent
   \begin{minipage}[t]{\textwidth}\vspace{0pt}%
     \doccol \Large \textbf{Poděkování:}
@@ -210,10 +211,11 @@
     V Praze dne \@date
   \end{minipage}
   \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}%
-    \centering ~ \\ \textbf{\dotfill} \\ \@author
+    \centering ~ \par \textbf{\dotfill} \par \@author
   \end{minipage}
   \cleardoublepage
   % Czech abstract
+  \thispagestyle{plain}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
     \doccol \textbf{Název:}
@@ -288,6 +290,7 @@
   \vfill
   \cleardoublepage
   % English abstract
+  \thispagestyle{plain}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
     \doccol \textbf{Title:}
@@ -316,9 +319,8 @@
   \end{minipage} \par
   \vfill
   \cleardoublepage
-  \hypersetup{pageanchor=true}
-  \pagestyle{fancy}
   \mainmatter
+  \hypersetup{pageanchor=true}
 }
 
 
