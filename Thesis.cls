@@ -384,7 +384,6 @@
 }
 
 % empty page style
-
 \def\cleardoublepage{
   \clearpage
     \if@twoside
