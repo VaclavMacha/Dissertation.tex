@@ -157,9 +157,9 @@
     \begin{minipage}[b][\textheight]{0.7\textwidth}
       \begin{minipage}[b]{\textwidth}
         \centering \doccol \Large
-        Czech Technical University in Prague \par
-        Faculty of Nuclear Sciences and \par
-        Physical Engineering
+        \textbf{Czech Technical University in Prague} \par
+        \textbf{Faculty of Nuclear Sciences and} \par
+        \textbf{Physical Engineering}
       \end{minipage} \par
       \vfill
       \begin{minipage}[b]{\textwidth}
