@@ -121,17 +121,22 @@
 % ------------------------------------------------------------------------------
 % Hyperrefs
 % ------------------------------------------------------------------------------
-\RequirePackage[unicode = true,
-                pdfusetitle,
-                bookmarks         = true,
-                bookmarksnumbered = false,
-                bookmarksopen     = true,
-                breaklinks        = false,
-                pdfborderstyle    = {},
-                backref           = false,
-                colorlinks        = true,
-                ]{hyperref}
-\hypersetup{linkcolor = mblue, urlcolor = mred, citecolor = mgreen}
+\RequirePackage[
+  unicode = true,
+  pdfusetitle,
+  bookmarks         = true,
+  bookmarksnumbered = false,
+  bookmarksopen     = true,
+  breaklinks        = false,
+  pdfborderstyle    = {},
+  backref           = false,
+  colorlinks        = true,
+]{hyperref}
+\hypersetup{
+  linkcolor = mblue,
+  urlcolor = mred,
+  citecolor = mgreen,
+}
 
 
 % ------------------------------------------------------------------------------
@@ -416,6 +421,8 @@
 \newmdtheoremenv[style = theoremstyle]{thm}{Theorem}[chapter]
 \mdtheorem[style = theoremstyle]{theorem}[thm]{Theorem}
 \mdtheorem[style = theoremstyle]{lemma}[thm]{Lemma}
+\mdtheorem[style = theoremstyle]{corollary}[thm]{Corollary}
+\mdtheorem[style = theoremstyle]{proposition}[thm]{Proposition}
 
 \renewcommand{\qedsymbol}{{\doccol $\blacksquare$}}
 \renewenvironment{proof}[1][\proofname]{%
