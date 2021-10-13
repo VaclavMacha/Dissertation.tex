@@ -5,11 +5,8 @@
 \usepackage[ddmmyyyy]{datetime}
 
 \usepackage{xspace}
-\usepackage{tikz,pgfplots}
-\usetikzlibrary{shapes,arrows,positioning,calc} 
-\pgfplotsset{compat=newest}
-\usepgfplotslibrary{groupplots}
-
+\usepackage{thmtools}
+\usepackage{thm-restate}
 
 % ------------------------------------------------------------------------------
 % Math declarations
@@ -42,8 +39,16 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 
-\newcommand{\wb}{\bm{w}}
-\newcommand{\xb}{\bm{x}}
+% ------------------------------------------------------------------------------
+% Tikz
+% ------------------------------------------------------------------------------
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\usetikzlibrary{shapes,arrows,positioning,calc} 
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{groupplots}
 
 % ------------------------------------------------------------------------------
 % Affiliation
