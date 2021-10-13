@@ -36,8 +36,40 @@
   \fi\fi\fi\fi\fi\fi\fi\fi
 }
 
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\cmark}{{\color{mgreen} \ding{51}}}%
+\newcommand{\xmark}{{\color{mred} \ding{55}}}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\Xc}{\mathcal{X}}
+
+\newcommand{\norm}[1]{\Brac[n]{#1}}
+\newcommand{\minimize}{\operatorname*{minimize}}
+\newcommand{\maximize}{\operatorname*{maximize}}
+\newcommand{\st}{\operatorname{subject\ to}}
+\newcommand{\argmin}{\operatorname*{argmin}}
+\newcommand{\eps}{{\varepsilon}}
+
+% models
+\newcommand{\TopPush}{\emph{TopPush}\xspace}
+\newcommand{\TopPushK}{\emph{TopPushK}\xspace}
+\newcommand{\tauFPL}{{\emph{$\tau$-FPL}}\xspace}
+\newcommand{\TopMeanK}{\emph{TopMeanK}\xspace}
+\newcommand{\PatMat}{\emph{Pat}\&\emph{Mat}\xspace}
+\newcommand{\PatMatNP}{{\emph{Pat}\&\emph{Mat-NP}}\xspace}
+\newcommand{\Grill}{\emph{Grill}\xspace}
+\newcommand{\GrillNP}{\emph{Grill-NP}\xspace}
+
+% counts and rates
+\newcommand{\tp}{\textnormal{tp}}
+\newcommand{\tn}{\textnormal{tn}}
+\newcommand{\fp}{\textnormal{fp}}
+\newcommand{\fn}{\textnormal{fn}}
+\newcommand{\tps}{\overline{\textnormal{tp}}}
+\newcommand{\tns}{\overline{\textnormal{tn}}}
+\newcommand{\fps}{\overline{\textnormal{fp}}}
+\newcommand{\fns}{\overline{\textnormal{fn}}}
 
 % ------------------------------------------------------------------------------
 % Tikz
