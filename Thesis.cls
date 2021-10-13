@@ -400,16 +400,17 @@
 % ------------------------------------------------------------------------------
 % Theorems
 % ------------------------------------------------------------------------------
-\RequirePackage{mdframed}
+\RequirePackage[framemethod=TikZ]{mdframed}
 \RequirePackage{xifthen}
 
 % theorem style
 \mdfdefinestyle{theoremstyle}{
   outerlinewidth            = 2,
-  linecolor                 = mblue!65,
-  linewidth                 = 2pt,
+  roundcorner               = 1pt,
+  linecolor                 = mblue!50,
+  linewidth                 = 1pt,
   frametitlerule            = true,
-  frametitlebackgroundcolor = mblue!65,
+  frametitlebackgroundcolor = mblue!50,
   skipabove                 = 5pt,
   skipbelow                 = 5pt,
 }
@@ -417,16 +418,19 @@
 \mdtheorem[style = theoremstyle]{theorem}[thm]{Theorem}
 \mdtheorem[style = theoremstyle]{lemma}[thm]{Lemma}
 
-\renewcommand\qedsymbol{{\doccol $\blacksquare$}}
-\renewenvironment{proof}[1][]{{\noindent \doccol \ifthenelse{\isempty{#1}}{\textbf{Proof:}}{\textbf{Proof of #1:}}}\par}{\qed}
+\renewcommand{\qedsymbol}{{\doccol $\blacksquare$}}
+\renewenvironment{proof}[1][\proofname]{%
+  \noindent{\doccol\textit{\textbf{#1:}}}\par\nobreak\noindent\ignorespaces%
+}{\qed}
 
 % definition style
 \mdfdefinestyle{definitionstyle}{
   outerlinewidth            = 2,
-  linecolor                 = mgreen!65,
-  linewidth                 = 2pt,
+  roundcorner               = 1pt,
+  linecolor                 = mgreen!50,
+  linewidth                 = 1pt,
   frametitlerule            = true,
-  frametitlebackgroundcolor = mgreen!65,
+  frametitlebackgroundcolor = mgreen!50,
   skipabove                 = 5pt,
   skipbelow                 = 5pt,
 }
@@ -435,10 +439,11 @@
 % example style
 \mdfdefinestyle{examplestyle}{
   outerlinewidth            = 2,
-  linecolor                 = myellow!65,
-  linewidth                 = 2pt,
+  roundcorner               = 1pt,
+  linecolor                 = myellow!50,
+  linewidth                 = 1pt,
   frametitlerule            = true,
-  frametitlebackgroundcolor = myellow!65,
+  frametitlebackgroundcolor = myellow!50,
   skipabove                 = 5pt,
   skipbelow                 = 5pt,
 }
