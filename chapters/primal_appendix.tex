@@ -1,0 +1,586 @@
+\chapter{Linear case}
+
+\section{Additional results and proofs}\label{app:proofs}
+
+Here, we provide additional results and proofs of results mentioned in the main body. For convenience, we repeat the result statements.
+
+\subsection{Equivalence of \eqref{eq:problem_aatp_orig} and \eqref{eq:problem_aatp}}
+
+To show this equivalence, we will start with an auxiliary lemma.
+
+\begin{lemma}\label{lemma:fnfp_equivalence}
+  Denote by $t$ the exact quantile from \eqref{eq:defin_quantile}. Then for all $\mu\in[0,1]$ we have
+  \begin{equation}\label{eq:fnfp_equivalence}
+  \fp (\bm{w},t) = \mu \fp(\bm{w},t) + (1-\mu)\fn(\bm{w},t) + (1-\mu)(n\tau - n^+) + (1-\mu)(q - 1),
+  \end{equation}
+  where $q:= \#\{\bm{x} \in\mathcal X|\ \bm{w}^\top \bm{x}= t\}$.
+\end{lemma}
+
+\begin{proof}
+  By the definition of the quantile we have
+  \begin{equation*}
+    \tp(\bm{w},t)+\fp(\bm{w},t) = n\tau + q-1.
+  \end{equation*}
+  This implies
+  \begin{equation*}
+    \fp(\bm{w},t)=n\tau +q - 1-\tp(\bm{w},t) =n\tau+q-1-n^{+} +\fn(\bm{w},t).
+  \end{equation*}
+  From this relation we deduce
+  \begin{equation*}
+    \begin{aligned}
+      \fp(\bm{w},t) &= \mu \fp(\bm{w},t) + (1-\mu)\fp(\bm{w},t) = \mu \fp(\bm{w},t) + (1-\mu)\left(\fn(\bm{w},t) + n\tau - n^+ + q - 1\right)\\
+      &= \mu \fp(\bm{w},t) + (1-\mu)\fn(\bm{w},t) + (1-\mu)\left(n\tau - n^+\right) + (1-\mu)\left(q - 1\right),
+    \end{aligned}
+  \end{equation*}
+  which is precisely the lemma statement.
+\end{proof}
+
+The right-hand side of \eqref{eq:fnfp_equivalence} consists of three parts. The first one is a convex combination of false-positives and false-negatives. The second one is a constant term which has no impact on optimization. Finally, the third term $(1-\mu)\left(q - 1\right)$ equals the number of samples for which their classifier equals the quantile. However, this term is small in comparison with the true-positives and the false-negatives and can be neglected. Moreover, when the data are ``truly'' random such as when measurement errors are present, then $q=1$ and this term vanishes completely. This gives the (almost) equivalence of \eqref{eq:problem_aatp_orig} and \eqref{eq:problem_aatp}. Note that term $q$ is ignored in many papers.
+
+\subsection{Results related to convexity}
+
+\propconvex*
+\begin{proof}[Proof Proposition \ref{prop:convex} on page \pageref{prop:convex}]
+  It is easy to show that the quantile $t_1$ is not convex. Due to \cite{lapin.2015}, the mean of the $k$ highest values of a vector is a convex function and therefore, $t_2$ is a convex function. It remains to analyze $t_3$. It is defined via an implicit equation, where we consider for simplicity $\beta=1$,
+  \begin{equation*}
+    g(\bm{w},t) := \frac{1}{n}\sum_{\bm{x} \in \Xc} l(\bm{w}^\top \bm{x}-t) - \tau = 0.
+  \end{equation*}
+  Since $l$ is convex, we immediately obtain that $g$ is jointly convex in both variables.
+
+  To show the convexity, consider $\bm{w}$, $\hat{\bm{w}}$ and the corresponding $t= t_3(\bm{w})$, $\hat{t}=t_3(\hat{\bm{w}})$. Note that this implies $g(\bm{w}, t)=g(\hat{\bm{w}},\hat{t})=0$. Then for any $\lambda\in[0,1]$ we have 
+  \begin{equation}\label{eq:proof_conv1}
+    g(\lambda \bm{w} + (1 - \lambda)\hat{\bm{w}},\;\lambda t + (1 - \lambda)\hat{t})
+    \le \lambda g(\bm{w}, t) + (1 - \lambda) g(\hat{\bm{w}}, \hat{t}) = 0,
+  \end{equation}
+  where the inequality follows from the convexity of $g$ and the equality from $g(\bm{w}, t) = g(\hat{\bm{w}}, \hat{t})=0.$
+  From the definition of the surrogate quantile function $t_3$ we have
+  \begin{equation}\label{eq:proof_conv2}
+    g(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}}, t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})) = 0.
+  \end{equation}
+  Since $g$ is non-increasing in the second variable, from \eqref{eq:proof_conv1} and \eqref{eq:proof_conv2} we deduce
+  \begin{equation*}
+    t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})
+    \le \lambda t + (1-\lambda)\hat{t}
+    =   \lambda t_3(\bm{w})+(1-\lambda) t_3(\hat{\bm{w}}),
+  \end{equation*}
+  which implies that function $\bm{w}\mapsto t_3(\bm{w})$ is convex.
+\end{proof}
+
+\thmconvex*
+\begin{proof}[Proof of Theorem \ref{thm:convex} on page \pageref{thm:convex}]
+  Due to the definition of the surrogate counts \eqref{eq:defin_counts_surr}, the objective of \eqref{eq:problem2} equals to
+  \begin{equation*}
+    \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+} l\Brac{t(\bm{w})-\bm{w}^\top \bm{x}}.
+  \end{equation*}
+  Here we write $t(\bm{w})$ to stress the dependence of $t$ on $\bm{w}$. Since $\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that $\bm{w}\mapsto t(\bm{w})-\bm{w}^\top \bm{x}$ is a convex function. From its definition, the surrogate function $l$ is convex and non-decreasing. Since a composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
+\end{proof}
+
+\subsection{Results related to differentiability}
+
+\derivative*
+\begin{proof}[Proof of Theorem \ref{thm:derivative} on page \pageref{thm:derivative}]
+  The result for $t_3$ follows directly from the implicit function theorem. The non-differentiability of $t_1$ and $t_2$ happens whenever the threshold value is achieved at two different scores.
+\end{proof}
+
+\subsection{Results related to stability}
+
+\larget*
+\begin{proof}[Proof of Theorem \ref{thm:large_t} on page \pageref{thm:large_t}]
+  Due to $l(0)=1$ and the convexity of $l$ we have $l(s)\ge 1+cs$, where $c$ equals to the derivative of $l$ at $0$. Then we have
+  \begin{equation*}
+    \begin{aligned}
+      f(\bm{w}) 
+      & \ge \frac{1}{n^+}\fns(\bm{w}, t) = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}l(t-\bm{w}^\top \bm{x}) \ge \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}(1+c(t-\bm{w}^\top \bm{x})) \\
+      & = 1+\frac{c}{n^+}\sum_{\bm{x} \in \Xc^+}(t-\bm{w}^\top \bm{x}) = 1+ct - \frac{c}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} \ge 1,
+    \end{aligned}
+  \end{equation*}
+  where the last inequality follows from \eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for $\bm{w}=0$ equals to $t=0$, and thus $f(\bm{0})=1$. But then $f(\bm{0})\le f(\bm{w})$. The second part of the result follows from the form of thresholds $t(\bm{w})$.
+\end{proof}
+
+\patmatzero*
+\begin{proof}[Proof of Theorem \ref{thm:patmat_zero} on page \pageref{thm:patmat_zero}]
+  Define first
+  \begin{equation*}
+    \begin{aligned}
+      s_{\min} = \min_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}, \quad
+      \bar{s} = \frac{1}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top \bm{x} , \quad
+      s_{\max} = \max_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}.
+    \end{aligned}
+  \end{equation*}
+  Then we have the following chain of relations
+  \begin{equation}\label{eq:patmat_zero_aux0}
+    \begin{aligned}
+      \bar{s}
+      & = \frac{1}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}
+        = \frac{1}{n}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} + \frac{1}{n}\sum_{\bm{x} \in \Xc^-}\bm{w}^\top \bm{x}
+        < \frac{1}{n}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} + \frac{n^-}{nn^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} \\
+      & = \frac 1n\left(1+\frac{n^-}{n^+}\right)\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}
+        = \frac 1n\frac{n^++n^-}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} = \frac 1{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}.
+    \end{aligned}
+  \end{equation}
+  The only inequality follows from \eqref{eq:patmat_zero_nn} and the last equality follows from $n^++n^-=n$.
+  
+  Due to \eqref{eq:patmat_zero_nn} we have $s_{\min} < \bar{s} < s_{\max}$. Then we can define
+  \begin{equation*}
+    \beta_0 = \min\Brac[c]{\frac{\tau}{\bar{s} - s_{\min}}, \frac{1-\tau}{s_{\max}-\bar{s}}, \tau},
+  \end{equation*}
+  observe that $\beta_0>0$, fix any $\beta\in(0,\beta_0)$ and define
+  \begin{equation*}
+    t = \frac{1-\tau}{\beta_0} + \bar{s}.
+  \end{equation*}
+  Then we obtain
+  \begin{equation}\label{eq:patmat_zero_aux1}
+    1+\beta(\bm{w}^\top\bm{x}-t) \ge 1+\beta(s_{\min}-t) = 1+\beta s_{\min}-1+\tau - \beta\bar{s} = \beta (s_{\min}-\bar{s})+\tau\ge 0.
+  \end{equation}
+  Here, the first equality follows from the definition of $t$ and the last inequality from the definition of $\beta_0$. Moreover, we have
+  \begin{equation*}
+    \begin{aligned}
+      \frac{1}{n}\sum_{\bm{x} \in \Xc}l(\beta(\bm{w}^\top\bm{x}-t))
+      & = \frac{1s}{n}\sum_{\bm{x} \in \Xc}\max\{1+\beta(\bm{w}^\top\bm{x}-t), 0\}
+        = \frac{1}{n}\sum_{\bm{x} \in \Xc}\Brac{1+\beta(\bm{w}^\top\bm{x}-t)} \\
+      & = 1-\beta t + \frac{\beta}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top\bm{x}
+        = 1-\beta t + \beta\bar{s} = \tau,
+    \end{aligned}
+  \end{equation*}
+  where the second equality employs \eqref{eq:patmat_zero_aux1}, the third one the definition of $\bar{s}$ and the last one the definition of $t$. But this means that $t$ is the threshold corresponding to $\bm{w}$.
+  
+  Similarly to \eqref{eq:patmat_zero_aux1} we get
+  \begin{equation}\label{eq:patmat_zero_aux2}
+    1 + t - \bm{w}^\top \bm{x}
+    \ge 1 + t-s_{\max}
+    =   1 + \frac{1-\tau}{\beta} + \bar{s} - s_{\max}
+    \ge \frac{1-\tau}{\beta} + \bar{s} - s_{\max}
+    \ge 0,
+  \end{equation}
+  where the last inequality follows from the definition of $\beta_0$. Then for the objective we have
+  \begin{equation*}
+    \begin{aligned}
+      f(\bm{w})
+      & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}l(t-\bm{w}^\top \bm{x})
+        = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\max\{1+t-\bm{w}^\top \bm{x}, 0\} = \\
+      & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\Brac{1+t-\bm{w}^\top \bm{x}}
+        = 1 + t - \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}
+        < 1 + t - \bar{s} \\
+      & = 1 + \frac{1-\tau}{\beta} + \bar{s} -\bar{s}
+        = 1 + \frac{1-\tau}{\beta}
+        = f(\bm{0}),\\
+    \end{aligned}
+  \end{equation*}
+  where we the third equality follows from \eqref{eq:patmat_zero_aux2}, the only inequality from \eqref{eq:patmat_zero_aux0} and the last equality from Appendix \ref{app:example}. Thus, we finished the proof for \PatMat. The proof for \PatMatNP can be performed in an identical way by replacing in the definition of $\bar{s}$ the mean with respect to all samples by the mean with respect to all negative samples.
+\end{proof}
+
+\subsection{Results related to threshold comparison}\label{app:relations}
+
+\begin{lemma}\label{lemma:thresholds2}
+  Define vector $\bm{s}^+$ with components $s^+=\bm{w}^\top \bm{x}^+$ for $\bm{x}^+\in\Xc^+$ and similarly define vector $\bm{s}^-$ with components $s^-=\bm{w}^\top \bm{x}^-$ for $\bm{x}^-\in\Xc^-$. Denote by $\bm{s}_{[\cdot]}^+$ and $\bm{s}_{[\cdot]}^-$ the sorted versions of $\bm{s}^+$ and $\bm{s}^-$, respectively. Then we have the following statements:
+  \begin{equation*}
+    \begin{aligned}
+      s_{[n^+\tau]}^+ > s_{[n^-\tau]}^-
+      & \implies \Grill \text{ has larger threshold than }\GrillNP, \\
+      \frac{1}{n^+\tau}\sum_{i=1}^{n^+\tau} s_{[i]}^+
+      > \frac{1}{n^-\tau}\sum_{i=1}^{n^-\tau} s_{[i]}^-
+      & \implies \TopMeanK \text{ has larger threshold than }\tauFPL. \\
+    \end{aligned}
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  Since $\bm{s}^+$ and $\bm{s}^-$ are computed on disjunctive indices, we have
+  \begin{equation*}
+    s_{[n\tau]} \ge \min\{s_{[n^+\tau]}^+, s_{[n^-\tau]}^-\}.
+  \end{equation*}
+  Since $s_{[n\tau]}$ is the threshold for \Grill and $s_{[n^-\tau]}^-$ is the threshold for \GrillNP, the first statement follows. The second part can be shown in a similar way.
+\end{proof}
+  
+\noindent Since the goal of the presented formulations is to push $s^+$ above $s^-$, we may expect that the conditions in Lemma \ref{lemma:thresholds2} hold true. 
+  
+\section{Computation for Section \ref{sec:example}}\label{app:example}
+
+We derive the results presented in Section \ref{sec:example} more properly. We recall that we have $n$ negative samples randomly distributed in $[-1,0]\times[-1,1]$, $n$ positive samples randomly distributed in $[0,1]\times[-1,1]$ and one negative sample at $(2,0)$. We assume that $n$ is large and the outlier may be ignored for the computation of thresholds which require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat.
+  
+For $\bm{w}_0=(0,0)$, we get
+\begin{equation*}
+  \tau
+  = \frac{1}{n}\sum_{\bm{x} \in \Xc}l(\beta(\bm{w}_0^\top \bm{x}-t))
+  = l(0-\beta t) = 1-\beta t,
+\end{equation*}
+which implies $t=\frac{1}{\beta}(1-\tau)$ and consequently
+\begin{equation*}
+  \frac{1}{n^+}\fns(\bm{w}_0,t)
+  = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+} l(t-0)
+  = l(t) = 1+t.
+\end{equation*}
+This finishes the computation for $\bm{w}_0$.
+
+For $\bm{w}_1=(1,0)$ the computation goes similar. Then $\bm{w}_1^\top \bm{x}^+$ has the uniform distribution on $[0,1]$ while $\bm{w}_1^\top \bm{x}$ has the uniform distribution on $[-1,1]$. If $\beta\le\tau$, then
+\begin{equation}\label{eq:example1}
+  \begin{aligned}
+    \tau
+    & = \frac{1}{n}\sum_{\bm{x} \in \Xc}l(\bm{w}_1^\top \bm{x}-t)
+    \approx \frac{1}{2}\int_{-1}^1 l(s-t)\dd{s}
+      = \frac{1}{2}\int_{-1}^1 \max\{0,1+\beta(s-t)\}\dd{s} \\
+    & =\frac{1}{2}\int_{-1}^1 (1+\beta(s - t))\dd{s}
+      = 1 - \beta t + \frac{\beta}{2}\int_{-1}^1s\dd{s}
+      = 1 - \beta t,
+  \end{aligned}
+\end{equation}
+and thus again $t=\frac{1}{\beta}(1-\tau)$. Note that
+\begin{equation*}
+  1+\beta(s-t) \ge 1+\beta(-1-t) = 1-\beta - 1+\tau = -\beta+\tau \ge0
+\end{equation*}
+and we could have ignored the $\max$ operator in \eqref{eq:example1}. Finally, we have
+\begin{equation*}
+  \frac{1}{n^+}\fns(\bm{w}_1,t)
+  \approx \int_0^1 l(t-s)\dd{s}
+  = \int_0^1 (1 + t - s)\dd{s}
+  = 0.5 + t.
+\end{equation*}
+
+\section{Computing the threshold for \PatMat}\label{app:threshold}
+
+We show how to efficiently compute the threshold \eqref{eq:defin_quantile0} for \PatMat and the hinge surrogate~\eqref{eq:defin_surrogate}. As always define the scores $s_i=\bm{w}^\top \bm{x}_i$ and consider function
+\begin{equation}\label{eq:defin_h}
+  h(t) = \sum_{i=1}^nl(\beta(s_i-t)) - n\tau.
+\end{equation}
+Then solving \eqref{eq:update_t} is equivalent to looking for $\hat{t}$ such that $h(\hat{t})=0$. We have the following properties of $h$.
+
+\begin{lemma}
+  Function $h$ is continuous and strictly decreasing (until it hits the global minimum) with $h(t)\to \infty$ as $t\to-\infty$ and $h(t)\to -n\tau$ as $t\to\infty$. Thus, there is a unique solution to the equation $h(t)=0$.
+\end{lemma}
+
+For sorted data, the following lemma gives advice on how to solve equation $h(t)=0$. 
+
+\begin{lemma}
+  Let $s_1\le s_2 \le \dots \le s_n$ be sorted. Define $\gamma= \frac{1}{\beta}$. Then 
+  \begin{equation}\label{eq:update_h}
+    h(s_i+\gamma) = h(s_{i+1}+\gamma) + (n-i)\beta(s_{i+1}-s_i)
+  \end{equation}
+  for all $i=n-1,\dots,1$ with the initial condition $h(s_n+\gamma)=-n\tau$.
+\end{lemma}
+\begin{proof}
+Observe first that
+\begin{equation*}
+  h(s_j+\gamma)
+  = \sum_{i=1}^n l(\beta(s_i-s_j-\gamma)) - n\tau
+  = \sum_{i=1}^n\max(0,\beta(s_i-s_j)) - n\tau
+  = \sum_{i=j+1}^n \beta(s_i-s_j) - n\tau.
+\end{equation*}
+From here, we obtain $h(s_n+\gamma)=-n\tau$. Moreover, we have
+\begin{equation*}
+  \begin{aligned}
+    h(s_j+\gamma)
+    & = \sum_{i=j+1}^n \beta(s_i - s_j) - n\tau
+      = \sum_{i=j+2}^n \beta(s_i - s_{j}) + \beta(s_{j+1}-s_{j})- n\tau \\
+    & = \sum_{i=j+2}^n \beta(s_i - s_{j+1}) + \sum_{i=j+2}^n\beta(s_{j+1}-s_j) + \beta(s_{j+1}-s_{j})- n\tau \\
+    & = \sum_{i=j+2}^n \beta(s_i-s_{j+1}) + (n-j)\beta(s_{j+1}-s_j)- n\tau \\
+    & = h(s_{j+1}+\gamma) + (n-j)\beta(s_{j+1}-s_j),
+  \end{aligned}
+\end{equation*}
+which finishes the proof.
+\end{proof}
+
+Thus, to solve $h(t)=0$ with the hinge surrogate, we start with $t_n=s_n+\gamma$ and $h(t_n)=-n\tau$. Then we start decreasing $t$ according to \eqref{eq:update_h} until we find some $t_i=s_i+\gamma$ such that $h(t_i)>0$. The desired $t$ then lies between $t_i$ and $t_{i+1}$. Since $h$ is a piecewise linear function with
+\begin{equation*}
+  h(t) = h(t_i) + \frac{t-t_i}{t_{i+1}-t_i}\Brac{h(t_{i+1})-h(t_i)}
+\end{equation*}
+for $t\in [t_i,t_{i+1}]$, the precise value of $\hat{t}$ can be computed by a simple interpolation
+\begin{equation*}
+  \hat{t}
+  = t_i - h(t_i)\frac{t_{i+1}-t_i}{h(t_{i+1})-h(t_i)}
+  = t_i - h(t_i)\frac{t_{i+1}-t_i}{-(n-i)\beta(t_{i+1}-t_{i})}
+  = t_i + \frac{h(t_i)}{\beta(n-i)}.
+\end{equation*}
+
+\section{Proof of Theorem \ref{thm:sgd}}
+
+The proof is divided into three parts. In Section \ref{app:sgd1}, we prove a general statement for convergence of stochastic gradient descent with a convex objective. In Section \ref{app:sgd2} we apply it to Theorem \ref{thm:sgd}. The proof is based on auxiliary results from Section \ref{app:sgd3}.
+
+\subsection{General result}\label{app:sgd1}
+
+Consider a differentiable objective function $f$ and the optimization method
+\begin{equation}\label{eq:update}
+  w^{k+1}=w^k-\alpha^kg(w^k),
+\end{equation}
+where $\alpha^k>0$ is a stepsize and $g(w^k)$ is an approximation of the gradient $\nabla f(w^k)$. Assume the following:
+\begin{enumerate}[label={(A\arabic*)}]
+  \item \label{ass_convex} $f$ is differentiable, convex and attains a global minimum;
+  \item \label{ass_gbound} $\norm{g(w^k)}\le B$ for all $k$;
+  \item \label{ass_alpha1} the stepsize is non-increasing and satisfies $\sum_{k=0}^\infty \alpha^k=\infty$;
+  \item \label{ass_alpha2} the stepsize satisfies $\sum_{k=0}^\infty (\alpha^k)^2<\infty$;
+  \item \label{ass_alpha3} the stepsize satisfies $\sum_{k=0}^\infty \nrm{\alpha^{k+1}-\alpha^k}<\infty$.
+\end{enumerate}
+Assumptions \ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for $\alpha^k=\alpha^0\frac{1}{k+1}$. We start with the general result.
+
+\begin{theorem}\label{thm:convergence}
+  Assume that \ref{ass_convex}-\ref{ass_alpha2} is satisfied. If there exists some $C$ such that for some global minimum of $w^*$ of $f$ we have
+  \begin{equation}\label{eq:nec_cond}
+    \sum_{k=0}^\infty\alpha^k\langle g(w^k)-\nabla f(w^k),w^*-w^k\rangle\le C,
+  \end{equation}
+  then the sequence $\{w^k\}$ generated by \eqref{eq:update} is bounded and $f(w^k)\to f(w^*)$. Thus, all its convergent subsequences converge to some global minimum of $f$.
+\end{theorem}
+\begin{proof}
+  Note first that the convexity from \ref{ass_convex} implies
+  \begin{equation}\label{eq:convex_estimate}
+    \langle \nabla f(w^k),w^*-w^k\rangle\le f(w^*)-f(w^k).
+  \end{equation}
+  Then we have
+  $$
+  \begin{aligned}
+  \norm{w^{k+1}-w^*}^2 &= \norm{w^k-\alpha^kg(w^k)-w^*}^2 \\
+  &=\norm{w^k-w^*}^2 + 2\alpha^k\langle g(w^k),w^*-w^k\rangle + (\alpha^k)^2\norm{g(w^k)}^2 \\
+  &\le \norm{w^k-w^*}^2 + 2\alpha^k\langle g(w^k)-\nabla f(w^k),w^*-w^k\rangle + 2\alpha^k(f(w^*)-f(w^k)) + (\alpha^k)^2B^2,
+  \end{aligned}
+  $$
+  where the inequality follows from \eqref{eq:convex_estimate} and assumption \ref{ass_gbound}. Summing this expression for all $k$ and using \eqref{eq:nec_cond} leads to
+  $$
+  \begin{aligned}
+  \limsup_k\norm{w^k-w^*}^2 &\le \norm{w^0-w^*}^2 +2C + 2\sum_{k=0}^\infty\alpha^k(f(w^*)-f(w^k)) + \sum_{k=0}^\infty(\alpha^k)^2B^2.
+  \end{aligned}
+  $$
+  Using assumption \ref{ass_alpha2} results in the existence of some $\hat C$ such that
+  \begin{equation}\label{eq:general_bound}
+  \limsup_k\norm{w^k-w^*}^2 + 2\sum_{k=0}^\infty\alpha^k(f(w^k) - f(w^*)) \le 2\hat C.
+  \end{equation}
+  Since $\alpha^k>0$ and $f(w^k)\ge f(w^*)$ as $w^*$ is a global minimum of $f$, we infer that sequence $\{w^k\}$ is bounded and \eqref{eq:general_bound} implies
+  $$
+  \sum_{k=0}^\infty\alpha^k(f(w^k) - f(w^*)) \le \hat C.
+  $$
+  Since $f(w^k)-f(w^*)\ge 0$, due to assumption \ref{ass_alpha1} we obtain $\lim f(w^k)\to f(w^*)$, which implies the theorem statement.
+\end{proof}
+
+\subsection{Proof of Theorem \ref{thm:sgd}}\label{app:sgd2}
+
+For the proof, we will consider a general surrogate which satisfies:
+\begin{enumerate}[label={(S\arabic*)}]
+  \item \label{surr_basic1} $l(s)\ge 0$ for all $s\in\R$,\ $l(0)=1$ and $l(s)\to 0$ as $s\to-\infty$;
+  \item \label{surr_basic2} $l$ is convex and strictly increasing function on $(s_0,\infty)$, where $s_0:=\sup\{s \mid l(s)=0\}$;
+  \item \label{surr_ratio} $\frac{l'}{l}$ is a decreasing function on $(s_0,\infty)$;
+  \item \label{surr_der1} $l'$ is a bounded function;
+  \item \label{surr_der2} $l'$ is a Lipschitz continuous function with modulus $L$.
+\end{enumerate}
+All these reguirements are satisfied for the surrogate logistic or by the Huber loss, which is the hinge surrogate which is smoothened on an $\eps$-neighborhood of zero.
+
+\sgd*
+\begin{proof}[Proof of Theorem \ref{thm:sgd} on page \pageref{thm:sgd}]
+  We intend to apply Theorem \ref{thm:convergence} and thus, we need to verify its assumptions. Assumption \ref{ass_convex} is satisfied as $f$ is convex due to Theorem \ref{thm:convex}. Assumption \ref{ass_gbound} follows directly from Lemma \ref{lemma:bound_g}. Assumptions \ref{ass_alpha1},\ref{ass_alpha2} and \ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify \eqref{eq:nec_cond}.
+
+  For simplicity, we will do so only for $\beta=1$ and for $s=2$ minibatches of the same size. However, the proof would be identical for other values. This implies that there are some $I^k$ and $I^{k+1}$ which are pairwise disjoint, they cover all samples and that $I^k=I^{k+2}$ for all $k$. The assumptions imply that the number of positive samples in each minibatch equal to $n_+^k=\frac{1}{2}n_+$, where $n_+$ is the total number of positive samples.
+
+  First we estimate the difference between $s_i^k$ defined in \eqref{eq:defin_z} and $x_i^\top w^k$. For any $i\in I^k$ due to the construction \eqref{eq:defin_z} we have
+  \begin{equation}\label{eq:sgd_estimate_z1}
+    \begin{aligned}
+      s_i^k
+      & = x_i^\top w^k, \\
+      s_i^{k-1}
+      & = s_i^{k-2} = x_i^\top w^{k-2}
+        = x_i^\top \Brac{w^k + \alpha^{k-2}g(w^{k-2}) + \alpha^{k-1}g(w^{k-1})} \\
+      & = x_i^\top w^k + \alpha^{k-2}x_i^\top g(w^{k-2}) + \alpha^{k-1}x_i^\top g(w^{k-1}).
+    \end{aligned}
+  \end{equation}
+  Similarly, for $i\notin I^k$ we have
+  \begin{equation}\label{eq:sgd_estimate_z2}
+    s_i^k
+    = s_i^{k-1}
+    = x_i^\top w^{k-1}
+    = x_i^\top (w^k+\alpha^{k-1}g(w^{k-1}))
+    = x_i^\top w^k + \alpha^{k-1}x_i^\top g(w^{k-1}).
+  \end{equation}
+  Recall that we already verified \ref{ass_convex}-\ref{ass_alpha3}. Combining \ref{ass_gbound} with \eqref{eq:sgd_estimate_z1} and \eqref{eq:sgd_estimate_z2} yields the existence of some $C_2$ such that for all $i\in X$ we have
+  \begin{equation}\label{eq:estimate_diff_z}
+    \begin{aligned}
+      \nrm{s_i^k - x_i^\top w^k} &\le C_2\alpha^{k-1}, \\
+      \nrm{s_i^{k-1} - x_i^\top w^k} &\le C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+    \end{aligned}
+  \end{equation}
+  This also immediately implies
+  \begin{equation}\label{eq:estimate_diff_t}
+    \begin{aligned}
+      \nrm{t^k - t(w^k)}     & \le C_2\alpha^{k-1}, \\
+      \nrm{t^{k-1} - t(w^k)} & \le C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+    \end{aligned}
+  \end{equation}
+
+  Since $l'$ is Lipschitz continuous with modulus $L$ according to \ref{surr_der2}, due to \eqref{eq:estimate_diff_z} and \eqref{eq:estimate_diff_t} we get
+  \begin{equation}\label{eq:sgd_lipschitz1}
+    \begin{aligned}
+      \nrm{l'(t^k-s_i^k) - l'(t(w^k)-x_i^\top w^k)}
+      & \le L \nrm{t^k-s_i^k - t(w^k)+ x_i^\top w^k}
+        \le  2C_2L\alpha^{k-1}.
+    \end{aligned}
+  \end{equation}
+  In an identical way we can show
+  \begin{equation}\label{eq:sgd_lipschitz2}
+    \begin{aligned}
+      \nrm{l'(t^{k-1}-s_i^{k-1}) - l'(t(w^k)-x_i^\top w^k)}
+      & \le 2C_2L\Brac{\alpha^{k-1}+\alpha^{k-2}}, \\
+      \nrm{l'(s_i^k-t^k) - l'(x_i^\top w^k-t(w^k))}
+      & \le 2C_2L\alpha^{k-1}, \\
+      \nrm{l'(s_i^{k-1}-t^{k-1}) - l'(x_i^\top w^k-t(w^k))}
+      & \le 2C_2L\Brac{\alpha^{k-1}+\alpha^{k-2}}.
+    \end{aligned}
+  \end{equation}
+  Now we need to estimate the distance between $\nabla t(w^k)$ and $\nabla t^k$. We have
+  \begin{equation}\label{eq:sgd_nablat}
+    \begin{aligned}
+      \nabla t^k
+      & = \frac{\sum_{i\in I^k}l'(s_i^k-t^k)x_i + \sum_{i\in I^{k-1}}l'(s_i^{k-1}-t^{k-1})x_i}{\sum_{i\in X}l'(s_i^k-t^k)}, \\
+      \nabla t(w^k)
+      & = \frac{\sum_{i\in I^k}l'(x_i^\top w^k-t(w^k))x_i + \sum_{i\in I^{k-1}}l'(x_i^\top w^k-t(w^k))x_i}{\sum_{i\in X}l'(x_i^\top w^k-t(w^k))}.
+    \end{aligned}
+  \end{equation}
+  The first equality in \eqref{eq:sgd_nablat} follows from \eqref{eq:update_nablat} and \eqref{eq:update_a} while the second equality in \eqref{eq:sgd_nablat} follows from Theorem \ref{thm:derivative} and $X=I^k\cup I^{k-1}$. From Lemma \ref{lemma:bound_zero} we deduce that the denominators in \eqref{eq:sgd_nablat} are bounded away from zero uniformly in $k$. Assumption \ref{ass_alpha2} implies  $\alpha^k\to 0$. This allows us to use Lemma \ref{lemma:ratio} which together with \eqref{eq:sgd_lipschitz2} implies that there is some $C_3$ such that for all sufficiently large $k$ we have
+  \begin{equation}\label{eq:sgd_nablat_diff}
+    \norm{\nabla t^k - \nabla t(w^k)} \le C_3\Brac{\alpha^{k-1} + \alpha^{k-2}}.
+  \end{equation}
+
+  Using the assumptions above, we can simplify the terms for $g(w^k)$ and $\nabla f(w^k)$ to
+  \begin{equation*}
+    \begin{aligned}
+      g(w^k)
+      & = \frac{2}{n_+}\sum_{i\in I_+^k}l'(t^k-s_i^k)(\nabla t^k - x_i), \\
+      g(w^{k+1})
+      & = \frac{2}{n_+}\sum_{i\in I_+^{k+1}}l'(t^{k+1}-s_i^{k+1})(\nabla t^{k+1} - x_i), \\
+      \nabla f(w^k)
+      & = \frac{1}{n_+}\sum_{i \in \Xc_+}l'(t(w^k)-x_i^\top w^k)(\nabla t(w^k) - x_i), \\
+      \nabla f(w^{k+1})
+      & = \frac{1}{n_+}\sum_{i \in \Xc_+}l'(t(w^{k+1})-x_i^\top w^{k+1})(\nabla t(w^{k+1}) - x_i).
+    \end{aligned}
+  \end{equation*}
+  Due to the assumptions, we have $\Xc_+=I_+^k\cup I_+^{k+1}$ and $\emptyset=I_+^k\cap I_+^{k+1}$, which allows us to write
+  \begin{subequations}\label{eq:sgd_sum}
+    \begin{align}
+    \label{eq:sgd_sum1}
+    & \qquad\qquad n^+\Brac{g(w^k)+g(w^{k+1})-\nabla f(w^k)-\nabla f(w^{k+1})}\\
+    \label{eq:sgd_sum2}
+    = & \sum_{i\in I_+^k}l'(t^k-s_i^k)(\nabla t^k - x_i) - \sum_{i\in I_+^k}l'(t(w^k)-x_i^\top w^k)(\nabla t(w^k) - x_i) \\
+    \label{eq:sgd_sum3}
+    + &\sum_{i\in I_+^k}l'(t^k-s_i^k)(\nabla t^k - x_i) - \sum_{i\in I_+^k}l'(t(w^{k+1})-x_i^\top w^{k+1})(\nabla t(w^{k+1}) - x_i)\\
+    \label{eq:sgd_sum4}
+    + &\sum_{i\in I_+^{k+1}}l'(t^{k+1}-s_i^{k+1})(\nabla t^{k+1} - x_i) - \sum_{i\in I^{k+1}_+}l'(t(w^k)-x_i^\top w^k)(\nabla t(w^k) - x_i) \\
+    \label{eq:sgd_sum5}
+    + &\sum_{i\in I_+^{k+1}}l'(t^{k+1}-s_i^{k+1})(\nabla t^{k+1} - x_i)  - \sum_{i\in I_+^{k+1}}l'(t(w^{k+1})-x_i^\top w^{k+1})(\nabla t(w^{k+1}) - x_i).
+    \end{align}
+  \end{subequations}
+  Then relations \eqref{eq:sgd_nablat_diff} and \eqref{eq:sgd_lipschitz1} applied to Lemma \ref{lemma:product} imply
+  \begin{equation*}
+    \nrm{\sum_{i\in I_+^k}l'(t^k-s_i^k)(\nabla t^k - x_i) - \sum_{i\in I_+^k}l'(t(w^k)-x_i^\top w^k)(\nabla t(w^k) - x_i)} \le C_4\Brac{\alpha^{k-1} + \alpha^{k-2}}
+  \end{equation*}
+  for some $C_4$, which gives a bound for \eqref{eq:sgd_sum2}. Bound for \eqref{eq:sgd_sum5} is obtained by increasing $k$ by one. Bounds for \eqref{eq:sgd_sum3} and \eqref{eq:sgd_sum4} can be find similarly using \eqref{eq:sgd_lipschitz2}. Altogether, we showed
+  \begin{equation}\label{eq:nec_cond3}
+  \norm{g(w^k)+g(w^{k+1})-\nabla f(w^k)-\nabla f(w^{k+1})} \le C_1(\alpha^{k-2} + \alpha^{k-1} + \alpha^{k} + \alpha^{k+1})
+  \end{equation}
+  for some $C_1$.
+
+  We now estimate
+  \begin{subequations}\label{eq:proof_est1}
+    \begin{align}
+      \label{eq:proof_est11} \alpha^k
+      & \langle g(w^{k})-\nabla f(w^{k}),w^*-w^{k}\rangle + \alpha^{k+1}\langle g(w^{k+1})-\nabla f(w^{k+1}),w^*-w^{k+1}\rangle \\
+      \label{eq:proof_est12}
+      & = \langle g(w^{k})-\nabla f(w^{k}),\alpha^k(w^*-w^{k})\rangle + \langle g(w^{k+1})-\nabla f(w^{k+1}),\alpha^{k+1}(w^*-w^{k+1})\rangle \\
+      \label{eq:proof_est13}
+      & = \langle g(w^{k})-\nabla f(w^{k}) + g(w^{k+1})-\nabla f(w^{k+1}),\alpha^k(w^*-w^{k})\rangle \\
+      \label{eq:proof_est14}
+      & \qquad \qquad + \langle g(w^{k+1})-\nabla f(w^{k+1}),\alpha^{k+1}(w^*-w^{k+1})-\alpha^k(w^*-w^{k})\rangle.
+    \end{align}
+  \end{subequations}
+  To estimate \eqref{eq:proof_est14}, we make use of Lemma \ref{lemma:bound_g} to obtain the existence of some $C_5$ such that
+  \begin{equation}\label{eq:proof_est2}
+    \begin{aligned}
+    \langle g(w^{k+1})
+    & -\nabla f(w^{k+1}),\alpha^{k+1}(w^*-w^{k+1})-\alpha^k(w^*-w^{k})\rangle \\
+    & \le 2B\norm{\alpha^{k+1}(w^*-w^{k+1})-\alpha^k(w^*-w^{k})} \\
+    & = 2B\norm{\alpha^{k+1}(w^*-w^k+\alpha^kg(w^k))-\alpha^k(w^*-w^{k})} \\
+    & = 2B\norm{(\alpha^{k+1}-\alpha^k)w^* + (\alpha^k-\alpha^{k+1})w^k +\alpha^k\alpha^{k+1} g(w^k)} \\
+    & \le C_5 \nrm{\alpha^{k+1}-\alpha^k} + C_5(\alpha^k)^2 + C_5(\alpha^{k+1})^2.
+    \end{aligned}
+  \end{equation}
+  In the last inequality we used the equality $2ab\le a^2+b^2$. To estimate \eqref{eq:proof_est13}, we can apply \eqref{eq:nec_cond3} together with the boundedness of $\{w^k\}$ to obtain the existence of some $C_6$ such that
+  \begin{equation}\label{eq:proof_est3}
+    \begin{aligned}
+      \langle g(w^{k})&-\nabla f(w^{k}) + g(w^{k+1})-\nabla f(w^{k+1}),\alpha^k(w^*-w^{k})\rangle \\
+      & \le C_6(\alpha^{k-2})^2 + C_6(\alpha^{k-1})^2 + C_6(\alpha^{k})^2 + C_6(\alpha^{k+1})^2.
+    \end{aligned}
+  \end{equation}
+  Plugging \eqref{eq:proof_est2} and \eqref{eq:proof_est3} into \eqref{eq:proof_est1} and summing the terms yields \eqref{eq:nec_cond}. Then the assumptions of Theorem \ref{thm:convergence} are verified and the theorem statement follows.
+\end{proof}
+
+\subsection{Auxiliary results}\label{app:sgd3}
+
+\begin{lemma}\label{lemma:bound_zero}
+  Let $l$ satisfy \ref{surr_basic1}-\ref{surr_ratio}. Then there exists some $\hat C$ such that for all $k$ we have
+  \begin{equation*}
+    \begin{aligned}
+      \sum_{i\in X}l'(s_i^k-t^k) & \ge \hat C > 0, \\
+      \sum_{i\in X}l'(x_i^\top w^k-t(w^k)) & \ge \hat C > 0.
+    \end{aligned}
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+  First, we will find an upper bound of $s_i^k-t^k$. Fix any index $i_0$. Since $l$ is nonnegative due to \ref{surr_basic1}, equation \eqref{eq:update_t} implies
+  \begin{equation*}
+    n\tau=\sum_{i\in X}l(s_i^k-t^k) \ge l(s_{i_0}^k-t^k).
+  \end{equation*}
+  Moreover, as $l$ is a strictly increasing function due to \ref{surr_basic2} and $n\tau>0$, this means 
+  \begin{equation}\label{eq:sigma_bound}
+    l^{-1}(n\tau) \ge s_{i_0}^k-t^k.
+  \end{equation}
+  Since $i_0$ was an arbitrary index, it holds true for all indices. Then \ref{surr_ratio} which leads to a further estimate
+  \begin{equation*}
+    \begin{aligned}
+    \sum_{i\in X}l'(s_i^k-t^k)
+    & = \sum_{i\in X} l(s_i^k-t^k)\frac{l'(s_i^k-t^k)}{l(s_i^k-t^k)}
+    \ge \sum_{i\in X} l(s_i^k-t^k)\frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
+    & = n\tau\frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} = l'(l^{-1}(n\tau)),
+    \end{aligned}
+  \end{equation*}
+  where the inequality follows from \eqref{eq:sigma_bound} and the following equality from \eqref{eq:update_t}. Due to \ref{surr_basic2} we obtain that $l'(l^{-1}(n\tau))$ is a positive number, which finishes the proof of the first part. The second part can be obtained in an identical way.
+\end{proof}
+
+\begin{lemma}\label{lemma:bound_g}
+  Let $l$ satisfy \ref{surr_basic1}-\ref{surr_der1}. Then there exists some $B$ such that for all $k$ we have $\norm{\nabla f(w^k)}\le B$ and $\norm{g(w^k)}\le B$.
+\end{lemma}
+\begin{proof}
+  Due to \ref{surr_der1} the derivative $l'$ is bounded by some $\hat B$. Then Theorem \ref{thm:derivative} and Lemma \ref{lemma:bound_zero} imply
+  \begin{equation*}
+    \norm{\nabla t(w^k)} \le \frac{\hat B\sum_{i\in X}\norm{x_i}
+    }{\sum_{i\in X}l'(x_i^\top w-t(w))} \le \frac{\hat B}{\hat C}\sum_{i\in X}\norm{x_i},
+  \end{equation*}
+  which is independent of $k$. Then \eqref{eq:derivatives} and again the boundedness of $l'$ imply the existence of some $B$ such that $\norm{\nabla f(w^k)}\le B$ for all $k$. The proof for $g(w^k)$ can be performed identically.
+\end{proof}
+
+\begin{lemma}\label{lemma:ratio}
+  Consider uniformly bounded positive sequences $c_1^k, c_2^k, d_1^k, d_2^k,\alpha^k$ and positive constants $C_1$, $C_2$ such that for all $k$ we have $\nrm{c_1^k-c_2^k}\le C_1\alpha^k$, $\nrm{d_1^k-d_2^k}\le C_1\alpha^k$, $d_1^k\ge C_2$ and $d_2^k\ge C_2$. If $\alpha^k\to 0$, then there exists a constant $C_3$ such that for all sufficiently large $k$ we have
+  \begin{equation*}
+    \norm{\frac{c_1^k}{d_1^k} - \frac{c_2^k}{d_2^k}} \le C_3\alpha^k.
+  \end{equation*}
+\end{lemma}
+
+\begin{proof}
+  Since $d_1^k$ and $d^k$ are bounded away from zero and since $\alpha^k\to 0$, we have
+  \begin{equation*}
+    \norm{\frac{c_1^k}{d_1^k} - \frac{c_2^k}{d_2^k}} \le \max\Brac[c]{ \frac{c_1^k}{d_1^k} - \frac{c_1^k+C_1\alpha^k}{d_1^k-C_1\alpha^k}, \frac{c_1^k}{d_1^k} - \frac{c_1^k-C_1\alpha^k}{d_1^k+C_1\alpha^k}}.
+  \end{equation*}
+  The first term can be estimated as
+  \begin{equation*}
+    \norm{\frac{c_1^k}{d_1^k} - \frac{c_1^k+C_1\alpha^k}{d_1^k-C_1\alpha^k}}
+    = \norm{\frac{(c_1^k+d_1^k)C_1\alpha^k}{d_1^k(d_1^k-C_1\alpha^k)}}
+    \le \frac{(c_1^k+d_1^k)C_1\alpha^k}{C_2|d_1^k-C_1\alpha^k|}.
+  \end{equation*}
+  Since $\alpha^k\to 0$ by assumption, for large $k$ we have $\nrm{d_1^k-C_1\alpha^k}\ge \frac{1}{2}C_2$. Since the sequences are uniformly bounded, the statement follows.
+\end{proof}
+  
+\begin{lemma}\label{lemma:product}
+  Consider scalars $a_i,c_i$ and vectors $b_i,d_i$. If there is some $\hat C$ such that $\nrm{a_i}\le \hat C$ and $\norm{d_i}\le \hat C$, then
+  \begin{equation*}
+    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i}
+    \le \hat C\sum_{i=1}^n \Brac{\nrm{a_i-c_i} + \norm{b_i-d_i}}.
+  \end{equation*}
+\end{lemma}
+\begin{proof}
+  It is simple to verify
+  \begin{equation*}
+    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i} \le \sum_{i=1}^n \norm{d_i}\nrm{a_i-c_i} + \sum_{i=1}^n \nrm{a_i}\norm{b_i-d_i},
+  \end{equation*}
+  from which the statement follows.
+\end{proof}

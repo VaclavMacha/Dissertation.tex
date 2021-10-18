@@ -1,0 +1,703 @@
+\chapter{Linear Classification at the Top}
+
+Many binary classification problems focus on separating the dataset by a linear hyperplane $\bm{w}^\top \bm{x} - t$. A sample $\bm{x}$ is deemed to be positive or relevant (depending on the application) if its score $\bm{w}^\top \bm{x}$ is above a threshold $t$. Multiple problem categories belong to this framework:
+\begin{itemize}
+  \item \textit{Ranking problems} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered.
+  \item \textit{Accuracy at the Top} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the accuracy (equivalently minimizes the misclassification) in these top samples. The prime examples of both categories include search engines or problems where identified samples undergo expensive post-processing such as human evaluation.
+  \item \textit{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
+\end{itemize}
+Examples of this type can be found in search engines, where the user is interested only in the first few queries. These queries need to be of high quality. Other examples include cybersecurity~\cite{Grill_2016}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated. All these three applications may be written (possibly after a reformulation) in a similar form as a minimization of the false-negatives (misclassified positives) above a threshold. They only differ in the way they define the threshold. Despite this striking similarity, they are usually considered separately in the literature. The main goal of this paper is to provide a unified framework for these three applications and perform its theoretical and numerical analysis.
+
+The goal of the ranking problems is to rank the relevant samples higher than the non-relevant ones. A prototypical example is the RankBoost \cite{freund2003efficient} maximizing the area under the ROC curve, the Infinite Push \cite{agarwal2011infinite} or the $p$-norm push \cite{rudin.2009} which concentrate on the high-ranked negatives and push them down. Since all these papers include pairwise comparisons of all samples, they can be used only for small datasets. This was alleviated in \cite{Li_TopPush}, where the authors performed the limit $p \to \infty$ in $p$-norm push and obtained the linear complexity in the number of samples. Moreover, since the $l_{\infty}$-norm is equal to the maximum, this method falls into our framework with the threshold equal to the largest score computed from negative samples.
+
+Accuracy at the Top ($\tau$-quantile) was formally defined in \cite{boyd2012accuracy} and maximizes the number of relevant samples in the top $\tau$-fraction of ranked samples. When the threshold equals the top $\tau$-quantile of all scores, this problem falls into our framework. The early approaches aim at solving approximations, for example, \cite{Joachims:2005:SVM:1102351.1102399} optimizes a convex upper bound on the number of errors among the top samples. Due to the presence of exponentially many constraints, the method is computationally expensive. \cite{boyd2012accuracy} presented an SVM-like formulation which fixes the index of the quantile and solves $n$ problems. While this removes the necessity to handle the (difficult) quantile constraint, the algorithm is computationally infeasible for a large number of samples. \cite{kar2015surrogate} derived upper approximations, their error bounds and solved these approximations. \cite{Grill_2016} proposed the projected gradient descent method where after each gradient step, the quantile is recomputed. \cite{Eban_2017} suggested new formulations for various criteria and argued that they keep desired properties such as convexity. \cite{tasche2018plug} showed that accuracy at the top is maximized by thresholding the posterior probability of the relevant class. The closest approach to our framework is \cite{lapin.2015,lapin2018analysis}, where the authors considered multi-class classification problems, and their goal was to optimize the performance on the top few classes and \cite{mackey2018constrained}, where the authors implicitly removed some variables and derived an efficient algorithm.
+
+\section{Framework for Minimizing Missclassification Above a Threshold}\label{sec:framework}
+
+Many important binary classification problems minimize the number of misclassified samples below (or above) certain threshold. Since these problems are usually considered separately, in this section, we provide a unified framework for their handling and present several classification problems falling into this framework.
+
+For samples $\bm{x}$, we consider the linear classifier $f(\bm{w}) = \bm{w}^\top \bm{x} - t$, where $\bm{w}$ is the normal vector to the separating hyperplane and $t$ is a threshold. The most well-known example is the support vector machines, where $t$ is an optimization variable. In many cases the threshold $t$ is computed from the scores $s = \bm{w}^\top \bm{x}$. For example, \TopPush from \cite{Li_TopPush} sets the threshold $t$ to the largest score $s^-$ corresponding to negative samples and \cite{Grill_2016} sets it to the quantile of all scores.
+
+To be able to determine the missclassification above and below the threshold $t$, we define the true-positive, false-negative, true-negative and false-positive counts by
+\begin{equation}\label{eq:defin_counts}
+  \begin{aligned}
+    \tp(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}\Brac[s]{\bm{w}^\top \bm{x} - t \ge 0}, &
+    \fn(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}\Brac[s]{\bm{w}^\top \bm{x} - t < 0}, \\
+    \tn(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}\Brac[s]{\bm{w}^\top \bm{x} - t < 0}, &
+    \fp(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}\Brac[s]{\bm{w}^\top \bm{x} - t \ge 0}.
+  \end{aligned}
+\end{equation}
+Here $[\cdot]$ is the 0-1 loss (Iverson bracket, characteristic function) which is equal to $1$ if the argument is true and to $0$ otherwise. Moreover, $\Xc / \Xc^{+} / \Xc^{-}$ denotes the sets of all/positive/negative samples and by $n / n^{+} / n^{-}$ their respective sizes. 
+
+Since the misclassified samples below the threshold are the false-negatives, we arrive at the following problem
+\begin{equation}\label{eq:problem1}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}}\fn(\bm{w}, t)\\
+    \st
+    & \quad \text{threshold } t \text{ is a function of }\{\bm{w}^\top \bm{x}_i\}_{i = 1}^n.
+  \end{aligned}
+\end{equation}
+As the 0-1 loss in \eqref{eq:defin_counts} is discontinuous, problem \eqref{eq:problem1} is difficult to handle. The usual approach is to employ a surrogate function such as the hinge loss function defined by
+\begin{equation}\label{eq:defin_surrogate}
+  \begin{aligned}
+    l_{\rm hinge}(s) & =\max\Brac[c]{0, 1 + s}.\\
+  \end{aligned}
+\end{equation}
+In the text below, the symbol $l$ denotes any convex non-negative non-decreasing function with $l(0) = 1$. Using the surrogate function, the counts \eqref{eq:defin_counts} may be approximated by their surrogate counterparts
+\begin{equation}\label{eq:defin_counts_surr}
+  \begin{aligned}
+    \tps(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}l(\bm{w}^\top \bm{x}-t), &
+    \fns(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}l(t - \bm{w}^\top \bm{x}), \\
+    \tns(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}l(t - \bm{w}^\top \bm{x}),&
+    \fps(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}l(\bm{w}^\top \bm{x}-t).
+  \end{aligned}
+\end{equation}
+Since $l(\cdot)\ge[\cdot]$, the surrogate counts \eqref{eq:defin_counts_surr} provide upper approximations of the true counts \eqref{eq:defin_counts}. Replacing the counts in \eqref{eq:problem1} by their surrogate counterparts and adding a regularization results in
+\begin{equation}\label{eq:problem2}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
+    \st
+    & \quad \text{threshold } t \text{ is a function of }\{\bm{w}^\top \bm{x}_i\}_{i = 1}^n.
+  \end{aligned}
+\end{equation}
+In the rest of this section, we list formulations which fall into the framework of \eqref{eq:problem1} and \eqref{eq:problem2}.
+
+\subsection{Methods based on pushing positives to the top}\label{sec:obj1}
+
+The first category of formulations falling into our framework \eqref{eq:problem1} and \eqref{eq:problem2} are ranking methods which attempt to put as many positives (relevant samples) to the top as possible. Specifically, for each sample $\bm{x}$, they compute the score $s = \bm{w}^\top \bm{x}$ and then sort the vector $\bm{s}$ into $\bm{s}_{[\cdot]}$ with decreasing components $s_{[1]} \ge s_{[2]} \ge \dots \ge s_{[n]}$. The number of positives on top equals to the number of positives above the highest negative. This amounts to maximizing true-positives or, equivalently, minimizing false-negatives, which may be written as
+\begin{equation}\label{eq:problem_top2}
+  \begin{aligned}
+    \minimize
+    & \quad\frac{1}{n^{+}}\fn(\bm{w},t) \\
+    \st
+    & \quad t = s_{[1]}^-, \\
+    & \quad \text{components of }\bm{s}^- \text{ equal to } s^- = \bm{w}^\top \bm{x}^-\text{ for }\bm{x}^- \in \Xc^-.
+  \end{aligned}
+\end{equation}
+As $t$ is a function of the scores $s = \bm{w}^\top \bm{x}$, problem \eqref{eq:problem_top2} is a special case of \eqref{eq:problem1}.
+
+\TopPush from \cite{Li_TopPush} replaces the false-negatives in \eqref{eq:problem_top2} by their surrogate and adds a regularization term to arrive at
+\begin{equation}\label{eq:problem_toppush}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}} \fns(\bm{w}, t) + \frac{\lambda}{2} \norm{\bm{w}}^2 \\
+    \st
+    & \quad t = s_{[1]}^-, \\
+    & \quad \text{components of }\bm{s}^-\text{ equal to } s^- = \bm{w}^\top \bm{x}^- \text{ for }\bm{x}^- \in \Xc^-.
+  \end{aligned}
+\end{equation}
+Note that this falls into the framework of \eqref{eq:problem2}.
+
+As we will show in Section \ref{sec:stability}, \TopPush is sensitive to outliers and mislabelled data. To robustify it, we follow the idea from \cite{lapin.2015} and propose to replace the largest negative score by the mean of $k$ largest negative scores. This results in
+\begin{equation}\label{eq:problem_toppushk}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}} \fns(\bm{w}, t) + \frac{\lambda}{2} \norm{\bm{w}}^2 \\
+    \st
+    & \quad t = \frac{1}{k}(s_{[1]}^- + \dots + s_{[k]}^-), \\
+    & \quad \text{components of } \bm{s}^- \text{ equal to } s^-= \bm{w}^\top \bm{x}^- \text{ for }\bm{x}^- \in \Xc^-.
+  \end{aligned}
+\end{equation}
+We used the mean of highest $k$ negative scores instead of the value of the $k$-th negative score to preserve convexity as shown in Section \ref{sec:convexity}.
+
+\subsection{Accuracy at the Top}\label{sec:obj2}
+
+The previous category considers formulations which minimize the false-negatives below the highest-ranked negative. Accuracy at the Top \cite{boyd2012accuracy} takes a different approach and minimizes false-positives above the top $\tau$-quantile defined by
+\begin{equation}\label{eq:defin_quantile} 
+  t_1(\bm{w}) = \max \Brac[c]{t \mid \tp(\bm{w}, t) + \fp(\bm{w}, t) \ge n \tau}.
+\end{equation}
+Then the Accuracy at the Top problem is defined by
+\begin{equation}\label{eq:problem_aatp_orig}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{-}}\fp(\bm{w},t) \\
+    \st
+    & \quad t \text{ is the top \ensuremath{\tau}-quantile: it solves } \eqref{eq:defin_quantile}.
+  \end{aligned}
+\end{equation}
+Due to Lemma \ref{lemma:fnfp_equivalence} in the Appendix, the previous problem \eqref{eq:problem_aatp_orig} is equivalent (up to a small theoretical issue) to
+\begin{equation}\label{eq:problem_aatp}
+  \begin{aligned}
+    \minimize
+    & \quad \mu \fn(\bm{w}, t) + (1 - \mu)\fp(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
+    \st
+    & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}
+  \end{aligned}
+\end{equation}
+for any $\mu \in [0,1]$. This problem with $\mu = 0$ equals to \eqref{eq:problem_aatp_orig}, with $\mu = 1$ it falls into our framework \eqref{eq:problem1}, while with $\mu = \frac{n^-}{n}$ it corresponds to the original definition from \cite{boyd2012accuracy}. 
+
+Apart from the quantile \eqref{eq:defin_quantile}, there are two other possible choices of the threshold
+\begin{align}
+  \label{eq:defin_quantile1} t_2(\bm{w}) =\ &\frac{1}{n\tau}\sum_{i=1}^{n\tau} s_{[i]}, \\
+  \label{eq:defin_quantile0} t_3(\bm{w})\quad \text{solves} \quad & \frac{1}{n}\sum_{i = 1}^nl(\beta(s_i - t)) = \tau.
+\end{align}
+We again use the vector of scores $\bm{s}$ with components $s_i = \bm{w}^\top \bm{x}_i$ and for the rest of the paper we assume, for simplicity, that $n\tau$ is an integer. The quantile \eqref{eq:defin_quantile} is sometimes denoted as VaR (value at risk) and \eqref{eq:defin_quantile1} as CVaR (conditional value of risk). It is known is that the latter is the tightest convex approximation of the former. We will sometimes denote \eqref{eq:defin_quantile0} as surrogate top $\tau$-quantile. We will investigate the relations between these three objects as well as their properties such as convexity, differentiability or stability in Section \ref{sec:theory}.
+
+Paper \cite{Grill_2016} builds on the Accuracy at the Top problem~\eqref{eq:problem_aatp}, where it replaces $\fn(\bm{w}, t)$ and $\fp(\bm{w}, t)$ in the objective by their surrogate counterparts $\fns(\bm{w}, t)$ and $\fps(\bm{w}, t)$. This leads to
+\begin{equation}\label{eq:problem_grill}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{1}{n^{-}}\fps(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
+    \st
+    & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}.
+  \end{aligned}
+\end{equation}
+Based on the first author, we name this formulation \Grill. The main purpose of \eqref{eq:defin_quantile1} is to provide a convex approximation of the non-convex quantile \eqref{eq:defin_quantile}. Putting it into the constraint results in a convex approximation problem, which we call \TopMeanK
+\begin{equation}\label{eq:problem_topmeank}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
+    \st
+    & \quad t = \frac 1{n\tau}(s_{[1]} + \dots + s_{[n\tau]}), \\
+    & \quad \text{components of }\bm{s}\text{ equal to } s = \bm{w}^\top \bm{x} \text{ for } \bm{x} \in \Xc.
+  \end{aligned}
+\end{equation}
+Similarly, we can use the surrogate top quantile in the constraint to arrive at
+\begin{equation}\label{eq:problem_patmat}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
+    \st
+    & \quad t \text{ is the surrogate top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile0}.
+  \end{aligned}
+\end{equation}
+Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq:problem_topmeank} and \eqref{eq:problem_patmat} minimize only the false-negatives. The reason for this will be evident in Section \ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem \eqref{eq:problem_patmat} provides a good approximation to the Accuracy at the Top problem, it is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning). 
+
+\subsection{Methods optimizing the Neyman-Pearson criterion}\label{sec:obj3}
+
+Another category falling into the framework of \eqref{eq:problem1} and \eqref{eq:problem2} is the Neyman-Pearson problem which is closely related to hypothesis testing, where null $H_0$ and alternative $H_1$ hypotheses are given. Type~I error occurs when $H_0$ is true but is rejected, and type II error happens when $H_0$ is false, but it fails to be rejected. The standard technique is to minimize Type II error while a bound for Type I error is given.
+
+In the Neyman-Pearson problem, the null hypothesis $H_0$ states that a sample $\bm{x}$ has the negative label. Then Type I error corresponds to false-positives while Type II error to false-negatives. If the bound on Type I error equals $\tau$, we may write this as
+\begin{equation}\label{eq:defin_quantile_np} 
+  t_1^{\rm NP}(\bm{w}) = \max\Brac[c]{t \mid \fp(\bm{w},t) \ge n^- \tau}.
+\end{equation}
+Then, we may write the Neyman-Pearson problem as
+\begin{equation}\label{eq:problem_np}
+  \begin{aligned}
+    \minimize
+    & \quad \frac{1}{n^{+}}\fn(\bm{w},t) \\
+    \st
+    & \quad t \text{ is Type I error at level \ensuremath{\tau}: it solves }\eqref{eq:defin_quantile_np}.
+  \end{aligned}
+\end{equation}
+Since \eqref{eq:problem_np} differs from \eqref{eq:problem_aatp} only by counting only the false-positives in \eqref{eq:defin_quantile_np} instead of counting all positives in \eqref{eq:defin_quantile}, we can derive its approximations in exactly the same way as in Section \ref{sec:obj2}. We therefore provide only their brief description and start with approximations of \eqref{eq:defin_quantile_np}
+\begin{align}
+  \label{eq:defin_quantile1_np} t_2^{\rm NP}(\bm{w}) =\ &\frac{1}{n^-\tau}\sum_{i=1}^{n^-\tau} s_{[i]}^-, \\
+  \label{eq:defin_quantile0_np} t_3^{\rm NP}(\bm{w})\quad \text{solves} \quad &\frac{1}{n}\sum_{i=1}^{n^-}l(\beta(s_i^- - t)) = \tau.
+\end{align}
+Replacing the true counts by their surrogates results in the Neyman-Pearson variant \GrillNP
+\begin{equation}\label{eq:problem_grill_np}
+  \begin{aligned}
+  \minimize
+  & \quad \frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{1}{n^{-}}\fps(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
+  \st
+  & \quad t\text{ is the Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile_np}.
+  \end{aligned}
+\end{equation}
+Similarly, the Neyman-Pearson alternative to \TopMeanK reads
+\begin{equation}\label{eq:problem_topmeank_np}
+  \begin{aligned}
+  \minimize
+  & \quad\frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
+  \st
+  & \quad t = \frac 1{n^ - \tau}(s_{[1]}^- + \dots + s_{[n^- \tau]}^-), \\
+  & \quad \text{components of }\bm{s}^-\text{ equal to } s^- = \bm{w}^\top \bm{x}^-\text{ for }\bm{x}^- \in \Xc.
+  \end{aligned}
+\end{equation}
+This problem already appeared in \cite{zhang2018tau} under the name \tauFPL. Finally, \PatMatNP reads
+\begin{equation}\label{eq:problem_patmat_np}
+  \begin{aligned}
+  \minimize
+  & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
+  \st
+  & \quad t\text{ is the surrogate Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile0_np}.
+  \end{aligned}
+\end{equation}
+
+We may see \eqref{eq:problem_topmeank_np} from two different viewpoints. First, \tauFPL provide convex approximations of \GrillNP. Second, \tauFPL has the same form as \TopPushK. The only difference is that for \tauFPL we have $k=n^-\tau$ while for \TopPushK the value of $k$ is small. Thus, even though we started from two different problems, we arrived at two approximations which differ only in the value of one parameter. This shows a close relation of the ranking problem and the Neyman-Pearson problem and the need for a unified theory to handle these problems.
+
+\section{Theoretical Analysis of the Framework}\label{sec:theory}
+
+In this section, we provide a theoretical analysis of the unified framework from Section~\ref{sec:framework}. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. We focus mainly on the following desirable properties:
+\begin{itemize}
+  \item \textit{Convexity} implies a guaranteed convergence for many optimization algorithms or their better convergence rates \cite{boyd.2004}.
+  \item \textit{Differentiability} increases the speed of convergence.
+  \item \textit{Stability} is a general term, by which we mean that the global minimum is not at $\bm{w} = \bm{0}$. This actually happens for many formulations from Section \ref{sec:framework} and results in the situation where the separating hyperplane is degenerate and does not actually exist.
+\end{itemize}
+For a nicer flow of text, we show the results only for formulations from Section \ref{sec:obj2}. The results for methods from Section \ref{sec:obj3} are identical. For the same reason, we postpone the proofs to Appendix \ref{app:proofs}.
+
+\subsection{Threshold value comparison}
+
+We start with the following proposition, which compares the threshold approximation quality.
+
+\begin{proposition}[\cite{zhang2018tau}]\label{prop:threholds}
+  We always have
+  \begin{equation*}
+    t_1(\bm{w}) \le t_2(\bm{w}) \le t_3(\bm{w}).
+  \end{equation*}
+\end{proposition}
+
+\noindent Whenever the objective contains only false-negatives, a lower threshold $t$ means a lower objective function. Therefore, a lower threshold is preferred.
+
+\subsection{Convexity}\label{sec:convexity}
+
+Convexity is one of the most important properties in numerical optimization. It ensures that the optimization problem has neither stationary points nor local minima. All points of interest are global minima. Moreover, it allows for faster convergence rates. We present the following two results.
+
+\begin{restatable}{proposition}{propconvex}\label{prop:convex}
+  Thresholds $t_2$ and $t_3$ are convex functions of the weights $\bm{w}$. The threshold function $t_1$ is non-convex.
+\end{restatable}
+
+\begin{restatable}{theorem}{thmconvex}\label{thm:convex}
+  If the threshold $t$ is a convex function of the weights $\bm{w}$, then function $f(\bm{w}) = \fns(\bm{w}, t(\bm{w}))$ is convex.
+\end{restatable}
+
+While the proof of Theorem \ref{thm:convex} is simple, it points to the necessity of considering only false-negatives in the objective of the problems in Section \ref{sec:framework}. In such a case, \TopPush, \TopPushK, \TopMeanK, \tauFPL, \PatMat and \PatMatNP are convex problems. At the same time, \Grill and \GrillNP are not convex problems.
+
+\subsection{Differentiability}
+
+Similarly to convexity, differentiability allows for faster convergence rate and in some algorithms, better termination criteria. The next theorem shows which formulations are differentiable.
+
+\begin{restatable}{theorem}{derivative}\label{thm:derivative}
+  If the surrogate function $l$ is differentiable, then threshold $t_3$ is a differentiable function of the weights $\bm{w}$ and its derivative equals to
+  \begin{equation*}
+    \nabla t_3(\bm{w}) = \frac{\sum_{\bm{x} \in \Xc} l'(\beta(\bm{w}^\top \bm{x} - t_3(\bm{w})))\bm{x}}{\sum_{\bm{x} \in \Xc}l'(\beta(\bm{w}^\top \bm{x} - t_3(\bm{w})))}.
+  \end{equation*}
+  The threshold functions $t_1$ and $t_2$ are non-differentiable.
+\end{restatable}
+
+\noindent This theorem shows that the objective functions of \PatMat and \PatMatNP are differentiable. This allows us to prove the convergence of the stochastic gradient descent for these two formulations in Section \ref{sec:convergence}.
+
+\subsection{Stability}\label{sec:stability}
+
+We first provide a simple example and show that many formulations from the previous section are degenerate for it. Then we analyze general conditions under which this degenerate behaviour happens.
+
+\subsubsection{Example of a Degenerate Behavior}\label{sec:example}
+
+We consider $n$ negative samples uniformly distributed in $[-1,0]\times[-1,1]$, $n$ positive samples uniformly distributed in $[0,1]\times[-1,1]$ and one negative sample at $(2,0)$, see Figure \ref{fig:example} (left). We consider the hinge loss and no regularization. If $n$ is large, the point at $(2,0)$ is an outlier and the dataset is separable and the separating hyperplane has the normal vector $\bm{w}=(1,0)$. 
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.7\linewidth]{data/toppush_convergence.pdf}
+  \caption{Left: distribution of positive (empty circle) and negative samples (full circles) for the example from Section \ref{sec:example}. Right: contour plot for \TopPush and its convergence to the zero vector from $12$ initial points.}
+  \label{fig:example}
+\end{figure}
+
+Table \ref{tab:example} shows the threshold $t$ and the objective value $f$ for two points $\bm{w}_1=(0,0)$ and $\bm{w}_2=(1,0)$. These two points are both important: $\bm{w}_1$ does not generate any separating hyperplane, while $\bm{w}_2$ generates the optimal separating hyperplane. We show the precise computation in Appendix \ref{app:example}. Since the dataset is perfectly separable by $\bm{w}_2$, we expect that $\bm{w}_2$ provides a lower objective than $\bm{w}_1$. By shading the better objective in Table~\ref{tab:example} by grey, we see that this did not happen for \TopPush and \TopMeanK.
+
+\begin{table}[!ht]
+  \caption{Comparison of formulations on the very simple problem from Section \ref{sec:example}. Two formulations have the global minimum (denoted by grey color) at $\bm{w}_1=(0,0)$ which does not generate any separating hyperplane. The optimal separating hyperplane is generated by $\bm{w}_2=(1,0)$.}
+  \label{tab:example}
+  \centering
+  \begin{tabular}{@{}l ccccc@{}}\toprule
+    & & \multicolumn{2}{c}{$\bm{w}_1=(0,0)$} & \multicolumn{2}{c}{$\bm{w}_2=(1,0)$} \\ \cmidrule(lr){3-4} \cmidrule(lr){5-6}
+    Name & Label & $t$& $f$ & $t$ & $f$ \\
+    \midrule
+    \TopPush & \eqref{eq:problem_toppush} & $0$ & \cellcolor{gray!40}$1$ & $2$ & $2.5$ \\
+    \TopPushK & \eqref{eq:problem_toppushk} & $0$ & $1$ & $\frac2k$ & \cellcolor{gray!40}$0.5+\frac2k$ \\
+    \Grill & \eqref{eq:problem_grill} & $0$ & $2$ & $1-2\tau$ & \cellcolor{gray!40}$1.5+2\tau(1-\tau)$ \\
+    \TopMeanK & \eqref{eq:problem_topmeank} & $0$ & \cellcolor{gray!40}$1$ & $1-\tau$ & $1.5-\tau$ \\
+    \PatMat & \eqref{eq:problem_patmat}  & $\frac{1}{\beta}(1-\tau)$ & $1+\frac{1}{\beta}(1-\tau)$ & $\frac{1}{\beta}(1-\tau)$ & \cellcolor{gray!40}$0.5+\frac{1}{\beta}(1-\tau)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+It can be shown that $\bm{w}_1=(0,0)$ is even the global minimum for \TopPush and \TopMeanK. This raises the question of whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative as shown in Figure \ref{fig:example} (right). Here, we run \TopPush from several starting points, and it always converges to zero from one of the three possible directions; all of them far from the normal vector to the separating hyperplane.
+
+\subsubsection{Stability and Global minimum at zero}\label{sec:w_zero}
+
+The convexity derived in the previous section guarantees that there are no local minima. However, as we showed in the example above, the global minimum may be at $\bm{w} = \bm{0}$. This is highly undesirable since $\bm{w}$ is the normal vector to the separating hyperplane and the zero vector provides no information. In this section, we analyze when this situation happens. The first result states that if the threshold $t(\bm{w})$ is above a certain value, then zero has a better objective that $\bm{w}$. If this happens for all $\bm{w}$, then zero is the global minimum.
+
+\begin{restatable}{theorem}{larget}\label{thm:large_t}
+  Consider any of these formulations: \TopPush, \TopPushK, \TopMeanK or \tauFPL. Fix any $\bm{w}$ and denote the corresponding threshold $t(\bm{w})$. If we have
+  \begin{equation*}
+    t(\bm{w})\ge \frac{1}{n^+} \sum_{\bm{x}^+ \in \Xc^+} \bm{w}^\top \bm{x}^+,
+  \end{equation*}
+  then $f(\bm{0})\le f(\bm{w})$. Specifically, denote the scores $s^+=\bm{w}^\top \bm{x}^+$ for $\bm{x}^+\in \Xc^+$ and $s^-=\bm{w}^\top \bm{x}^-$ for $\bm{x}^-\in \Xc^-$ and the ordered variants with decreasing components of $\bm{s}^-$ by $\bm{s}_{[\cdot]}^-$. Then
+  \begin{equation}\label{eq:w_zero}
+    \begin{aligned}
+    s_{[1]}^- \ge \frac{1}{n^+} \sum_{i=1}^{n^+} s_{i}^+
+    & \implies f(\bm{0}) \le f(\bm{w}) \text{ for } \TopPush, \\
+    \frac{1}{k}\sum_{i=1}^k s_{[i]}^- \ge \frac{1}{n^+} \sum_{i=1}^{n^+} s_{i}^+
+    & \implies f(\bm{0})\le f(\bm{w}) \text{ for } \TopPushK, \\
+    \frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s_{[i]}^- \ge \frac{1}{n^+}\sum_{i=1}^{n^+} s_{i}^+
+    & \implies f(\bm{0}) \le f(\bm{w}) \text{ for } \tauFPL. \\
+    \end{aligned}
+  \end{equation}
+\end{restatable}
+
+We can use this result immediately to deduce that some formulations have the global minimum at $\bm{w} = \bm{0}$. More specifically, \TopPush fails if there are outliers, and \TopMeanK fails whenever there are many positive samples.
+
+\begin{corollary}\label{cor:toppush}
+  Consider the \TopPush formulation. If the positive samples lie in the convex hull of negative samples, then $\bm{w}=\bm{0}$ is the global minimum.
+\end{corollary}
+
+\begin{corollary}\label{cor:topmean}
+  Consider the \TopMeanK formulation. If $n^+\ge n\tau$, then $\bm{w}=\bm{0}$ is the global minimum.
+\end{corollary}
+
+The proof of Theorem \ref{thm:large_t} employs the fact that all formulations in the theorem statement have only false-negatives in the objective. If $\bm{w}_0=\bm{0}$, then $\bm{w}_0^\top \bm{x}=0$ for all samples $\bm{x}$, the threshold equals to $t=0$ and the objective equals to one. If the threshold is large for $\bm{w}$, many positives are below the threshold, and the false-negatives have the average surrogate value larger than one. In such a case, $\bm{w}_0=\bm{0}$ becomes the global minimum. There are two fixes to this situation:
+\begin{itemize}
+  \item Include false-positives to the objective. This approach is taken by \Grill and \GrillNP and necessarily results in the loss of convexity.  \item Move the threshold away from zero even when all scores $\bm{w}^\top \bm{x}$ are zero. This approach is taken by our formulations \PatMat and \PatMatNP and keeps convexity.
+\end{itemize}
+The next theorem shows the advantage of the second approach.
+
+\begin{restatable}{theorem}{patmatzero}\label{thm:patmat_zero}
+  Consider the \PatMat or \PatMatNP formulation with the hinge surrogate and no regularization. Assume that for some $\bm{w}$ we have
+  \begin{equation}\label{eq:patmat_zero}
+    \frac{1}{n^+}\sum_{\bm{x}^+ \in \Xc^+}\bm{w}^\top \bm{x}^+ > \frac{1}{n^-}\sum_{\bm{x}^- \in \Xc^-}\bm{w}^\top \bm{x}^-.
+  \end{equation}
+  Then there is a scaling parameter $\beta_0$ from \eqref{eq:defin_quantile0} such that $f(\bm{w})<f(\bm{0})$ for all $\beta\in(0,\beta_0)$.
+\end{restatable}
+
+These theorem shed some light on the behaviour of the formulations. Theorem \ref{thm:large_t} states that the stability of \tauFPL requires
+\begin{equation}\label{eq:stability1}
+  \frac{1}{n^-\tau}\sum_{i=1}^{n^-\tau}s_{[i]}^- < \frac{1}{n^+}\sum_{i=1}^{n^+} s_{i}^+,
+\end{equation}
+while Theorem \ref{thm:patmat_zero} states that the stability of \PatMatNP is ensured by
+\begin{equation}\label{eq:stability2}
+  \frac{1}{n^-}\sum_{i=1}^{n^-}s_{[i]}^- < \frac{1}{n^+}\sum_{i=1}^{n^+} s_{i}^+.
+\end{equation}
+The right-hand sides of \eqref{eq:stability1} and \eqref{eq:stability2} are the same, while the left-hand side of \eqref{eq:stability2} is always smaller than the left-hand side of \eqref{eq:stability1}. This implies that if \tauFPL is stable, then \PatMatNP is stable as well.
+
+At the same time, there may be a huge difference in the stability of both formulations. Since the scores of positive samples should be above the scores of negative samples, the scores $s$ may be interpreted as performance. Then formula \eqref{eq:stability1} states that if the mean performance of a \emph{small number of the best} negative samples is larger than the average performance of \emph{all} positive samples, then \tauFPL fails. On the other hand, formula \eqref{eq:stability2} states that if the average performance of \emph{all} positive samples is better than the average performance of \emph{all} negative samples, then \PatMatNP is stable. The former may well happen as accuracy at the top is interested in a good performance of only a small number of positive samples.
+
+\subsection{Method comparison}
+
+We provide a summary of the obtained results in Table \ref{tab:methods}. There we give basic characterizations of the formulations such as their definition label, their source, the hyperparameters, whether the formulation is differentiable and convex, and whether it has stability problems with $\bm{w}=\bm{0}$ being the global minimum. 
+
+\begin{table}[!ht]
+  \caption{Summary of the formulations from Section \ref{sec:framework}. The table shows their definition label, the source or the source they are based on, the hyperparameters, whether the formulation is differentiable, convex and stable (in the sense of having problems with $\bm{w}=\bm{0}$).}
+  \label{tab:methods}
+  \centering
+  \begin{tabular}{ll ccccc}\toprule
+    Name & Source & Definition & Hyperpars & Convex & Differentiable & Stable \\
+    \midrule
+    \TopPush & \cite{Li_TopPush} & \eqref{eq:problem_toppush}& $\lambda$ & \cmark & \xmark & \xmark\\
+    \TopPushK & ours & \eqref{eq:problem_toppushk} & $\lambda$, $k$ & \cmark & \xmark & \xmark\\ 
+    \Grill & \cite{Grill_2016} & \eqref{eq:problem_grill}  & $\lambda$ & \xmark & \xmark & \cmark\\
+    \PatMat & ours & \eqref{eq:problem_patmat} & $\beta$, $\lambda$ & \cmark & \cmark & \cmark\\ 
+    \TopMeanK & - & \eqref{eq:problem_topmeank} & $\lambda$ & \cmark & \xmark & \xmark\\ 
+    \GrillNP & - & \eqref{eq:problem_grill_np} & $\lambda$ & \xmark & \xmark & \cmark\\
+    \PatMatNP & ours & \eqref{eq:problem_patmat_np} & $\beta$, $\lambda$ & \cmark & \cmark & \cmark\\
+    \tauFPL & \cite{zhang2018tau} & \eqref{eq:problem_topmeank_np} & $\lambda$ & \cmark & \xmark & \xmark\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+A similar comparison is performed in Figure \ref{fig:thresholds}. Methods in green and grey are convex, while formulations in white are non-convex. Based on Theorem \ref{thm:large_t}, four formulations in grey are vulnerable to have the global minimum at $\bm{w}=0$. This theorem states that the higher the threshold, the more vulnerable the formulation is. The full arrows depict this dependence. If it points from one formulation to another, the latter one has a smaller threshold and thus is less vulnerable to this undesired global minima. The dotted arrows indicate that this holds usually but not always, the precise formulation is provided in Appendix \ref{app:relations}. This complies with Corollaries \ref{cor:toppush} and \ref{cor:topmean} which state that \TopPush and \TopMeanK are most vulnerable. At the same time, it says that \tauFPL is the best one from the grey-coloured formulations. Finally, even though \PatMatNP has a worse approximation of the true threshold than \tauFPL due to Theorem \ref{thm:large_t}, it is more stable due to the discussion after Theorem \ref{thm:patmat_zero}.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{tikzpicture}[node distance=3cm]
+  \node (tikz1) [bubbleB] {\TopPush};
+  \node (tikz2) [bubbleB, right of=tikz1] {\TopPushK};
+  \node (tikz3) [bubbleA, above right of=tikz2] {\PatMatNP};
+  \node (tikz4) [bubbleB, below right of=tikz2] {\tauFPL};
+  \node (tikz5) [bubbleC, below right of=tikz3] {\GrillNP};
+  \draw [arrowA] (tikz1) -- (tikz2);
+  \draw [arrowA] (tikz2) -- (tikz4);
+  \draw [arrowA] (tikz3) -- (tikz5);
+  \draw [arrowA] (tikz4) -- (tikz5);
+  \draw [arrowA] (tikz3) -- (tikz4);
+  %
+  \node (tikz8) [bubbleC, right of=tikz5] {\Grill};
+  \node (tikz6) [bubbleA, above right of=tikz8] {\PatMat};
+  \node (tikz7) [bubbleB, below right of=tikz8] {\TopMeanK};
+  \draw [arrowA] (tikz6) -- (tikz8);
+  \draw [arrowA] (tikz7) -- (tikz8);
+  \draw [arrowA] (tikz6) -- (tikz7);
+  %
+  \draw [arrowB] (tikz6) -- (tikz3);
+  \draw [arrowB] (tikz7) -- (tikz4);
+  \draw [arrowB] (tikz8) -- (tikz5);
+  %
+  \node (comm2) [bubbleB, minimum height=3mm, node distance=4.1cm, left of=tikz3] {\phantom{not }convex, not stable};
+  \node (comm1) [bubbleA, minimum height=3mm, node distance=6.1mm, above of=comm2] {\phantom{not }convex, \phantom{not }stable};
+  \node (comm3) [bubbleC, minimum height=3mm, node distance=6.1mm, below of=comm2] {not convex, \phantom{not }stable};
+  \end{tikzpicture}
+  \caption{Summary of the formulations from Section \ref{sec:framework}. Methods in green and grey are convex, while formulations in white are non-convex. Methods in grey are vulnerable to have the global minimum at $\bm{w}=0$. Full (dotted) arrow pointing from one formulation to another show that the latter formulation has always (usually) smaller threshold.}
+  \label{fig:thresholds}
+\end{figure}
+
+\section{Convergence of stochastic gradient descent}\label{sec:convergence}
+
+The previous section analyzed the formulations from Section \ref{sec:framework} but did not consider any optimization algorithms. In this section, we show a basic version of the stochastic gradient descent and then show its convergent version. Since due to considering the threshold, gradient computed on a minibatch is a biased estimate of the true gradient, we need to use variance reduction techniques, and the proof is rather complex.
+
+\subsection{Stochastic gradient descent: Basic}
+
+Many optimization algorithms for solving the formulations from Section \ref{sec:framework} use primal-dual or purely dual formulations. \cite{Eban_2017} introduced dual variables and used alternating optimization to the resulting min-max problem.  \cite{Li_TopPush} and \cite{zhang2018tau} dualized the problem and solved it with the steepest gradient ascent. \cite{macha2020nonlinear} followed the same path but added kernels to handle non-linearity. We follow the ideas of \cite{mackey2018constrained} and \cite{adam2019machine} and solve the problems directly in their primal formulations. Therefore, even though we use the same formulation for \TopPush as \cite{Li_TopPush} or for \tauFPL as \cite{zhang2018tau}, our solution process is different. However, due to convexity, both algorithms should converge to the same point.
+
+The decision variables in \eqref{eq:problem2} are the normal vector of the separating hyperplane $\bm{w}$ and the threshold $t$. To apply an efficient optimization method, we need to compute gradients. The simplest idea \cite{Grill_2016} is to compute the gradient only with respect to $\bm{w}$ and then recompute $t$. A more sophisticated way is based on the chain rule. For each $\bm{w}$, the threshold $t$ can be computed uniquely. We stress this dependence by writing $t(\bm{w})$ instead of $t$. By doing so, we effectively remove the threshold $t$ from the decision variables and $\bm{w}$ remains the only decision variable. Note that the convexity is preserved. Then we can compute the derivative via the chain rule
+\begin{equation}\label{eq:derivatives}
+  \begin{aligned}
+  f(\bm{w}) & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+} l(t(\bm{w}) - \bm{w}^\top \bm{x}) + \frac{\lambda}{2}\norm{\bm{w}}^2, \\
+  \nabla f(\bm{w}) & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+} l'(t(\bm{w}) - \bm{w}^\top \bm{x})(\nabla t(\bm{w}) - \bm{x}) + \lambda \bm{w}.
+  \end{aligned}
+\end{equation}
+The only remaining part is the computation of $\nabla t(\bm{w})$. It is simple for $\nabla t_1(\bm{w})$ and $\nabla t_2(\bm{w})$ and Theorem \ref{thm:derivative} shows the computation for $\nabla t_3(\bm{w})$. Appendix \ref{app:threshold} provides an efficient computation method for $t_3(\bm{w})$.
+
+Having derivative \eqref{eq:derivatives}, deriving the stochastic gradient is simple. It partitions the dataset into minibatches and provides an update of the weights $\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in \eqref{eq:derivatives} by a mean over the minibatch.
+
+\subsection{Stochastic gradient descent: Convergent for \PatMat and \PatMatNP}
+
+For the convergence proof, we need differentiability which is due to Theorem \ref{thm:derivative} possessed only by \PatMat and \PatMatNP. Therefore, we consider only these two formulations and for simplicity, show it only for \PatMat. We apply a variance reduction technique based on delayed values similar to SAG \cite{schmidt2017minimizing}. 
+
+At iteration $k$ we have the decision variable $\bm{w}^k$ and the active minibatch $I^k$. First, we update the score vector $\bm{s}^k$ only on the active minibatch by setting
+\begin{equation}\label{eq:defin_z}
+  s_i^k = \begin{cases} \bm{x}_i^\top \bm{w}^k &\text{for all }i\in I^k,\\ s_i^{k-1} &\text{for all }i\notin I^k.\end{cases} 
+\end{equation}
+We keep scores from previous minibatches intact. We use Appendix \ref{app:threshold} to compute the surrogate quantile $t^k$ as the unique solution of
+\begin{equation}\label{eq:update_t}
+  \sum_{i \in X}l(\beta(s_i^k - t^k)) = n\tau.
+\end{equation}
+This is an approximation of the surrogate quantile $t(\bm{w}^k)$ from \eqref{eq:defin_quantile0}. The only difference from the true value $t(\bm{w}^k)$ is that we use delayed scores. Then we introduce artificial variable
+\begin{equation}\label{eq:update_a}
+  \begin{aligned}
+    \bm{a}^k &= \sum_{i\in I^k}l'(\beta(s_i^k - t^k))\bm{x}_i.
+  \end{aligned}
+\end{equation}
+Finally, we approximate the derivative $\nabla f(\bm{w}^k)$ from \eqref{eq:derivatives} by
+\begin{equation}\label{eq:update_g}
+  g(\bm{w}^k) = \frac{1}{n^k_+}\sum_{i\in I^k_+}l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
+\end{equation}
+where $\nabla t^k$ is an approximation of $\nabla t(\bm{w}^k)$ from Theorem \ref{thm:derivative} defined by
+\begin{equation}\label{eq:update_nablat}
+  \nabla t^k = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in X} l'(\beta(s_i^k - t^k))}.
+\end{equation}
+A perhaps more straightforward possibility would be to consider only $\bm{a}^k$ in the numerator of \eqref{eq:update_nablat}. However, choice \eqref{eq:update_nablat} enables us to prove the convergence and it adds stability to the algorithm for small minibatches.
+
+The whole procedure does not perform any vector operations outside of the current minibatch~$I^k$. We summarize it in Algorithm \ref{alg:sgd}. Note that a proper initialization for the first $m$ iterations is needed. We finish the theoretical part by the convergence proof.
+
+\begin{algorithm}[!ht]
+  \begin{algorithmic}[1]
+    \Require Dataset $X$, Minibatches $I^1,\dots,I^m$, Stepsize $\alpha^k$
+    \State Initialize weights $\bm{w}^0$
+    \For{$k = 0,1,\dots$}
+    \State Select a minibatch $I^k$
+    \State Compute $s_i^k$ for all $i\in I^k$ according to \eqref{eq:defin_z}
+    \State Compute $t^k$ according to \eqref{eq:update_t}
+    \State Compute $\bm{a}^k$ according to \eqref{eq:update_a}
+    \State Compute $\nabla t^k$ according to \eqref{eq:update_nablat}
+    \State Compute $g(\bm{w}^k)$ according to \eqref{eq:update_g}
+    \State Set $\bm{w}^{k+1}\gets \bm{w}^k - \alpha^k g(\bm{w}^k)$
+    \EndFor
+  \end{algorithmic}
+  \caption{Stochastic gradient descent for maximizing accuracy at the top}
+  \label{alg:sgd}
+\end{algorithm}
+
+\begin{restatable}{theorem}{sgd}\label{thm:sgd}
+  Consider the \PatMat or \PatMatNP formulation, stepsizes $\alpha^k = \frac{\alpha^0}{k+1}$ and piecewise disjoint minibatches $I^1,\dots,I^m$ which cycle periodically $I^{k+m}=I^k$. If $l$ is the smoothened (Huberized) hinge function, then Algorithm \ref{alg:sgd} converges to the global minimum of \eqref{eq:problem_patmat}.  
+\end{restatable}
+
+\section{Numerical experiments}\label{sec:num1}
+
+In this section, we present numerical results.
+
+\subsection{Implementational details and Hyperparameter choice}
+
+We recall that all methods fall into the framework of either \eqref{eq:problem1} or \eqref{eq:problem2}. Since the threshold $t$ depends on the weights $\bm{w}$, we can consider the decision variable to be only $\bm{w}$. Then to apply a method, we implemented the following iterative procedure. At iteration $j$, we have the weights $\bm{w}^j$ to which we compute the threshold $t^j=t(\bm{w}^j)$. Then according to \eqref{eq:derivatives}, we compute the gradient of the objective and apply the ADAM descent scheme \cite{kingma2014adam}. All methods were run for $10000$ iterations using the stochastic gradient descent. The minibatch size was $512$ except for the Ionosphere and Spambase datasets where the full gradient was used. All methods used the hinge surrogate \eqref{eq:defin_surrogate}. The initial point is generated randomly.
+
+We run the methods for the following hyperparameters
+\begin{equation}\label{eq:beta1}
+  \begin{aligned}
+    \beta   & \in  \{0.0001,\ 0.001,\ 0.01,\ 0.1,\ 1,\ 10\}, \\
+    \lambda & \in \{0,\ 0.00001,\ 0.0001,\ 0.001,\ 0.01,\ 0.1\}, \\
+    k       & \in \{1, 3, 5, 10, 15, 20\}.
+  \end{aligned}
+\end{equation}
+For \TopPushK, \PatMat and \PatMatNP we fixed $\lambda=0.001$ to have six hyperparameters for all methods. For all datasets, we choose the hyperparameter which minimized the criterion on the validation set. The results are computed on the testing set which was not used during training the methods.
+
+\TopPush and \tauFPL were originally implemented in the dual. However, to allow for the same framework and the stochastic gradient descent, we implemented it in the primal. These two approaches are equivalent.
+
+\subsection{Dataset description and Performance criteria}\label{sec:datasets}
+
+For the numerical results, we considered 10 datasets summarized in Table \ref{tab:counts}. They can be downloaded from the UCI repository. Ionosphere \cite{ionosphere} and Spambase are small, Hepmass \cite{hepmass} contains a large number of samples while Gisette \cite{gisette} contains a large number of features. We also considered six visual recognition datasets: MNIST, FashionMNIST, CIFAR10, CIFAR20, CIFAR100 and SVHN2. MNIST and FashionMNIST are grayscale datasets of digits and fashion items, respectively. CIFAR100 is a dataset of coloured images of items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. SVHN2 contains coloured images of house numbers. As Table \ref{tab:counts} shows, these datasets are imbalanced.
+
+Each of the visual recognition datasets was converted into ten binary datasets by considering one of the classes $\{0,\dots,9\}$ as the positive class and the rest as the negative class. The experiments were repeated ten times for each dataset from different seeds, which influenced the starting point and minibatch creation. We use tpr@fpr as the evaluation criterion. This describes the true-positive rate at a prescribed true-negative rate, usually of $1\%$ or $5\%$. For the linear classifier $\bm{w}^\top \bm{x} - t$, it selects the threshold $t$ so that the desired true-negative rate is satisfied and then computes the true-positive rate for this threshold.
+
+\begin{table}[!ht]
+  \caption{Structure of the used datasets. The training, validation and testing sets show the number of features $m$, samples $n$ and the fraction of positive samples $\frac{n^+}{n}$.}
+  \label{tab:counts}
+  \centering
+  \begin{tabular}{@{}lllllllll@{}}
+    \toprule
+    &  & \multicolumn{2}{c}{Training} & \multicolumn{2}{c}{Validation} & \multicolumn{2}{c}{Testing} \\ \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(l){7-8} 
+    & $m$ & $n$ & $\frac{n^+}{n}$ & $n$ & $\frac{n^+}{n}$ & $n$ & $\frac{n^+}{n}$ \\ \midrule
+    Ionosphere
+      & $34$
+      & $175$ & $36.0\%$ & $88$ & $36.4\%$ & $88$ & $35.2\%$ \\
+    Spambase
+      & $57$
+      & $2300$ & $39.4\%$ & $1150$ & $39.4\%$ & $1151$ & $39.4\%$ \\
+    Gisette
+      & $5000$
+      & $1000$ & $50.0\%$ & $1500$ & $50.0\%$ & $500$ & $50.0\%$ \\
+    Hepmass
+      & $28$
+      & $5250000$ & $50.0\%$ & $1750000$ & $50.0\%$ & $3500000$ & $50.0\%$ \\
+    MNIST
+      & $28 \times 28 \times 1$
+      & $44999$ & $11.2\%$ & $15001$ & $11.2\%$ & $10000$ & $11.4\%$ \\
+    FashionMNIST
+      & $28 \times 28\times 1$
+      & $45000$ & $10.0\%$ & $15000$ & $10.0\%$ & $10000$ & $10.0\%$ \\
+    CIFAR10
+      & $32\times 32\times 3$
+      & $37500$ & $10.0\%$ & $12500$ & $10.0\%$ & $10000$ & $10.0\%$ \\
+    CIFAR20
+      & $32 \times 32\times 3$
+      & $37500$ & $5.0\%$ & $12500$ & $5.0\%$ & $10000$ & $5.0\%$ \\
+    CIFAR100
+      & $32 \times 32\times 3$
+      & $37500$ & $1.0\%$ & $12500$ & $1.0\%$ & $10000$ & $1.0\%$ \\
+    SVHN2
+      & $32 \times 32\times 3$
+      & $54944$ & $18.9\%$ & $18313$ & $18.9\%$ & $26032$ & $19.6\%$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Numerical results}
+
+Figure \ref{fig:ptau} presents the standard ROC (receiver operating characteristic) curves on selected datasets. Since all methods from this paper are supposed to work at low false-positive rates, the $x$ axis is logarithmic. Both figures depict averages over ten runs with different seeds. The left column depicts CIFAR100 while the right one Hepmass. These are the two more complicated datasets. We selected four representative methods: \PatMat and \PatMatNP as our methods and \TopPush and \tauFPL as state-of-the-art methods. Even though all methods work well, \PatMatNP seems to outperform the remaining methods on most levels of false-positive rate.
+
+\begin{figure}[!ht]
+  \centering
+  \begin{tikzpicture}
+    \pgfplotsset{
+      xlabel={False negative rate},
+      ylabel={True positive rate},
+      xmin = 0.0001,
+      xmax = 1,
+      xmode = log,
+      ymin = -0.05,
+      ymax = 1.05,
+      ytick = {0,0.2,0.4,0.6,0.8,1},
+      grid=major,
+      grid style={dashed, gray!50},
+      axis x line*=bottom,
+    }
+    \begin{groupplot}[
+        group style = {group size = 2 by 1, horizontal sep = 20pt},
+      ]
+      \nextgroupplot[
+        legend to name={Leg},
+        legend style={legend columns=4, column sep = 10pt},
+      ]
+      \addplot [LinePatMatNP] table[x index=12, y index=13] {\DataCIFAR};
+      \addlegendentry{\PatMatNP}
+      \addplot [LineTopPush] table[x index=20, y index=21] {\DataCIFAR};
+      \addlegendentry{\TopPush}
+      \addplot [LinePatMat] table[x index=8, y index=9] {\DataCIFAR};
+      \addlegendentry{\PatMat}
+      \addplot [LinetauFPL] table[x index=24, y index=25] {\DataCIFAR};
+      \addlegendentry{\tauFPL}
+
+      \nextgroupplot[ylabel = {}, yticklabels={}]
+      \addplot [LinePatMatNP] table[x index=12, y index=13] {\DataHEPMASS};
+      \addplot [LineTopPush] table[x index=20, y index=21] {\DataHEPMASS};
+      \addplot [LinePatMat] table[x index=8, y index=9] {\DataHEPMASS};
+      \addplot [LinetauFPL] table[x index=24, y index=25] {\DataHEPMASS};
+    \end{groupplot}
+    \path (group c1r1.north east) -- node[above]{\ref{Leg}} (group c2r1.north west);
+  \end{tikzpicture}
+  \caption{ROC curves (with logarithmic $x$ axis) on CIFAR100 (left) and Hepmass (right).}
+  \label{fig:ptau}
+\end{figure}
+
+While Figure \ref{fig:ptau} gave a glimpse of the behaviour of methods, Figures \ref{fig:cd1} and~\ref{fig:cd2} provide a statistically more sound comparison. It employs the Nemenyi post hoc test for the Friedman test recommended in \cite{demvsar2006statistical}. This test compares if the mean ranks of multiple methods are significantly different.
+
+We consider 14 methods (we count different values of $\tau$ as different methods) as depicted in this table. For each dataset mentioned in Section \ref{sec:datasets} and each method, we evaluated the fpr@tpr metric and ranked all methods. Rank 1 refers to the best performance for given criteria, while rank 14 is the worst. The $x$-axis shows the average rank over all datasets. The Nemenyi test computes the critical difference. If two methods are within their critical difference, their performance is not deemed to be significantly different. Black wide horizontal lines group such methods.
+
+\begin{figure}[!ht]
+    \centering
+    \input{data/crit_diag_fpr_1.tex}
+    \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.01$) metric.}
+    \label{fig:cd1}
+\end{figure}
+
+\begin{figure}[!ht]
+    \centering
+    \input{data/crit_diag_fpr_5.tex}
+    \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.05$) metric.}
+    \label{fig:cd2}
+\end{figure}
+
+From this figure and table, we make several observations:
+\begin{itemize}
+  \item \TopPushK (rank 5.1) provides a slight improvement over \TopPush (rank 6.7) even though this improvement is not statistically significant as both methods are connected by the black line in both Figures \ref{fig:cd1} and \ref{fig:cd2}.
+  \item Neither \Grill (ranks 12.0 and 12.1) nor \GrillNP (ranks 12.1 and 12.4) perform well. We believe this happened due to the lack of convexity as indicated in Theorem \ref{thm:convex} and the discussion after that.
+  \item \TopMeanK (ranks 9.2 and 9.9) does not perform well either. Since the thresholds $\tau$ are small, then $\bm{w}=0$ is the global minimum as proved in Corollary \ref{cor:topmean}.
+  \item \PatMatNP (rank 2.1 and 2.6) seems to outperform other methods.
+  \item \PatMat (ranks 5.0 and 5.4), \tauFPL (ranks 4.8 and 5.8) and \TopPushK (rank 5.1) perform similarly. Since they are connected, there is no statistical difference between their behaviours.
+  \item \PatMatNP at level $0.01$ (rank 2.1) outperforms \PatMatNP at level $0.05$ (rank 2.6) for $\tau=0.01$. \PatMatNP at level $0.05$ (rank 1.9 in Figure \ref{fig:cd2}) outperforms \PatMatNP at level $0.01$ (rank 3.0 in Figure \ref{fig:cd2}) for $\tau=0.05$. This should be because these methods are optimized for the corresponding threshold. For $\tauFPL$ we observed this behaviour for Figure \ref{fig:cd2} but not for Figure \ref{fig:cd1}.
+\end{itemize}
+
+Figure \ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted from the best (left) to the worst (right) average ranks. The numbers in the graph show the $p$-value for the pairwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr of both methods is the same. Even though Figure \ref{fig:cd1} employs a comparison of mean ranks and Figure \ref{fig:wilcoxon} a pairwise comparison of fpr@tpr, the results are almost similar. Methods grouped by the black line in the former figure usually show a large $p$-value in the latter figure.
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[width = \linewidth]{data/wilcoxon_fpr_1.pdf}
+    \caption{The $p$-value for the parwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr(0.01) of both methods is the same. The methods are sorted by mean rank (left = better).}
+    \label{fig:wilcoxon}
+\end{figure}
+
+Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than $\bm{w}=0$. Thus, \cmark\ means that it is always better while \xmark\ means that the algorithm made no progress from the starting point $\bm{w} =0$. The latter case implies that $\bm{w}=0$ seems to be the global minimum. We make the following observations:
+\begin{itemize}
+  \item \PatMat and \PatMatNP are the only methods which succeeded at every dataset for some hyperparameter. Moreover, for each dataset, there was some $\beta_0$ such that these methods were successful if and only if $\beta\in(0,\beta_0)$. This is in agreement with Theorem~\ref{thm:patmat_zero}.
+  \item \TopMeanK fails everywhere which agrees with Corollary \ref{cor:topmean}.
+  \item Figure \ref{fig:thresholds} states that the methods from Section \ref{sec:obj2} has a higher threshold than their Neyman-Pearson variants from Section \ref{sec:obj3}. This is documented in the table as the latter have a higher number of successes.
+\end{itemize}
+
+\begin{table}[!ht]
+  \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \cmark\ means that the solution was better than zero for all hyperparameters while \xmark\ means that it was worse for all hyperparameters.}
+  \label{tab:fails}
+  \centering
+  \begin{tabular}{@{}lllll@{}}
+    \toprule
+    & Ionosphere & Hepmass & FashionMNIST & CIFAR100 \\
+    \midrule
+    \TopPush
+      & \cmark & \xmark & \cmark & \xmark \\
+    \TopPushK
+      & \cmark & \xmark & \cmark & \xmark \\
+    \Grill$\tau=0.01$
+      & \xmark & \xmark & \xmark & \xmark \\
+    \phantom{\Grill}$\tau=0.05$
+      & \xmark &\xmark & \xmark & \xmark \\
+    \PatMat$\tau=0.01$
+      & \cmark & \good{\boldmath$\beta\le 0.1$} & \good{\boldmath$\beta\le 1$} & \good{\boldmath$\beta\le 1$} \\
+    \phantom{\PatMat}$\tau=0.05$
+      & \cmark & \good{\boldmath$\beta\le 1$} & \cmark & \cmark \\
+    \TopMeanK$\tau=0.01$
+      & \xmark & \xmark & \xmark & \xmark \\
+    \phantom{\TopMeanK}$\tau=0.05$
+      & \xmark & \xmark & \xmark & \xmark \\
+    \GrillNP$\tau=0.01$
+      & \xmark & \xmark & \xmark & \xmark \\
+    \phantom{\GrillNP}$\tau=0.05$
+      & \xmark & \xmark & \xmark & \xmark \\
+    \PatMatNP$\tau=0.01$
+      & \cmark & \good{\boldmath$\beta\le 1$} & \cmark & \good{\boldmath$\beta\le 1$} \\
+    \phantom{\PatMatNP}$\tau=0.05$
+      & \cmark & \cmark & \cmark & \good{\boldmath$\beta\le 1$} \\
+    \tauFPL$\tau=0.01$
+      & \cmark & \xmark & \cmark & \xmark \\
+    \phantom{\tauFPL}$\tau=0.05$
+      & \cmark & \cmark & \cmark & \good{\boldmath$\lambda\le 0.001$} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Conclusion}
+
+In this paper, we achieved the following results:
+\begin{itemize}
+  \item We presented a unified framework for the three criteria from Section \ref{sec:framework}. These criteria include ranking, accuracy at the top and hypothesis testing.
+  \item We showed that several known methods (\TopPush, \Grill, \tauFPL) fall into our framework and derived some completely new methods (\PatMat, \PatMatNP).
+  \item We performed a theoretical analysis of the methods. We showed that known methods suffer from certain disadvantages. While \TopPush and \tauFPL are sensitive to outliers, \Grill is non-convex. We proved the global convergence of the stochastic gradient descent for \PatMat and \PatMatNP.
+  \item We performed a numerical comparison and we showed a good performance of our method \PatMatNP.
+\end{itemize}
