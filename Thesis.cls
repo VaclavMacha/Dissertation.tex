@@ -353,9 +353,9 @@
    {\doccol \Huge \bfseries \filcenter}
    {\partname{} \thepart}
    {0em}
-   {{\titlerule[2pt]} #1}
+   {{\titlerule[4pt]} #1}
 
-\assignpagestyle{\part}{empty}
+\assignpagestyle{\part}{plain}
 
 
 % ------------------------------------------------------------------------------
