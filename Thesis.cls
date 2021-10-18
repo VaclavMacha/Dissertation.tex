@@ -37,6 +37,7 @@
 \RequirePackage{mathtools}
 \RequirePackage{nicefrac}
 \RequirePackage{bm}
+\RequirePackage{dsfont}
 
 
 % ------------------------------------------------------------------------------
