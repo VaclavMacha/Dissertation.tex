@@ -37,13 +37,15 @@
 }
 
 \usepackage{pifont}% http://ctan.org/pkg/pifont
-\newcommand{\cmark}{\textcolor{mygreen}{\ding{51}}}%
-\newcommand{\xmark}{\textcolor{myred}{\ding{55}}}
+\newcommand{\yesmark}{\textcolor{mygreen}{\ding{51}}}%
+\newcommand{\nomark}{\textcolor{myred}{\ding{55}}}
 \newcommand{\good}[1]{\textcolor{mygreen}{#1}}
 \newcommand{\bad}[1]{\textcolor{myred}{#1}}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\X}{\mathbb{X}}
 \newcommand{\Xc}{\mathcal{X}}
 
 \newcommand{\norm}[1]{\Brac[n]{#1}}
@@ -55,7 +57,20 @@
 \newcommand{\argmin}{\operatorname*{argmin}}
 \newcommand{\eps}{{\varepsilon}}
 
+\newcommand{\clip}[3]{\mathrm{clip}_{\Brac[s]{#1,\; #2}}\Brac{#3}}
+\newcommand{\Matrix}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
+\newcommand{\domain}{\operatorname*{dom}}
+
+\newcommand{\precision}{\operatorname*{Precision}}
+\newcommand{\recall}{\operatorname*{Recall}}
+\newcommand{\pratrec}{\operatorname*{Precision@Recall}}
+
+\newcommand{\repeatloop}{\texttt{repeat}\xspace}
+\newcommand{\forloop}{\texttt{for}\xspace}
+
 % models
+\newcommand{\AccatTop}{\emph{Accuracy at the Top}\xspace}
 \newcommand{\TopPush}{\emph{TopPush}\xspace}
 \newcommand{\TopPushK}{\emph{TopPushK}\xspace}
 \newcommand{\tauFPL}{{\emph{$\tau$-FPL}}\xspace}
