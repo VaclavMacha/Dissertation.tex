@@ -311,9 +311,9 @@ The convexity derived in the previous section guarantees that there are no local
 
 \begin{restatable}{theorem}{larget}\label{thm:large_t}
   Consider any of these formulations: \TopPush, \TopPushK, \TopMeanK or \tauFPL. Fix any $\bm{w}$ and denote the corresponding threshold $t(\bm{w})$. If we have
-  \begin{equation*}
+  \begin{equation}\label{eq:w_zero_nn}
     t(\bm{w})\ge \frac{1}{n^+} \sum_{\bm{x}^+ \in \Xc^+} \bm{w}^\top \bm{x}^+,
-  \end{equation*}
+  \end{equation}
   then $f(\bm{0})\le f(\bm{w})$. Specifically, denote the scores $s^+=\bm{w}^\top \bm{x}^+$ for $\bm{x}^+\in \Xc^+$ and $s^-=\bm{w}^\top \bm{x}^-$ for $\bm{x}^-\in \Xc^-$ and the ordered variants with decreasing components of $\bm{s}^-$ by $\bm{s}_{[\cdot]}^-$. Then
   \begin{equation}\label{eq:w_zero}
     \begin{aligned}

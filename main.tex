@@ -21,6 +21,16 @@
 \definecolor{myorange}{RGB}{255, 153, 51}
 
 % ------------------------------------------------------------------------------
+% Tables
+% ------------------------------------------------------------------------------
+\usepackage{multirow}
+\usepackage{colortbl}
+
+\newcommand{\best}{\cellcolor{mygreen!25}}
+\newcommand{\besttotal}{\cellcolor{mygreen!50}}
+\newcommand{\rotatecell}[1]{\rotatebox{90}{\begin{tabular}{@{}c@{}}#1\end{tabular}}}
+
+% ------------------------------------------------------------------------------
 % Math declarations
 % ------------------------------------------------------------------------------
 \newcommand{\Brac}[2][r]{%
@@ -51,8 +61,8 @@
 \newcommand{\norm}[1]{\Brac[n]{#1}}
 \newcommand{\nrm}[1]{\Brac[n]{#1}}
 \newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
-\newcommand{\minimize}{\operatorname*{minimize}}
-\newcommand{\maximize}{\operatorname*{maximize}}
+\newcommand{\minimize}[1][]{\operatorname*{minimize}_{#1}}
+\newcommand{\maximize}[1][]{\operatorname*{maximize}_{#1}}
 \newcommand{\st}{\operatorname{subject\ to}}
 \newcommand{\argmin}{\operatorname*{argmin}}
 \newcommand{\eps}{{\varepsilon}}
@@ -112,9 +122,31 @@
     LineTopPush/.style={myred, very thick, dashed},
     LinePatMat/.style={myblue, very thick, dotted},
     LinetauFPL/.style={myorange, very thick, dashdotted},
+    lineneg/.style      = {smooth, cyan, very thick, dashed},
+    fillneg/.style      = {draw=none, fill = cyan, fill opacity = 0.15},
+    linepos/.style      = {smooth, myred, very thick},
+    fillpos/.style      = {draw=none, fill = myred, fill opacity = 0.15},
+    linetau/.style      = {black, very thick, dash dot},
+    linepatmat/.style   = {smooth, myred, very thick},
+    linetoppush/.style  = {smooth, cyan, very thick, dashed},
+    linetoppushk/.style = {smooth, black, very thick, dotted},
+    lineprimal/.style   = {smooth, myred, very thick},
+    linedual/.style     = {cyan, very thick, dashed},
+    legstyle/.style     = {column sep = 10pt, legend columns = -1}
 }
 \pgfplotstableread[col sep = comma]{data/CIFAR100.csv}\DataCIFAR
 \pgfplotstableread[col sep = comma]{data/HEPMASS.csv}\DataHEPMASS
+\pgfplotstableread[col sep = comma]{data/Scores_Linear_TopPush.csv}\ScoresLinearTopPush
+\pgfplotstableread[col sep = comma]{data/Scores_Gauss_TopPush.csv}\ScoresGaussTopPush
+\pgfplotstableread[col sep = comma]{data/Scores_Linear_TopPushK.csv}\ScoresLinearTopPushK
+\pgfplotstableread[col sep = comma]{data/Scores_Gauss_TopPushK.csv}\ScoresGaussTopPushK
+\pgfplotstableread[col sep = comma]{data/Scores_Linear_PatMat.csv}\ScoresLinearPatMat
+\pgfplotstableread[col sep = comma]{data/Scores_Gauss_PatMat.csv}\ScoresGaussPatMat
+\pgfplotstableread[col sep = comma]{data/PR_Linear.csv}\PRLinear
+\pgfplotstableread[col sep = comma]{data/PR_Gauss.csv}\PRGauss
+\pgfplotstableread[col sep = comma]{data/Convergence_TopPush.csv}\ConvergenceTopPush
+\pgfplotstableread[col sep = comma]{data/Convergence_TopPushK.csv}\ConvergenceTopPushK
+\pgfplotstableread[col sep = comma]{data/Convergence_PatMat.csv}\ConvergencePatMat
 
 % ------------------------------------------------------------------------------
 % Affiliation
@@ -148,6 +180,7 @@
 \maketitle
 
 \input{chapters/primal.tex}
+\input{chapters/dual.tex}
 
 % ------------------------------------------------------------------------------
 % Appendix
@@ -156,6 +189,7 @@
 \appendix
 
 \input{chapters/primal_appendix.tex}
+\input{chapters/dual_appendix.tex}
 
 
 % ------------------------------------------------------------------------------
