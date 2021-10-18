@@ -374,14 +374,14 @@ We provide a summary of the obtained results in Table \ref{tab:methods}. There w
   \begin{tabular}{ll ccccc}\toprule
     Name & Source & Definition & Hyperpars & Convex & Differentiable & Stable \\
     \midrule
-    \TopPush & \cite{Li_TopPush} & \eqref{eq:problem_toppush}& $\lambda$ & \cmark & \xmark & \xmark\\
-    \TopPushK & ours & \eqref{eq:problem_toppushk} & $\lambda$, $k$ & \cmark & \xmark & \xmark\\ 
-    \Grill & \cite{Grill_2016} & \eqref{eq:problem_grill}  & $\lambda$ & \xmark & \xmark & \cmark\\
-    \PatMat & ours & \eqref{eq:problem_patmat} & $\beta$, $\lambda$ & \cmark & \cmark & \cmark\\ 
-    \TopMeanK & - & \eqref{eq:problem_topmeank} & $\lambda$ & \cmark & \xmark & \xmark\\ 
-    \GrillNP & - & \eqref{eq:problem_grill_np} & $\lambda$ & \xmark & \xmark & \cmark\\
-    \PatMatNP & ours & \eqref{eq:problem_patmat_np} & $\beta$, $\lambda$ & \cmark & \cmark & \cmark\\
-    \tauFPL & \cite{zhang2018tau} & \eqref{eq:problem_topmeank_np} & $\lambda$ & \cmark & \xmark & \xmark\\
+    \TopPush & \cite{Li_TopPush} & \eqref{eq:problem_toppush}& $\lambda$ & \yesmark & \nomark & \nomark\\
+    \TopPushK & ours & \eqref{eq:problem_toppushk} & $\lambda$, $k$ & \yesmark & \nomark & \nomark\\ 
+    \Grill & \cite{Grill_2016} & \eqref{eq:problem_grill}  & $\lambda$ & \nomark & \nomark & \yesmark\\
+    \PatMat & ours & \eqref{eq:problem_patmat} & $\beta$, $\lambda$ & \yesmark & \yesmark & \yesmark\\ 
+    \TopMeanK & - & \eqref{eq:problem_topmeank} & $\lambda$ & \yesmark & \nomark & \nomark\\ 
+    \GrillNP & - & \eqref{eq:problem_grill_np} & $\lambda$ & \nomark & \nomark & \yesmark\\
+    \PatMatNP & ours & \eqref{eq:problem_patmat_np} & $\beta$, $\lambda$ & \yesmark & \yesmark & \yesmark\\
+    \tauFPL & \cite{zhang2018tau} & \eqref{eq:problem_topmeank_np} & $\lambda$ & \yesmark & \nomark & \nomark\\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -645,7 +645,7 @@ Figure \ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted fr
     \label{fig:wilcoxon}
 \end{figure}
 
-Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than $\bm{w}=0$. Thus, \cmark\ means that it is always better while \xmark\ means that the algorithm made no progress from the starting point $\bm{w} =0$. The latter case implies that $\bm{w}=0$ seems to be the global minimum. We make the following observations:
+Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than $\bm{w}=0$. Thus, \yesmark\ means that it is always better while \nomark\ means that the algorithm made no progress from the starting point $\bm{w} =0$. The latter case implies that $\bm{w}=0$ seems to be the global minimum. We make the following observations:
 \begin{itemize}
   \item \PatMat and \PatMatNP are the only methods which succeeded at every dataset for some hyperparameter. Moreover, for each dataset, there was some $\beta_0$ such that these methods were successful if and only if $\beta\in(0,\beta_0)$. This is in agreement with Theorem~\ref{thm:patmat_zero}.
   \item \TopMeanK fails everywhere which agrees with Corollary \ref{cor:topmean}.
@@ -653,7 +653,7 @@ Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential globa
 \end{itemize}
 
 \begin{table}[!ht]
-  \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \cmark\ means that the solution was better than zero for all hyperparameters while \xmark\ means that it was worse for all hyperparameters.}
+  \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \yesmark\ means that the solution was better than zero for all hyperparameters while \nomark\ means that it was worse for all hyperparameters.}
   \label{tab:fails}
   \centering
   \begin{tabular}{@{}lllll@{}}
@@ -661,33 +661,33 @@ Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential globa
     & Ionosphere & Hepmass & FashionMNIST & CIFAR100 \\
     \midrule
     \TopPush
-      & \cmark & \xmark & \cmark & \xmark \\
+      & \yesmark & \nomark & \yesmark & \nomark \\
     \TopPushK
-      & \cmark & \xmark & \cmark & \xmark \\
+      & \yesmark & \nomark & \yesmark & \nomark \\
     \Grill$\tau=0.01$
-      & \xmark & \xmark & \xmark & \xmark \\
+      & \nomark & \nomark & \nomark & \nomark \\
     \phantom{\Grill}$\tau=0.05$
-      & \xmark &\xmark & \xmark & \xmark \\
+      & \nomark &\nomark & \nomark & \nomark \\
     \PatMat$\tau=0.01$
-      & \cmark & \good{\boldmath$\beta\le 0.1$} & \good{\boldmath$\beta\le 1$} & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \good{\boldmath$\beta\le 0.1$} & \good{\boldmath$\beta\le 1$} & \good{\boldmath$\beta\le 1$} \\
     \phantom{\PatMat}$\tau=0.05$
-      & \cmark & \good{\boldmath$\beta\le 1$} & \cmark & \cmark \\
+      & \yesmark & \good{\boldmath$\beta\le 1$} & \yesmark & \yesmark \\
     \TopMeanK$\tau=0.01$
-      & \xmark & \xmark & \xmark & \xmark \\
+      & \nomark & \nomark & \nomark & \nomark \\
     \phantom{\TopMeanK}$\tau=0.05$
-      & \xmark & \xmark & \xmark & \xmark \\
+      & \nomark & \nomark & \nomark & \nomark \\
     \GrillNP$\tau=0.01$
-      & \xmark & \xmark & \xmark & \xmark \\
+      & \nomark & \nomark & \nomark & \nomark \\
     \phantom{\GrillNP}$\tau=0.05$
-      & \xmark & \xmark & \xmark & \xmark \\
+      & \nomark & \nomark & \nomark & \nomark \\
     \PatMatNP$\tau=0.01$
-      & \cmark & \good{\boldmath$\beta\le 1$} & \cmark & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \good{\boldmath$\beta\le 1$} & \yesmark & \good{\boldmath$\beta\le 1$} \\
     \phantom{\PatMatNP}$\tau=0.05$
-      & \cmark & \cmark & \cmark & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\beta\le 1$} \\
     \tauFPL$\tau=0.01$
-      & \cmark & \xmark & \cmark & \xmark \\
+      & \yesmark & \nomark & \yesmark & \nomark \\
     \phantom{\tauFPL}$\tau=0.05$
-      & \cmark & \cmark & \cmark & \good{\boldmath$\lambda\le 0.001$} \\
+      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\lambda\le 0.001$} \\
     \bottomrule
   \end{tabular}
 \end{table}
