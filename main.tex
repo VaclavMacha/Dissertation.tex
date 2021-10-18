@@ -19,12 +19,15 @@
 \definecolor{myblue}{RGB}{0, 101, 189}
 \definecolor{myyellow}{RGB}{220, 206, 0}
 \definecolor{myorange}{RGB}{255, 153, 51}
+\definecolor{mycyan}{RGB}{51, 204, 204}
+\definecolor{mypurple}{RGB}{204, 0, 153}
 
 % ------------------------------------------------------------------------------
 % Tables
 % ------------------------------------------------------------------------------
 \usepackage{multirow}
 \usepackage{colortbl}
+\usepackage{makecell}
 
 \newcommand{\best}{\cellcolor{mygreen!25}}
 \newcommand{\besttotal}{\cellcolor{mygreen!50}}
@@ -67,6 +70,15 @@
 \newcommand{\argmin}{\operatorname*{argmin}}
 \newcommand{\eps}{{\varepsilon}}
 
+\newcommand{\Imin}{I_{\rm mb}}
+\newcommand{\Iminh}{I_{\rm mb}^{\rm enh}}
+\newcommand{\nmin}{n_{\rm mb}}
+\newcommand{\II}{\mathds{1}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\bias}{\operatorname{bias}}
+
 \newcommand{\clip}[3]{\mathrm{clip}_{\Brac[s]{#1,\; #2}}\Brac{#3}}
 \newcommand{\Matrix}[1]{\begin{pmatrix} #1 \end{pmatrix}}
 \newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
@@ -90,6 +102,9 @@
 \newcommand{\Grill}{\emph{Grill}\xspace}
 \newcommand{\GrillNP}{\emph{Grill-NP}\xspace}
 \newcommand{\DeepTopPush}{\emph{DeepTopPush}\xspace}
+\newcommand{\TFCO}{\emph{TFCO}\xspace}
+\newcommand{\APPerf}{\emph{Ap-Perf}\xspace}
+\newcommand{\BaseLine}{\emph{BaseLine}\xspace}
 
 % counts and rates
 \newcommand{\tp}{\textnormal{tp}}
@@ -108,9 +123,12 @@
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
 
-\usetikzlibrary{shapes,arrows,positioning,calc} 
+% \usetikzlibrary{external}
+% \tikzexternalize[prefix=tmp/figures/,optimize command away=\includepdf]
+
+\usetikzlibrary{shapes, arrows, positioning, calc, intersections} 
 \pgfplotsset{compat=newest}
-\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{groupplots, fillbetween}
 
 \tikzstyle{bubbleA} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=mygreen!70]
 \tikzstyle{bubbleB} = [bubbleA, fill=gray!40]
@@ -133,10 +151,26 @@
     linetoppushk/.style = {smooth, black, very thick, dotted},
     lineprimal/.style   = {smooth, myred, very thick},
     linedual/.style     = {cyan, very thick, dashed},
-    legstyle/.style     = {column sep = 10pt, legend columns = -1}
+    legstyle/.style     = {column sep = 10pt, legend columns = -1},
+    lineA/.style        = {myblue, very thick},
+    lineB/.style        = {myred, very thick, dashed},
+    lineC/.style        = {gray, thick, dotted},
+    lineD/.style        = {myred, very thick},
+    lineDeepTP/.style   = {myblue, very thick},
+    lineBaseLine/.style = {gray, very thick, densely dotted},
+    lineAPPerf/.style   = {myred, very thick, dash dot},
+    linePatMat2/.style  = {myorange, very thick, dash dot},
+    linePatMat3/.style  = {mypurple, very thick, dashed},
+    lineTFCO/.style     = {mygreen, very thick, dashed},
+    scatterpos/.style   = {only marks, myred, fill = myred, fill opacity = 0.15, mark size=1.5pt},
+    scatterneg/.style   = {only marks, myblue, fill = myblue, fill opacity = 0.15, mark size=1.5pt},
 }
+
+% Data primal
 \pgfplotstableread[col sep = comma]{data/CIFAR100.csv}\DataCIFAR
 \pgfplotstableread[col sep = comma]{data/HEPMASS.csv}\DataHEPMASS
+
+% Data dual
 \pgfplotstableread[col sep = comma]{data/Scores_Linear_TopPush.csv}\ScoresLinearTopPush
 \pgfplotstableread[col sep = comma]{data/Scores_Gauss_TopPush.csv}\ScoresGaussTopPush
 \pgfplotstableread[col sep = comma]{data/Scores_Linear_TopPushK.csv}\ScoresLinearTopPushK
@@ -148,6 +182,14 @@
 \pgfplotstableread[col sep = comma]{data/Convergence_TopPush.csv}\ConvergenceTopPush
 \pgfplotstableread[col sep = comma]{data/Convergence_TopPushK.csv}\ConvergenceTopPushK
 \pgfplotstableread[col sep = comma]{data/Convergence_PatMat.csv}\ConvergencePatMat
+
+% Data deep
+\pgfplotstableread[col sep = comma]{data/Molecules.csv}\Molecules
+\pgfplotstableread[col sep = comma]{data/Quantiles.csv}\Quantiles
+\pgfplotstableread[col sep = comma]{data/Thresholds.csv}\Thresholds
+\pgfplotstableread[col sep = comma]{data/DeepCIFAR.csv}\DeepCIFAR
+\pgfplotstableread[col sep = comma]{data/DeepLarge.csv}\DeepLarge
+\pgfplotstableread[col sep = comma]{data/ExampleTop.csv}\ExampleTop
 
 % ------------------------------------------------------------------------------
 % Affiliation
@@ -182,7 +224,7 @@
 
 \input{chapters/primal.tex}
 \input{chapters/dual.tex}
-
+\input{chapters/deep.tex}
 % ------------------------------------------------------------------------------
 % Appendix
 % ------------------------------------------------------------------------------
@@ -191,7 +233,7 @@
 
 \input{chapters/primal_appendix.tex}
 \input{chapters/dual_appendix.tex}
-
+\input{chapters/deep_appendix.tex}
 
 % ------------------------------------------------------------------------------
 % Bibliography
