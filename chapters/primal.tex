@@ -32,7 +32,7 @@ Here $[\cdot]$ is the 0-1 loss (Iverson bracket, characteristic function) which 
 Since the misclassified samples below the threshold are the false-negatives, we arrive at the following problem
 \begin{equation}\label{eq:problem1}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}}\fn(\bm{w}, t)\\
     \st
     & \quad \text{threshold } t \text{ is a function of }\{\bm{w}^\top \bm{x}_i\}_{i = 1}^n.
@@ -56,7 +56,7 @@ In the text below, the symbol $l$ denotes any convex non-negative non-decreasing
 Since $l(\cdot)\ge[\cdot]$, the surrogate counts \eqref{eq:defin_counts_surr} provide upper approximations of the true counts \eqref{eq:defin_counts}. Replacing the counts in \eqref{eq:problem1} by their surrogate counterparts and adding a regularization results in
 \begin{equation}\label{eq:problem2}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
     \st
     & \quad \text{threshold } t \text{ is a function of }\{\bm{w}^\top \bm{x}_i\}_{i = 1}^n.
@@ -69,7 +69,7 @@ In the rest of this section, we list formulations which fall into the framework 
 The first category of formulations falling into our framework \eqref{eq:problem1} and \eqref{eq:problem2} are ranking methods which attempt to put as many positives (relevant samples) to the top as possible. Specifically, for each sample $\bm{x}$, they compute the score $s = \bm{w}^\top \bm{x}$ and then sort the vector $\bm{s}$ into $\bm{s}_{[\cdot]}$ with decreasing components $s_{[1]} \ge s_{[2]} \ge \dots \ge s_{[n]}$. The number of positives on top equals to the number of positives above the highest negative. This amounts to maximizing true-positives or, equivalently, minimizing false-negatives, which may be written as
 \begin{equation}\label{eq:problem_top2}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad\frac{1}{n^{+}}\fn(\bm{w},t) \\
     \st
     & \quad t = s_{[1]}^-, \\
@@ -81,7 +81,7 @@ As $t$ is a function of the scores $s = \bm{w}^\top \bm{x}$, problem \eqref{eq:p
 \TopPush from \cite{li2014top} replaces the false-negatives in \eqref{eq:problem_top2} by their surrogate and adds a regularization term to arrive at
 \begin{equation}\label{eq:problem_toppush}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}} \fns(\bm{w}, t) + \frac{\lambda}{2} \norm{\bm{w}}^2 \\
     \st
     & \quad t = s_{[1]}^-, \\
@@ -93,7 +93,7 @@ Note that this falls into the framework of \eqref{eq:problem2}.
 As we will show in Section \ref{sec:stability}, \TopPush is sensitive to outliers and mislabelled data. To robustify it, we follow the idea from \cite{lapin2015top} and propose to replace the largest negative score by the mean of $k$ largest negative scores. This results in
 \begin{equation}\label{eq:problem_toppushk}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}} \fns(\bm{w}, t) + \frac{\lambda}{2} \norm{\bm{w}}^2 \\
     \st
     & \quad t = \frac{1}{k}(s_{[1]}^- + \dots + s_{[k]}^-), \\
@@ -111,7 +111,7 @@ The previous category considers formulations which minimize the false-negatives 
 Then the Accuracy at the Top problem is defined by
 \begin{equation}\label{eq:problem_aatp_orig}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{-}}\fp(\bm{w},t) \\
     \st
     & \quad t \text{ is the top \ensuremath{\tau}-quantile: it solves } \eqref{eq:defin_quantile}.
@@ -120,7 +120,7 @@ Then the Accuracy at the Top problem is defined by
 Due to Lemma \ref{lemma:fnfp_equivalence} in the Appendix, the previous problem \eqref{eq:problem_aatp_orig} is equivalent (up to a small theoretical issue) to
 \begin{equation}\label{eq:problem_aatp}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \mu \fn(\bm{w}, t) + (1 - \mu)\fp(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
     \st
     & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}
@@ -138,7 +138,7 @@ We again use the vector of scores $\bm{s}$ with components $s_i = \bm{w}^\top \b
 Paper \cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{eq:problem_aatp}, where it replaces $\fn(\bm{w}, t)$ and $\fp(\bm{w}, t)$ in the objective by their surrogate counterparts $\fns(\bm{w}, t)$ and $\fps(\bm{w}, t)$. This leads to
 \begin{equation}\label{eq:problem_grill}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{1}{n^{-}}\fps(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
     \st
     & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}.
@@ -147,7 +147,7 @@ Paper \cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{
 Based on the first author, we name this formulation \Grill. The main purpose of \eqref{eq:defin_quantile1} is to provide a convex approximation of the non-convex quantile \eqref{eq:defin_quantile}. Putting it into the constraint results in a convex approximation problem, which we call \TopMeanK
 \begin{equation}\label{eq:problem_topmeank}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
     \st
     & \quad t = \frac 1{n\tau}(s_{[1]} + \dots + s_{[n\tau]}), \\
@@ -157,7 +157,7 @@ Based on the first author, we name this formulation \Grill. The main purpose of 
 Similarly, we can use the surrogate top quantile in the constraint to arrive at
 \begin{equation}\label{eq:problem_patmat}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
     \st
     & \quad t \text{ is the surrogate top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile0}.
@@ -176,7 +176,7 @@ In the Neyman-Pearson problem, the null hypothesis $H_0$ states that a sample $\
 Then, we may write the Neyman-Pearson problem as
 \begin{equation}\label{eq:problem_np}
   \begin{aligned}
-    \minimize
+    \minimize{}
     & \quad \frac{1}{n^{+}}\fn(\bm{w},t) \\
     \st
     & \quad t \text{ is Type I error at level \ensuremath{\tau}: it solves }\eqref{eq:defin_quantile_np}.
@@ -190,7 +190,7 @@ Since \eqref{eq:problem_np} differs from \eqref{eq:problem_aatp} only by countin
 Replacing the true counts by their surrogates results in the Neyman-Pearson variant \GrillNP
 \begin{equation}\label{eq:problem_grill_np}
   \begin{aligned}
-  \minimize
+  \minimize{}
   & \quad \frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{1}{n^{-}}\fps(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
   \st
   & \quad t\text{ is the Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile_np}.
@@ -199,7 +199,7 @@ Replacing the true counts by their surrogates results in the Neyman-Pearson vari
 Similarly, the Neyman-Pearson alternative to \TopMeanK reads
 \begin{equation}\label{eq:problem_topmeank_np}
   \begin{aligned}
-  \minimize
+  \minimize{}
   & \quad\frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
   \st
   & \quad t = \frac 1{n^ - \tau}(s_{[1]}^- + \dots + s_{[n^- \tau]}^-), \\
@@ -209,7 +209,7 @@ Similarly, the Neyman-Pearson alternative to \TopMeanK reads
 This problem already appeared in \cite{zhang2018tau} under the name \tauFPL. Finally, \PatMatNP reads
 \begin{equation}\label{eq:problem_patmat_np}
   \begin{aligned}
-  \minimize
+  \minimize{}
   & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
   \st
   & \quad t\text{ is the surrogate Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile0_np}.

@@ -61,8 +61,8 @@
 \newcommand{\norm}[1]{\Brac[n]{#1}}
 \newcommand{\nrm}[1]{\Brac[n]{#1}}
 \newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
-\newcommand{\minimize}[1][]{\operatorname*{minimize}_{#1}}
-\newcommand{\maximize}[1][]{\operatorname*{maximize}_{#1}}
+\newcommand{\minimize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{minimize}\quad}{\operatorname*{minimize}_{#1}\quad}}
+\newcommand{\maximize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{maximize}\quad}{\operatorname*{maximize}_{#1}\quad}}
 \newcommand{\st}{\operatorname{subject\ to}}
 \newcommand{\argmin}{\operatorname*{argmin}}
 \newcommand{\eps}{{\varepsilon}}
@@ -89,6 +89,7 @@
 \newcommand{\PatMatNP}{{\emph{Pat}\&\emph{Mat-NP}}\xspace}
 \newcommand{\Grill}{\emph{Grill}\xspace}
 \newcommand{\GrillNP}{\emph{Grill-NP}\xspace}
+\newcommand{\DeepTopPush}{\emph{DeepTopPush}\xspace}
 
 % counts and rates
 \newcommand{\tp}{\textnormal{tp}}
