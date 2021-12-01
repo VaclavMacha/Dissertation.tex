@@ -1,0 +1,61 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  scatter/.style = {
+    only marks,
+    myred,
+    fill opacity = 0.15,
+    mark size=1.5pt
+  },
+  scatterneg/.style = {scatter, myblue, fill = myblue},
+  scatterpos/.style = {scatter, myred, fill = myred},
+}
+
+\pgfplotstableread[col sep = comma]{../data/ExampleTop.csv}\ExampleTop
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin = -0.525,
+    xmax = 2.05,
+    ymin = -0.25,
+    ymax = 3.25,
+    hide axis,
+    legend style = {
+      column sep = 10pt,
+      legend columns = 4,
+      legend cell align = {left},
+      anchor = south,
+      at = {(0.5, 1.05)},
+    },
+    enlargelimits = false,
+  ]
+    \addplot [scatterneg] table[x index=1, y index=0] {\ExampleTop};
+    \addlegendentry{Negative scores}
+    \addplot [scatterpos] table[x index=3, y index=2] {\ExampleTop};
+    \addlegendentry{Positive scores}
+    \addlegendimage{black, very thick, dashed}
+    \addlegendentry{Threshold accuracy}    
+    \addlegendimage{myorange, very thick, dashed}
+    \addlegendentry{Threshold top}    
+    \addplot [scatterneg] table[x index=5, y index=4] {\ExampleTop};
+    \addplot [scatterpos] table[x index=7, y index=6] {\ExampleTop};
+    \node [draw, left] at (axis cs:-0.05,2.5) {\parbox{2cm}{\textbf{Classifier 1} \\ Accuracy 95\% \\ Top 19\%}};
+    \node [draw, left] at (axis cs:-0.05,0.5) {\parbox{2cm}{\textbf{Classifier 2} \\ Accuracy 76\% \\ Top 53\%}};
+    \draw [black, very thick, dashed] (axis cs:1, 1.75) -- (axis cs:1,3.25);
+    \draw [myorange, very thick, dashed] (axis cs:1.764, 1.75) -- (axis cs:1.764,3.25);
+    \draw [black, very thick, dashed] (axis cs:0.995,-0.25) -- (axis cs:0.995,1.25);
+    \draw [myorange, very thick, dashed] (axis cs:1,-0.25) -- (axis cs:1,1.25);
+    \draw [black, very thick] (axis cs:-0.525,1.5) -- (axis cs:2.05,1.5);
+  \end{axis}
+\end{tikzpicture}
+% 
+\end{document}

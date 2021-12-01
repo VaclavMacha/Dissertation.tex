@@ -1,0 +1,54 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\tikzstyle{bubble} = [
+    rectangle,
+    rounded corners,
+    minimum width=2cm,
+    minimum height=1cm,
+    text centered,
+    draw=black,
+]
+\tikzstyle{bubble_convex_stable} = [bubble, fill=mygreen!70]
+\tikzstyle{bubble_convex}        = [bubble, fill=mygreen!40]
+\tikzstyle{bubble_nonconvex}     = [bubble, fill=myred!40]
+\tikzstyle{arrow_solid}  = [thick,->,>=stealth]
+\tikzstyle{arrow_dotted} = [thick,dotted,->,>=stealth]
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+%
+\begin{tikzpicture}[node distance=3cm]
+    \node (tikz1) [bubble_convex] {\TopPush};
+    \node (tikz2) [bubble_convex, right of=tikz1] {\TopPushK};
+    \node (tikz3) [bubble_convex_stable, above right of=tikz2] {\PatMatNP};
+    \node (tikz4) [bubble_convex, below right of=tikz2] {\tauFPL};
+    \node (tikz5) [bubble_nonconvex, below right of=tikz3] {\GrillNP};
+    \draw [arrow_solid] (tikz1) -- (tikz2);
+    \draw [arrow_solid] (tikz2) -- (tikz4);
+    \draw [arrow_solid] (tikz3) -- (tikz5);
+    \draw [arrow_solid] (tikz4) -- (tikz5);
+    \draw [arrow_solid] (tikz3) -- (tikz4);
+    %
+    \node (tikz8) [bubble_nonconvex, right of=tikz5] {\Grill};
+    \node (tikz6) [bubble_convex_stable, above right of=tikz8] {\PatMat};
+    \node (tikz7) [bubble_convex, below right of=tikz8] {\TopMeanK};
+    \draw [arrow_solid] (tikz6) -- (tikz8);
+    \draw [arrow_solid] (tikz7) -- (tikz8);
+    \draw [arrow_solid] (tikz6) -- (tikz7);
+    %
+    \draw [arrow_dotted] (tikz6) -- (tikz3);
+    \draw [arrow_dotted] (tikz7) -- (tikz4);
+    \draw [arrow_dotted] (tikz8) -- (tikz5);
+    %
+    \node (comm2) [bubble_convex, minimum height=3mm, node distance=4.1cm, left of=tikz3] {\phantom{not }convex, not stable};
+    \node (comm1) [bubble_convex_stable, minimum height=3mm, node distance=6.1mm, above of=comm2] {\phantom{not }convex, \phantom{not }stable};
+    \node (comm3) [bubble_nonconvex, minimum height=3mm, node distance=6.1mm, below of=comm2] {not convex, \phantom{not }stable};
+\end{tikzpicture}
+%
+\end{document}

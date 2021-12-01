@@ -1,22 +1,11 @@
 \chapter{Linear Classification at the Top}
 
-Many binary classification problems focus on separating the dataset by a linear hyperplane $\bm{w}^\top \bm{x} - t$. A sample $\bm{x}$ is deemed to be positive or relevant (depending on the application) if its score $\bm{w}^\top \bm{x}$ is above a threshold $t$. Multiple problem categories belong to this framework:
-\begin{itemize}
-  \item \textit{Ranking problems} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered.
-  \item \textit{Accuracy at the Top} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the accuracy (equivalently minimizes the misclassification) in these top samples. The prime examples of both categories include search engines or problems where identified samples undergo expensive post-processing such as human evaluation.
-  \item \textit{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
-\end{itemize}
-Examples of this type can be found in search engines, where the user is interested only in the first few queries. These queries need to be of high quality. Other examples include cybersecurity~\cite{grill2016learning}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated. All these three applications may be written (possibly after a reformulation) in a similar form as a minimization of the false-negatives (misclassified positives) above a threshold. They only differ in the way they define the threshold. Despite this striking similarity, they are usually considered separately in the literature. The main goal of this paper is to provide a unified framework for these three applications and perform its theoretical and numerical analysis.
-
-The goal of the ranking problems is to rank the relevant samples higher than the non-relevant ones. A prototypical example is the RankBoost \cite{freund2003efficient} maximizing the area under the ROC curve, the Infinite Push \cite{agarwal2011infinite} or the $p$-norm push \cite{rudin2009pnorm} which concentrate on the high-ranked negatives and push them down. Since all these papers include pairwise comparisons of all samples, they can be used only for small datasets. This was alleviated in \cite{li2014top}, where the authors performed the limit $p \to \infty$ in $p$-norm push and obtained the linear complexity in the number of samples. Moreover, since the $l_{\infty}$-norm is equal to the maximum, this method falls into our framework with the threshold equal to the largest score computed from negative samples.
-
-Accuracy at the Top ($\tau$-quantile) was formally defined in \cite{boyd2012accuracy} and maximizes the number of relevant samples in the top $\tau$-fraction of ranked samples. When the threshold equals the top $\tau$-quantile of all scores, this problem falls into our framework. The early approaches aim at solving approximations, for example, \cite{joachims2005svm} optimizes a convex upper bound on the number of errors among the top samples. Due to the presence of exponentially many constraints, the method is computationally expensive. \cite{boyd2012accuracy} presented an SVM-like formulation which fixes the index of the quantile and solves $n$ problems. While this removes the necessity to handle the (difficult) quantile constraint, the algorithm is computationally infeasible for a large number of samples. \cite{kar2015surrogate} derived upper approximations, their error bounds and solved these approximations. \cite{grill2016learning} proposed the projected gradient descent method where after each gradient step, the quantile is recomputed. \cite{eban2017scalable} suggested new formulations for various criteria and argued that they keep desired properties such as convexity. \cite{tasche2018plug} showed that accuracy at the top is maximized by thresholding the posterior probability of the relevant class. The closest approach to our framework is \cite{lapin2015top,lapin2018analysis}, where the authors considered multi-class classification problems, and their goal was to optimize the performance on the top few classes and \cite{mackey2018constrained}, where the authors implicitly removed some variables and derived an efficient algorithm.
-
 \section{Framework for Minimizing Missclassification Above a Threshold}\label{sec:framework}
 
 Many important binary classification problems minimize the number of misclassified samples below (or above) certain threshold. Since these problems are usually considered separately, in this section, we provide a unified framework for their handling and present several classification problems falling into this framework.
 
 For samples $\bm{x}$, we consider the linear classifier $f(\bm{w}) = \bm{w}^\top \bm{x} - t$, where $\bm{w}$ is the normal vector to the separating hyperplane and $t$ is a threshold. The most well-known example is the support vector machines, where $t$ is an optimization variable. In many cases the threshold $t$ is computed from the scores $s = \bm{w}^\top \bm{x}$. For example, \TopPush from \cite{li2014top} sets the threshold $t$ to the largest score $s^-$ corresponding to negative samples and \cite{grill2016learning} sets it to the quantile of all scores.
+
 
 To be able to determine the missclassification above and below the threshold $t$, we define the true-positive, false-negative, true-negative and false-positive counts by
 \begin{equation}\label{eq:defin_counts}
@@ -279,7 +268,7 @@ We consider $n$ negative samples uniformly distributed in $[-1,0]\times[-1,1]$, 
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width=0.7\linewidth]{data/toppush_convergence.pdf}
+  \includegraphics[width=0.7\linewidth]{images/toppush_convergence.pdf}
   \caption{Left: distribution of positive (empty circle) and negative samples (full circles) for the example from Section \ref{sec:example}. Right: contour plot for \TopPush and its convergence to the zero vector from $12$ initial points.}
   \label{fig:example}
 \end{figure}
@@ -390,33 +379,7 @@ A similar comparison is performed in Figure \ref{fig:thresholds}. Methods in gre
 
 \begin{figure}[!ht]
   \centering
-  \begin{tikzpicture}[node distance=3cm]
-  \node (tikz1) [bubbleB] {\TopPush};
-  \node (tikz2) [bubbleB, right of=tikz1] {\TopPushK};
-  \node (tikz3) [bubbleA, above right of=tikz2] {\PatMatNP};
-  \node (tikz4) [bubbleB, below right of=tikz2] {\tauFPL};
-  \node (tikz5) [bubbleC, below right of=tikz3] {\GrillNP};
-  \draw [arrowA] (tikz1) -- (tikz2);
-  \draw [arrowA] (tikz2) -- (tikz4);
-  \draw [arrowA] (tikz3) -- (tikz5);
-  \draw [arrowA] (tikz4) -- (tikz5);
-  \draw [arrowA] (tikz3) -- (tikz4);
-  %
-  \node (tikz8) [bubbleC, right of=tikz5] {\Grill};
-  \node (tikz6) [bubbleA, above right of=tikz8] {\PatMat};
-  \node (tikz7) [bubbleB, below right of=tikz8] {\TopMeanK};
-  \draw [arrowA] (tikz6) -- (tikz8);
-  \draw [arrowA] (tikz7) -- (tikz8);
-  \draw [arrowA] (tikz6) -- (tikz7);
-  %
-  \draw [arrowB] (tikz6) -- (tikz3);
-  \draw [arrowB] (tikz7) -- (tikz4);
-  \draw [arrowB] (tikz8) -- (tikz5);
-  %
-  \node (comm2) [bubbleB, minimum height=3mm, node distance=4.1cm, left of=tikz3] {\phantom{not }convex, not stable};
-  \node (comm1) [bubbleA, minimum height=3mm, node distance=6.1mm, above of=comm2] {\phantom{not }convex, \phantom{not }stable};
-  \node (comm3) [bubbleC, minimum height=3mm, node distance=6.1mm, below of=comm2] {not convex, \phantom{not }stable};
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/methods_relation.pdf}
   \caption{Summary of the formulations from Section \ref{sec:framework}. Methods in green and grey are convex, while formulations in white are non-convex. Methods in grey are vulnerable to have the global minimum at $\bm{w}=0$. Full (dotted) arrow pointing from one formulation to another show that the latter formulation has always (usually) smaller threshold.}
   \label{fig:thresholds}
 \end{figure}
@@ -566,44 +529,7 @@ Figure \ref{fig:ptau} presents the standard ROC (receiver operating characterist
 
 \begin{figure}[!ht]
   \centering
-  \begin{tikzpicture}
-    \pgfplotsset{
-      xlabel={False negative rate},
-      ylabel={True positive rate},
-      xmin = 0.0001,
-      xmax = 1,
-      xmode = log,
-      ymin = -0.05,
-      ymax = 1.05,
-      ytick = {0,0.2,0.4,0.6,0.8,1},
-      grid=major,
-      grid style={dashed, gray!50},
-      axis x line*=bottom,
-    }
-    \begin{groupplot}[
-        group style = {group size = 2 by 1, horizontal sep = 20pt},
-      ]
-      \nextgroupplot[
-        legend to name={Leg},
-        legend style={legend columns=4, column sep = 10pt},
-      ]
-      \addplot [LinePatMatNP] table[x index=12, y index=13] {\DataCIFAR};
-      \addlegendentry{\PatMatNP}
-      \addplot [LineTopPush] table[x index=20, y index=21] {\DataCIFAR};
-      \addlegendentry{\TopPush}
-      \addplot [LinePatMat] table[x index=8, y index=9] {\DataCIFAR};
-      \addlegendentry{\PatMat}
-      \addplot [LinetauFPL] table[x index=24, y index=25] {\DataCIFAR};
-      \addlegendentry{\tauFPL}
-
-      \nextgroupplot[ylabel = {}, yticklabels={}]
-      \addplot [LinePatMatNP] table[x index=12, y index=13] {\DataHEPMASS};
-      \addplot [LineTopPush] table[x index=20, y index=21] {\DataHEPMASS};
-      \addplot [LinePatMat] table[x index=8, y index=9] {\DataHEPMASS};
-      \addplot [LinetauFPL] table[x index=24, y index=25] {\DataHEPMASS};
-    \end{groupplot}
-    \path (group c1r1.north east) -- node[above]{\ref{Leg}} (group c2r1.north west);
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/primal_results.pdf}
   \caption{ROC curves (with logarithmic $x$ axis) on CIFAR100 (left) and Hepmass (right).}
   \label{fig:ptau}
 \end{figure}
@@ -613,17 +539,17 @@ While Figure \ref{fig:ptau} gave a glimpse of the behaviour of methods, Figures 
 We consider 14 methods (we count different values of $\tau$ as different methods) as depicted in this table. For each dataset mentioned in Section \ref{sec:datasets} and each method, we evaluated the fpr@tpr metric and ranked all methods. Rank 1 refers to the best performance for given criteria, while rank 14 is the worst. The $x$-axis shows the average rank over all datasets. The Nemenyi test computes the critical difference. If two methods are within their critical difference, their performance is not deemed to be significantly different. Black wide horizontal lines group such methods.
 
 \begin{figure}[!ht]
-    \centering
-    \input{data/crit_diag_fpr_1.tex}
-    \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.01$) metric.}
-    \label{fig:cd1}
+  \centering
+  \includegraphics[width = \linewidth]{images/crit_diag_fpr_1.pdf}
+  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.01$) metric.}
+  \label{fig:cd1}
 \end{figure}
 
 \begin{figure}[!ht]
-    \centering
-    \input{data/crit_diag_fpr_5.tex}
-    \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.05$) metric.}
-    \label{fig:cd2}
+  \centering
+  \includegraphics[width = \linewidth]{images/crit_diag_fpr_5.pdf}
+  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.05$) metric.}
+  \label{fig:cd2}
 \end{figure}
 
 From this figure and table, we make several observations:
@@ -639,10 +565,10 @@ From this figure and table, we make several observations:
 Figure \ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted from the best (left) to the worst (right) average ranks. The numbers in the graph show the $p$-value for the pairwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr of both methods is the same. Even though Figure \ref{fig:cd1} employs a comparison of mean ranks and Figure \ref{fig:wilcoxon} a pairwise comparison of fpr@tpr, the results are almost similar. Methods grouped by the black line in the former figure usually show a large $p$-value in the latter figure.
 
 \begin{figure}[!ht]
-    \centering
-    \includegraphics[width = \linewidth]{data/wilcoxon_fpr_1.pdf}
-    \caption{The $p$-value for the parwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr(0.01) of both methods is the same. The methods are sorted by mean rank (left = better).}
-    \label{fig:wilcoxon}
+  \centering
+  \includegraphics[width = \linewidth]{images/wilcoxon_fpr_1.pdf}
+  \caption{The $p$-value for the parwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr(0.01) of both methods is the same. The methods are sorted by mean rank (left = better).}
+  \label{fig:wilcoxon}
 \end{figure}
 
 Table \ref{tab:fails} investigates the impact of $\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than $\bm{w}=0$. Thus, \yesmark\ means that it is always better while \nomark\ means that the algorithm made no progress from the starting point $\bm{w} =0$. The latter case implies that $\bm{w}=0$ seems to be the global minimum. We make the following observations:

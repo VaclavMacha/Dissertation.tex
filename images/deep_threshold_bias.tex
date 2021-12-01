@@ -1,0 +1,46 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+    line_sampled/.style = {myblue, very thick},
+    line_true/.style = {myred, very thick},
+}
+
+\pgfplotstableread[col sep = comma]{../data/Quantiles.csv}\Quantiles
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \begin{axis}[
+    height = 130,
+    width = 0.9\linewidth,
+    title = {},
+    xlabel = {Minibatch size},
+    ylabel = {},
+    ymin = 1.5,
+    ymax = 2.5,
+    tick pos = left,
+    grid = major,
+    grid style = {dashed, draw = gray!50, very thin},
+    enlargelimits = false,
+    legend pos=south east,
+    legend cell align={left},
+  ]
+    \addplot [line_true] table[x index=0, y index=1] {\Quantiles};
+    \addlegendentry{True threshold}
+    \addplot [line_sampled] table[x index=0, y index=2] {\Quantiles};
+    \addlegendentry{Sampled threshold}
+    \addplot [myblue!50,name path=path1] table[x index=0, y index=3] {\Quantiles};
+    \addplot [myblue!50,name path=path2] table[x index=0, y index=4] {\Quantiles};
+    \addplot[myblue!50,fill opacity=0.5] fill between[of=path1 and path2];
+    \addlegendentry{Standard deviation}
+  \end{axis}
+\end{tikzpicture}
+% 
+\end{document}

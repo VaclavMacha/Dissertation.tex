@@ -1,0 +1,151 @@
+\usepackage[ddmmyyyy]{datetime}
+
+% ------------------------------------------------------------------------------
+% Text options
+% ------------------------------------------------------------------------------
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{xspace}
+
+\usepackage{thmtools}
+\usepackage{thm-restate}
+\usepackage{enumitem}
+
+\usepackage[title, titletoc]{appendix}
+
+
+% ------------------------------------------------------------------------------
+% Graphics and colors
+% ------------------------------------------------------------------------------
+\usepackage{graphicx,import}
+\usepackage{graphics}
+\usepackage{xcolor}
+
+\definecolor{myred}{RGB}{150,0,0}  
+\definecolor{mygreen}{RGB}{0,150,0}
+\definecolor{myblue}{RGB}{0, 101, 189}
+\definecolor{myyellow}{RGB}{220, 206, 0}
+\definecolor{myorange}{RGB}{255, 153, 51}
+\definecolor{mycyan}{RGB}{51, 204, 204}
+\definecolor{mypurple}{RGB}{204, 0, 153}
+
+% ------------------------------------------------------------------------------
+% Tables
+% ------------------------------------------------------------------------------
+\usepackage{multirow}
+\usepackage{colortbl}
+\usepackage{makecell}
+
+\newcommand{\best}{\cellcolor{mygreen!25}}
+\newcommand{\besttotal}{\cellcolor{mygreen!50}}
+\newcommand{\rotatecell}[1]{\rotatebox{90}{\begin{tabular}{@{}c@{}}#1\end{tabular}}}
+
+% ------------------------------------------------------------------------------
+% Math declarations
+% ------------------------------------------------------------------------------
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{nicefrac}
+\usepackage{bm}
+\usepackage{dsfont}
+
+\newcommand{\Brac}[2][r]{%
+  \ifx r#1 \left(       #2 \right)       \else
+  \ifx c#1 \left\{      #2 \right\}      \else
+  \ifx s#1 \left[       #2 \right]       \else
+  \ifx v#1 \left\vert   #2 \right\vert   \else
+  \ifx a#1 \left\langle #2 \right\rangle \else
+  \ifx t#1 \left\lceil  #2 \right\rceil  \else
+  \ifx b#1 \left\lfloor #2 \right\rfloor \else
+  \ifx n#1 \left\|      #2 \right\|      \else
+  \mathrm{Illegal~option}%
+  \fi\fi\fi\fi\fi\fi\fi\fi
+}
+
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+\newcommand{\yesmark}{\textcolor{mygreen}{\ding{51}}}%
+\newcommand{\nomark}{\textcolor{myred}{\ding{55}}}
+\newcommand{\good}[1]{\textcolor{mygreen}{#1}}
+\newcommand{\bad}[1]{\textcolor{myred}{#1}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\X}{\mathbb{X}}
+\newcommand{\Xc}{\mathcal{X}}
+
+\newcommand{\norm}[1]{\Brac[n]{#1}}
+\newcommand{\nrm}[1]{\Brac[n]{#1}}
+\newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
+\newcommand{\minimize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{minimize}\quad}{\operatorname*{minimize}_{#1}\quad}}
+\newcommand{\maximize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{maximize}\quad}{\operatorname*{maximize}_{#1}\quad}}
+\newcommand{\st}{\operatorname{subject\ to}}
+\newcommand{\argmin}{\operatorname*{argmin}}
+\newcommand{\eps}{{\varepsilon}}
+
+\newcommand{\Imin}{I_{\rm mb}}
+\newcommand{\Iminh}{I_{\rm mb}^{\rm enh}}
+\newcommand{\nmin}{n_{\rm mb}}
+\newcommand{\II}{\mathds{1}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\bias}{\operatorname{bias}}
+
+\newcommand{\clip}[3]{\mathrm{clip}_{\Brac[s]{#1,\; #2}}\Brac{#3}}
+\newcommand{\Matrix}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
+\newcommand{\domain}{\operatorname*{dom}}
+
+\newcommand{\precision}{\operatorname*{Precision}}
+\newcommand{\recall}{\operatorname*{Recall}}
+\newcommand{\pratrec}{\operatorname*{Precision@Recall}}
+
+\newcommand{\repeatloop}{\texttt{repeat}\xspace}
+\newcommand{\forloop}{\texttt{for}\xspace}
+
+% models
+\newcommand{\AccatTop}{\emph{Accuracy at the Top}\xspace}
+\newcommand{\TopPush}{\emph{TopPush}\xspace}
+\newcommand{\TopPushK}{\emph{TopPushK}\xspace}
+\newcommand{\tauFPL}{{\emph{$\tau$-FPL}}\xspace}
+\newcommand{\TopMeanK}{\emph{TopMeanK}\xspace}
+\newcommand{\PatMat}{\emph{Pat}\&\emph{Mat}\xspace}
+\newcommand{\PatMatNP}{{\emph{Pat}\&\emph{Mat-NP}}\xspace}
+\newcommand{\Grill}{\emph{Grill}\xspace}
+\newcommand{\GrillNP}{\emph{Grill-NP}\xspace}
+\newcommand{\DeepTopPush}{\emph{DeepTopPush}\xspace}
+\newcommand{\TFCO}{\emph{TFCO}\xspace}
+\newcommand{\APPerf}{\emph{Ap-Perf}\xspace}
+\newcommand{\BaseLine}{\emph{BaseLine}\xspace}
+
+% counts and rates
+\newcommand{\tp}{\textnormal{tp}}
+\newcommand{\tn}{\textnormal{tn}}
+\newcommand{\fp}{\textnormal{fp}}
+\newcommand{\fn}{\textnormal{fn}}
+\newcommand{\tps}{\overline{\textnormal{tp}}}
+\newcommand{\tns}{\overline{\textnormal{tn}}}
+\newcommand{\fps}{\overline{\textnormal{fp}}}
+\newcommand{\fns}{\overline{\textnormal{fn}}}
+
+% ------------------------------------------------------------------------------
+% Tikz
+% ------------------------------------------------------------------------------
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+
+\usetikzlibrary{shapes}
+\usetikzlibrary{arrows}
+\usetikzlibrary{positioning}
+\usetikzlibrary{calc}
+\usetikzlibrary{intersections}
+\pgfplotsset{compat=newest}
+
+\usepgfplotslibrary{groupplots}
+\usepgfplotslibrary{fillbetween}

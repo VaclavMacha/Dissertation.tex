@@ -1,0 +1,63 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  lineA/.style        = {myblue, very thick},
+  lineB/.style        = {myred, very thick, dashed},
+  lineC/.style        = {gray, thick, dotted},
+  lineD/.style        = {myred, very thick},
+}
+
+\pgfplotstableread[col sep = comma]{../data/Thresholds.csv}\Thresholds
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \begin{groupplot}[
+    group style = {
+        group size = 1 by 2,
+        vertical sep = 5pt,
+        x descriptions at = edge bottom,
+        y descriptions at = edge left,
+    },
+    footnotesize,
+    xtick={0,2,4, 6, 8, 10},
+    width= 0.9\linewidth,
+    tick pos = left,
+    enlargelimits = false,
+  ]
+  \nextgroupplot[
+    title = {},
+    ylabel = {Threshold},
+    ytick={0, 4, 8, 12},
+    ymin=0,
+    ymax=14.5,
+    height=120,
+  ]
+    \addplot [lineC] table[x index=4, y index=9] {\Thresholds};
+    \addplot [lineA] table[x index=4, y index=10] {\Thresholds};
+    \addplot [lineB] table[x index=4, y index=11] {\Thresholds};
+
+  \nextgroupplot[
+    title = {},
+    xlabel = {Epoch},
+    ylabel = {Gradient angle},
+    ytick={0,45,90},
+    ymin=-5,
+    ymax=100,
+    height=120,
+  ]
+    \addplot [lineC] table[x index=4, y index=3] {\Thresholds};
+    \addplot [lineA] table[x index=4, y index=2] {\Thresholds};
+    \addplot [lineB] table[x index=4, y index=12] {\Thresholds};
+    \addplot [lineB] table[x index=4, y index=13] {\Thresholds};
+  \end{groupplot}
+\end{tikzpicture}
+% 
+\end{document}

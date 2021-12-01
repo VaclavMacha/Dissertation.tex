@@ -1,0 +1,44 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  scatter/.style = {
+    only marks,
+    myred,
+    fill opacity = 0.15,
+    mark size=1.5pt
+  },
+  scatterneg/.style = {scatter, myblue, fill = myblue},
+  scatterpos/.style = {scatter, myred, fill = myred},
+}
+
+\pgfplotstableread[col sep = comma]{../data/Molecules.csv}\Molecules
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \begin{axis}[
+    width=0.7\linewidth,
+    title = {},
+    xlabel = {Scores},
+    ylabel = {Activity},
+    xmax = 8,
+    ymax = 8.5,
+    tick pos = left,
+    grid = major,
+    grid style = {dashed, draw = gray!50, very thin},
+    enlargelimits = false,
+  ]
+    \addplot [scatterneg] table[x index=0, y index=1] {\Molecules};
+    \addplot [scatterpos] table[x index=2, y index=3] {\Molecules};
+    \node[circle, black, draw, very thick, minimum size = 30pt, label = above left:Target] at (axis cs:5.2,7.55) {};
+  \end{axis}
+\end{tikzpicture}
+% 
+\end{document}

@@ -8,74 +8,14 @@ Since this task considers only scores above the threshold, \cite{boyd2012accurac
 
 \begin{figure}[!ht]
   \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      height=130,
-      width=0.9\linewidth,
-      title = {},
-      xlabel = {Minibatch size},
-      ylabel = {},
-      ymin = 1.5,
-      ymax = 2.5,
-      tick pos = left,
-      grid = major,
-      grid style = {dashed, draw = gray!50, very thin},
-      enlargelimits = false,
-      legend pos=south east,
-      legend cell align={left},
-    ]
-      \addplot [lineD]  table[x index=0, y index=1] {\Quantiles};
-      \addlegendentry{True threshold}
-      \addplot [lineA] table[x index=0, y index=2] {\Quantiles};
-      \addlegendentry{Sampled threshold}
-      \addplot [myblue!50,name path=path1] table[x index=0, y index=3] {\Quantiles};
-      \addplot [myblue!50,name path=path2] table[x index=0, y index=4] {\Quantiles};
-      \addplot[myblue!50,fill opacity=0.5] fill between[of=path1 and path2]; \addlegendentry{Standard deviation}
-    \end{axis}
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/deep_threshold_bias.pdf}
   \caption{The bias between the sampled and true thresholds computed from scores following the standard normal distribution. The threshold separates the top $1\%$ of samples with the highest scores.}
   \label{fig:thresholds1}
 \end{figure}
 
 \begin{figure*}[!ht]
   \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width = \textwidth,
-      height = 5cm, 
-      xmin = -0.525,
-      xmax = 2.05,
-      ymin = -0.25,
-      ymax = 3.25,
-      hide axis,
-      legend style = {
-        column sep = 10pt,
-        legend columns = 4,
-        legend cell align = {left},
-        anchor = south,
-        at = {(0.5, 1.05)},
-      },
-      enlargelimits = false,
-    ]
-      \addplot [scatterneg] table[x index=1, y index=0] {\ExampleTop};
-      \addlegendentry{Negative scores}
-      \addplot [scatterpos] table[x index=3, y index=2] {\ExampleTop};
-      \addlegendentry{Positive scores}
-      \addlegendimage{black, very thick, dashed}
-      \addlegendentry{Threshold accuracy}    
-      \addlegendimage{myorange, very thick, dashed}
-      \addlegendentry{Threshold top}    
-      \addplot [scatterneg] table[x index=5, y index=4] {\ExampleTop};
-      \addplot [scatterpos] table[x index=7, y index=6] {\ExampleTop};
-      \node [draw, left] at (axis cs:-0.05,2.5) {\parbox{2cm}{\textbf{Classifier 1} \\ Accuracy 95\% \\ Top 19\%}};
-      \node [draw, left] at (axis cs:-0.05,0.5) {\parbox{2cm}{\textbf{Classifier 2} \\ Accuracy 76\% \\ Top 53\%}};
-      \draw [black, very thick, dashed] (axis cs:1, 1.75) -- (axis cs:1,3.25);
-      \draw [myorange, very thick, dashed] (axis cs:1.764, 1.75) -- (axis cs:1.764,3.25);
-      \draw [black, very thick, dashed] (axis cs:0.995,-0.25) -- (axis cs:0.995,1.25);
-      \draw [myorange, very thick, dashed] (axis cs:1,-0.25) -- (axis cs:1,1.25);
-      \draw [black, very thick] (axis cs:-0.525,1.5) -- (axis cs:2.05,1.5);
-      \end{axis}
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/deep_aatp_example.pdf}
   \caption{Difference between standard classifiers (top row) and classifiers maximizing accuracy at the top (bottom row). While the former has a good total accuracy, the latter has a good top acccuracy.}
   \label{fig:difference}
 \end{figure*}
@@ -388,96 +328,14 @@ We converted the continuous activity level into binary by considering a threshol
 
 \begin{figure}[!ht]
   \centering
-  \begin{tikzpicture}
-    \begin{axis}[
-      width=0.8\linewidth,
-      title = {},
-      xlabel = {Scores},
-      ylabel = {Activity},
-      xmax = 8,
-      ymax = 8.5,
-      tick pos = left,
-      grid = major,
-      grid style = {dashed, draw = gray!50, very thin},
-      enlargelimits = false,
-    ]
-      \addplot [scatterneg] table[x index=0, y index=1] {\Molecules};
-      \addplot [scatterpos] table[x index=2, y index=3] {\Molecules};
-      \node[circle, black, draw, very thick, minimum size = 30pt, label = above left:Target] at (axis cs:5.2,7.55) {};
-      \end{axis}
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/deep_molecules.pdf}
   \caption{Results for the 3A4 dataset. The goal was to assign large scores to a few molecules with high activity (scores on top-right are preferred).}
   \label{fig:molecules}
 \end{figure}
 
 \begin{figure*}[!ht]
   \centering
-  \begin{tikzpicture}
-    \begin{groupplot}[
-      group style = {
-          group size = 2 by 1,
-          horizontal sep = 20pt,
-          x descriptions at = edge bottom,
-          y descriptions at = edge left,
-      },
-      footnotesize,
-      width= 0.4\linewidth,
-      xlabel = {False positive rate},
-      ylabel = {True positive rate},
-      ytick = {0, 0.2, 0.4, 0.6, 0.8, 1},
-      ymin = -0.05,
-      xmode = log,
-      tick pos = left,
-      grid = major,
-      grid style = {dashed, draw = gray!50, very thin},
-      enlargelimits = false,
-      height = 150,
-    ]
-    \nextgroupplot[
-      title = {\textbf{A)} CIFAR100},
-      xmin = 0.001,
-      legend to name={CommonLegend},
-      legend style = {
-          column sep = 10pt,
-          legend columns = 3,
-          legend cell align = {left},
-      }
-    ]
-      % legend
-      \addlegendimage{lineDeepTP}
-      \addlegendentry{DeepTopPush}
-      \addlegendimage{lineBaseLine}
-      \addlegendentry{BaseLine}
-      \addlegendimage{lineTFCO}
-      \addlegendentry{TFCO($\tau = 10^{-2}$)}
-      \addlegendimage{lineAPPerf}
-      \addlegendentry{AP-Perf($\tau = 10^{-2}$)}
-      \addlegendimage{linePatMat3}
-      \addlegendentry{Pat\&Mat-NP($\tau = 10^{-3}$)}
-      \addlegendimage{linePatMat2}
-      \addlegendentry{Pat\&Mat-NP($\tau = 10^{-2}$)}
-
-      \addplot [lineDeepTP] table[x index=2, y index=3] {\DeepCIFAR};
-      \addplot [lineTFCO] table[x index=12, y index=13] {\DeepCIFAR};
-      \addplot [lineBaseLine] table[x index=0, y index=1] {\DeepCIFAR};
-      \addplot [lineAPPerf] table[x index=8, y index=9] {\DeepCIFAR};
-      \draw (axis cs:0.01,-0.05) -- (axis cs:0.01,1) node [right] at (axis cs:0.01,0.3) {Optimized threshold};
-
-    \nextgroupplot[
-      title = {\textbf{B)} Malware detection},
-      xmin = 0.00001,
-    ]
-      \addplot [lineDeepTP]  table[x index=4, y index=5] {\DeepLarge};
-      \addplot [linePatMat3]  table[x index=6, y index=7] {\DeepLarge};
-      \addplot [linePatMat2] table[x index=0, y index=1] {\DeepLarge};
-      \addplot [lineBaseLine]  table[x index=2, y index=3] {\DeepLarge};
-      \fill [myblue] (axis cs:0.000015,0.459232673) circle [radius=4pt];
-      \fill [mypurple] (axis cs:0.001,0.924199612) circle [radius=4pt];
-      \fill [myorange] (axis cs:0.01,0.915815306) circle [radius=4pt];
-
-    \end{groupplot}
-    \path ($(group c1r1.north)!.5!(group c2r1.north)$) ++ (0,1.1) node {\pgfplotslegendfromname{CommonLegend}};
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/deep_results1.pdf}
   \caption{\textbf{A)} ROC curves averaged over ten runs on the CIFAR100 dataset. \textbf{B)} ROC curve for Malware Detection dataset. The circles show the thresholds the methods were optimized for.}
   \label{fig: roc curves}
 \end{figure*}
@@ -496,47 +354,7 @@ Figure \ref{fig:thresholds2} shows explanation for this behaviour. The full blue
 
 \begin{figure}[!ht]
   \centering
-  \begin{tikzpicture}
-    \begin{groupplot}[
-      group style = {
-          group size = 1 by 2,
-          vertical sep = 5pt,
-          x descriptions at = edge bottom,
-          y descriptions at = edge left,
-      },
-      footnotesize,
-      xtick={0,2,4, 6, 8, 10},
-      width= 0.9\linewidth,
-      tick pos = left,
-      enlargelimits = false,
-    ]
-    \nextgroupplot[
-      title = {},
-      ylabel = {Threshold},
-      ytick={0, 4, 8, 12},
-      ymin=0,
-      ymax=14.5,
-      height=120,
-    ]
-      \addplot [lineC] table[x index=4, y index=9] {\Thresholds};
-      \addplot [lineA] table[x index=4, y index=10] {\Thresholds};
-      \addplot [lineB] table[x index=4, y index=11] {\Thresholds};
-
-    \nextgroupplot[
-      title = {},
-      xlabel = {Epoch},
-      ylabel = {Gradient angle},
-      ytick={0,45,90},
-      ymin=-5,
-      ymax=100,
-      height=120,
-    ]
-      \addplot [lineC] table[x index=4, y index=3] {\Thresholds};
-      \addplot [lineA] table[x index=4, y index=2] {\Thresholds};
-      \addplot [lineB] table[x index=4, y index=12] {\Thresholds};
-      \addplot [lineB] table[x index=4, y index=13] {\Thresholds};
-      \end{groupplot}
-  \end{tikzpicture}
+  \includegraphics[width = \linewidth]{images/deep_thresholds.pdf}
   \caption{The thresholds (top) and angle between true and sampled gradients (bottom) for Algorithm \ref{alg1} (full blue) and Algorithm \ref{alg2} (dotted gray).}
   \label{fig:thresholds2}
 \end{figure}

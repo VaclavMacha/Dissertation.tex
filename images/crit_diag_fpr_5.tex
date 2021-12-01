@@ -1,0 +1,33 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \draw (1.0,0) -- (14.0,0);
+  \foreach \x in {1,...,14} \draw (\x,0.10) -- (\x,-0.10) node[anchor=north]{$\x$};   \draw (1.8766233766233766,0) -- (1.8766233766233766,0.19999999999999998) -- (0.9, 0.19999999999999998) node[anchor=east] {\footnotesize Pat\&Mat-NP(0.05)};
+  \draw (3.0357142857142856,0) -- (3.0357142857142856,0.5) -- (0.9, 0.5) node[anchor=east] {\footnotesize Pat\&Mat-NP(0.01)};
+  \draw (4.577922077922078,0) -- (4.577922077922078,0.7999999999999999) -- (0.9, 0.7999999999999999) node[anchor=east] {\footnotesize Pat\&Mat(0.01)};
+  \draw (4.6688311688311686,0) -- (4.6688311688311686,1.0999999999999999) -- (0.9, 1.0999999999999999) node[anchor=east] {\footnotesize Pat\&Mat(0.05)};
+  \draw (4.782467532467533,0) -- (4.782467532467533,1.4) -- (0.9, 1.4) node[anchor=east] {\footnotesize $\tau$-FPL(0.05)};
+  \draw (5.103896103896104,0) -- (5.103896103896104,1.6999999999999997) -- (0.9, 1.6999999999999997) node[anchor=east] {\footnotesize TopPushK};
+  \draw (6.327922077922078,0) -- (6.327922077922078,2.0) -- (0.9, 2.0) node[anchor=east] {\footnotesize $\tau$-FPL(0.01)};
+  \draw (6.9058441558441555,0) -- (6.9058441558441555,1.9999999999999998) -- (14.1, 1.9999999999999998) node[anchor=west] {\footnotesize TopPush};
+  \draw (9.097402597402597,0) -- (9.097402597402597,1.7) -- (14.1, 1.7) node[anchor=west] {\footnotesize TopMean(0.05)};
+  \draw (9.714285714285714,0) -- (9.714285714285714,1.4) -- (14.1, 1.4) node[anchor=west] {\footnotesize TopMean(0.01)};
+  \draw (12.090909090909092,0) -- (12.090909090909092,1.0999999999999999) -- (14.1, 1.0999999999999999) node[anchor=west] {\footnotesize Grill(0.01)};
+  \draw (12.152597402597403,0) -- (12.152597402597403,0.8) -- (14.1, 0.8) node[anchor=west] {\footnotesize Grill-NP(0.01)};
+  \draw (12.162337662337663,0) -- (12.162337662337663,0.5) -- (14.1, 0.5) node[anchor=west] {\footnotesize Grill(0.05)};
+  \draw (12.503246753246753,0) -- (12.503246753246753,0.2) -- (14.1, 0.2) node[anchor=west] {\footnotesize Grill-NP(0.05)};
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (1.8466233766233766,0.1) -- (3.0657142857142854,0.1);
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (3.005714285714286,0.2) -- (4.812467532467533,0.2);
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (4.5479220779220775,0.30000000000000004) -- (6.357922077922078,0.30000000000000004);
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (5.073896103896104,0.4) -- (6.935844155844156,0.4);
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (9.067402597402598,0.1) -- (9.744285714285713,0.1);
+  \draw[line width=0.06cm,color=black,draw opacity=1.0] (12.060909090909092,0.1) -- (12.533246753246752,0.1);
+\end{tikzpicture}
+% 
+\end{document}
