@@ -153,9 +153,9 @@
   \begin{titlepage}
     \raggedleft
     \begin{minipage}[b][\textheight]{0.15\textwidth}
-      \includegraphics[width=\textwidth]{logocvut.pdf} \par
+      \includegraphics[width=\textwidth]{images/logocvut.pdf} \par
       \vfill
-      \includegraphics[width=\textwidth]{logofjfi.pdf} \par
+      \includegraphics[width=\textwidth]{images/logofjfi.pdf} \par
     \end{minipage}
     \hspace{0.05\textwidth}
     \doccol \rule{2pt}{\textheight}
