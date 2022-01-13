@@ -23,6 +23,7 @@
 *.synctex.gz
 *.bbl
 *.blg
+*.synctex(busy)
 
 ## Intermediate documents:
 *.dvi
