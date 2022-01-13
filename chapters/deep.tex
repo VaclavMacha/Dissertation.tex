@@ -247,7 +247,7 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
   \label{table:time}
 \end{table}
 
-\begin{table*}[ht]
+\begin{table}[ht]
   \centering
   \footnotesize
   \begin{tabular}{@{}c|llllll@{}}
@@ -312,7 +312,7 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
   \end{tabular}
   \caption{The true positive rates (in \%) at two levels of false positive rates averaged across ten indepenedent runs with standard deviation. The best methods are highlighted.}
   \label{tab:Overall comparison}
-\end{table*}
+\end{table}
 
 Table \ref{tab:Overall comparison} shows the true positive rate (tpr) above the second-largest negative and at the prescribed false positive rate (fpr) $\tau=0.01$. Using the second-largest negative, which corresponds to $\tau=\frac{1}{n^-}$, allows for one outlier. The results are averaged over ten independent runs except for AP-Perf, which is too slow. The best result for each metric (in columns) is highlighted. All methods are better than \BaseLine. This is not surprising as all these methods are designed to work well for low false positive rates. \DeepTopPush outperforms all other methods at the top, while it performs well at the low fpr of $\tau=0.01$. There \PatMatNP, which also falls into our framework, performs well. Both these methods outperform the state of the art methods. 
 

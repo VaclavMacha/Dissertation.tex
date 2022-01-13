@@ -242,8 +242,6 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
 
 
 \begin{table}[!ht]
-  \caption{Computational complexity of one \repeatloop loop (which updates two coordinates of $\bm{\alpha}$ or $\bm{\beta}$) from Algorithm~\ref{alg:Coordinate descent}.}
-  \label{tab:Computational complexity}
   \centering
   \begin{tabular}{@{}clll@{}l} 
     \toprule
@@ -253,7 +251,9 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
     \nomark  & $O(d)$ & $O(nd)$ & $O(nd)$ \\
     \bottomrule
   \end{tabular}
-\end{table}{}
+  \caption{Computational complexity of one \repeatloop loop (which updates two coordinates of $\bm{\alpha}$ or $\bm{\beta}$) from Algorithm~\ref{alg:Coordinate descent}.}
+  \label{tab:Computational complexity}
+\end{table}
 
 \subsection{Computing $\Delta$ for \TopPushK with truncated quadratic loss}\label{sec:Computing Delta for TopPushK with truncated quadratic loss}
 
@@ -354,8 +354,6 @@ The classifiers were trained on the training set. We selected the optimal hyperp
 which gave the best performance on the validation set. All presented result are shown on the testing set which was not part of the training process.
 
 \begin{table}[ht]
-  \caption{Summary of the used datasets. It shows which original labels $y^+$ were selected as the positive class, the number of features~$d,$ samples~$n,$ and the fraction of positive samples~$\frac{n^+}{n}$.}
-  \label{tab:Datasets}
   \centering
   \begin{tabular}{@{}lllllllll@{}}
       \toprule
@@ -384,6 +382,8 @@ which gave the best performance on the validation set. All presented result are 
         & 0 & 784 & 50000 & 10.0\% & 10000 & 10.0\% & 10000 & 10.0\% \\
       \bottomrule
   \end{tabular}
+  \caption{Summary of the used datasets. It shows which original labels $y^+$ were selected as the positive class, the number of features~$d,$ samples~$n,$ and the fraction of positive samples~$\frac{n^+}{n}$.}
+  \label{tab:Datasets}
 \end{table}
 
 \subsection{Dataset description}
@@ -418,8 +418,6 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
 \end{itemize}
 
 \begin{table}[ht]
-  \caption{The precision of all methods averaged across all datasets from Table~\ref{tab:Datasets}. Each column represents precision at a certain level of recall. Light green depicts the best method for the given kernel and dark green depicts the best overall method.}
-  \label{tab:Metrics comparison}
   \centering
   \begin{tabular}{@{}c|llllllll@{}}
     \toprule
@@ -457,6 +455,8 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
       & 81.30 & 84.14 & 82.58 & \besttotal 83.12 & \besttotal 77.82 & \besttotal 66.50 \\
     \bottomrule
   \end{tabular}
+  \caption{The precision of all methods averaged across all datasets from Table~\ref{tab:Datasets}. Each column represents precision at a certain level of recall. Light green depicts the best method for the given kernel and dark green depicts the best overall method.}
+  \label{tab:Metrics comparison}
 \end{table}
 
 In Figure~\ref{fig:Convergence comparison}, we investigate the convergence of methods. In each column, we show the convergence of primal and dual problems for one method. To solve the primal problem, we use the gradient method proposed in~\cite{adam2019patmat}. For the dual problem, we use our Algorithm~\ref{alg:Coordinate descent}. Since~\cite{adam2019patmat} considers only linear kernels, we present them. Moreover, since the computation of the objective is expensive, the results are presented for the sigillito1989classification dataset. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual problems. This means that the problem was solved to optimality. However, there is a little gap between optimal solution of primal and dual problems for \PatMat.
@@ -471,27 +471,27 @@ In Figure~\ref{fig:Convergence comparison}, we investigate the convergence of me
 Finally, Table~\ref{tab:Time comparison} depicts the time comparison for all methods and all datasets. It shows the average time in milliseconds needed for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The time is relatively stable and for most of the datasets it is below one millisecond. Since we run all experiments for 20000 \repeatloop loops, the evaluation of one method with one hyperparameter setting takes a few seconds for smaller datasets and approximately 7 minutes for FashionMNIST. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between $1.7\cdot 10^{-7}$ and $3.1\cdot 10^{-7}$ seconds for each methods. It is almost the same for all datasets, which corresponds to the fact that the complexity of step~\ref{alg: line 5} is independent of the size of the dataset. Note that in all experiments we used precomputed kernel matrix~$\K$ saved on the hard drive and not in memory.
 
 \begin{table}[ht]
-    \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between $1.7\cdot 10^{-7}$ and $3.1\cdot 10^{-7}$ seconds for each methods.}
-    \label{tab:Time comparison}
-    \centering
-    \begin{tabular}{@{}c|llll@{}}
-        \toprule
-        \multicolumn{2}{c}{}
-          & \TopPush & \TopPushK & \PatMat \\
-        \midrule
-        \multirow{5}{*}{\rotatecell{One \repeatloop \\ loop [ms]}}
-        & sigillito1989classification
-          & $ 0.04 \pm 0.00 $ & $ 0.03 \pm 0.00 $ & $ 0.03 \pm 0.00 $ \\
-        & Spambase
-          & $ 0.56 \pm 0.02 $ & $ 0.49 \pm 0.01 $ & $ 0.50 \pm 0.01 $ \\
-        & WhiteWineQuality
-          & $ 0.62 \pm 0.03 $ & $ 0.53 \pm 0.01 $ & $ 0.54 \pm 0.01 $ \\
-        & RedWineQuality
-          & $ 0.17 \pm 0.01 $ & $ 0.14 \pm 0.01 $ & $ 0.15 \pm 0.01 $ \\
-        & Fashion-MNIST
-          & $ 17.16 \pm 0.74 $ & $ 15.95 \pm 0.14 $ & $ 15.54 \pm 0.80 $ \\
-        \bottomrule
-    \end{tabular}
+  \centering
+  \begin{tabular}{@{}c|llll@{}}
+      \toprule
+      \multicolumn{2}{c}{}
+        & \TopPush & \TopPushK & \PatMat \\
+      \midrule
+      \multirow{5}{*}{\rotatecell{One \repeatloop \\ loop [ms]}}
+      & sigillito1989classification
+        & $ 0.04 \pm 0.00 $ & $ 0.03 \pm 0.00 $ & $ 0.03 \pm 0.00 $ \\
+      & Spambase
+        & $ 0.56 \pm 0.02 $ & $ 0.49 \pm 0.01 $ & $ 0.50 \pm 0.01 $ \\
+      & WhiteWineQuality
+        & $ 0.62 \pm 0.03 $ & $ 0.53 \pm 0.01 $ & $ 0.54 \pm 0.01 $ \\
+      & RedWineQuality
+        & $ 0.17 \pm 0.01 $ & $ 0.14 \pm 0.01 $ & $ 0.15 \pm 0.01 $ \\
+      & Fashion-MNIST
+        & $ 17.16 \pm 0.74 $ & $ 15.95 \pm 0.14 $ & $ 15.54 \pm 0.80 $ \\
+      \bottomrule
+  \end{tabular}
+  \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between $1.7\cdot 10^{-7}$ and $3.1\cdot 10^{-7}$ seconds for each methods.}
+  \label{tab:Time comparison}
 \end{table}
 
 \section{Conclusion}\label{sec:Conclusion}
