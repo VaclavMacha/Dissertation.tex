@@ -14,6 +14,8 @@
 
 \usepackage[title, titletoc]{appendix}
 
+\captionsetup[table]{position=bottom}
+\captionsetup[figure]{position=bottom}
 
 % ------------------------------------------------------------------------------
 % Graphics and colors
@@ -36,6 +38,8 @@
 \usepackage{multirow}
 \usepackage{colortbl}
 \usepackage{makecell}
+
+\renewcommand{\arraystretch}{1.5}
 
 \newcommand{\best}{\cellcolor{mygreen!25}}
 \newcommand{\besttotal}{\cellcolor{mygreen!50}}
@@ -79,6 +83,8 @@
 \newcommand{\X}{\mathbb{X}}
 \newcommand{\Xc}{\mathcal{X}}
 
+\newcommand{\I}{\mathcal{I}}
+
 \newcommand{\norm}[1]{\Brac[n]{#1}}
 \newcommand{\nrm}[1]{\Brac[n]{#1}}
 \newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
@@ -92,6 +98,7 @@
 \newcommand{\Iminh}{I_{\rm mb}^{\rm enh}}
 \newcommand{\nmin}{n_{\rm mb}}
 \newcommand{\II}{\mathds{1}}
+\newcommand{\Iverson}[1]{\mathds{1}_{\Brac[s]{#1}}}
 
 \newcommand{\EE}{\mathbb{E}}
 \newcommand{\PP}{\mathbb{P}}
