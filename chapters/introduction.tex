@@ -31,11 +31,11 @@ The binary classification is a special case of classification in which the numbe
     \I^+ & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
   \end{aligned}
 \end{equation}
-We also denote number of negative samples in the training set as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in the training set as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of training samples is~$n = n^- + n^+.$ Generally, the problem of binary classification can be written as follows
-\begin{mini}{\bm{w}, \bm{s}}{
+We also denote the number of negative samples in the training set as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in the training set as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of training samples is~$n = n^- + n^+.$ Generally, the problem of binary classification can be written as follows
+\begin{mini}{\bm{w}}{
     \lambda_1 \sum_{i \in \I^-} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \I^+} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
-  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n,}
+  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n}
   \addConstraint{t}{= 0.5,}
 \end{mini}
 where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
@@ -45,5 +45,20 @@ where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represe
     1 & \textnormal{if } x \textnormal{ is true}.  \\
   \end{cases}
 \end{equation*}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$ With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative.
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$ With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative. To simplify the notation, we define the true-positive, false-negative, true-negative and false-positive counts by
+\begin{equation}\label{eq: confusion counts}
+  \begin{aligned}
+    \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, &
+    \fn(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i < t}, \\
+    \tn(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i < t}, &
+    \fp(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i \ge t}.
+  \end{aligned}
+\end{equation}
+Using this notation, the problem~(\ref{eq: Binary classification}) can be written in more compact form as follows
+\begin{mini}{\bm{w}}{
+    \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+  }{\label{eq: Binary classification counts}}{}
+  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n}
+  \addConstraint{t}{= 0.5.}
+\end{mini}
 
