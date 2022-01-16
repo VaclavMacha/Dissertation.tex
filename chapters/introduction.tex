@@ -9,14 +9,41 @@ The problem of data classification is very important mathematical problem. The g
 Many other classification problems can be found in almost all fields. Also, there is a vast number of classification algorithms that try to solve these classifications problems. Typically these algorithms consist of two phases:
 \begin{itemize}
   \item \textbf{Training Phase:} In the training phase, the algorithm uses training data to build a model. The classification algorithms fall into the category of supervised learning algorithms. It means, that these algorithms must have labeled training data to build the model, i.e. the algorithm must have the knowledge of the target classes. The training data typically consists of pairs (sample, label) and can be described as follows
-  \begin{equation}\label{eq: training set}
+  \begin{equation*}\label{eq: training set}
     \mathcal{D}_{\mathrm{train}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
-  \end{equation}
-  where the sample~$\bm{x}_i \in \Xc$ is a vector of features that descibes the object of interes and the label~$y_i \in \{1, 2, \ldots, k\}$ represents target class. Moreover~$n \in \N$ is a number of training samples and~$k \in \N$ is a number of target classes.
+  \end{equation*}
+  where the sample~$\bm{x}_i \in \R^d$ is a $d$-dimensional vector of features that describes the object of interes and the label~$y_i \in \{1, 2, \ldots, k\}$ represents target class. Moreover~$n \in \N$ is a number of training samples and~$k \in \N$ is a number of target classes.
   \item \textbf{Testing Phase:} In the testing phase, the trained model from the previous phase is used to assign labels~$\hat{y}_i \in \{1, 2, \ldots, k\}$ to the data from unlabeled testing data
-  \begin{equation}\label{eq: test set}
+  \begin{equation*}\label{eq: test set}
     \mathcal{D}_{\mathrm{test}} = \Brac[c]{\bm{x}_i}_{i=1}^{m},
-  \end{equation}
-  where~$\bm{x}_i \in \Xc$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
+  \end{equation*}
+  where~$\bm{x}_i \in \R^d$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
 \end{itemize}
 The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification.
+
+
+\section{Binary Classification}
+
+The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. In this work, we will follow the notation used for neural networks. To simplify future notation, we denote set of all indices of training samples as~$\I = \I^- \cup \I^+,$ where
+\begin{equation}
+  \begin{aligned}
+    \I^- & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
+    \I^+ & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
+  \end{aligned}
+\end{equation}
+We also denote number of negative samples in the training set as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in the training set as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of training samples is~$n = n^- + n^+.$ Generally, the problem of binary classification can be written as follows
+\begin{mini}{\bm{w}, \bm{s}}{
+    \lambda_1 \sum_{i \in \I^-} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \I^+} \Iverson{s_i < t}
+  }{\label{eq: Binary classification}}{}
+  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n,}
+  \addConstraint{t}{= 0.5,}
+\end{mini}
+where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
+\begin{equation*}
+  \Iverson{x} = \begin{cases}
+    0 & \textnormal{if } x \textnormal{ is false}, \\
+    1 & \textnormal{if } x \textnormal{ is true}.  \\
+  \end{cases}
+\end{equation*}
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$ With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative.
+
