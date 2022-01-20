@@ -13,11 +13,11 @@ Many other classification problems can be found in almost all fields. Also, ther
     \mathcal{D}_{\mathrm{train}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
   \end{equation*}
   where the sample~$\bm{x}_i \in \R^d$ is a $d$-dimensional vector of features that describes the object of interes and the label~$y_i \in \{1, 2, \ldots, k\}$ represents target class. Moreover~$n \in \N$ is a number of training samples and~$k \in \N$ is a number of target classes.
-  \item \textbf{Testing Phase:} In the testing phase, the trained model from the previous phase is used to assign labels~$\hat{y}_i \in \{1, 2, \ldots, k\}$ to the data from unlabeled testing data
+  \item \textbf{Testing Phase:} In the testing phase, the model is used to assign labels~$\hat{y}_i \in \{1, 2, \ldots, k\}$ to the data from testing set which was not known during the training phase
   \begin{equation*}\label{eq: test set}
-    \mathcal{D}_{\mathrm{test}} = \Brac[c]{\bm{x}_i}_{i=1}^{m},
+    \mathcal{D}_{\mathrm{test}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{m},
   \end{equation*}
-  where~$\bm{x}_i \in \R^d$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
+  where~$\bm{x}_i \in \R^d,$~$y_i \in \{1, 2, \ldots, k\}$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
 \end{itemize}
 The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification.
 
@@ -41,11 +41,33 @@ We also denote the number of negative samples in the training set as~$n^- = \Bra
 where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
 \begin{equation*}
   \Iverson{x} = \begin{cases}
-    0 & \textnormal{if } x \textnormal{ is false}, \\
-    1 & \textnormal{if } x \textnormal{ is true}.  \\
+    0 & \text{if } x \text{ is false}, \\
+    1 & \text{if } x \text{ is true}. \\
   \end{cases}
 \end{equation*}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$ With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative. To simplify the notation, we define the true-positive, false-negative, true-negative and false-positive counts by
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$
+
+\subsection{Performance Criteria}
+
+In the previous section we defined general binary classification problem~\ref{eq: Binary classification}. However, we did not discuss yet how to measure the accuracy of classifiers. Consider the dataset in the following form
+\begin{equation*}\label{eq: test set bin}
+  \mathcal{D} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{m},
+\end{equation*}
+where~$\bm{x}_i \in \R^d,$~$y_i \in \{0, 1\}$ and~$m \in \N$ is a number of samples in the datase. With fixed classifier~$f$ (classifier with fixed weights~$\bm{w}$) and fixed decision threshold~$t,$ the following formula can be used to obtain predictions~$\hat{y}_i$ for all~$i = 1, 2, \ldots, m$
+\begin{equation*}
+  \hat{y}_i = \begin{cases}
+    1 \ldots & \text{if } f(\bm{w}; \bm{x}_i) \ge t, \\
+    0 \ldots & \text{otherwise.}
+  \end{cases}
+\end{equation*}
+Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm{x}_i,$ each sample can be assigned to one of the following categories
+\begin{itemize}
+  \item \textbf{True positive:} the sample~$\bm{x}_i$ is actually positive and is classified as positive, i.e.~$y_i = 1 \land \hat{y}_i = 1.$
+  \item \textbf{False negative:} the sample~$\bm{x}_i$ is actually positive and is classified as negative, i.e.~$y_i = 1 \land \hat{y}_i = 0.$
+  \item \textbf{False positive:} the sample~$\bm{x}_i$ is actually negative and is classified as positive, i.e.~$y_i = 0 \land \hat{y}_i = 1.$
+  \item \textbf{True negative:} the sample~$\bm{x}_i$ is actually negative and is classified as negative, i.e.~$y_i = 0 \land \hat{y}_i = 0.$
+\end{itemize}
+With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative. To simplify the notation, we define the true-positive, false-negative, true-negative and false-positive counts by
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
     \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, &
@@ -62,3 +84,53 @@ Using this notation, the problem~(\ref{eq: Binary classification}) can be writte
   \addConstraint{t}{= 0.5.}
 \end{mini}
 
+\begin{table}[!ht]
+  \centering
+  \begin{NiceTabular}{cccccc}[cell-space-limits = 7pt]
+    && \Block[draw=black, line-width=2pt, rounded-corners]{1-2}{
+      \longcell{\textbf{Predicted condition}}
+    } \\
+    && $\hat{y} = 0$
+    &  $\hat{y} = 1$
+    && \Block{1-1}{\textbf{Row total:}} \\
+    \Block[draw=black, line-width=2pt, rounded-corners]{2-1}{
+      \rotate \longcell{\textbf{Actual} \\ \textbf{condition}}
+    }
+    & $y = 0$
+    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
+      \longcell{true \\ negatives \\ \textbf{tn}}
+    }
+    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
+      \longcell{false \\ positives \\ \textbf{fp}}
+    }
+    & $\rightarrow$
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ negatives \\ \textbf{n}}} \\
+    & $y = 1$
+    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
+      \longcell{false \\ negatives \\ \textbf{fn}}
+    }
+    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
+      \longcell{true \\ positives \\ \textbf{tp}}
+    }
+    & $\rightarrow$
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ positives \\ \textbf{p}}} \\
+    && $\downarrow$
+    &  $\downarrow$ \\
+    \Block{1-2}{\longcell{\textbf{Column} \\ \textbf{total:}}}
+    && \Block[draw=black, rounded-corners]{1-1}{
+      \longcell{all predicted \\ negatives}
+    }
+    & \Block[draw=black, rounded-corners]{1-1}{
+      \longcell{all predicted \\ positives}
+    }
+  \end{NiceTabular}
+  \caption{Confusion matrix}
+  \label{tbl: confusion matrix}
+\end{table}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=\linewidth]{images/confusion_rates.pdf}
+  \caption{aaa}
+  \label{fig: scores and rates}
+\end{figure}
