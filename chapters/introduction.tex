@@ -24,7 +24,11 @@ The previous definitions of training and test set are general for classification
 
 \section{Binary Classification}
 
-The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. In this work, we will follow the notation used for neural networks. To simplify future notation, we denote set of all indices of training samples as~$\I = \I^- \cup \I^+,$ where
+The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. In this work, we will follow the notation used for neural networks. Consider the dataset in the following form
+\begin{equation*}\label{eq: train set bin}
+  \mathcal{D} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
+\end{equation*}
+where~$\bm{x}_i \in \R^d,$~$y_i \in \{0, 1\}$ and~$n \in \N$ is a number of samples in the dataset. To simplify future notation, we denote set of all indices of training samples as~$\I = \I^- \cup \I^+,$ where
 \begin{equation}
   \begin{aligned}
     \I^- & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
@@ -35,8 +39,8 @@ We also denote the number of negative samples in the training set as~$n^- = \Bra
 \begin{mini}{\bm{w}}{
     \lambda_1 \sum_{i \in \I^-} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \I^+} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
-  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n}
-  \addConstraint{t}{= 0.5,}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i = 1, 2, \ldots, n}
+  \addConstraint{t}{\text{ is fixed,}}
 \end{mini}
 where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
 \begin{equation*}
@@ -45,75 +49,81 @@ where~$\lambda_1, \lambda_2 \in \R,$ the function $f \colon \R^d \to \R$ represe
     1 & \text{if } x \text{ is true}. \\
   \end{cases}
 \end{equation*}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. The decision threshold may be also determined from training data. However, in most cases, this parameter is fixed. The reason is, that for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold, i.e. probability that the sample belongs to the positive class is larger or equal to~$0.5.$
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases it is fixed. For example, for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold. 
 
-\subsection{Performance Criteria}
+\section{Performance Criteria}
 
-In the previous section we defined general binary classification problem~\ref{eq: Binary classification}. However, we did not discuss yet how to measure the accuracy of classifiers. Consider the dataset in the following form
-\begin{equation*}\label{eq: test set bin}
-  \mathcal{D} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{m},
-\end{equation*}
-where~$\bm{x}_i \in \R^d,$~$y_i \in \{0, 1\}$ and~$m \in \N$ is a number of samples in the datase. With fixed classifier~$f$ (classifier with fixed weights~$\bm{w}$) and fixed decision threshold~$t,$ the following formula can be used to obtain predictions~$\hat{y}_i$ for all~$i = 1, 2, \ldots, m$
+In the previous section we defined general binary classification problem~\ref{eq: Binary classification}. However, we did not discuss yet how to measure the accuracy of the resulting classifier. With fixed classifier~$f$ (classifier with fixed weights~$\bm{w}$) and fixed decision threshold~$t,$ the following formula can be used to obtain predictions~$\hat{y}_i$ for all~$i = 1, 2, \ldots, n$
 \begin{equation*}
   \hat{y}_i = \begin{cases}
-    1 \ldots & \text{if } f(\bm{w}; \bm{x}_i) \ge t, \\
+    1 \ldots & \text{if } f(\bm{x}_i; \bm{w}) \ge t, \\
     0 \ldots & \text{otherwise.}
   \end{cases}
 \end{equation*}
 Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm{x}_i,$ each sample can be assigned to one of the following categories
 \begin{itemize}
-  \item \textbf{True positive:} the sample~$\bm{x}_i$ is actually positive and is classified as positive, i.e.~$y_i = 1 \land \hat{y}_i = 1.$
-  \item \textbf{False negative:} the sample~$\bm{x}_i$ is actually positive and is classified as negative, i.e.~$y_i = 1 \land \hat{y}_i = 0.$
-  \item \textbf{False positive:} the sample~$\bm{x}_i$ is actually negative and is classified as positive, i.e.~$y_i = 0 \land \hat{y}_i = 1.$
-  \item \textbf{True negative:} the sample~$\bm{x}_i$ is actually negative and is classified as negative, i.e.~$y_i = 0 \land \hat{y}_i = 0.$
+  \item \textbf{True negative:} $\bm{x}_i$ is negative and is classified as negative, i.e.~$y_i = 0 \; \land \; \hat{y}_i = 0.$
+  \item \textbf{False positive:} $\bm{x}_i$ is negative and is classified as positive, i.e.~$y_i = 0 \; \land \; \hat{y}_i = 1.$
+  \item \textbf{False negative:} $\bm{x}_i$ is positive and is classified as negative, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 0.$
+  \item \textbf{True positive:} $\bm{x}_i$ is positive and is classified as positive, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 1.$
 \end{itemize}
-With this in mind, the objective function in problem~(\ref{eq: Binary classification}) consists of two parts: the first part represents negative samples classified as positive and the second part represents positive samples classified as negative. To simplify the notation, we define the true-positive, false-negative, true-negative and false-positive counts by
-\begin{equation}\label{eq: confusion counts}
+Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by classifier~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for~$i = 1, 2, \ldots, n,$ we can compute all fields of the confusion matrix as follows
+\begin{equation}\label{eq: c counts}
   \begin{aligned}
-    \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, &
+    \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, & \quad
     \fn(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i < t}, \\
-    \tn(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i < t}, &
+    \tn(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i < t}, & \quad
     \fp(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i \ge t}.
   \end{aligned}
 \end{equation}
-Using this notation, the problem~(\ref{eq: Binary classification}) can be written in more compact form as follows
+In the following text, we will sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (similarly fo the other counts) for example to define classification metrics. In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation we can simply define true-positive, false-positive, true-negative and false-negative rates as follows
+\begin{equation}\label{eq: confusion rates}
+  \begin{aligned}
+    \tpr & = \frac{\tp}{n^{+}}, & \quad
+    \fnr & = \frac{\fn}{n^{+}}, & \quad
+    \tnr & = \frac{\tn}{n^{-}}, & \quad
+    \fpr & = \frac{\fp}{n^{-}}. \\
+  \end{aligned}
+\end{equation}
+Figure~\ref{fig: scores and rates} show the relation between these for classification rates and the classification scores and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want to an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~(\ref{eq: Binary classification}), we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~(\ref{eq: c counts}) and rewrite the problem~(\ref{eq: Binary classification}) to the following form
 \begin{mini}{\bm{w}}{
     \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
   }{\label{eq: Binary classification counts}}{}
-  \addConstraint{s_i}{= f(\bm{w}; \bm{x}_i), \quad}{i = 1, 2, \ldots, n}
-  \addConstraint{t}{= 0.5.}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i = 1, 2, \ldots, n}
+  \addConstraint{t}{\text{ is fixed.}}
 \end{mini}
+The parameters~$\lambda_1 \lambda_2 \in \R$ are used to specify which error is more serious for the particular classification task.
 
-\begin{table}[!ht]
+\begin{figure}
   \centering
   \begin{NiceTabular}{cccccc}[cell-space-limits = 7pt]
     && \Block[draw=black, line-width=2pt, rounded-corners]{1-2}{
-      \longcell{\textbf{Predicted condition}}
+      \longcell{\textbf{Predicted label}}
     } \\
     && $\hat{y} = 0$
     &  $\hat{y} = 1$
     && \Block{1-1}{\textbf{Row total:}} \\
     \Block[draw=black, line-width=2pt, rounded-corners]{2-1}{
-      \rotate \longcell{\textbf{Actual} \\ \textbf{condition}}
+      \rotate \longcell{\textbf{Actual} \\ \textbf{label}}
     }
     & $y = 0$
     & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
-      \longcell{true \\ negatives \\ \textbf{tn}}
+      \longcell{true \\ negatives \\ (\textbf{tn})}
     }
     & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
-      \longcell{false \\ positives \\ \textbf{fp}}
+      \longcell{false \\ positives \\ (\textbf{fp})}
     }
     & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ negatives \\ \textbf{n}}} \\
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ negatives \\ ($n^{-}$)}} \\
     & $y = 1$
     & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
-      \longcell{false \\ negatives \\ \textbf{fn}}
+      \longcell{false \\ negatives \\ (\textbf{fn})}
     }
     & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
-      \longcell{true \\ positives \\ \textbf{tp}}
+      \longcell{true \\ positives \\ (\textbf{tp})}
     }
     & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ positives \\ \textbf{p}}} \\
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ positives \\ ($n^{+}$)}} \\
     && $\downarrow$
     &  $\downarrow$ \\
     \Block{1-2}{\longcell{\textbf{Column} \\ \textbf{total:}}}
@@ -124,13 +134,24 @@ Using this notation, the problem~(\ref{eq: Binary classification}) can be writte
       \longcell{all predicted \\ positives}
     }
   \end{NiceTabular}
-  \caption{Confusion matrix}
-  \label{tbl: confusion matrix}
-\end{table}
+  \caption{Representation of the confusion matrix for the binary classification problem, where the negative class has label~$0$ and the positive class has label~$1.$ The true (target) label is denoted as~$y$ and predicted label is denoted as~$\hat{y}.$}
+  \label{fig: confusion matrix}
+\end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}
   \centering
   \includegraphics[width=\linewidth]{images/confusion_rates.pdf}
-  \caption{aaa}
+  \caption{The relation between classification scores and  rates. The blue curve represents theoretical distribution of the scores of negative samples and the red curve the same for the score of positive samples. Filled areas with light blue or red color represent true-negative and true-positive rates respectively. Similarly the filled areas with dark blue or red color represent false-positive and false-negaives rates.}
   \label{fig: scores and rates}
 \end{figure}
+
+Many performance metrics used for binary classification such as accuracy, precision, or recall can be easily derived from the confusion matrix:
+\begin{equation}\label{eq: performance metrics}
+  \begin{aligned}
+    \accuracy & = \frac{\tp + \tn}{n}, & \quad
+    \baccuracy & = \frac{1}{2}\Brac{\tpr + \tnr}, \\
+    \precision & = \frac{\tp}{\tp + \fp}, & \quad
+    \recall & = \tpr, \\
+  \end{aligned}
+\end{equation}
+In other words, accuracy represents the ratio of correctly classified samples from all samples. In the case, where the dataset is unbalanced (the number of samples in one class is significantly higher then the number of samples in the other class) the accuracy is not a good metric, since both classes have the same weights. In such a case, balanced accuracy is a better choice. The balanced accuracy is defined as an average of true-positive and true-negative rate. Precision represents the ratio of correctly classified positive samples from all samples classified as positives. Finally, recall is just an alias for true-positive rate.
