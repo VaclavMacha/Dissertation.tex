@@ -182,10 +182,6 @@
 \newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
 \newcommand{\domain}{\operatorname*{dom}}
 
-\newcommand{\precision}{\operatorname*{Precision}}
-\newcommand{\recall}{\operatorname*{Recall}}
-\newcommand{\pratrec}{\operatorname*{Precision@Recall}}
-
 \newcommand{\repeatloop}{\texttt{repeat}\xspace}
 \newcommand{\forloop}{\texttt{for}\xspace}
 
@@ -205,11 +201,25 @@
 \newcommand{\BaseLine}{\emph{BaseLine}\xspace}
 
 % counts and rates
-\newcommand{\tp}{\textnormal{tp}}
-\newcommand{\tn}{\textnormal{tn}}
-\newcommand{\fp}{\textnormal{fp}}
-\newcommand{\fn}{\textnormal{fn}}
-\newcommand{\tps}{\overline{\textnormal{tp}}}
-\newcommand{\tns}{\overline{\textnormal{tn}}}
-\newcommand{\fps}{\overline{\textnormal{fp}}}
-\newcommand{\fns}{\overline{\textnormal{fn}}}
+\DeclareMathOperator{\tp}{tp}
+\DeclareMathOperator{\tn}{tn}
+\DeclareMathOperator{\fp}{fp}
+\DeclareMathOperator{\fn}{fn}
+\DeclareMathOperator{\tpr}{tpr}
+\DeclareMathOperator{\tnr}{tnr}
+\DeclareMathOperator{\fpr}{fpr}
+\DeclareMathOperator{\fnr}{fnr}
+
+\DeclareMathOperator{\nneg}{n}
+\DeclareMathOperator{\npos}{p}
+
+\DeclareMathOperator{\tps}{\overline{tp}}
+\DeclareMathOperator{\tns}{\overline{tn}}
+\DeclareMathOperator{\fps}{\overline{fp}}
+\DeclareMathOperator{\fns}{\overline{fn}}
+
+\DeclareMathOperator{\accuracy}{accuracy}
+\DeclareMathOperator{\baccuracy}{balanced~accuracy}
+\DeclareMathOperator{\precision}{precision}
+\DeclareMathOperator{\recall}{recall}
+\DeclareMathOperator{\pratrec}{Precision@Recall}
