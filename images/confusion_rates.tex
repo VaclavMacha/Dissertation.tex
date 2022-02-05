@@ -8,17 +8,16 @@
   lineneg/.style  = {smooth, cyan, very thick},
   linepos/.style  = {smooth, myred, very thick},
   fill_tnr/.style  = {draw=none, fill = cyan, fill opacity = 0.25},
-  fill_fpr/.style  = { draw=none, fill = cyan},
+  fill_fpr/.style  = {draw=none, fill = cyan},
   fill_tpr/.style  = {draw=none, fill = myred, fill opacity = 0.25},
   fill_fnr/.style  = {draw=none, fill = myred},
 }
 \begin{document}
+%
 \pgfmathdeclarefunction{gauss}{3}{%
   \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
 }
-%
 \begin{tikzpicture}
-
   \begin{axis}[
     no markers, 
     samples=100,

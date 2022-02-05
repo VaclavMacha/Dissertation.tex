@@ -1,0 +1,65 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\tikzstyle{scatter} = [
+  only marks,
+  fill opacity = 0.25,
+  mark size=1.5pt
+]
+\tikzstyle{scatterneg} = [scatter, cyan, fill = cyan]
+\tikzstyle{scatterpos} = [scatter, myred, fill = myred]
+\tikzstyle{thresholdacc} = [black, very thick, dashed]
+\tikzstyle{thresholdtop} = [mygreen, very thick, dashed]
+
+\pgfplotstableread[col sep = comma]{../data/standard_aatp_comparison.csv}\StandardAATPComparison
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+% 
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin = -0.6,
+    xmax = 2.05,
+    ymin = -0.25,
+    ymax = 3.25,
+    hide axis,
+    legend style = {
+      column sep = 10pt,
+      legend columns = 2,
+      at = {(0.5, -0.1)},
+      anchor=north,
+    },
+    enlargelimits = false,
+    height=6cm,
+    width=14cm,
+  ]
+    \addplot [scatterneg] table[x index=1, y index=0] {\StandardAATPComparison};
+    \addlegendentry{Negative scores}
+    \addlegendimage{thresholdacc}
+    \addlegendentry{Threshold for $\accuracy$}
+    \addplot [scatterpos] table[x index=3, y index=2] {\StandardAATPComparison};
+    \addlegendentry{Positive scores}
+    \addlegendimage{thresholdtop}
+    \addlegendentry{Threshold for $\postop$}
+    \addplot [scatterneg] table[x index=5, y index=4] {\StandardAATPComparison};
+    \addplot [scatterpos] table[x index=7, y index=6] {\StandardAATPComparison};
+    \node [draw, right] at (-0.6, 2.5) {
+      \parbox{2.2cm}{\textbf{Classifier 1} \\ $\accuracy$ 95\% \\ $\postop$ 19\%}
+    };
+    \node [draw, right] at (-0.6, 0.5) {
+      \parbox{2.2cm}{\textbf{Classifier 2} \\ $\accuracy$ 76\% \\ $\postop$ 53\%}
+    };
+    \draw [thresholdacc] (axis cs:1, 1.75) -- (axis cs:1,3.25);
+    \draw [thresholdtop] (axis cs:1.764, 1.75) -- (axis cs:1.764,3.25);
+    \draw [thresholdacc] (axis cs:0.995,-0.25) -- (axis cs:0.995,1.25);
+    \draw [thresholdtop] (axis cs:1,-0.25) -- (axis cs:1,1.25);
+    \draw [black, very thick] (-0.55,1.5) -- (2.05,1.5);
+  \end{axis}
+\end{tikzpicture}
+% 
+\end{document}
