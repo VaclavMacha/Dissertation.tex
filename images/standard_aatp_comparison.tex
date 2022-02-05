@@ -24,10 +24,12 @@
 \begin{tikzpicture}
   \begin{axis}[
     xmin = -0.6,
-    xmax = 2.05,
-    ymin = -0.25,
-    ymax = 3.25,
-    hide axis,
+    xmax = 2.15,
+    ymin = -1.75,
+    ymax = 1.75,
+    axis lines=middle,
+    axis y line=none,
+    xtick=\empty,
     legend style = {
       column sep = 10pt,
       legend columns = 2,
@@ -48,17 +50,16 @@
     \addlegendentry{Threshold for $\postop$}
     \addplot [scatterneg] table[x index=5, y index=4] {\StandardAATPComparison};
     \addplot [scatterpos] table[x index=7, y index=6] {\StandardAATPComparison};
-    \node [draw, right] at (-0.6, 2.5) {
+    \node [draw, right] at (-0.6, 1) {
       \parbox{2.2cm}{\textbf{Classifier 1} \\ $\accuracy$ 95\% \\ $\postop$ 19\%}
     };
-    \node [draw, right] at (-0.6, 0.5) {
+    \node [draw, right] at (-0.6, -1) {
       \parbox{2.2cm}{\textbf{Classifier 2} \\ $\accuracy$ 76\% \\ $\postop$ 53\%}
     };
-    \draw [thresholdacc] (axis cs:1, 1.75) -- (axis cs:1,3.25);
-    \draw [thresholdtop] (axis cs:1.764, 1.75) -- (axis cs:1.764,3.25);
-    \draw [thresholdacc] (axis cs:0.995,-0.25) -- (axis cs:0.995,1.25);
-    \draw [thresholdtop] (axis cs:1,-0.25) -- (axis cs:1,1.25);
-    \draw [black, very thick] (-0.55,1.5) -- (2.05,1.5);
+    \draw [thresholdacc] (1, 0.25)     -- (1,1.75);
+    \draw [thresholdtop] (1.764, 0.25) -- (1.764,1.75);
+    \draw [thresholdacc] (0.995,-0.25) -- (0.995,-1.75);
+    \draw [thresholdtop] (1,-0.25)     -- (1,-1.75);
   \end{axis}
 \end{tikzpicture}
 % 
