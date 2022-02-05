@@ -142,11 +142,11 @@ The parameters~$\lambda_1, \; \lambda_2 \in \R$ are used to specify which error 
   \caption{The relation between classification scores and  rates. The blue curve represents theoretical distribution of the scores of negative samples and the red curve the same for the score of positive samples. Filled areas with light blue or red color represent true-negative and true-positive rates respectively. Similarly the filled areas with dark blue or red color represent false-positive and false-negaives rates.}
   \label{fig: scores and rates}
 \end{figure}
-In addition to the confusion matrix, there are many other classification metrics, and many of them are derived directly from the confusion matrix. As an example, we can mention accuracy and the balanced accuracy. Accuracy is defined as the ratio of correctly classified samples from all samples.
+In addition to the confusion matrix, there are many other classification metrics, and many of them are derived directly from the confusion matrix. As an example, we can mention accuracy and the balanced accuracy. Accuracy is defined as the ratio of correctly classified samples from all samples~\cite{metz1978basic}
 \begin{equation*}
   \accuracy = \frac{\tp + \tn}{n}.
 \end{equation*}
-However, the accuracy is not suitable for unbalanced datasets, i.e. for dataset where the number of samples in one class is significantly higher then the number of samples in the other class. In such a case, the balanced accuracy is better. The balanced accuracy is defined as an average of true-positive and true-negative rate.
+However, the accuracy is not suitable for unbalanced datasets, i.e. for dataset where the number of samples in one class is significantly higher then the number of samples in the other class. In such a case, the balanced accuracy is better. The balanced accuracy is defined as an average of true-positive and true-negative rate~\cite{brodersen2010balanced}
 \begin{equation*}
   \baccuracy = \frac{1}{2}\Brac{\tpr + \tnr}.
 \end{equation*}
@@ -154,8 +154,60 @@ The difference can be easily demonstrated on a simple example. Let us suppose th
 \begin{equation*}
   \accuracy = \frac{90 + 0}{100} = 0.9.
 \end{equation*}
-It seems that the results is quite good since we classify 90\% of all samples correctly. However, the classifier totally ignores the negative class. If we compute the balanced accuracy we will get the following result
+Even though we know, that the classifier totally ignores negative samples, the accuracy is still 90\%. The reason is, that the used classifier is biased towards the more frequent class. Balanced accuracy solves this problem by using true-positive and true-negative rates instead of counts, which leads to the following results for the given example
 \begin{equation*}
   \baccuracy = \Brac{\frac{90}{90} + \frac{0}{10}} = 0.5.
 \end{equation*}
-In this case, we at least see that there is something odd with the classifier.
+In this case the balanced accuracy is only 50\% which is very poor, but is more relevant to the unbalanced dataset. There are many more classification metrics that are based on the confusion matrix~\cite{fawcett2006introduction, metz1978basic, brodersen2010balanced, hossin2015review}. In this work, however, we will use mainly those that we have presented in this section.
+
+\section{ROC Analysis}
+
+In the previous section, we defined general binary clasification problem as a minimization task with objective that consists of a weighted sum of the false-positive and false-negative counts~(\ref{eq: Binary classification counts}). For fixed classifier and decision threshold, the results can be visualized in the Receiver Operating Characteristic space~\cite{egan1975signal}.
+
+
+\section{Classification at the Top}
+
+The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
+\begin{equation*}
+  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{i \in \I^-}\{s_i\}}.
+\end{equation*}
+While the classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
+  \caption{Difference between standard classifiers (top row) and classifiers maximizing accuracy at the top (bottom row). While the former has a good total accuracy, the latter has a good top acccuracy.}
+  \label{fig: standard vs. aatp}
+\end{figure*}
+
+
+Such classifiers have many applications:
+\begin{itemize}
+  \item \textbf{Ranking problems:} Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages.
+  \item \textbf{Accuracy at the Top:} Accuracy at the Top~\cite{boyd2012accuracy, grill2016learning} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the number of positive samples (equivalently minimizes the misclassification)  above the top $\tau$-quantile of scores. The Accuracy at the Top can be very useful for search engines or in applications where identified samples undergo expensive post-processing such as human evaluation. As an example, we can mention cyber security~\cite{grill2016learning}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated.
+  \item \textbf{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
+\end{itemize}
+The standard binary classification formulation~(\ref{eq: Binary classification}) is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
+\begin{mini}{\bm{w}}{
+  \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+}{\label{eq: aatp counts}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i = 1, 2, \ldots, n}
+  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}),}
+\end{mini}
+where function~$G \colon\R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. The problems above only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but depends the scores of all samples.
+
+\subsection{Ranking problems}
+
+The goal of the ranking problems is to rank the relevant samples higher than the non-relevant ones. A prototypical example is the RankBoost~\cite{freund2003efficient} maximizing the area under the ROC curve, the Infinite Push~\cite{agarwal2011infinite} or the $p$-norm push~\cite{rudin2009pnorm} which concentrate on the high-ranked negatives and push them down. Since all these papers include pairwise comparisons of all samples, they can be used only for small datasets. This was alleviated in~\cite{li2014top}, where the authors performed the limit $p \to \infty$ in $p$-norm push and obtained the linear complexity in the number of samples. Moreover, since the $l_{\infty}$-norm is equal to the maximum, this method falls into our framework with the threshold equal to the largest score computed from negative samples.
+
+Many methods, such as \emph{RankBoost}~\cite{freund2003efficient}, \emph{Infinite Push}~\cite{agarwal2011infinite} or \emph{$p$-norm push}~\cite{rudin2009pnorm} employ a pairwise comparison of samples, which makes them infeasible for larger datasets. This was alleviated in \TopPush~\cite{li2014top} where the authors considered the limit~$p \rightarrow \infty$. Since the $l_{\infty}$ norm from \TopPush is equal to the maximum, the decision threshold from our framework equals to the maximum of scores of negative samples. This was generalized into \TopPushK~\cite{adam2019patmat} by considering the threshold to be the mean of~$K$ largest scores of negative samples.
+
+\subsection{Accuracy at the Top}
+
+Accuracy at the Top ($\tau$-quantile) was formally defined in~\cite{boyd2012accuracy} and maximizes the number of relevant samples in the top $\tau$-fraction of ranked samples. When the threshold equals the top $\tau$-quantile of all scores, this problem falls into our framework. The early approaches aim at solving approximations, for example,~\cite{joachims2005svm} optimizes a convex upper bound on the number of errors among the top samples. Due to the presence of exponentially many constraints, the method is computationally expensive.~\cite{boyd2012accuracy} presented an SVM-like formulation which fixes the index of the quantile and solves $n$ problems. While this removes the necessity to handle the (difficult) quantile constraint, the algorithm is computationally infeasible for a large number of samples.~\cite{kar2015surrogate} derived upper approximations, their error bounds and solved these approximations.~\cite{grill2016learning} proposed the projected gradient descent method where after each gradient step, the quantile is recomputed.~\cite{eban2017scalable} suggested new formulations for various criteria and argued that they keep desired properties such as convexity.~\cite{tasche2018plug} showed that accuracy at the top is maximized by thresholding the posterior probability of the relevant class. The closest approach to our framework is~\cite{lapin2015top,lapin2018analysis}, where the authors considered multi-class classification problems, and their goal was to optimize the performance on the top few classes and~\cite{mackey2018constrained}, where the authors implicitly removed some variables and derived an efficient algorithm.
+
+\AccatTop~\cite{boyd2012accuracy} focuses on maximizing the number of positive samples above the top $\tau$-quantile of scores. There are many methods on how to solve accuracy at the top. In~\cite{boyd2012accuracy}, the authors assume that the top quantile is one of the samples, construct~$n$ unconstrained optimization problems with fixed thresholds, solve them and select the best solution. This method is computationally expensive. In~\cite{grill2016learning} the authors propose a fast projected gradient descent method. In our previous paper, we proposed a convex approximation of the accuracy at the top called \PatMat. This method is reasonably fast and guaranteed the existence of global optimum.
+
+\subsection{Hypothesis Testing}
+
+Hypothesis testing states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
