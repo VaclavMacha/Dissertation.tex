@@ -167,26 +167,25 @@ In the previous section, we defined general binary clasification problem as a mi
 
 \section{Classification at the Top}
 
-The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
-\begin{equation*}
-  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{i \in \I^-}\{s_i\}}.
-\end{equation*}
-While the classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2.
-
-\begin{figure*}
-  \centering
-  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
-  \caption{Difference between standard classifiers (top row) and classifiers maximizing accuracy at the top (bottom row). While the former has a good total accuracy, the latter has a good top acccuracy.}
-  \label{fig: standard vs. aatp}
-\end{figure*}
-
-
-Such classifiers have many applications:
+The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Such classifiers have many applications:
 \begin{itemize}
   \item \textbf{Ranking problems:} Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages.
   \item \textbf{Accuracy at the Top:} Accuracy at the Top~\cite{boyd2012accuracy, grill2016learning} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the number of positive samples (equivalently minimizes the misclassification)  above the top $\tau$-quantile of scores. The Accuracy at the Top can be very useful for search engines or in applications where identified samples undergo expensive post-processing such as human evaluation. As an example, we can mention cyber security~\cite{grill2016learning}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated.
   \item \textbf{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
 \end{itemize}
+Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
+\begin{equation*}
+  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{i \in \I^-}\{s_i\}}.
+\end{equation*}
+While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
+  \caption{Difference between standard classifiers (\textbf{Classifier~1}) and classifiers maximizing~$\postop$ metric (\textbf{Classifier~2}). While the former has a good total~$\accuracy$, the latter has a~$\postop$ metric.}
+  \label{fig: standard vs. aatp}
+\end{figure*}
+
 The standard binary classification formulation~(\ref{eq: Binary classification}) is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
 \begin{mini}{\bm{w}}{
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
