@@ -67,7 +67,7 @@ Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm
   \item \textbf{True positive:} $\bm{x}_i$ is positive and is classified as positive, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 1.$
 \end{itemize}
 Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by classifier~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for~$i = 1, 2, \ldots, n,$ we can compute all fields of the confusion matrix as follows
-\begin{equation}\label{eq: c counts}
+\begin{equation}\label{eq: confusion counts}
   \begin{aligned}
     \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, & \quad
     \fn(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i < t}, \\
@@ -84,7 +84,7 @@ In the following text, we will sometimes use simplified notation~$\tp = \tp(\bm{
     \fpr & = \frac{\fp}{n^{-}}. \\
   \end{aligned}
 \end{equation}
-Figure~\ref{fig: scores and rates} show the relation between these for classification rates and the classification scores and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~(\ref{eq: Binary classification}), we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~(\ref{eq: c counts}) and rewrite the problem~(\ref{eq: Binary classification}) to the following form
+Figure~\ref{fig: scores and rates} show the relation between these for classification rates and the classification scores and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~\eqref{eq: c counts} and rewrite the problem~\eqref{eq: Binary classification} to the following form
 \begin{mini}{\bm{w}, t}{
     \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
   }{\label{eq: Binary classification counts}}{}
@@ -162,7 +162,7 @@ In this case the balanced accuracy is only 50\% which is very poor, but is more 
 
 \section{ROC Analysis}
 
-In the previous section, we defined general binary clasification problem as a minimization task with objective that consists of a weighted sum of the false-positive and false-negative counts~(\ref{eq: Binary classification counts}). For fixed classifier and decision threshold, the results can be visualized in the Receiver Operating Characteristic space~\cite{egan1975signal}.
+In the previous section, we defined general binary clasification problem as a minimization task with objective that consists of a weighted sum of the false-positive and false-negative counts~\eqref{eq: Binary classification counts}. For fixed classifier and decision threshold, the results can be visualized in the Receiver Operating Characteristic space~\cite{egan1975signal}.
 
 
 \section{Classification at the Top}
@@ -186,7 +186,7 @@ While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar be
   \label{fig: standard vs. aatp}
 \end{figure*}
 
-The standard binary classification formulation~(\ref{eq: Binary classification}) is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
+The standard binary classification formulation~\eqref{eq: Binary classification} is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
 \begin{mini}{\bm{w}}{
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
