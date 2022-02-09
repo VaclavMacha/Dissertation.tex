@@ -1,0 +1,63 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  lineiver/.style  = {smooth, myred, very thick},
+  linehinge/.style  = {no markers, smooth, myorange, very thick},
+  linequadratic/.style  = {no markers, smooth, mygreen, very thick},
+  lineexp/.style  = {no markers, smooth, cyan, very thick},
+}
+
+\pgfmathdeclarefunction{iverson}{1}{%
+  \pgfmathparse{max(0, 1 + #1)}%
+}
+\pgfmathdeclarefunction{hinge}{2}{%
+  \pgfmathparse{max(0, 1 + #2 * #1)}%
+}
+\pgfmathdeclarefunction{quadratic}{2}{%
+  \pgfmathparse{(max(0, 1 + #2 * #1))^2}%
+}
+\pgfmathdeclarefunction{exploss}{2}{%
+  \pgfmathparse{exp(#1)}%
+}
+
+\begin{document}
+%
+\begin{tikzpicture}
+  \begin{axis}[
+    xmin = -2,
+    xmax = 2.1,
+    ymin = 0,
+    ymax = 4.2,
+    domain = -2:2,
+    axis lines = left,
+    xtick = {-2, -1, 0, 1, 2},
+    xlabel={$x$},
+    ylabel={$l(x)$},
+    grid=both,
+    grid style=dashed,
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos =north west,
+    legend cell align={left},
+    enlargelimits = false,
+    height=6cm,
+    width=14cm,
+  ]
+    
+    \addplot [linehinge] {hinge(x, 1)};
+    \addlegendentry{Hinge loss}
+    \addplot [linequadratic] {quadratic(x, 1)};
+    \addlegendentry{Quadratic hinge loss}
+    \addplot [lineexp] {exploss(x, 1)};
+    \addlegendentry{Exp loss}
+    \addplot[lineiver, no markers] coordinates {(-2, 0) (0, 0)};
+    \addlegendentry{Iverson funcion}
+    \addplot[lineiver, no markers] coordinates {(0, 1) (2, 1)};
+    \addplot[lineiver, only marks, mark=*, mark options={fill=white}] coordinates {(0, 0)};
+    \addplot[lineiver, only marks, mark=*, mark options={fill=myred}] coordinates {(0, 1)};
+  \end{axis}
+\end{tikzpicture}
+\end{document}
