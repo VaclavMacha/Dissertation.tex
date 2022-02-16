@@ -1,4 +1,26 @@
-\chapter{General Framework}
+\chapter{Binary Classiciation at the Top}
+
+Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
+\begin{equation*}
+  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{i \in \I^-}\{s_i\}}.
+\end{equation*}
+While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2.
+
+\begin{figure*}
+  \centering
+  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
+  \caption{Difference between standard classifiers (\textbf{Classifier~1}) and classifiers maximizing~$\postop$ metric (\textbf{Classifier~2}). While the former has a good total~$\accuracy$, the latter has a~$\postop$ metric.}
+  \label{fig: standard vs. aatp}
+\end{figure*}
+
+The standard binary classification formulation~\eqref{eq: Binary classification} is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
+\begin{mini}{\bm{w}}{
+  \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+}{\label{eq: aatp counts}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i = 1, 2, \ldots, n}
+  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}),}
+\end{mini}
+where function~$G \colon\R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. The problems above only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but depends the scores of all samples.
 
 Many important binary classification problems minimize the number of misclassified samples below (or above) certain threshold. Since these problems are usually considered separately, in this section, we provide a unified framework for their handling and present several classification problems falling into this framework. We recall the general form for binary classification at the top~\eqref{eq: aatp counts} defined in the previous chapter
 \begin{mini*}{\bm{w}}{
