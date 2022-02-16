@@ -3,21 +3,21 @@
 
 To promote reproducibility, we share all our code online. We follow the NeurIPS instructions which allow sharing only anonymized repositories. We provide one respository with the code\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop-7562}} and one repository with numerical experiments.\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop\_DeepTopPush-834E}}
 
-\section{Theorem \ref{theorem:convergence} for Rec@K}
+\section{Theorem~\ref{theorem:convergence} for Rec@K}
 
-The assumption of Theorem \ref{theorem:convergence} requires that the threshold is computing from negative samples and the objective for positive samples. This does not hold for Rec@K. We will show that we can obtain a similar result even for this case.
+The assumption of Theorem~\ref{theorem:convergence} requires that the threshold is computing from negative samples and the objective for positive samples. This does not hold for Rec@K. We will show that we can obtain a similar result even for this case.
 
-The proof of Theorem \ref{theorem:convergence} is based on Lemma \ref{lemma:convergence}. We will now obtain the variant of Lemma \ref{lemma:convergence} for Rec@K. First, we realize that if the threshold index $j^*$ corresponds to a negative sample, the computation will not change and therefore
+The proof of Theorem~\ref{theorem:convergence} is based on Lemma~\ref{lemma:convergence}. We will now obtain the variant of Lemma~\ref{lemma:convergence} for Rec@K. First, we realize that if the threshold index~$j^*$ corresponds to a negative sample, the computation will not change and therefore
 \begin{equation*}
   \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a negative sample}}
   =  \nabla L(\bm w).
 \end{equation*}
-On the other hand, when $j^*$ corresponds to a positive sample, it needs to be always present in the minibatch selection and there are effectively only $\nmin^+-1$ positive samples in the minibatch. Then
+On the other hand, when~$j^*$ corresponds to a positive sample, it needs to be always present in the minibatch selection and there are effectively only~$\nmin^+-1$ positive samples in the minibatch. Then
 \begin{equation*}
   \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a positive sample}}
   = \frac{\nmin^+-1}{\nmin^+}\nabla L(\bm w).
 \end{equation*}
-Denote now $p$ the probability that the threshold corresponds to a positive sample. Then we have
+Denote now~$p$ the probability that the threshold corresponds to a positive sample. Then we have
 \begin{equation*}
   \begin{aligned}
     \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*}
@@ -26,7 +26,7 @@ Denote now $p$ the probability that the threshold corresponds to a positive samp
 \end{aligned}
 \end{equation*}
 
-Theorem \ref{theorem:convergence} will then be modified into
+Theorem~\ref{theorem:convergence} will then be modified into
 \begin{equation*}
   \begin{aligned}
     \bias(\bm w)
@@ -34,19 +34,19 @@ Theorem \ref{theorem:convergence} will then be modified into
     & \qquad - \PP(\hat j= j^*)\frac{p}{\nmin^+}\nabla L(\bm w).
   \end{aligned}
 \end{equation*}
-We changed the result by adding the last term. Usually the training set contains much less positive than negative samples. This implies that $p$ is assumed to be small and the extra term is small as well. Thefore, this change should have a negligible impact on the theorem implications.
+We changed the result by adding the last term. Usually the training set contains much less positive than negative samples. This implies that~$p$ is assumed to be small and the extra term is small as well. Thefore, this change should have a negligible impact on the theorem implications.
 
 \subsection{Used network architecture}\label{app:network}
 
-For 3A4, we preprocessed the input with $9491$ into a $100$-dimensional input by PCA. Then we used two dense layers of size $100\times 50$ and $50\times 25$ with batch-normalization after these layers. The last layer was dense.
+For 3A4, we preprocessed the input with~$9491$ into a~$100$-dimensional input by PCA. Then we used two dense layers of size~$100\times 50$ and~$50\times 25$ with batch-normalization after these layers. The last layer was dense.
 
-For FashionMNIST, we used a network alternating two hidden convolutional layers with two max-pooling layers finished with a dense layer. The convolutional layers used kernels $5\times 5$ and had $20$ and $50$ channels, respectively. For CIFAR100 and SVHN2, we increased the number of hidden and max-pooling layers from two to three. The convolutional layers used kernels $3\times 3$ and had $64$, $128$, and $128$ channels, respectively. A more detailed description can be found in our codes online. We are fully aware that these architectures are suboptimal. Since the accuracy at the top needs to select only a few relevant samples and the rest of the dataset's performance is irrelevant, such a network can be used. Moreover, using a simpler network has the advantage of faster experiments.
+For FashionMNIST, we used a network alternating two hidden convolutional layers with two max-pooling layers finished with a dense layer. The convolutional layers used kernels~$5\times 5$ and had~$20$ and~$50$ channels, respectively. For CIFAR100 and SVHN2, we increased the number of hidden and max-pooling layers from two to three. The convolutional layers used kernels~$3\times 3$ and had~$64$,~$128$, and~$128$ channels, respectively. A more detailed description can be found in our codes online. We are fully aware that these architectures are suboptimal. Since the accuracy at the top needs to select only a few relevant samples and the rest of the dataset's performance is irrelevant, such a network can be used. Moreover, using a simpler network has the advantage of faster experiments.
 
-For ImageNet, we merged all turtles into the positive class and all non-turtles into the negative class. Then we used the pre-trained EfficientNet B0, where we replaced the last dense layer with $1000$ outputs by a dense layer into a scalar output.
+For ImageNet, we merged all turtles into the positive class and all non-turtles into the negative class. Then we used the pre-trained EfficientNet B0, where we replaced the last dense layer with~$1000$ outputs by a dense layer into a scalar output.
 
 \section{Dataset summary}
 
-Table \ref{tab:DatasetsDeep} summarizes the used datasets. The Malware Detection dataset was represented by JSONs, which contain varying number of features. Moreover, many features are not scalar but have some hierarchical structure as well.
+Table~\ref{tab:DatasetsDeep} summarizes the used datasets. The Malware Detection dataset was represented by JSONs, which contain varying number of features. Moreover, many features are not scalar but have some hierarchical structure as well.
 
 \begin{table}[!ht]
   \centering
