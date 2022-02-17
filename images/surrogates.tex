@@ -6,9 +6,8 @@
 % ------------------------------------------------------------------------------
 \pgfplotsset{
   lineiver/.style  = {smooth, myred, very thick},
-  linehinge/.style  = {no markers, smooth, myorange, very thick},
+  line/.style  = {no markers, smooth, very thick},
   linequadratic/.style  = {no markers, smooth, mygreen, very thick},
-  lineexp/.style  = {no markers, smooth, cyan, very thick},
 }
 
 \pgfmathdeclarefunction{iverson}{1}{%
@@ -19,9 +18,6 @@
 }
 \pgfmathdeclarefunction{quadratic}{2}{%
   \pgfmathparse{(max(0, 1 + #2 * #1))^2}%
-}
-\pgfmathdeclarefunction{exploss}{2}{%
-  \pgfmathparse{exp(#1)}%
 }
 
 \begin{document}
@@ -35,8 +31,8 @@
     domain = -2:2,
     axis lines = left,
     xtick = {-2, -1, 0, 1, 2},
-    xlabel={$x$},
-    ylabel={$l(x)$},
+    xlabel={$s$},
+    ylabel={$l(s)$},
     grid=both,
     grid style=dashed,
     major grid style={line width=.2pt,draw=gray!50},
@@ -47,12 +43,14 @@
     width=14cm,
   ]
     
-    \addplot [linehinge] {hinge(x, 1)};
-    \addlegendentry{Hinge loss}
-    \addplot [linequadratic] {quadratic(x, 1)};
-    \addlegendentry{Quadratic hinge loss}
-    \addplot [lineexp] {exploss(x, 1)};
-    \addlegendentry{Exp loss}
+    \addplot [line, cyan] {hinge(x, 1)};
+    \addlegendentry{Hinge loss~$\vartheta = 1$}
+    \addplot [line, myorange, dashed] {hinge(x, 2)};
+    \addlegendentry{Hinge loss~$\vartheta = 2$}
+    \addplot [line, myblue, dotted] {quadratic(x, 1)};
+    \addlegendentry{Quadratic hinge loss~$\vartheta = 1$}
+    \addplot [line, mygreen, dashdotted] {quadratic(x, 2)};
+    \addlegendentry{Quadratic hinge loss~$\vartheta = 2$}
     \addplot[lineiver, no markers] coordinates {(-2, 0) (0, 0)};
     \addlegendentry{Iverson funcion}
     \addplot[lineiver, no markers] coordinates {(0, 1) (2, 1)};
