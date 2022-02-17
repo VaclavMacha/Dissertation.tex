@@ -22,7 +22,7 @@ Many other classification problems can be found in almost all fields. Also, ther
 The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification.
 
 
-\section{General Formulation}
+\section{General Formulation}\label{sec: general formulation}
 
 The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. In this work, we will follow the notation used for neural networks. Consider the dataset in the following form
 \begin{equation*}\label{eq: train set bin}
@@ -42,12 +42,12 @@ We also denote the number of negative samples in the training set as~$n^- = \Bra
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
 \end{mini}
 where~$\lambda_1, \lambda_2 \in \R,$ the function~$f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
-\begin{equation*}
+\begin{equation}\label{eq: iverson}
   \Iverson{x} = \begin{cases}
     0 & \text{if } x \text{ is false}, \\
     1 & \text{if } x \text{ is true}. \\
   \end{cases}
-\end{equation*}
+\end{equation}
 Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases it is fixed. For example, for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold. 
 
 \section{Performance Evaluation}
@@ -55,7 +55,7 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
 In the previous section we defined general binary classification problem~\ref{eq: Binary classification}. However, we did not discuss yet how to measure the performance of the resulting classifier. In this section, we will introduce basic approaches that are used to measure the performance of binary classifiers.
 
 \subsection{Confusion Matrix}
-With fixed classifier~$f$ (classifier with fixed weights~$\bm{w}$) and fixed decision threshold~$t,$ the following formula can be used to obtain predictions~$\hat{y}_i$ for all~$i = 1, 2, \ldots, n$
+With fixed classifier~$f$ (classifier with fixed weights~$\bm{w}$) and fixed decision threshold~$t,$ the following formula can be used to obtain predictions~$\hat{y}_i$ for all~$i \in \I$
 \begin{equation*}
   \hat{y}_i = \begin{cases}
     1 \ldots & \text{if } f(\bm{x}_i; \bm{w}) \ge t, \\
@@ -69,7 +69,7 @@ Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm
   \item \textbf{False negative:}~$\bm{x}_i$ is positive and is classified as negative, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 0.$
   \item \textbf{True positive:}~$\bm{x}_i$ is positive and is classified as positive, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 1.$
 \end{itemize}
-Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by classifier~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for~$i = 1, 2, \ldots, n,$ we can compute all fields of the confusion matrix as follows
+Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by classifier~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for all~$i \in \I,$ we can compute all fields of the confusion matrix as follows
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
     \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, & \quad
@@ -194,7 +194,18 @@ In the previous section, we defined general binary clasification problem as a mi
 
 \section{Related Problems}
 
-The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. In the rest of the chapter, we will present three main categories of problems that are closely related to the binary classification but do not focus on optimizing overall performance.  
+The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
+\begin{equation*}
+  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{j \in \I^-}\{s_j\}}.
+\end{equation*}
+While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2. In the rest of the chapter, we will present three main categories of problems that are closely related to the binary classification but do not focus on optimizing overall performance.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
+  \caption{Difference between standard classifiers (\textbf{Classifier~1}) and classifiers maximizing~$\postop$ metric (\textbf{Classifier~2}). While the former has a good total~$\accuracy$, the latter has a~$\postop$ metric.}
+  \label{fig: standard vs. aatp}
+\end{figure}
 
 \subsection{Accuracy at the Top}
 

@@ -1,195 +1,168 @@
 \chapter{Binary Classiciation at the Top}\label{chap: framework}
 
-Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
-\begin{equation*}
-  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{i \in \I^-}\{s_i\}}.
-\end{equation*}
-While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2.
-
-\begin{figure*}
-  \centering
-  \includegraphics[width = 0.95\linewidth]{images/standard_aatp_comparison.pdf}
-  \caption{Difference between standard classifiers (\textbf{Classifier~1}) and classifiers maximizing~$\postop$ metric (\textbf{Classifier~2}). While the former has a good total~$\accuracy$, the latter has a~$\postop$ metric.}
-  \label{fig: standard vs. aatp}
-\end{figure*}
-
-The standard binary classification formulation~\eqref{eq: Binary classification} is not suitable for such problems because it optimizes overall performance. Moreover, all of the above examples have one thing in common: they can be formulated as a binary classification problem with special condition on the decision threshold. It means, that all these problems can be written in the following general form
+In the previous chapter, we introduced the general formulation of the binary classification problem~\eqref{eq: Binary classification counts} and basic ways how to evaluate the performance of binary classification. Furthermore, we introduced three problems that are closely related to binary classification, but focus on specific performance criteria. Namely: accuracy at the top, ranking problems and problem of hypothesis testing. Since these problems are usually considered separately, we will show, that they have one important thing in common: all three problems can be formulated as a minimization of the number of misclassified samples below (or above) a certain threshold. Moreover, we provide a unified framework for their handling and present several classification problems falling into this framework. Specificaly, all mentioned problems falls into the following formulation
 \begin{mini}{\bm{w}}{
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
   \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}),}
 \end{mini}
-where function~$G \colon\R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. The problems above only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but depends the scores of all samples.
+where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. In other words, all mentioned problems can be formulated as a binary classification problem with special condition on the decision threshold. Then the problems only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but is a function of scores of all samples. Therefore, the minimization in the problem~\eqref{eq: aatp counts} is performed only with respect to the one variable~$\bm{w}$.
 
-Many important binary classification problems minimize the number of misclassified samples below (or above) certain threshold. Since these problems are usually considered separately, in this section, we provide a unified framework for their handling and present several classification problems falling into this framework. We recall the general form for binary classification at the top~\eqref{eq: aatp counts} defined in the previous chapter
-\begin{mini*}{\bm{w}}{
-  \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
-  }{}{}
-  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
-\end{mini*}
-The objective function of the problem~\eqref{eq: aatp counts} is discontinuous because it contains Iverson function. Therefore the problem is difficult to handle. The usual approach is to employ a surrogate function such as the hinge loss or quadratic hinge loss function defined by
-\begin{equation}\label{eq: hinge loss}
-  \begin{aligned}
-    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + s}.\\
-    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.\\
-  \end{aligned}
-\end{equation}
-In the text below, the symbol~$l$ denotes any convex non-negative non-decreasing function with~$l(0) = 1$. Using the surrogate function, the counts~\eqref{eq: confusion counts} may be approximated by their surrogate counterparts
-\begin{equation}\label{eq: confusion counts surrogate}
-  \begin{aligned}
-    \tps(\bm{s}, t) & = \sum_{i \in \I^+}l(s_i - t), & \quad
-    \fns(\bm{s}, t) & = \sum_{i \in \I^+}l(t - s_i), \\
-    \tns(\bm{s}, t) & = \sum_{i \in \I^-}l(t - s_i), & \quad
-    \fps(\bm{s}, t) & = \sum_{i \in \I^-}l(s_i - t).
-  \end{aligned}
-\end{equation}
-Since~$l(\cdot)\ge[\cdot]$, the surrogate counts~\eqref{eq: confusion counts surrogate} provide upper approximations of the true counts~\eqref{eq: confusion counts}. Replacing the counts in~\eqref{eq: aatp counts}by their surrogate counterparts and adding a regularization results in
-\begin{mini}{\bm{w}}{
-  \lambda_0 \cdot \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
-  }{\label{eq: aatp surrogate}}{}
-  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
-\end{mini}
-In the rest of this section, we list formulations which fall into the framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}.
-
-
-\begin{figure*}
+\begin{figure}[t]
   \centering
   \includegraphics[width = 0.95\linewidth]{images/surrogates.pdf}
   \caption{Surrogates}
   \label{fig: surrogates}
-\end{figure*}
+\end{figure}
 
+The problem~\eqref{eq: aatp counts} is difficult to handle, since the objective function contains Iverson function~\eqref{eq: iverson} and therefore is discontinuous. The usual approach how to getting a continuous objective function is to employ a surrogate function to replace the Iverson function~\cite{li2014top, grill2016learning}. In the text below, the symbol~$l$ denotes any convex non-negative non-decreasing function with~$l(0) = 1$. As examples of such function we can mention the hinge loss function or the quadratic hinge loss functions defined as follows
+\begin{equation}\label{eq: surrogates}
+  \begin{aligned}
+    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + \vartheta \cdot s}, \\
+    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + \vartheta \cdot s}}^2,\\
+  \end{aligned}
+\end{equation}
+where~$\vartheta > 0$ is a scaling parameter. Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge with different scaling parameters. If the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1. Besides that, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ 
 
-% For samples~$\bm{x}$, we consider the linear classifier~$f(\bm{w}) = \bm{w}^\top \bm{x} - t$, where~$\bm{w}$ is the normal vector to the separating hyperplane and~$t$ is a threshold. The most well-known example is the support vector machines, where~$t$ is an optimization variable. In many cases the threshold~$t$ is computed from the scores~$s = \bm{w}^\top \bm{x}$. For example, \TopPush from~\cite{li2014top} sets the threshold~$t$ to the largest score~$s^-$ corresponding to negative samples and~\cite{grill2016learning} sets it to the quantile of all scores.
+To follow the notation from the previous chapter, we will define surrogate approximations of the counts defined in equation~\eqref{eq: confusion counts}. Using surrogate function~$l$ that fulfill the requirements mentioned above, the counts~\eqref{eq: confusion counts} may be approximated by their surrogate counterparts defined as follows
+\begin{equation}\label{eq: confusion counts surrogate}
+  \begin{aligned}
+    \tps(\bm{s}, t) & = \sum_{i \in \I^+}l(s_i - t), & \qquad
+    \fns(\bm{s}, t) & = \sum_{i \in \I^+}l(t - s_i), \\
+    \tns(\bm{s}, t) & = \sum_{i \in \I^-}l(t - s_i), &
+    \fps(\bm{s}, t) & = \sum_{i \in \I^-}l(s_i - t).
+  \end{aligned}
+\end{equation}
+Since the surrogate function provides upper approximation of the Iverson function, the surrogate counts~\eqref{eq: confusion counts surrogate} provide upper approximations of the true counts~\eqref{eq: confusion counts}. Replacing the counts in~\eqref{eq: aatp counts} by their surrogate counterparts and adding a regularization results in
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  }{\label{eq: aatp surrogate}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
+\end{mini}
+The regularization is not necessary, but it is usually added for better numerical stability. The resulting optimization problem is easier to solve than problem~\eqref{eq: aatp counts} since the objective function is continuous. To derive other theoretical properties, we need to know the form of the function~$G$ as well as the form of the used classifier~$f.$ Different forms of the function~$G$ will be discussed in the rest of this chapter and different forms of classifier~$f$ will be discussed in Chapters~\ref{chap: linear} - \ref{chap: deep}. 
 
+In the rest of the chapter, we will show, that accuracy at the top, ranking problems and the problem of hypothesis testing can be formulated in such a way, that fall  into our general framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}. Most of the problems that we will be referring to are originally defined for the linear classifier only, i.e. for~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$ However, we will formulate all the problems for general classifier~$f$ and then in Chapters~\ref{chap: linear} - \ref{chap: deep} we will discuss their properties based on the used classifier.  
 
-% To be able to determine the missclassification above and below the threshold~$t$, we define the true-positive, false-negative, true-negative and false-positive counts by
-% \begin{equation}\label{eq: confusion counts}
-%   \begin{aligned}
-%     \tp(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}\Brac[s]{\bm{w}^\top \bm{x} - t \ge 0}, &
-%     \fn(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^+}\Brac[s]{\bm{w}^\top \bm{x} - t < 0}, \\
-%     \tn(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}\Brac[s]{\bm{w}^\top \bm{x} - t < 0}, &
-%     \fp(\bm{w}, t) & = \sum_{\bm{x} \in \Xc^-}\Brac[s]{\bm{w}^\top \bm{x} - t \ge 0}.
-%   \end{aligned}
-% \end{equation}
-% Here~$[\cdot]$ is the 0-1 loss (Iverson bracket, characteristic function) which is equal to~$1$ if the argument is true and to~$0$ otherwise. Moreover,~$\Xc / \Xc^{+} / \Xc^{-}$ denotes the sets of all/positive/negative samples and by~$n / n^{+} / n^{-}$ their respective sizes. 
-
-% Since the misclassified samples below the threshold are the false-negatives, we arrive at the following problem
-% \begin{equation}\label{eq: aatp counts}
-%   \begin{aligned}
-%     \minimize{}
-%     & \quad \frac{1}{n^{+}}\fn(\bm{w}, t)\\
-%     \st
-%     & \quad \text{threshold } t \text{ is a function of }\{\bm{w}^\top \bm{x}_i\}_{i = 1}^n.
-%   \end{aligned}
-% \end{equation}
+To make the presentation as simple as possible, we first define a special notation. Section~\ref{sec: general formulation}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
+\begin{equation}\label{eq: scores}
+  s_i = f(\bm{x}_i; \bm{w}), \quad i \in \I.
+\end{equation}
+To simplify the upcoming sections, let us define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
+\begin{equation*}
+  s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
+\end{equation*}
+Similarly, let us define vectors~$\bm{s}^- \in \R^{n^-},$ $\bm{s}^+ \in \R^{n^+}$ of scores of all positive and negative samples with components defined as
+\begin{equation}\label{eq: scores neg/pos}
+  \begin{aligned}
+    s^-_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^-, \\
+    s^+_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^+,
+  \end{aligned}
+\end{equation}
+and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
 
 \section{Methods based on pushing positives to the top}\label{sec:obj1}
 
-The first category of formulations falling into our framework~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} are ranking methods which attempt to put as many positives (relevant samples) to the top as possible. For simplicity, define vectors~$\bm{s}$ /~$\bm{s}^-$ /~$\bm{s}^+$ of scores of all / negative / positive with components defined as follows
-\begin{align}
-  s_i   & = f(\bm{x}_i; \bm{w}), \quad i \in \I, \\
-  s^-_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^-, \\
-  s^+_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^+.
-\end{align}
-Then, define their sorted versions~$\bm{s}_{[\cdot]}$ /~$\bm{s}^-_{[\cdot]}$ /~$\bm{s}^+_{[\cdot]}$ decreasing components
-\begin{equation*}
-  \begin{aligned}
-    s_{[1]}   \ge s_{[2]}   \ge \dots \ge s_{[n]}, \\
-    s^-_{[1]} \ge s^-_{[2]} \ge \dots \ge s^-_{[n^-]}, \\
-    s^+_{[1]} \ge s^+_{[2]} \ge \dots \ge s^+_{[n^+]}.
-  \end{aligned}
-\end{equation*}
-The number of positives on top equals to the number of positives above the highest negative. This amounts to maximizing true-positives or, equivalently, minimizing false-negatives, which may be written as
+The first category of formulations falling into our framework~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} are ranking methods which attempt to put as many positive (relevant) samples to the top as possible. The number of positive samples on top equals to the number of positive samples with classification score the highest classicication score corresponding to negative sample. This amounts to maximizing the number of true-positive samples or, equivalently, minimizing the number of false-negative negative samples, which may be written as
 \begin{mini}{\bm{w}}{
   \frac{1}{n^+} \fn(\bm{s}, t)
   }{\label{eq: toppush}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-}
 \end{mini}
-As~$t$ is a function of the scores~$s = \bm{w}^\top \bm{x}$, problem~\eqref{eq: toppush} is a special case of~\eqref{eq: aatp counts}. \TopPush from~\cite{li2014top} replaces the false-negatives in~\eqref{eq: toppush} by their surrogate and adds a regularization term to arrive at
+Since the threshold~$t$ is a function of score, the problem~\eqref{eq: toppush} is a special case of~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. The authors in~\cite{li2014top} proposed an efficient method to solve the formulation above and called it \TopPush. They replaced the number of false-negative samples with its surrogate counterpart in the objective function of~\eqref{eq: toppush} and added the regularization term to arrive at
 \begin{mini}{\bm{w}}{
-  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{n^+} \fns(\bm{s}, t)
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^+} \fns(\bm{s}, t)
   }{\label{eq: toppush surrogate}}{}
-  \addConstraint{s_i}{= \bm{w}^{\top}\bm{x}_i, \quad i \in \I}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-}
 \end{mini}
-Note that this falls into the framework of~\eqref{eq: aatp surrogate}.
-
-As we will show in Section~\ref{sec:stability}, \TopPush is sensitive to outliers and mislabelled data. To robustify it, we follow the idea from~\cite{lapin2015top} and propose to replace the largest negative score by the mean of~$K$ largest negative scores. This results in
+Similarly to the original problem, this surrogate approximation falls into our framework of~\eqref{eq: aatp surrogate} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. However, \TopPush can be very sensitive to outliers. Especially when the linear classifier is used, as shown in Section~\ref{sec: stability}. To robustify \TopPush method, we follow the idea from~\cite{lapin2015top} and propose to replace the largest negative score by the mean of~$K$ largest negative scores. We call this approach \TopPushK and the resulting formulation is as follows
 \begin{mini}{\bm{w}}{
-  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{n^+} \fns(\bm{s}, t)
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^+} \fns(\bm{s}, t)
   }{\label{eq: toppushK surrogate}}{}
-  \addConstraint{s_i}{= \bm{w}^{\top}\bm{x}_i, \quad i \in \I}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \sum_{i = 1}^{K} s_{[i]}^-}
 \end{mini}
-We used the mean of highest~$K$ negative scores instead of the value of the~$k$-th negative score to preserve convexity as shown in Section~\ref{sec:convexity}.
+We used the mean of highest~$K$ negative scores instead of the value of the~$K$-th negative score to preserve convexity as shown in Section~\ref{sec:convexity}. 
 
 \section{Accuracy at the Top}\label{sec: aatp}
 
-The previous category considers formulations which minimize the false-negatives below the highest-ranked negative. Accuracy at the Top~\cite{boyd2012accuracy} takes a different approach and minimizes false-positives above the top~$\tau$-quantile defined by
-\begin{equation}\label{eq:defin_quantile} 
-  t_1(\bm{w}) = \max \Brac[c]{t \mid \tp(\bm{w}, t) + \fp(\bm{w}, t) \ge n \tau}.
+The previous category considers formulations which minimize the number of positive samples below the highest-ranked negative sample, i.e. minimize the number of false-negative samples. Accuracy at the Top~\cite{boyd2012accuracy} takes a different approach and minimizes the number of negative samples with the score above the top~$\tau$-quantile of all scores defined by
+\begin{equation}\label{eq: aatp quantile} 
+  t_1(\bm{s}) = \max \Set{t}{\tp(\bm{s}, t) + \fp(\bm{s}, t) \ge n \tau}.
 \end{equation}
 Then the Accuracy at the Top problem is defined by
-\begin{equation}\label{eq:problem_aatp_orig}
-  \begin{aligned}
-    \minimize{}
-    & \quad \frac{1}{n^{-}}\fp(\bm{w},t) \\
-    \st
-    & \quad t \text{ is the top \ensuremath{\tau}-quantile: it solves }~\eqref{eq:defin_quantile}.
-  \end{aligned}
-\end{equation}
-Due to Lemma~\ref{lemma:fnfp_equivalence} in the Appendix, the previous problem~\eqref{eq:problem_aatp_orig} is equivalent (up to a small theoretical issue) to
-\begin{equation}\label{eq:problem_aatp}
-  \begin{aligned}
-    \minimize{}
-    & \quad \mu \fn(\bm{w}, t) + (1 - \mu)\fp(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
-    \st
-    & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}
-  \end{aligned}
-\end{equation}
-for any~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq:problem_aatp_orig}, with~$\mu = 1$ it falls into our framework~\eqref{eq: aatp counts}, while with~$\mu = \frac{n^-}{n}$ it corresponds to the original definition from~\cite{boyd2012accuracy}. 
+\begin{mini}{\bm{w}}{
+  \frac{1}{n^-} \fp(\bm{s}, t)
+  }{\label{eq: aatp original}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile}.}}
+\end{mini}
+This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = 0$. However, this formulation can be rewritten using the following lemma.
+\begin{restatable}{lemma}{lemmaequivalence}\label{lemma:fnfp_equivalence}
+  Denote by~$t$ the exact quantile from~\eqref{eq: aatp quantile}. Then for all~$\mu \in [0,1]$ we have
+  \begin{equation}\label{eq: fn fp equivalence}
+      \fp(\bm{s},t) = \mu \fp(\bm{s},t) + (1-\mu)\fn(\bm{s},t) + (1-\mu)(n\tau - n^+) + (1-\mu)(q - 1),
+  \end{equation}
+  where~$q$ represents the number of samples which score is equal to~$t$
+  \begin{equation*}
+      q := \# \Set{i \in \I}{ \bm{s}_i = t}.
+  \end{equation*}
+\end{restatable}
+\noindent The right-hand side of~\eqref{eq: fn fp equivalence} consists of three parts. The first one is a convex combination of false-positive and false-negative counts. The second one is a constant term which has no impact on optimization. Finally, the third term~$(1-\mu)\Brac{q - 1}$ equals the number of samples for which their score equals the quantile. However, this term is small in comparison with the true-positive and the false-negative counts and can be neglected. Moreover, when the data are ``truly'' random such as when measurement errors are present, then~$q = 1$ and this term vanishes completely. Altogether, we get the following (almost) equivalent formulation to the problem~\eqref{eq: aatp original}
+\begin{mini}{\bm{w}}{
+  \mu \fp(\bm{s},t) + (1 - \mu)\fn(\bm{s},t)
+  }{\label{eq: aatp original combination}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}
+\end{mini}
+where~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq: aatp original}, while with~$\mu = \frac{n^-}{n}$ it corresponds to the original definition (without regularization) from~\cite{boyd2012accuracy}.
 
-Apart from the quantile~\eqref{eq:defin_quantile}, there are two other possible choices of the threshold
-\begin{align}
-  \label{eq:defin_quantile1} t_2(\bm{w}) =\ &\frac{1}{n\tau}\sum_{i=1}^{n\tau} s_{[i]}, \\
-  \label{eq:defin_quantile0} t_3(\bm{w})\quad \text{solves} \quad & \frac{1}{n}\sum_{i = 1}^nl(\beta(s_i - t)) = \tau.
-\end{align}
-We again use the vector of scores~$\bm{s}$ with components~$s_i = \bm{w}^\top \bm{x}_i$ and for the rest of the paper we assume, for simplicity, that~$n\tau$ is an integer. The quantile~\eqref{eq:defin_quantile} is sometimes denoted as VaR (value at risk) and~\eqref{eq:defin_quantile1} as CVaR (conditional value of risk). It is known is that the latter is the tightest convex approximation of the former. We will sometimes denote~\eqref{eq:defin_quantile0} as surrogate top~$\tau$-quantile. We will investigate the relations between these three objects as well as their properties such as convexity, differentiability or stability in Section~\ref{sec:theory}.
+Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{eq: aatp original combination}, where it replaces false-positive and false-negative counts in the objective function by their surrogate counterparts. This leads to
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{-}}\fps(\bm{s}, t) + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: grill}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}
+\end{mini}
+Based on the first author, we name this formulation \Grill. This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = \frac{1}{n^+}$.
 
-Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{eq:problem_aatp}, where it replaces~$\fn(\bm{w}, t)$ and~$\fp(\bm{w}, t)$ in the objective by their surrogate counterparts~$\fns(\bm{w}, t)$ and~$\fps(\bm{w}, t)$. This leads to
-\begin{equation}\label{eq:problem_grill}
-  \begin{aligned}
-    \minimize{}
-    & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{1}{n^{-}}\fps(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
-    \st
-    & \quad t\text{ is the top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile}.
-  \end{aligned}
+Apart from the quantile~\eqref{eq: aatp quantile}, there are two other possible choices of the threshold. The first on is simple approximation of the the true quantile by mean of the~$n\tau$ largest scores 
+\begin{equation}\label{eq: aatp quantile mean} 
+  t_2(\bm{s}) = \frac{1}{n\tau} \sum_{i=1}^{n\tau} s_{[i]}.
 \end{equation}
-Based on the first author, we name this formulation \Grill. The main purpose of~\eqref{eq:defin_quantile1} is to provide a convex approximation of the non-convex quantile~\eqref{eq:defin_quantile}. Putting it into the constraint results in a convex approximation problem, which we call \TopMeanK
-\begin{equation}\label{eq:problem_topmeank}
-  \begin{aligned}
-    \minimize{}
-    & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
-    \st
-    & \quad t = \frac 1{n\tau}(s_{[1]} + \dots + s_{[n\tau]}), \\
-    & \quad \text{components of }\bm{s}\text{ equal to } s = \bm{w}^\top \bm{x} \text{ for } \bm{x} \in \Xc.
-  \end{aligned}
+For simplicity, for the rest of the paper we assume, that~$n\tau$ is an integer. The quantile~\eqref{eq: aatp quantile} is sometimes denoted as VaR (value at risk) and~\eqref{eq: aatp quantile mean} as CVaR (conditional value of risk).The main purpose of~\eqref{eq: aatp quantile mean} is to provide a convex approximation of the non-convex quantile~\eqref{eq: aatp quantile}. In fact, it is known is that it is the tightest convex approximation of~\eqref{eq: aatp quantile}. Putting~\eqref{eq: aatp quantile mean} into the constraint results in the following problem, which we call \TopMeanK
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: topmeank}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{= \frac{1}{K} \sum_{i=1}^{K} s_{[i]},}
+\end{mini}
+where~$K = n\tau.$ Note that this formulation is very similar to the \TopPushK formulation from the previous section. The only difference is, that the threshold is computed from scores of all samples and not only from the negative ones as for \TopPushK. 
+
+The second option for the threshold, is to use surrogate counterparts to replace counts in~\eqref{eq: aatp quantile} and solve the following equality
+\begin{equation}\label{eq: aatp quantile surrogate}
+  t_3(\bm{s}) \quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau. 
 \end{equation}
-Similarly, we can use the surrogate top quantile in the constraint to arrive at
-\begin{equation}\label{eq:problem_patmat}
-  \begin{aligned}
-    \minimize{}
-    & \quad \frac{1}{n^{+}} \fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
-    \st
-    & \quad t \text{ is the surrogate top \ensuremath{\tau}-quantile: it solves }\eqref{eq:defin_quantile0}.
-  \end{aligned}
-\end{equation}
-Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq:problem_topmeank} and~\eqref{eq:problem_patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq:problem_patmat} provides a good approximation to the Accuracy at the Top problem, it is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning). 
+Since this threshold uses the surrogate approximation, we will sometimes denote~\eqref{eq: aatp quantile surrogate} as surrogate top~$\tau$-quantile. Similarly to the previous case, we can use the top~$\tau$-quantile in the constraint to arrive at
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: patmat}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is the surrogate top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile surrogate}.}}{~}
+\end{mini}
+Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear classifier is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning). 
+
+The following proposition compares the thresholds defined in this section in terms of approximation quality.
+\begin{proposition}[Thresholds relation~\cite{zhang2018tau}]\label{prop: threholds}
+  We always have
+  \begin{equation*}
+    t_1(\bm{s}) \le t_2(\bm{s}) \le t_3(\bm{s}).
+  \end{equation*}
+\end{proposition}
+Whenever the objective contains only false-negatives, a lower threshold~$t$ means a lower objective function. Therefore, a lower threshold is preferred.
 
 \section{Methods optimizing the Neyman-Pearson criterion}\label{sec: Neyman-Pearson}
 
@@ -208,7 +181,7 @@ Then, we may write the Neyman-Pearson problem as
     & \quad t \text{ is Type I error at level \ensuremath{\tau}: it solves }\eqref{eq:defin_quantile_np}.
   \end{aligned}
 \end{equation}
-Since~\eqref{eq:problem_np} differs from~\eqref{eq:problem_aatp} only by counting only the false-positives in~\eqref{eq:defin_quantile_np} instead of counting all positives in~\eqref{eq:defin_quantile}, we can derive its approximations in exactly the same way as in Section~\ref{sec: aatp}. We therefore provide only their brief description and start with approximations of~\eqref{eq:defin_quantile_np}
+Since~\eqref{eq:problem_np} differs from~\eqref{eq: aatp original combination} only by counting only the false-positives in~\eqref{eq:defin_quantile_np} instead of counting all positives in~\eqref{eq: aatp quantile}, we can derive its approximations in exactly the same way as in Section~\ref{sec: aatp}. We therefore provide only their brief description and start with approximations of~\eqref{eq:defin_quantile_np}
 \begin{align}
   \label{eq:defin_quantile1_np} t_2^{\rm NP}(\bm{w}) =\ &\frac{1}{n^-\tau}\sum_{i=1}^{n^-\tau} s_{[i]}^-, \\
   \label{eq:defin_quantile0_np} t_3^{\rm NP}(\bm{w})\quad \text{solves} \quad &\frac{1}{n}\sum_{i=1}^{n^-}l(\beta(s_i^- - t)) = \tau.
@@ -243,3 +216,22 @@ This problem already appeared in~\cite{zhang2018tau} under the name \tauFPL. Fin
 \end{equation}
 
 We may see~\eqref{eq:problem_topmeank_np} from two different viewpoints. First, \tauFPL provide convex approximations of \GrillNP. Second, \tauFPL has the same form as \TopPushK. The only difference is that for \tauFPL we have~$k=n^-\tau$ while for \TopPushK the value of~$k$ is small. Thus, even though we started from two different problems, we arrived at two approximations which differ only in the value of one parameter. This shows a close relation of the ranking problem and the Neyman-Pearson problem and the need for a unified theory to handle these problems.
+
+\section{Summary}
+
+\begin{table}
+  \centering
+  \begin{NiceTabular}{lcccc}
+    \toprule
+    \textbf{Name} & \textbf{Source} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
+    \midrule
+    \TopPush &  & 0 & $\frac{1}{n^+}$ & $s_{[1]}^-$ \\
+    \TopPushK & ours & 0 & $\frac{1}{n^+}$ & $\sum_{i = 1}^{K} s_{[i]}^-$\\
+    \midrule
+    \PatMat & & 0 & $\frac{1}{n^+}$ &\\
+    \PatMatNP & & 0 & $\frac{1}{n^+}$ & \\
+    \bottomrule
+  \end{NiceTabular}
+  \caption{Summary of ...}
+  \label{tab: aatp summary}
+\end{table}

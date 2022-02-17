@@ -1,0 +1,29 @@
+\chapter{Proofs for Chapter~\ref{chap: framework}}
+
+Here, we provide additional results and proofs of results mentioned in the main body. For convenience, we repeat the result statements.
+
+\section{Equivalence of \eqref{eq: aatp original} and \eqref{eq: aatp original combination}}
+
+To show this equivalence, we will start with an auxiliary lemma.
+
+\lemmaequivalence*
+\begin{proof}[Proof Lemma~\ref{lemma:fnfp_equivalence} on page \pageref{lemma:fnfp_equivalence}]
+  By the definition of the quantile we have
+  \begin{equation*}
+    \tp(\bm{s},t)+\fp(\bm{s},t) = n\tau + q-1.
+  \end{equation*}
+  This implies
+  \begin{equation*}
+    \fp(\bm{s},t)=n\tau +q - 1-\tp(\bm{s},t) =n\tau+q-1-n^{+} +\fn(\bm{s},t).
+  \end{equation*}
+  From this relation we deduce
+  \begin{equation*}
+    \begin{aligned}
+      \fp(\bm{s},t)
+      & = \mu \fp(\bm{s},t) + (1 - \mu)\fp(\bm{s},t) \\
+      & = \mu \fp(\bm{s},t) + (1 - \mu)\Brac{\fn(\bm{s},t) + n\tau - n^+ + q - 1} \\
+      & = \mu \fp(\bm{s},t) + (1 - \mu)\fn(\bm{s},t) + (1-\mu)\Brac{n\tau - n^+} + (1-\mu)\Brac{q - 1},
+    \end{aligned}
+  \end{equation*}
+  which is precisely the lemma statement.
+\end{proof}

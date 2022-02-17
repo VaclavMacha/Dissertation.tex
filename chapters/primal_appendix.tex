@@ -4,39 +4,6 @@
 
 Here, we provide additional results and proofs of results mentioned in the main body. For convenience, we repeat the result statements.
 
-\subsection{Equivalence of \eqref{eq:problem_aatp_orig} and \eqref{eq:problem_aatp}}
-
-To show this equivalence, we will start with an auxiliary lemma.
-
-\begin{lemma}\label{lemma:fnfp_equivalence}
-  Denote by~$t$ the exact quantile from \eqref{eq:defin_quantile}. Then for all~$\mu\in[0,1]$ we have
-  \begin{equation}\label{eq:fnfp_equivalence}
-  \fp (\bm{w},t) = \mu \fp(\bm{w},t) + (1-\mu)\fn(\bm{w},t) + (1-\mu)(n\tau - n^+) + (1-\mu)(q - 1),
-  \end{equation}
-  where~$q:= \#\{\bm{x} \in\mathcal X|\ \bm{w}^\top \bm{x}= t\}$.
-\end{lemma}
-
-\begin{proof}
-  By the definition of the quantile we have
-  \begin{equation*}
-    \tp(\bm{w},t)+\fp(\bm{w},t) = n\tau + q-1.
-  \end{equation*}
-  This implies
-  \begin{equation*}
-    \fp(\bm{w},t)=n\tau +q - 1-\tp(\bm{w},t) =n\tau+q-1-n^{+} +\fn(\bm{w},t).
-  \end{equation*}
-  From this relation we deduce
-  \begin{equation*}
-    \begin{aligned}
-      \fp(\bm{w},t) &= \mu \fp(\bm{w},t) + (1-\mu)\fp(\bm{w},t) = \mu \fp(\bm{w},t) + (1-\mu)\left(\fn(\bm{w},t) + n\tau - n^+ + q - 1\right)\\
-      &= \mu \fp(\bm{w},t) + (1-\mu)\fn(\bm{w},t) + (1-\mu)\left(n\tau - n^+\right) + (1-\mu)\left(q - 1\right),
-    \end{aligned}
-  \end{equation*}
-  which is precisely the lemma statement.
-\end{proof}
-
-The right-hand side of \eqref{eq:fnfp_equivalence} consists of three parts. The first one is a convex combination of false-positives and false-negatives. The second one is a constant term which has no impact on optimization. Finally, the third term~$(1-\mu)\left(q - 1\right)$ equals the number of samples for which their classifier equals the quantile. However, this term is small in comparison with the true-positives and the false-negatives and can be neglected. Moreover, when the data are ``truly'' random such as when measurement errors are present, then~$q=1$ and this term vanishes completely. This gives the (almost) equivalence of \eqref{eq:problem_aatp_orig} and \eqref{eq:problem_aatp}. Note that term~$q$ is ignored in many papers.
-
 \subsection{Results related to convexity}
 
 \propconvex*
@@ -238,7 +205,7 @@ and we could have ignored the~$\max$ operator in \eqref{eq:example1}. Finally, w
 
 \section{Computing the threshold for \PatMat}\label{app:threshold}
 
-We show how to efficiently compute the threshold \eqref{eq:defin_quantile0} for \PatMat and the hinge surrogate~\eqref{eq:defin_surrogate}. As always define the scores~$s_i=\bm{w}^\top \bm{x}_i$ and consider function
+We show how to efficiently compute the threshold \eqref{eq: aatp quantile surrogate} for \PatMat and the hinge surrogate~\eqref{eq:defin_surrogate}. As always define the scores~$s_i=\bm{w}^\top \bm{x}_i$ and consider function
 \begin{equation}\label{eq:defin_h}
   h(t) = \sum_{i=1}^nl(\beta(s_i-t)) - n\tau.
 \end{equation}
