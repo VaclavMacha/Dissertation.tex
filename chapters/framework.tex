@@ -218,67 +218,68 @@ For simplicity, we call this problem \PatMatNP.
 
 \begin{table}
   \centering
-  \begin{NiceTabular}{lccccc}
+  \begin{NiceTabular}{lcccc}
     \toprule
-    \textbf{Name} & \textbf{Definition} & \textbf{Source} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
+    \textbf{Name} & \textbf{Definition} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
     \midrule
     \TopPush
-      & \eqref{eq: toppush surrogate}
-      & \cite{li2014top}
+      & \eqref{eq: toppush surrogate} / \cite{li2014top}
       & 0
       & $\frac{1}{n^+}$
-      & $t = s_{[1]}^-$ \\
+      & $s_{[1]}^-$ \\
     \TopPushK
-      & \eqref{eq: toppushK surrogate}
-      & ours~\cite{adam2021general}
+      & \eqref{eq: toppushK surrogate} / ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
-      & $t = \sum_{i = 1}^{K} s_{[i]}^-$ \\
+      & $\sum_{i = 1}^{K} s_{[i]}^-$ \\
     \midrule
     \Grill
-      & \eqref{eq: grill}
-      & \cite{grill2016learning}
+      & \eqref{eq: grill} / \cite{grill2016learning}
       & $\frac{1}{n^-}$
       & $\frac{1}{n^+}$
-      & $t$ defined in~\eqref{eq: aatp quantile} \\
+      & $\max \Set{t}{\tp(\bm{s}, t) + \fp(\bm{s}, t) \ge n \tau}$ \\
     \TopMeanK
-      & \eqref{eq: topmeank}
-      & ---
+      & \eqref{eq: topmeank} / ---
       & 0
       & $\frac{1}{n^+}$
-      & $t = \frac{1}{n\tau} \sum_{i=1}^{n\tau} s_{[i]}$ \\
+      & $\frac{1}{K} \sum_{i=1}^{K} s_{[i]}$ \\
     \PatMat
-      & \eqref{eq: patmat}
-      & ours~\cite{adam2021general}
+      & \eqref{eq: patmat} / ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
       & $t$ solves $\frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau$ \\
     \midrule
     \GrillNP
-      & \eqref{eq: grill np}
-      & ---
-      & $\frac{1}{n^-}$
+      & \eqref{eq: grill np} / ---
+      & $\frac{1}{n^-}$ 
       & $\frac{1}{n^+}$
-      & $t$ defined in~\eqref{eq: NP quantile} \\
+      & $\max \Set{t}{\fp(\bm{s}, t) \ge n^- \tau}$ \\
     \tauFPL
-      & \eqref{eq: tau-fpl}
-      & \cite{zhang2018tau}
+      & \eqref{eq: tau-fpl} / \cite{zhang2018tau}
       & 0
       & $\frac{1}{n^+}$
-      & $t = \frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}$ \\
+      & $\frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}$ \\
     \PatMatNP
-      & \eqref{eq: patmat np}
-      & ours~\cite{adam2021general}
+      & \eqref{eq: patmat np} / ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
       & $t$ solves $\frac{1}{n^-} \fps(\bm{s}, t) = \tau$ \\
     \midrule
-    % \emph{Precision\@Recall}
-    %   & (6) in~\cite{mackey2018constrained}
-    %   & \cite{mackey2018constrained}
-    %   & 1
-    %   & 0
-    %   & $t = \frac{1}{n^-} \tp(\bm{s})$ \\
+    \emph{Precision@Recall}
+      & (6) in~\cite{mackey2018constrained} / \cite{mackey2018constrained}
+      & $\frac{1}{n^-}$
+      & 0
+      & $\min \Set{t}{\tp(\bm{s}, t) \le n^+ \tau}$ \\
+    \emph{Precision@K}
+      & --- / ---
+      & $\frac{1}{n^-}$
+      & 0
+      & $s_{[K]}$ \\
+      \emph{Recall@K}
+      & --- / ---
+      & 0
+      & $\frac{1}{n^+}$
+      & $s_{[K]}$ \\
     \bottomrule
   \end{NiceTabular}
   \caption{Summary of problems that fall in the framework~\eqref{eq: aatp surrogate}. The  table shows their definition label, the source or the source they are based on, the values of parameters~$\lambda_1,$~$\lambda_2$ for framework~\eqref{eq: aatp surrogate} and the form of the decision threshold~$t$.}
