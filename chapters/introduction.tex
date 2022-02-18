@@ -169,19 +169,41 @@ In this case the balanced accuracy is only 50\% which is very poor, but is more 
     \toprule
     \textbf{Name} & \textbf{Aliases} & \textbf{Formula} \\
     \midrule
-    true negatives & correct rejection & $\tn$ \\
-    false positives & type I error, false alarm & $\fp = n^- - \tn$ \\
-    true positives & hity & $\tp$ \\
-    false negatives & type II error & $\fn = n^+ - \tp$ \\
+    true negatives
+      & correct rejection
+      & $\tn$ \\
+    false positives
+      & Type I error, false alarm
+      & $\fp = n^- - \tn$ \\
+    true positives
+      & hity
+      & $\tp$ \\
+    false negatives
+      & Type II error
+      & $\fn = n^+ - \tp$ \\
     \midrule
-    true negative rate & specificity, selectivity & $\tnr = \frac{\tn}{n^-}$ \\
-    false positive rate & fall-out & $\fpr = \frac{\fp}{n^-} = 1 - \tnr$ \\
-    true positive rate & sensitivity, recall, hit rate & $\tpr = \frac{\tp}{n^+}$ \\
-    false negative rate & miss rate & $\fnr = \frac{\fn}{n^+} = 1 - \tpr$ \\
+    true negative rate
+      & specificity, selectivity
+      & $\tnr = \frac{\tn}{n^-}$ \\
+    false positive rate
+      & fall-out
+      & $\fpr = \frac{\fp}{n^-} = 1 - \tnr$ \\
+    true positive rate
+      & sensitivity, recall, hit rate
+      & $\tpr = \frac{\tp}{n^+}$ \\
+    false negative rate
+      & miss rate
+      & $\fnr = \frac{\fn}{n^+} = 1 - \tpr$ \\
     \midrule
-    accuracy & --- & $\accuracy = \frac{\tp + \tn}{n}$ \\
-    balanced accuracy & --- & $\baccuracy = \frac{\tpr + \tnr}{2}$ \\
-    precision & positive predictive value & $\precision = \frac{\tp}{\tp + \fp}$ \\
+    accuracy
+      & ---
+      & $\accuracy = \frac{\tp + \tn}{n}$ \\
+    balanced accuracy
+      & ---
+      & $\baccuracy = \frac{\tpr + \tnr}{2}$ \\
+    precision
+      & positive predictive value
+      & $\precision = \frac{\tp}{\tp + \fp}$ \\
     \bottomrule
   \end{NiceTabular}
   \caption{Classicication metrics}
@@ -207,6 +229,24 @@ While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar be
   \label{fig: standard vs. aatp}
 \end{figure}
 
+\subsection{Ranking problems}
+
+\textbf{Ranking problems:} Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages~\cite{cortes2003auc}.
+
+The first category of problems that is tightly related to binary classification at the top, is the category of ranking problems. Ranking problems have become very important in many different fields
+\begin{itemize}
+  \item \textbf{Information retrieval systems:} The goal of the information retrieval systems is to rank documents according to relevance to a given query.
+  \item \textbf{Recommendation  systems:} The goal is to rank and recommend products based on the user's previous behavior.
+  \item 
+\end{itemize}
+All the examples above can be formulated as bipartite ranking problem~\cite{freund2003efficient, agarwal2005generalization, agarwal2011infinite}, where the goal is to rank the relevant (positive) samples higher than the non-relevant (negative) ones. 
+
+Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages~\cite{cortes2003auc}.
+
+A prototypical example is the RankBoost~\cite{freund2003efficient} maximizing the area under the ROC curve, the Infinite Push~\cite{agarwal2011infinite} or the~$p$-norm push~\cite{rudin2009pnorm} which concentrate on the high-ranked negatives and push them down. Since all these papers include pairwise comparisons of all samples, they can be used only for small datasets. This was alleviated in~\cite{li2014top}, where the authors performed the limit~$p \to \infty$ in~$p$-norm push and obtained the linear complexity in the number of samples. Moreover, since the~$l_{\infty}$-norm is equal to the maximum, this method falls into our framework with the threshold equal to the largest score computed from negative samples.
+
+Many methods, such as \emph{RankBoost}~\cite{freund2003efficient}, \emph{Infinite Push}~\cite{agarwal2011infinite} or \emph{$p$-norm push}~\cite{rudin2009pnorm} employ a pairwise comparison of samples, which makes them infeasible for larger datasets. This was alleviated in \TopPush~\cite{li2014top} where the authors considered the limit~$p \rightarrow \infty$. Since the~$l_{\infty}$ norm from \TopPush is equal to the maximum, the decision threshold from our framework equals to the maximum of scores of negative samples. This was generalized into \TopPushK~\cite{adam2021general} by considering the threshold to be the mean of~$K$ largest scores of negative samples.
+
 \subsection{Accuracy at the Top}
 
 \textbf{Accuracy at the Top:} Accuracy at the Top~\cite{boyd2012accuracy, grill2016learning} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the number of positive samples (equivalently minimizes the misclassification)  above the top~$\tau$-quantile of scores. The Accuracy at the Top can be very useful for search engines or in applications where identified samples undergo expensive post-processing such as human evaluation. As an example, we can mention cyber security~\cite{grill2016learning}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated.
@@ -220,32 +260,3 @@ Accuracy at the Top ($\tau$-quantile) was formally defined in~\cite{boyd2012accu
 \textbf{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
 
 Hypothesis testing states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
-
-
-\subsection{Ranking problems}
-
-\textbf{Ranking problems:} Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages~\cite{cortes2003auc}.
-
-
-
-The first category of problems that is tightly related to binary classification at the top, is the category of ranking problems. Ranking problems have become very important in many different fields
-\begin{itemize}
-  \item \textbf{Information retrieval systems:} The goal of the information retrieval systems is to rank documents according to relevance to a given query.
-  \item \textbf{Recommendation  systems:} The goal is to rank and recommend products based on the user's previous behavior.
-  \item 
-\end{itemize}
-All the examples above can be formulated as bipartite ranking problem~\cite{freund2003efficient, agarwal2005generalization, agarwal2011infinite}, where the goal is to rank the relevant (positive) samples higher than the non-relevant (negative) ones. 
-
-
-
-Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages~\cite{cortes2003auc}.
-
-
-
-
-
-
-
-A prototypical example is the RankBoost~\cite{freund2003efficient} maximizing the area under the ROC curve, the Infinite Push~\cite{agarwal2011infinite} or the~$p$-norm push~\cite{rudin2009pnorm} which concentrate on the high-ranked negatives and push them down. Since all these papers include pairwise comparisons of all samples, they can be used only for small datasets. This was alleviated in~\cite{li2014top}, where the authors performed the limit~$p \to \infty$ in~$p$-norm push and obtained the linear complexity in the number of samples. Moreover, since the~$l_{\infty}$-norm is equal to the maximum, this method falls into our framework with the threshold equal to the largest score computed from negative samples.
-
-Many methods, such as \emph{RankBoost}~\cite{freund2003efficient}, \emph{Infinite Push}~\cite{agarwal2011infinite} or \emph{$p$-norm push}~\cite{rudin2009pnorm} employ a pairwise comparison of samples, which makes them infeasible for larger datasets. This was alleviated in \TopPush~\cite{li2014top} where the authors considered the limit~$p \rightarrow \infty$. Since the~$l_{\infty}$ norm from \TopPush is equal to the maximum, the decision threshold from our framework equals to the maximum of scores of negative samples. This was generalized into \TopPushK~\cite{adam2019patmat} by considering the threshold to be the mean of~$K$ largest scores of negative samples.

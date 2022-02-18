@@ -62,7 +62,7 @@ Similarly, let us define vectors~$\bm{s}^- \in \R^{n^-},$ $\bm{s}^+ \in \R^{n^+}
 \end{equation}
 and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
 
-\section{Methods based on pushing positives to the top}\label{sec:obj1}
+\section{Ranking problems}\label{sec:obj1}
 
 The first category of formulations falling into our framework~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} are ranking methods which attempt to put as many positive (relevant) samples to the top as possible. The number of positive samples on top equals to the number of positive samples with classification score the highest classicication score corresponding to negative sample. This amounts to maximizing the number of true-positive samples or, equivalently, minimizing the number of false-negative negative samples, which may be written as
 \begin{mini}{\bm{w}}{
@@ -98,7 +98,7 @@ Then the Accuracy at the Top problem is defined by
   \frac{1}{n^-} \fp(\bm{s}, t)
   }{\label{eq: aatp original}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile}.}}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile}.}}{~}
 \end{mini}
 This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = 0$. However, this formulation can be rewritten using the following lemma.
 \begin{restatable}{lemma}{lemmaequivalence}\label{lemma:fnfp_equivalence}
@@ -116,7 +116,7 @@ This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$
   \mu \fp(\bm{s},t) + (1 - \mu)\fn(\bm{s},t)
   }{\label{eq: aatp original combination}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}{~}
 \end{mini}
 where~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq: aatp original}, while with~$\mu = \frac{n^-}{n}$ it corresponds to the original definition (without regularization) from~\cite{boyd2012accuracy}.
 
@@ -125,7 +125,7 @@ Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{
   \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{-}}\fps(\bm{s}, t) + \frac{1}{n^{+}} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}
+  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}{~}
 \end{mini}
 Based on the first author, we name this formulation \Grill. This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = \frac{1}{n^+}$.
 
@@ -146,14 +146,14 @@ The second option for the threshold, is to use surrogate counterparts to replace
 \begin{equation}\label{eq: aatp quantile surrogate}
   t_3(\bm{s}) \quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau. 
 \end{equation}
-Since this threshold uses the surrogate approximation, we will sometimes denote~\eqref{eq: aatp quantile surrogate} as surrogate top~$\tau$-quantile. Similarly to the previous case, we can use the top~$\tau$-quantile in the constraint to arrive at
+Since this threshold uses the surrogate approximation, we will sometimes denote~\eqref{eq: aatp quantile surrogate} as surrogate top~$\tau$-quantile. Similarly to the previous case, we can use the surrogate top~$\tau$-quantile in the constraint to arrive at
 \begin{mini}{\bm{w}}{
   \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{+}} \fns(\bm{s}, t)
   }{\label{eq: patmat}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the surrogate top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile surrogate}.}}{~}
+  \addConstraint{t}{\quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau.}
 \end{mini}
-Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear classifier is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning). 
+Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear classifier is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
 
 The following proposition compares the thresholds defined in this section in terms of approximation quality.
 \begin{proposition}[Thresholds relation~\cite{zhang2018tau}]\label{prop: threholds}
@@ -164,74 +164,123 @@ The following proposition compares the thresholds defined in this section in ter
 \end{proposition}
 Whenever the objective contains only false-negatives, a lower threshold~$t$ means a lower objective function. Therefore, a lower threshold is preferred.
 
-\section{Methods optimizing the Neyman-Pearson criterion}\label{sec: Neyman-Pearson}
+\section{Neyman-Pearson problem}\label{sec: Neyman-Pearson}
 
-Another category falling into the framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} is the Neyman-Pearson problem which is closely related to hypothesis testing, where null~$H_0$ and alternative~$H_1$ hypotheses are given. Type~I error occurs when~$H_0$ is true but is rejected, and type II error happens when~$H_0$ is false, but it fails to be rejected. The standard technique is to minimize Type II error while a bound for Type I error is given.
+Another category falling into the framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} is the Neyman-Pearson problem which is closely related to hypothesis testing, where null~$H_0$ and alternative~$H_1$ hypotheses are given. Type~I error occurs when~$H_0$ is true but is rejected, and Type II error happens when~$H_0$ is false, but it fails to be rejected. The standard technique is to minimize Type II error while a bound for Type I error is given.
 
-In the Neyman-Pearson problem, the null hypothesis~$H_0$ states that a sample~$\bm{x}$ has the negative label. Then Type I error corresponds to false-positives while Type II error to false-negatives. If the bound on Type I error equals~$\tau$, we may write this as
-\begin{equation}\label{eq:defin_quantile_np} 
-  t_1^{\rm NP}(\bm{w}) = \max\Brac[c]{t \mid \fp(\bm{w},t) \ge n^- \tau}.
+In the Neyman-Pearson problem, the null hypothesis~$H_0$ states that a sample~$\bm{x}$ has the negative label. Then Type I error occurs when the sample is false-positive while Type II error when the sample false-negative, see Table~\ref{tab: classification metrics}. In other words, minimizing Type II error corresponds to minimizing the number of false-negative samples and the bound for Type I error is equivalent to the bound on the number of false-positive samples, i.e. if the bound on Type I error equals~$\tau$, we may write this as
+\begin{equation}\label{eq: NP quantile} 
+  t_1^{\rm NP}(\bm{s}) = \max \Set{t}{\fp(\bm{s}, t) \ge n^- \tau}.
 \end{equation}
-Then, we may write the Neyman-Pearson problem as
-\begin{equation}\label{eq:problem_np}
-  \begin{aligned}
-    \minimize{}
-    & \quad \frac{1}{n^{+}}\fn(\bm{w},t) \\
-    \st
-    & \quad t \text{ is Type I error at level \ensuremath{\tau}: it solves }\eqref{eq:defin_quantile_np}.
-  \end{aligned}
-\end{equation}
-Since~\eqref{eq:problem_np} differs from~\eqref{eq: aatp original combination} only by counting only the false-positives in~\eqref{eq:defin_quantile_np} instead of counting all positives in~\eqref{eq: aatp quantile}, we can derive its approximations in exactly the same way as in Section~\ref{sec: aatp}. We therefore provide only their brief description and start with approximations of~\eqref{eq:defin_quantile_np}
-\begin{align}
-  \label{eq:defin_quantile1_np} t_2^{\rm NP}(\bm{w}) =\ &\frac{1}{n^-\tau}\sum_{i=1}^{n^-\tau} s_{[i]}^-, \\
-  \label{eq:defin_quantile0_np} t_3^{\rm NP}(\bm{w})\quad \text{solves} \quad &\frac{1}{n}\sum_{i=1}^{n^-}l(\beta(s_i^- - t)) = \tau.
-\end{align}
-Replacing the true counts by their surrogates results in the Neyman-Pearson variant \GrillNP
-\begin{equation}\label{eq:problem_grill_np}
-  \begin{aligned}
-  \minimize{}
-  & \quad \frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{1}{n^{-}}\fps(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
-  \st
-  & \quad t\text{ is the Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile_np}.
-  \end{aligned}
-\end{equation}
-Similarly, the Neyman-Pearson alternative to \TopMeanK reads
-\begin{equation}\label{eq:problem_topmeank_np}
-  \begin{aligned}
-  \minimize{}
-  & \quad\frac{1}{n^{+}}\fns(\bm{w}, t) + \frac{\lambda}{2}\norm{\bm{w}}^2 \\
-  \st
-  & \quad t = \frac 1{n^ - \tau}(s_{[1]}^- + \dots + s_{[n^- \tau]}^-), \\
-  & \quad \text{components of }\bm{s}^-\text{ equal to } s^- = \bm{w}^\top \bm{x}^-\text{ for }\bm{x}^- \in \Xc.
-  \end{aligned}
-\end{equation}
-This problem already appeared in~\cite{zhang2018tau} under the name \tauFPL. Finally, \PatMatNP reads
-\begin{equation}\label{eq:problem_patmat_np}
-  \begin{aligned}
-  \minimize{}
-  & \quad \frac{1}{n^{+}}\fns(\bm{w},t) + \frac{\lambda}{2}\norm{\bm{w}}^2\\
-  \st
-  & \quad t\text{ is the surrogate Neyman-Pearson threshold: it solves }\eqref{eq:defin_quantile0_np}.
-  \end{aligned}
-\end{equation}
+Note that in~\eqref{eq: NP quantile} we only count the false-positive samples instead of counting all positives in~\eqref{eq: aatp quantile}. Then, we may write the Neyman-Pearson problem as
+\begin{mini}{\bm{w}}{
+  \frac{1}{n^+} \fn(\bm{s}, t)
+  }{\label{eq: NP problem}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is Type I error at level } \tau\text{: it solves~\eqref{eq: NP quantile}.}}{~}
+\end{mini}
+This problem again falls within our framework for~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. Since problems~\eqref{eq: NP problem} and~\eqref{eq: aatp original combination} are almost identical, we can derive approximations of~\eqref{eq: NP problem} in the exactly the same way as in Section~\ref{sec: aatp}.
 
-We may see~\eqref{eq:problem_topmeank_np} from two different viewpoints. First, \tauFPL provide convex approximations of \GrillNP. Second, \tauFPL has the same form as \TopPushK. The only difference is that for \tauFPL we have~$k=n^-\tau$ while for \TopPushK the value of~$k$ is small. Thus, even though we started from two different problems, we arrived at two approximations which differ only in the value of one parameter. This shows a close relation of the ranking problem and the Neyman-Pearson problem and the need for a unified theory to handle these problems.
+The first way how to approximate the problem~\eqref{eq: aatp counts} is to replace the true counts  in the objective function by their surrogate counterparts as in~\cite{grill2016learning}. This results in the Neyman-Pearson variant of \Grill. To emphasize this relationship, we call this problem \GrillNP. Resulting problem has the following form
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{-}}\fps(\bm{s}, t) + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: grill np}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\text{ is Type I error at level } \tau\text{: it solves~\eqref{eq: NP quantile}.}}{~}
+\end{mini}
+The second option is to use approximation of the true quantile. In such a case, the firsat choice is to replace the treu qunatile by mean of the~$n\tau$ largest scores of negative samples 
+\begin{equation}\label{eq: np quantile mean} 
+  t_2^{\rm NP}(\bm{s}) = \frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}.
+\end{equation}
+For simplicity, for the rest of the paper we assume, that~$n^-\tau$ is an integer. Putting~\eqref{eq: np quantile mean} into the constraint results in the the Neyman-Pearson alternative to \TopMeanK defined as
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: tau-fpl}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{= \frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}.}
+\end{mini}
+This problem already appeared in~\cite{zhang2018tau} under the name \tauFPL. We may see~\eqref{eq: tau-fpl} from two different viewpoints. First, \tauFPL provide convex approximations of \GrillNP. Second, \tauFPL has the same form as \TopPushK. The only difference is that for \tauFPL we have~$K = n^-\tau$ while for \TopPushK the value of~$K$ is small. Thus, even though we started from two different problems, we arrived at two approximations which differ only in the value of one parameter. This shows a close relation of the ranking problem and the Neyman-Pearson problem and the need for a unified theory to handle these problems.
+
+Finally, it is possible to use surrogate counterparts to replace counts in~\eqref{eq: NP quantile} and solve the following equality
+\begin{equation}\label{eq: np quantile surrogate}
+  t_3^{\rm NP}(\bm{s}) \quad \text{solves} \quad \frac{1}{n^-}\sum_{i \in \I^-} l(s_i - t) = \tau. 
+\end{equation}
+This approximation of the true quantile leads to the Neyman-Pearson alternative to \PatMat in the following form
+\begin{mini}{\bm{w}}{
+  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{+}} \fns(\bm{s}, t)
+  }{\label{eq: patmat np}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{\quad \text{solves} \quad \frac{1}{n^-} \fps(\bm{s}, t) = \tau.}
+\end{mini}
+For simplicity, we call this problem \PatMatNP.
 
 \section{Summary}
 
 \begin{table}
   \centering
-  \begin{NiceTabular}{lcccc}
+  \begin{NiceTabular}{lccccc}
     \toprule
-    \textbf{Name} & \textbf{Source} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
+    \textbf{Name} & \textbf{Definition} & \textbf{Source} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
     \midrule
-    \TopPush &  & 0 & $\frac{1}{n^+}$ & $s_{[1]}^-$ \\
-    \TopPushK & ours & 0 & $\frac{1}{n^+}$ & $\sum_{i = 1}^{K} s_{[i]}^-$\\
+    \TopPush
+      & \eqref{eq: toppush surrogate}
+      & \cite{li2014top}
+      & 0
+      & $\frac{1}{n^+}$
+      & $t = s_{[1]}^-$ \\
+    \TopPushK
+      & \eqref{eq: toppushK surrogate}
+      & ours~\cite{adam2021general}
+      & 0
+      & $\frac{1}{n^+}$
+      & $t = \sum_{i = 1}^{K} s_{[i]}^-$ \\
     \midrule
-    \PatMat & & 0 & $\frac{1}{n^+}$ &\\
-    \PatMatNP & & 0 & $\frac{1}{n^+}$ & \\
+    \Grill
+      & \eqref{eq: grill}
+      & \cite{grill2016learning}
+      & $\frac{1}{n^-}$
+      & $\frac{1}{n^+}$
+      & $t$ defined in~\eqref{eq: aatp quantile} \\
+    \TopMeanK
+      & \eqref{eq: topmeank}
+      & ---
+      & 0
+      & $\frac{1}{n^+}$
+      & $t = \frac{1}{n\tau} \sum_{i=1}^{n\tau} s_{[i]}$ \\
+    \PatMat
+      & \eqref{eq: patmat}
+      & ours~\cite{adam2021general}
+      & 0
+      & $\frac{1}{n^+}$
+      & $t$ solves $\frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau$ \\
+    \midrule
+    \GrillNP
+      & \eqref{eq: grill np}
+      & ---
+      & $\frac{1}{n^-}$
+      & $\frac{1}{n^+}$
+      & $t$ defined in~\eqref{eq: NP quantile} \\
+    \tauFPL
+      & \eqref{eq: tau-fpl}
+      & \cite{zhang2018tau}
+      & 0
+      & $\frac{1}{n^+}$
+      & $t = \frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}$ \\
+    \PatMatNP
+      & \eqref{eq: patmat np}
+      & ours~\cite{adam2021general}
+      & 0
+      & $\frac{1}{n^+}$
+      & $t$ solves $\frac{1}{n^-} \fps(\bm{s}, t) = \tau$ \\
+    \midrule
+    % \emph{Precision\@Recall}
+    %   & (6) in~\cite{mackey2018constrained}
+    %   & \cite{mackey2018constrained}
+    %   & 1
+    %   & 0
+    %   & $t = \frac{1}{n^-} \tp(\bm{s})$ \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of ...}
+  \caption{Summary of problems that fall in the framework~\eqref{eq: aatp surrogate}. The  table shows their definition label, the source or the source they are based on, the values of parameters~$\lambda_1,$~$\lambda_2$ for framework~\eqref{eq: aatp surrogate} and the form of the decision threshold~$t$.}
   \label{tab: aatp summary}
 \end{table}
