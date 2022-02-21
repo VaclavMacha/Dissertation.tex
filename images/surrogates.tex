@@ -26,7 +26,7 @@
   \begin{axis}[
     xmin = -2,
     xmax = 2.1,
-    ymin = 0,
+    ymin = -0.1,
     ymax = 4.1,
     domain = -2:2.1,
     axis lines = left,
@@ -44,19 +44,19 @@
     width=14cm,
   ]
     
-    \addplot [line, cyan] {hinge(x, 1)};
-    \addlegendentry{Hinge loss~$\vartheta = 1$}
-    \addplot [line, myorange, dashed] {hinge(x, 2)};
-    \addlegendentry{Hinge loss~$\vartheta = 2$}
-    \addplot [line, myblue, dotted] {quadratic(x, 1)};
-    \addlegendentry{Quadratic hinge loss~$\vartheta = 1$}
-    \addplot [line, mygreen, dashdotted] {quadratic(x, 2)};
-    \addlegendentry{Quadratic hinge loss~$\vartheta = 2$}
     \addplot[lineiver, no markers] coordinates {(-2, 0) (0, 0)};
-    \addlegendentry{Iverson funcion}
+    \addlegendentry{$\Iverson{s >= 0}$}
+    \addplot [line, cyan] {hinge(x, 1)};
+    \addlegendentry{$l_{\text{hinge}}(s)$}
+    \addplot [line, myorange, dashed] {hinge(x, 2)};
+    \addlegendentry{$l_{\text{hinge}}(2s)$}
+    \addplot [line, myblue, dotted] {quadratic(x, 1)};
+    \addlegendentry{$l_{\text{quadratic}}(s)$}
+    \addplot [line, mygreen, dashdotted] {quadratic(x, 2)};
+    \addlegendentry{$l_{\text{quadratic}}(2s)$}
     \addplot[lineiver, no markers] coordinates {(0, 1) (2.1, 1)};
-    \addplot[lineiver, only marks, mark=*, mark options={fill=white}] coordinates {(0, 0)};
-    \addplot[lineiver, only marks, mark=*, mark options={fill=myred}] coordinates {(0, 1)};
+    \addplot[lineiver, mark=*, mark options={fill=white}] coordinates {(0, 0)};
+    \addplot[lineiver, mark=*, mark options={fill=myred}] coordinates {(0, 1)};
   \end{axis}
 \end{tikzpicture}
 \end{document}
