@@ -1,26 +1,39 @@
-\chapter{Linear case}
+\chapter{Additional materials Chapter~\ref{chap: linear}}
 
-\section{Additional results and proofs}\label{app: proofs primal}
+\section{Proofs}
 
-Here, we provide additional results and proofs of results mentioned in the main body. For convenience, we repeat the result statements.
+Firstly we recall definitions of the thresholds defined in Section~\ref{sec: aatp}
+\begin{equation*}
+  \begin{aligned}
+    t_1(\bm{s}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau} \\
+    t_2(\bm{s}) & = \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \\
+    t_3(\bm{s}) & \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l_{\vartheta}(s_i - t) = \tau \\
+  \end{aligned}
+\end{equation*}
+and also recall, that we assume linear classifier, i.e. scores are defined for all~$i \in \I$ as follows
+\begin{equation*}
+  s_i = \bm{w}^{\top} \bm{x}_i,
+\end{equation*}
+where~$\bm{w}, \; \bm{x}_i \in \R^d$ and~$d \in \N.$
 
-\subsection{Results related to convexity}
+\subsection{Convexity}
 
 \propconvex*
-\begin{proof}[Proof Proposition~\ref{prop:convex} on page \pageref{prop:convex}]
-  It is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$k$ highest values of a vector is a convex function and therefore,~$t_2$ is a convex function. It remains to analyze~$t_3$. It is defined via an implicit equation, where we consider for simplicity~$\beta=1$,
+\begin{proof}[Proof Proposition~\ref{prop:convex} on page~\pageref{prop:convex}]
+  It is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$k$ highest values of a vector is a convex function and therefore,~$t_2$ is a convex function. It remains to analyze~$t_3$. Let us dfefine function~$g$ as follows
   \begin{equation*}
-    g(\bm{w},t) := \frac{1}{n}\sum_{\bm{x} \in \Xc} l(\bm{w}^\top \bm{x}-t) - \tau = 0.
-  \end{equation*}
-  Since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables.
-
-  To show the convexity, consider~$\bm{w}$,~$\hat{\bm{w}}$ and the corresponding~$t= t_3(\bm{w})$,~$\hat{t}=t_3(\hat{\bm{w}})$. Note that this implies~$g(\bm{w}, t)=g(\hat{\bm{w}},\hat{t})=0$. Then for any~$\lambda\in[0,1]$ we have 
+    g(\bm{w},t) := \frac{1}{n} \sum_{i \in \I} l_{\vartheta}(\bm{w}^\top \bm{x}_i - t) - \tau.
+  \end{equation*}  
+  Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l_{\vartheta}$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \hat{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\hat{t} = t_3(\hat{\bm{w}})$. Then for any~$\lambda\in[0,1]$ we have 
   \begin{equation}\label{eq:proof_conv1}
-    g(\lambda \bm{w} + (1 - \lambda)\hat{\bm{w}},\;\lambda t + (1 - \lambda)\hat{t})
+    g\Brac{\lambda \bm{w} + (1 - \lambda)\hat{\bm{w}}, \;\lambda t + (1 - \lambda)\hat{t}}
     \le \lambda g(\bm{w}, t) + (1 - \lambda) g(\hat{\bm{w}}, \hat{t}) = 0,
   \end{equation}
-  where the inequality follows from the convexity of~$g$ and the equality from~$g(\bm{w}, t) = g(\hat{\bm{w}}, \hat{t})=0.$
-  From the definition of the surrogate quantile function~$t_3$ we have
+  where the inequality follows from the convexity of~$g$ and the equality from
+  \begin{equation*}
+    g(\bm{w}, t) = g(\hat{\bm{w}}, \hat{t}) = 0,
+  \end{equation*}
+  which holds true since both~$t$ and $\hat{t}$ solves~\eqref{eq: aatp quantile surrogate}. From the definition of the surrogate quantile function~$t_3$ we have
   \begin{equation}\label{eq:proof_conv2}
     g(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}}, t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})) = 0.
   \end{equation}
@@ -34,109 +47,128 @@ Here, we provide additional results and proofs of results mentioned in the main 
 \end{proof}
 
 \thmconvex*
-\begin{proof}[Proof of Theorem~\ref{thm:convex} on page \pageref{thm:convex}]
-  Due to the definition of the surrogate counts \eqref{eq: confusion counts surrogate}, the objective of \eqref{eq: aatp surrogate} equals to
+\begin{proof}[Proof of Theorem~\ref{thm:convex} on page~\pageref{thm:convex}]
+  Due to the definition of the surrogate counts \eqref{eq: confusion counts surrogate}, the function~$f$ equals to
   \begin{equation*}
-    \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+} l\Brac{t(\bm{w})-\bm{w}^\top \bm{x}}.
+    f(\bm{w}) = \fns(\bm{w}, t(\bm{w})) = \sum_{i \in \I^+} l_{\vartheta} \Brac{t(\bm{w}) - \bm{w}^\top \bm{x}_i}.
   \end{equation*}
   Here we write~$t(\bm{w})$ to stress the dependence of~$t$ on~$\bm{w}$. Since~$\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that~$\bm{w}\mapsto t(\bm{w})-\bm{w}^\top \bm{x}$ is a convex function. From its definition, the surrogate function~$l$ is convex and non-decreasing. Since a composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
 \end{proof}
 
-\subsection{Results related to differentiability}
+\subsection{Differentiability}
 
-\derivative*
-\begin{proof}[Proof of Theorem~\ref{thm:derivative} on page \pageref{thm:derivative}]
+\derivative* 
+\begin{proof}[Proof of Theorem~\ref{thm:derivative} on page~\pageref{thm:derivative}]
   The result for~$t_3$ follows directly from the implicit function theorem. The non-differentiability of~$t_1$ and~$t_2$ happens whenever the threshold value is achieved at two different scores.
 \end{proof}
 
-\subsection{Results related to stability}
+\subsection{Stability}
 
 \larget*
-\begin{proof}[Proof of Theorem~\ref{thm:large_t} on page \pageref{thm:large_t}]
-  Due to~$l(0)=1$ and the convexity of~$l$ we have~$l(s)\ge 1+cs$, where~$c$ equals to the derivative of~$l$ at~$0$. Then we have
+\begin{proof}[Proof of Theorem~\ref{thm:large_t} on page~\pageref{thm:large_t}]
+  All mentioned formulations use surogate approximation of the false-negative rate as the objective function~$L.$ For the linear classifier, the objective function had following form
   \begin{equation*}
-    \begin{aligned}
-      f(\bm{w}) 
-      & \ge \frac{1}{n^+}\fns(\bm{w}, t) = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}l(t-\bm{w}^\top \bm{x}) \ge \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}(1+c(t-\bm{w}^\top \bm{x})) \\
-      & = 1+\frac{c}{n^+}\sum_{\bm{x} \in \Xc^+}(t-\bm{w}^\top \bm{x}) = 1+ct - \frac{c}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} \ge 1,
-    \end{aligned}
+    L(\bm{w})
+      = \frac{1}{n^+}\sum_{i \in \I^+}l_{\vartheta}(t - \bm{w}^\top \bm{x}_i)
   \end{equation*}
-  where the last inequality follows from \eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for~$\bm{w}=0$ equals to~$t=0$, and thus~$f(\bm{0})=1$. But then~$f(\bm{0})\le f(\bm{w})$. The second part of the result follows from the form of thresholds~$t(\bm{w})$.
+  Due to~$l_{\vartheta}(0) = 1$ and the convexity of~$l_{\vartheta}$ we have~$l_{\vartheta}(s) \ge 1 + cs$, where~$c$ equals to the derivative of~$l_{\vartheta}$ at~$0$. Then we have
+  \begin{equation*}
+    L(\bm{w}) 
+      \ge \frac{1}{n^+} \sum_{i \in \I^+}(1 + c(t-\bm{w}^\top \bm{x}_i))
+      = 1 + ct - \frac{c}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}
+      \ge 1,
+  \end{equation*}
+  where the last inequality follows from assumption~\eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for~$\bm{w}=0$ equals to~$t=0$, and thus~$L(\bm{0})=1$. But then~$L(\bm{0}) \le L(\bm{w})$. The second part of the result follows from the form of thresholds~$t(\bm{w})$.
 \end{proof}
 
 \patmatzero*
-\begin{proof}[Proof of Theorem~\ref{thm:patmat_zero} on page \pageref{thm:patmat_zero}]
-  Define first
+\begin{proof}[Proof of Theorem~\ref{thm:patmat_zero} on page~\pageref{thm:patmat_zero}]
+  Define first~$s_i = \bm{w}^\top \bm{x}_i$ for all~$i \in I$ and
   \begin{equation*}
     \begin{aligned}
-      s_{\min} = \min_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}, \quad
-      \bar{s} = \frac{1}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top \bm{x} , \quad
-      s_{\max} = \max_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}.
+      s_{\min} & = \min \Set{s_i}{i \in \I}, \qquad
+      s_{\max} & = \max \Set{s_i}{i \in \I}, \qquad
+      \bar{s} & = \frac{1}{n} \sum_{i \in \I} s_i. \\
     \end{aligned}
   \end{equation*}
-  Then we have the following chain of relations
+  Using the definition of~$\bar{s}$ and the assumption~\eqref{eq:patmat_zero}, we get the following relation
   \begin{equation}\label{eq:patmat_zero_aux0}
-    \begin{aligned}
-      \bar{s}
-      & = \frac{1}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top \bm{x}
-        = \frac{1}{n}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} + \frac{1}{n}\sum_{\bm{x} \in \Xc^-}\bm{w}^\top \bm{x}
-        < \frac{1}{n}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} + \frac{n^-}{nn^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} \\
-      & = \frac 1n\left(1+\frac{n^-}{n^+}\right)\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}
-        = \frac 1n\frac{n^++n^-}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x} = \frac 1{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}.
-    \end{aligned}
+    \bar{s}
+      = \frac{1}{n} \sum_{i \in \I} s_i
+      = \frac{1}{n}\sum_{i \in \I^+} s_i + \frac{1}{n} \sum_{i \in \I^-} s_i
+      < \frac{1}{n} \sum_{i \in \I^+} s_i + \frac{n^-}{nn^+} \sum_{i \in \I^+} s_i
+      = \frac{1}{n^+} \sum_{i \in \I^+} s_i,
   \end{equation}
-  The only inequality follows from \eqref{eq:patmat_zero} and the last equality follows from~$n^++n^-=n$.
-  
-  Due to \eqref{eq:patmat_zero} we have~$s_{\min} < \bar{s} < s_{\max}$. Then we can define
+  where the inequality follows from~\eqref{eq:patmat_zero} and the last equality follows from
   \begin{equation*}
-    \beta_0 = \min\Brac[c]{\frac{\tau}{\bar{s} - s_{\min}}, \frac{1-\tau}{s_{\max}-\bar{s}}, \tau},
+    \frac{1}{n} + \frac{n^-}{nn^+}
+      = \frac{1}{n} \Brac{1 + \frac{n^-}{n^+}} 
+      = \frac{1}{n} \frac{n^+ + n^-}{n^+}
+      = \frac{1}{n} \frac{n}{n^+}
+      = \frac{1}{n^+}.
   \end{equation*}
-  observe that~$\beta_0>0$, fix any~$\beta\in(0,\beta_0)$ and define
+  Moreover, for the lower band we get
   \begin{equation*}
-    t = \frac{1-\tau}{\beta_0} + \bar{s}.
+    \bar{s}
+      < \frac{1}{n^+} \sum_{i \in \I^+} s_i
+      \le \max \Set{s_i}{i \in \I^+}
+      \le \max \Set{s_i}{i \in \I}
+      = s_{\max}
   \end{equation*}
-  Then we obtain
+  where the first inequality follows from~\eqref{eq:patmat_zero_aux0}. The lower bound for~$\bar{s}$ can be computed in a similar way. Altogether, we have~$s_{\min} < \bar{s} < s_{\max}$. Then we can define
+  \begin{equation*}
+    \vartheta_0 = \min\Brac[c]{\frac{\tau}{\bar{s} - s_{\min}}, \; \frac{1-\tau}{s_{\max}-\bar{s}}, \; \tau},
+  \end{equation*}
+  observe that~$\vartheta_0>0$, fix any~$\vartheta\in(0,\vartheta_0)$ and define
+  \begin{equation*}
+    t = \frac{1-\tau}{\vartheta_0} + \bar{s}.
+  \end{equation*}
+  Then we obtain for any~$i \in \I$
   \begin{equation}\label{eq:patmat_zero_aux1}
-    1+\beta(\bm{w}^\top\bm{x}-t) \ge 1+\beta(s_{\min}-t) = 1+\beta s_{\min}-1+\tau - \beta\bar{s} = \beta (s_{\min}-\bar{s})+\tau\ge 0.
+    1+\vartheta(s_i - t)
+      \ge 1 + \vartheta(s_{\min} - t)
+      = 1 + \vartheta s_{\min} - 1 + \tau - \vartheta\bar{s}
+      = \vartheta (s_{\min} - \bar{s}) + \tau
+      \ge 0.
   \end{equation}
-  Here, the first equality follows from the definition of~$t$ and the last inequality from the definition of~$\beta_0$. Moreover, we have
+  Here, the first equality follows from the definition of~$t$ and the last inequality from the definition of~$\vartheta_0$. Moreover, from definition of the hinge function~\eqref{eq: surrogates}, we have
   \begin{equation*}
     \begin{aligned}
-      \frac{1}{n}\sum_{\bm{x} \in \Xc}l(\beta(\bm{w}^\top\bm{x}-t))
-      & = \frac{1s}{n}\sum_{\bm{x} \in \Xc}\max\{1+\beta(\bm{w}^\top\bm{x}-t), 0\}
-        = \frac{1}{n}\sum_{\bm{x} \in \Xc}\Brac{1+\beta(\bm{w}^\top\bm{x}-t)} \\
-      & = 1-\beta t + \frac{\beta}{n}\sum_{\bm{x} \in \Xc}\bm{w}^\top\bm{x}
-        = 1-\beta t + \beta\bar{s} = \tau,
+      \frac{1}{n} \sum_{i \in \I} l_{\vartheta}(s_i - t)
+      & = \frac{1}{n} \sum_{i \in \I} \max\{0, 1 + \vartheta (s_i - t), 0\} \\
+      & = \frac{1}{n}\sum_{i \in \I}\Brac{1 + \vartheta(s_i - t)} \\
+      & = 1 - \vartheta t + \frac{\vartheta}{n} \sum_{i \in \I} s_i \\
+      & = 1 - \vartheta t + \vartheta \bar{s} = \tau,
     \end{aligned}
   \end{equation*}
   where the second equality employs \eqref{eq:patmat_zero_aux1}, the third one the definition of~$\bar{s}$ and the last one the definition of~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$.
   
   Similarly to \eqref{eq:patmat_zero_aux1} we get
   \begin{equation}\label{eq:patmat_zero_aux2}
-    1 + t - \bm{w}^\top \bm{x}
+    1 + t - s_i
     \ge 1 + t-s_{\max}
-    =   1 + \frac{1-\tau}{\beta} + \bar{s} - s_{\max}
-    \ge \frac{1-\tau}{\beta} + \bar{s} - s_{\max}
+    =   1 + \frac{1-\tau}{\vartheta} + \bar{s} - s_{\max}
+    \ge \frac{1-\tau}{\vartheta} + \bar{s} - s_{\max}
     \ge 0,
   \end{equation}
-  where the last inequality follows from the definition of~$\beta_0$. Then for the objective we have
+  where the last inequality follows from the definition of~$\vartheta_0$. Then for the objective we have
   \begin{equation*}
     \begin{aligned}
-      f(\bm{w})
-      & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}l(t-\bm{w}^\top \bm{x})
-        = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\max\{1+t-\bm{w}^\top \bm{x}, 0\} = \\
-      & = \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\Brac{1+t-\bm{w}^\top \bm{x}}
-        = 1 + t - \frac{1}{n^+}\sum_{\bm{x} \in \Xc^+}\bm{w}^\top \bm{x}
+      L(\bm{w})
+      & = \frac{1}{n^+}\sum_{i \in \I^+}l(t-s_i)
+        = \frac{1}{n^+}\sum_{i \in \I^+}\max\{0, 1+t-s_i \} = \\
+      & = \frac{1}{n^+}\sum_{i \in \I^+}\Brac{1+t-s_i}
+        = 1 + t - \frac{1}{n^+}\sum_{i \in \I^+} s_i
         < 1 + t - \bar{s} \\
-      & = 1 + \frac{1-\tau}{\beta} + \bar{s} -\bar{s}
-        = 1 + \frac{1-\tau}{\beta}
-        = f(\bm{0}),\\
+      & = 1 + \frac{1-\tau}{\vartheta} + \bar{s} -\bar{s}
+        = 1 + \frac{1-\tau}{\vartheta}
+        = L(\bm{0}),\\
     \end{aligned}
   \end{equation*}
   where we the third equality follows from \eqref{eq:patmat_zero_aux2}, the only inequality from \eqref{eq:patmat_zero_aux0} and the last equality from Appendix~\ref{app:example}. Thus, we finished the proof for \PatMat. The proof for \PatMatNP can be performed in an identical way by replacing in the definition of~$\bar{s}$ the mean with respect to all samples by the mean with respect to all negative samples.
 \end{proof}
 
-\subsection{Results related to threshold comparison}\label{app:relations}
+\subsection{Threshold comparison}\label{app:relations}
 
 \begin{lemma}\label{lemma:thresholds2}
   Define vector~$\bm{s}^+$ with components~$s^+=\bm{w}^\top \bm{x}^+$ for~$\bm{x}^+\in\Xc^+$ and similarly define vector~$\bm{s}^-$ with components~$s^-=\bm{w}^\top \bm{x}^-$ for~$\bm{x}^-\in\Xc^-$. Denote by~$\bm{s}_{[\cdot]}^+$ and~$\bm{s}_{[\cdot]}^-$ the sorted versions of~$\bm{s}^+$ and~$\bm{s}^-$, respectively. Then we have the following statements:
@@ -328,7 +360,7 @@ For the proof, we will consider a general surrogate which satisfies:
 All these reguirements are satisfied for the surrogate logistic or by the Huber loss, which is the hinge surrogate which is smoothened on an~$\eps$-neighborhood of zero.
 
 \sgd*
-\begin{proof}[Proof of Theorem~\ref{thm:sgd} on page \pageref{thm:sgd}]
+\begin{proof}[Proof of Theorem~\ref{thm:sgd} on page~\pageref{thm:sgd}]
   We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$f$ is convex due to Theorem~\ref{thm:convex}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}. Assumptions~\ref{ass_alpha1},\ref{ass_alpha2} and~\ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify \eqref{eq:nec_cond}.
 
   For simplicity, we will do so only for~$\beta=1$ and for~$s=2$ minibatches of the same size. However, the proof would be identical for other values. This implies that there are some~$I^k$ and~$I^{k+1}$ which are pairwise disjoint, they cover all samples and that~$I^k=I^{k+2}$ for all~$k$. The assumptions imply that the number of positive samples in each minibatch equal to~$n_+^k=\frac{1}{2}n_+$, where~$n_+$ is the total number of positive samples.

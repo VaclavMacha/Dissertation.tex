@@ -11,7 +11,7 @@ where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and lab
 
 \begin{figure}[t]
   \centering
-  \includegraphics[width = 0.95\linewidth]{images/surrogates.pdf}
+  \includegraphics[width = \linewidth]{images/surrogates.pdf}
   \caption{Surrogates}
   \label{fig: surrogates}
 \end{figure}
@@ -19,11 +19,11 @@ where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and lab
 The problem~\eqref{eq: aatp counts} is difficult to handle, since the objective function contains Iverson function~\eqref{eq: iverson} and therefore is discontinuous. The usual approach how to getting a continuous objective function is to employ a surrogate function to replace the Iverson function~\cite{li2014top, grill2016learning}. In the text below, the symbol~$l$ denotes any convex non-negative non-decreasing function with~$l(0) = 1$. As examples of such function we can mention the hinge loss function or the quadratic hinge loss functions defined as follows
 \begin{equation}\label{eq: surrogates}
   \begin{aligned}
-    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + \vartheta \cdot s}, \\
-    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + \vartheta \cdot s}}^2,\\
+    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + s}, \\
+    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.\\
   \end{aligned}
 \end{equation}
-where~$\vartheta > 0$ is a scaling parameter. Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge with different scaling parameters. If the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1. Besides that, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ 
+We also use scaling parameter~$\vartheta > 0$ to scale inputs to the surrogate functions, i.e.~$l(\vartheta \cdot s).$ Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge with different scaling parameters. If the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1. Besides that, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ 
 
 To follow the notation from the previous chapter, we will define surrogate approximations of the counts defined in equation~\eqref{eq: confusion counts}. Using surrogate function~$l$ that fulfill the requirements mentioned above, the counts~\eqref{eq: confusion counts} may be approximated by their surrogate counterparts defined as follows
 \begin{equation}\label{eq: confusion counts surrogate}
@@ -45,22 +45,24 @@ The regularization is not necessary, but it is usually added for better numerica
 
 In the rest of the chapter, we will show, that accuracy at the top, ranking problems and the problem of hypothesis testing can be formulated in such a way, that fall  into our general framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}. Most of the problems that we will be referring to are originally defined for the linear classifier only, i.e. for~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$ However, we will formulate all the problems for general classifier~$f$ and then in Chapters~\ref{chap: linear} - \ref{chap: deep} we will discuss their properties based on the used classifier.  
 
-To make the presentation as simple as possible, we first define a special notation. Section~\ref{sec: general formulation}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
-\begin{equation}\label{eq: scores}
-  s_i = f(\bm{x}_i; \bm{w}), \quad i \in \I.
-\end{equation}
-To simplify the upcoming sections, let us define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
-\begin{equation*}
-  s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
-\end{equation*}
-Similarly, let us define vectors~$\bm{s}^- \in \R^{n^-},$ $\bm{s}^+ \in \R^{n^+}$ of scores of all positive and negative samples with components defined as
-\begin{equation}\label{eq: scores neg/pos}
-  \begin{aligned}
-    s^-_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^-, \\
-    s^+_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^+,
-  \end{aligned}
-\end{equation}
-and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
+\begin{notation}[Classification scores]\label{not: scores}
+  In Section~\ref{sec: general formulation}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
+  \begin{equation*}
+    s_i = f(\bm{x}_i; \bm{w}), \quad i \in \I,
+  \end{equation*}
+  where~$f \colon \R^d \to \R$ represents arbitrary classifier. To simplify the upcoming sections, we define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
+  \begin{equation*}
+    s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
+  \end{equation*}
+  Similarly, we define vectors~$\bm{s}^- \in \R^{n^-},$ $\bm{s}^+ \in \R^{n^+}$ of scores of all positive and negative samples with components defined as
+  \begin{equation*}
+    \begin{aligned}
+      s^-_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^-, \\
+      s^+_i & = f(\bm{x}_i; \bm{w}), \quad i \in \I^+,
+    \end{aligned}
+  \end{equation*}
+  and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
+\end{notation}
 
 \section{Ranking problems}\label{sec:obj1}
 
@@ -91,14 +93,16 @@ We used the mean of highest~$K$ negative scores instead of the value of the~$K$-
 
 The previous category considers formulations which minimize the number of positive samples below the highest-ranked negative sample, i.e. minimize the number of false-negative samples. Accuracy at the Top~\cite{boyd2012accuracy} takes a different approach and minimizes the number of negative samples with the score above the top~$\tau$-quantile of all scores defined by
 \begin{equation}\label{eq: aatp quantile} 
-  t_1(\bm{s}) = \max \Set{t}{\tp(\bm{s}, t) + \fp(\bm{s}, t) \ge n \tau}.
+  t_1(\bm{s})
+    = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}
+    = \max \Set{t}{\tp(\bm{s}) + \fp(\bm{s}) \ge n\tau}.
 \end{equation}
 Then the Accuracy at the Top problem is defined by
 \begin{mini}{\bm{w}}{
   \frac{1}{n^-} \fp(\bm{s}, t)
   }{\label{eq: aatp original}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile}.}}{~}
+  \addConstraint{t}{= \frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau.}{~}
 \end{mini}
 This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = 0$. However, this formulation can be rewritten using the following lemma.
 \begin{restatable}{lemma}{lemmaequivalence}\label{lemma:fnfp_equivalence}
@@ -116,7 +120,7 @@ This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$
   \mu \fp(\bm{s},t) + (1 - \mu)\fn(\bm{s},t)
   }{\label{eq: aatp original combination}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}{~}
+  \addConstraint{t}{= \frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau,}{~}
 \end{mini}
 where~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq: aatp original}, while with~$\mu = \frac{n^-}{n}$ it corresponds to the original definition (without regularization) from~\cite{boyd2012accuracy}.
 
@@ -125,7 +129,7 @@ Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{
   \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{-}}\fps(\bm{s}, t) + \frac{1}{n^{+}} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is the top } \tau\text{-quantile: it solves~\eqref{eq: aatp quantile},}}{~}
+  \addConstraint{t}{= \frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau,}{~}
 \end{mini}
 Based on the first author, we name this formulation \Grill. This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \frac{1}{n^-}$ and~$\lambda_2 = \frac{1}{n^+}$.
 
@@ -170,14 +174,16 @@ Another category falling into the framework of~\eqref{eq: aatp counts} and~\eqre
 
 In the Neyman-Pearson problem, the null hypothesis~$H_0$ states that a sample~$\bm{x}$ has the negative label. Then Type I error occurs when the sample is false-positive while Type II error when the sample false-negative, see Table~\ref{tab: classification metrics}. In other words, minimizing Type II error corresponds to minimizing the number of false-negative samples and the bound for Type I error is equivalent to the bound on the number of false-positive samples, i.e. if the bound on Type I error equals~$\tau$, we may write this as
 \begin{equation}\label{eq: NP quantile} 
-  t_1^{\rm NP}(\bm{s}) = \max \Set{t}{\fp(\bm{s}, t) \ge n^- \tau}.
+  t_1^{\rm NP}(\bm{s})
+    = \max \Set{t}{\frac{1}{n^-} \sum_{i \in \I^-} \Iverson{s_i \ge t} \ge \tau}
+    = \max \Set{t}{\fp(\bm{s}, t) \ge n^- \tau}.
 \end{equation}
 Note that in~\eqref{eq: NP quantile} we only count the false-positive samples instead of counting all positives in~\eqref{eq: aatp quantile}. Then, we may write the Neyman-Pearson problem as
 \begin{mini}{\bm{w}}{
   \frac{1}{n^+} \fn(\bm{s}, t)
   }{\label{eq: NP problem}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is Type I error at level } \tau\text{: it solves~\eqref{eq: NP quantile}.}}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{n^-} \sum_{i \in \I^-} \Iverson{s_i \ge t} \ge \tau}.}{~}
 \end{mini}
 This problem again falls within our framework for~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. Since problems~\eqref{eq: NP problem} and~\eqref{eq: aatp original combination} are almost identical, we can derive approximations of~\eqref{eq: NP problem} in the exactly the same way as in Section~\ref{sec: aatp}.
 
@@ -186,7 +192,7 @@ The first way how to approximate the problem~\eqref{eq: aatp counts} is to repla
   \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^{-}}\fps(\bm{s}, t) + \frac{1}{n^{+}} \fns(\bm{s}, t)
   }{\label{eq: grill np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{\text{ is Type I error at level } \tau\text{: it solves~\eqref{eq: NP quantile}.}}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{n^-} \sum_{i \in \I^-} \Iverson{s_i \ge t} \ge \tau}.}{~}
 \end{mini}
 The second option is to use approximation of the true quantile. In such a case, the firsat choice is to replace the treu qunatile by mean of the~$n\tau$ largest scores of negative samples 
 \begin{equation}\label{eq: np quantile mean} 
@@ -218,70 +224,86 @@ For simplicity, we call this problem \PatMatNP.
 
 \begin{table}
   \centering
-  \begin{NiceTabular}{lcccc}
+  \begin{NiceTabular}{lccccc}
     \toprule
-    \textbf{Name} & \textbf{Definition} & $\lambda_1$ & $\lambda_2$ & \textbf{Threshold} \\
+    \textbf{Name}
+      & \textbf{Definition}
+      & \textbf{Source}
+      & $\lambda_1$
+      & $\lambda_2$
+      & \textbf{Threshold} \\
     \midrule
     \TopPush
-      & \eqref{eq: toppush surrogate} / \cite{li2014top}
+      & \eqref{eq: toppush surrogate}
+      & \cite{li2014top}
       & 0
       & $\frac{1}{n^+}$
       & $s_{[1]}^-$ \\
     \TopPushK
-      & \eqref{eq: toppushK surrogate} / ours~\cite{adam2021general}
+      & \eqref{eq: toppushK surrogate}
+      & ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
       & $\sum_{i = 1}^{K} s_{[i]}^-$ \\
     \midrule
     \Grill
-      & \eqref{eq: grill} / \cite{grill2016learning}
+      & \eqref{eq: grill}
+      & \cite{grill2016learning}
       & $\frac{1}{n^-}$
       & $\frac{1}{n^+}$
-      & $\max \Set{t}{\tp(\bm{s}, t) + \fp(\bm{s}, t) \ge n \tau}$ \\
+      & $\max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}$ \\
     \TopMeanK
-      & \eqref{eq: topmeank} / ---
+      & \eqref{eq: topmeank}
+      & ---
       & 0
       & $\frac{1}{n^+}$
       & $\frac{1}{K} \sum_{i=1}^{K} s_{[i]}$ \\
     \PatMat
-      & \eqref{eq: patmat} / ours~\cite{adam2021general}
+      & \eqref{eq: patmat}
+      & ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
-      & $t$ solves $\frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau$ \\
+      & $\frac{1}{n} \sum_{i \in \I} l(s_i - t) = \tau$ \\
     \midrule
     \GrillNP
-      & \eqref{eq: grill np} / ---
+      & \eqref{eq: grill np}
+      & ---
       & $\frac{1}{n^-}$ 
       & $\frac{1}{n^+}$
-      & $\max \Set{t}{\fp(\bm{s}, t) \ge n^- \tau}$ \\
+      & $\max \Set{t}{ \frac{1}{n^-} \sum_{i \in \I^-} \Iverson{s_i \ge t} \ge \tau}$ \\
     \tauFPL
-      & \eqref{eq: tau-fpl} / \cite{zhang2018tau}
+      & \eqref{eq: tau-fpl}
+      & \cite{zhang2018tau}
       & 0
       & $\frac{1}{n^+}$
       & $\frac{1}{n^-\tau} \sum_{i=1}^{n^-\tau} s^-_{[i]}$ \\
     \PatMatNP
-      & \eqref{eq: patmat np} / ours~\cite{adam2021general}
+      & \eqref{eq: patmat np}
+      & ours~\cite{adam2021general}
       & 0
       & $\frac{1}{n^+}$
-      & $t$ solves $\frac{1}{n^-} \fps(\bm{s}, t) = \tau$ \\
+      & $\frac{1}{n^-} \sum_{i \in \I^-} l(s_i - t) = \tau$ \\
     \midrule
     \emph{Precision@Recall}
-      & (6) in~\cite{mackey2018constrained} / \cite{mackey2018constrained}
+      & (6) in~\cite{mackey2018constrained}
+      & \cite{mackey2018constrained}
       & $\frac{1}{n^-}$
       & 0
-      & $\min \Set{t}{\tp(\bm{s}, t) \le n^+ \tau}$ \\
+      & $\min \Set{t}{\frac{1}{n^+} \sum_{i \in \I^+} s_i \le \tau}$ \\
     \emph{Precision@K}
-      & --- / ---
+      & ---
+      & ---
       & $\frac{1}{n^-}$
       & 0
       & $s_{[K]}$ \\
       \emph{Recall@K}
-      & --- / ---
+      & ---
+      & ---
       & 0
       & $\frac{1}{n^+}$
       & $s_{[K]}$ \\
     \bottomrule
   \end{NiceTabular}
   \caption{Summary of problems that fall in the framework~\eqref{eq: aatp surrogate}. The  table shows their definition label, the source or the source they are based on, the values of parameters~$\lambda_1,$~$\lambda_2$ for framework~\eqref{eq: aatp surrogate} and the form of the decision threshold~$t$.}
-  \label{tab: aatp summary}
+  \label{tab: summary formulations}
 \end{table}
