@@ -1,0 +1,95 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\tikzstyle{scatter} = [
+  only marks,
+  fill opacity = 0.25,
+  mark size=1.5pt
+]
+\tikzstyle{scatterneg} = [scatter, cyan, fill = cyan]
+\tikzstyle{scatterpos} = [scatter, myred, fill = myred]
+\tikzstyle{linered} = [red, thick, dashed, no markers, smooth]
+\tikzstyle{trajectory} = [myorange, very thick, no markers, smooth]
+
+\pgfplotstableread[col sep = comma]{../data/toppush_degenerate.csv}\DataDegenerate
+\pgfplotstableread[col sep = comma]{../data/toppush_degenerate_scatter.csv}\DataDegenerateScatter
+\pgfplotstableread[col sep = comma]{../data/toppush_degenerate_trajectory.csv}\DataDegenerateTrajectory
+
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+%
+\begin{tikzpicture}
+  \begin{groupplot}[
+    group style = {
+      group size = 2 by 1,
+      horizontal sep = 1cm,
+    },
+    xmin = -1,
+    ymin = -1,
+    ymax = 1,
+    ytick={-1, 0, 1},
+    axis x line=bottom,
+    axis y line=left,
+    % ticks = none,
+    enlargelimits = false,
+  ]
+    \nextgroupplot[
+      xlabel = $x_1$,
+      ylabel = $x_2$,
+      xmax = 2,
+      xtick={-1, 0, 1, 2},
+      legend style = {column sep = 10pt, legend columns = -1},
+      legend to name = legtoppush,
+    ]
+      \addplot [scatterneg] table[x index=0, y index=1] {\DataDegenerateScatter};
+      \addlegendentry{Negative scores}
+      \addplot [scatterpos] table[x index=2, y index=3] {\DataDegenerateScatter};
+      \addlegendentry{Positive scores}
+      \coordinate (cleft) at (rel axis cs:0,1);
+
+    \nextgroupplot[
+      xlabel = $w_1$,
+      ylabel = $w_2$,
+      xmax = 1,
+      xtick={-1, 0, 1},
+      yticklabels={,,},
+      view={0}{90},
+      % axis equal,
+      colormap name=viridis,
+    ]
+      \addplot3[
+        mesh/rows=70,
+        mesh/cols=70,
+        contour filled={
+          number = 15,
+          labels=false,
+        },
+      ] table [x index={0}, y index={1}, z index={2}] {\DataDegenerate};
+      \addplot[linered] coordinates {(0, -1) (0, 1)};
+      \addplot[linered] coordinates {(-1, 0) (1, 0)};
+      \draw[linered] (axis cs:0,0) circle[radius=1];
+      \addplot [trajectory] table[x index=0, y index=1] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=2, y index=3] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=4, y index=5] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=6, y index=7] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=8, y index=9] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=10, y index=11] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=12, y index=13] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=14, y index=15] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=16, y index=17] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=18, y index=19] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=20, y index=21] {\DataDegenerateTrajectory};
+      \addplot [trajectory] table[x index=22, y index=23] {\DataDegenerateTrajectory};
+      \coordinate (cright) at (rel axis cs:1,1);
+  \end{groupplot}
+  \coordinate (clegend) at ($(cleft)!.5!(cright)$);
+  \node[above] at (clegend |- current bounding box.north) {\pgfplotslegendfromname{legtoppush}};
+\end{tikzpicture}
+\end{document}
