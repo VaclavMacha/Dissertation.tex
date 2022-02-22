@@ -24,6 +24,7 @@
 *.bbl
 *.blg
 *.synctex(busy)
+*.tdo
 
 ## Intermediate documents:
 *.dvi
