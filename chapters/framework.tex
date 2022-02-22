@@ -1,6 +1,6 @@
 \chapter{Binary Classiciation at the Top}\label{chap: framework}
 
-In the previous chapter, we introduced the general formulation of the binary classification problem~\eqref{eq: Binary classification counts} and basic ways how to evaluate the performance of binary classification. Furthermore, we introduced three problems that are closely related to binary classification, but focus on specific performance criteria. Namely: accuracy at the top, ranking problems and problem of hypothesis testing. Since these problems are usually considered separately, we will show, that they have one important thing in common: all three problems can be formulated as a minimization of the number of misclassified samples below (or above) a certain threshold. Moreover, we provide a unified framework for their handling and present several classification problems falling into this framework. Specificaly, all mentioned problems falls into the following formulation
+In the previous chapter, we introduced the general formulation of the binary classification problem~\eqref{eq: Binary classification counts} and basic ways how to evaluate the performance of binary classification. Furthermore, we introduced three problems that are closely related to binary classification, but focus on specific performance criteria. Namely: accuracy at the top, ranking problems and problem of hypothesis testing. Eventhough these problems are usually considered separately, they have one important thing in common: all three problems can be formulated as a minimization of the number of misclassified samples below (or above) a certain threshold. More specifically, in the rest of the chapter we show, that all mentioned problems falls into the following unified framework
 \begin{mini}{\bm{w}}{
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
@@ -9,13 +9,6 @@ In the previous chapter, we introduced the general formulation of the binary cla
 \end{mini}
 where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. In other words, all mentioned problems can be formulated as a binary classification problem with special condition on the decision threshold. Then the problems only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but is a function of scores of all samples. Therefore, the minimization in the problem~\eqref{eq: aatp counts} is performed only with respect to the one variable~$\bm{w}$.
 
-\begin{figure}[t]
-  \centering
-  \includegraphics[width = \linewidth]{images/surrogates.pdf}
-  \caption{Surrogates}
-  \label{fig: surrogates}
-\end{figure}
-
 The problem~\eqref{eq: aatp counts} is difficult to handle, since the objective function contains Iverson function~\eqref{eq: iverson} and therefore is discontinuous. The usual approach how to getting a continuous objective function is to employ a surrogate function to replace the Iverson function~\cite{li2014top, grill2016learning}. In the text below, the symbol~$l$ denotes any convex non-negative non-decreasing function with~$l(0) = 1$. As examples of such function we can mention the hinge loss function or the quadratic hinge loss functions defined as follows
 \begin{equation}\label{eq: surrogates}
   \begin{aligned}
@@ -23,7 +16,14 @@ The problem~\eqref{eq: aatp counts} is difficult to handle, since the objective 
     l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.\\
   \end{aligned}
 \end{equation}
-We also use scaling parameter~$\vartheta > 0$ to scale inputs to the surrogate functions, i.e.~$l(\vartheta \cdot s).$ Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge with different scaling parameters. If the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1. Besides that, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ 
+We also use parameter~$\vartheta > 0$ to scale inputs to the surrogate functions. Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge loss with different scaling parameters. As can be seen, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ Besides that, if the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width = \linewidth]{images/surrogates.pdf}
+  \caption{Surrogates}
+  \label{fig: surrogates}
+\end{figure}
 
 To follow the notation from the previous chapter, we will define surrogate approximations of the counts defined in equation~\eqref{eq: confusion counts}. Using surrogate function~$l$ that fulfill the requirements mentioned above, the counts~\eqref{eq: confusion counts} may be approximated by their surrogate counterparts defined as follows
 \begin{equation}\label{eq: confusion counts surrogate}
@@ -41,16 +41,16 @@ Since the surrogate function provides upper approximation of the Iverson functio
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
 \end{mini}
-The regularization is not necessary, but it is usually added for better numerical stability. The resulting optimization problem is easier to solve than problem~\eqref{eq: aatp counts} since the objective function is continuous. To derive other theoretical properties, we need to know the form of the function~$G$ as well as the form of the used classifier~$f.$ Different forms of the function~$G$ will be discussed in the rest of this chapter and different forms of classifier~$f$ will be discussed in Chapters~\ref{chap: linear} - \ref{chap: deep}. 
+The regularization is not necessary, but it is usually added for better numerical stability. The resulting optimization problem is easier to solve than problem~\eqref{eq: aatp counts} since the objective function is continuous. To derive other theoretical properties, we need to know the form of the threshold function~$G$ as well as the form of the used model~$f.$ Different forms of the function~$G$ will be discussed in the rest of this chapter and different forms of model~$f$ will be discussed in Chapters~\ref{chap: linear} - \ref{chap: deep}. 
 
-In the rest of the chapter, we will show, that accuracy at the top, ranking problems and the problem of hypothesis testing can be formulated in such a way, that fall  into our general framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}. Most of the problems that we will be referring to are originally defined for the linear classifier only, i.e. for~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$ However, we will formulate all the problems for general classifier~$f$ and then in Chapters~\ref{chap: linear} - \ref{chap: deep} we will discuss their properties based on the used classifier.  
+In the rest of the chapter, we will show, that accuracy at the top, ranking problems and the problem of hypothesis testing can be formulated in such a way, that fall  into our general framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}. Most of the problems that we will be referring to are originally defined for the linear model only, i.e. for~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$ However, we will formulate all the problems for general model~$f$ and then in Chapters~\ref{chap: linear} - \ref{chap: deep} we will discuss their properties based on the used model.
 
 \begin{notation}[Classification scores]\label{not: scores}
   In Section~\ref{sec: general formulation}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
   \begin{equation*}
     s_i = f(\bm{x}_i; \bm{w}), \quad i \in \I,
   \end{equation*}
-  where~$f \colon \R^d \to \R$ represents arbitrary classifier. To simplify the upcoming sections, we define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
+  where~$f \colon \R^d \to \R$ represents arbitrary model. To simplify the upcoming sections, we define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
   \begin{equation*}
     s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
   \end{equation*}
@@ -80,7 +80,7 @@ Since the threshold~$t$ is a function of score, the problem~\eqref{eq: toppush} 
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-}
 \end{mini}
-Similarly to the original problem, this surrogate approximation falls into our framework of~\eqref{eq: aatp surrogate} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. However, \TopPush can be very sensitive to outliers. Especially when the linear classifier is used, as shown in Section~\ref{sec: stability}. To robustify \TopPush method, we follow the idea from~\cite{lapin2015top} and propose to replace the largest negative score by the mean of~$K$ largest negative scores. We call this approach \TopPushK and the resulting formulation is as follows
+Similarly to the original problem, this surrogate approximation falls into our framework of~\eqref{eq: aatp surrogate} for~$\lambda_1 = 0$ and~$\lambda_2 = \frac{1}{n^+}$. However, \TopPush can be very sensitive to outliers. Especially when the linear model is used, as shown in Section~\ref{sec: stability}. To robustify \TopPush method, we follow the idea from~\cite{lapin2015top} and propose to replace the largest negative score by the mean of~$K$ largest negative scores. We call this approach \TopPushK and the resulting formulation is as follows
 \begin{mini}{\bm{w}}{
   \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{n^+} \fns(\bm{s}, t)
   }{\label{eq: toppushK surrogate}}{}
@@ -157,7 +157,7 @@ Since this threshold uses the surrogate approximation, we will sometimes denote~
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l(s_i - t) = \tau.}
 \end{mini}
-Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear classifier is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
+Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec:convexity} and amounts to preservation of convexity. Moreover, as will see later, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear model is easily solvable due to convexity and requires almost no tuning, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
 
 The following proposition compares the thresholds defined in this section in terms of approximation quality.
 \begin{proposition}[Thresholds relation~\cite{zhang2018tau}]\label{prop: threholds}
