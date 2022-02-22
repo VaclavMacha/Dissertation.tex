@@ -21,7 +21,7 @@ Many other classification problems can be found in almost all fields. Also, ther
 \end{itemize}
 The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification. The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. 
 
-\begin{notation}[Dataset]\label{eq: dataset}
+\begin{notation}[Dataset]\label{not: dataset}
   In the rest of the work,, we follow the notation used for neural networks, i.e. we use~$1$ as positive label and~$0$ as negative label. Moreover, by dataset of size~$n \in \N$ we mean set in the form
   \begin{equation*}\label{eq: train set bin}
     \D = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
@@ -36,7 +36,7 @@ The previous definitions of training and test set are general for classification
   We also denote the number of negative samples in~$\D$ set as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in~$\D$ as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of samples is~$n = n^- + n^+.$ 
 \end{notation}
 
-\section{General Formulation}\label{sec: general formulation}
+\todo[inline]{Add description of binary classification goal}
 
 Generally, the problem of binary classification can be written as follows
 \begin{mini}{\bm{w}, t}{
@@ -55,7 +55,7 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
 
 \todo[inline]{Add definition of classification scores and describe model weights (parameters).}
 
-\begin{notation}[Classifier]\label{eq: classifier}
+\begin{notation}[Classifier]\label{not: classifier}
   By classifier, we always mean pair of model~$f \colon \R^d \to \R$ which maps~$\bm{x}$ to classification scores~$s$ and corresponding decision threshold~$t \in \R$. Prediction~$\hat{y}$ for the given classifier is define as follows
   \begin{equation*}
     \hat{y} = \begin{cases}

@@ -46,7 +46,7 @@ The regularization is not necessary, but it is usually added for better numerica
 In the rest of the chapter, we will show, that accuracy at the top, ranking problems and the problem of hypothesis testing can be formulated in such a way, that fall  into our general framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate}. Most of the problems that we will be referring to are originally defined for the linear model only, i.e. for~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$ However, we will formulate all the problems for general model~$f$ and then in Chapters~\ref{chap: linear} - \ref{chap: deep} we will discuss their properties based on the used model.
 
 \begin{notation}[Classification scores]\label{not: scores}
-  In Section~\ref{sec: general formulation}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
+  In Notation~\ref{not: classifier}, we defined vector~$\bm{s} \in \R^n$ of scores of all samples with components defined as
   \begin{equation*}
     s_i = f(\bm{x}_i; \bm{w}), \quad i \in \I,
   \end{equation*}
