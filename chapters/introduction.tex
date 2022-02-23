@@ -19,11 +19,11 @@ Many other classification problems can be found in almost all fields. Also, ther
   \end{equation*}
   where~$\bm{x}_i \in \R^d,$~$y_i \in \{1, 2, \ldots, k\}$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
 \end{itemize}
-The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification. The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1.$ The encoding of the negative class differs for different algorithms. For example, SVM-like algorithms (from Support Vector Machines~\cite{cortes1995support}) usually use the label~$-1$ for the negative class. On the other hand, neural networks usually use the label~$0$ for the negative class. 
+The previous definitions of training and test set are general for classification problems with multiple classes. However, the main focus of this work is on a special subclass of classification problems with only two target classes: binary classification. The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes and the positive class is the one that we are more interested in. If we go back to the mammogram example, the positive class would represent cancer. The positive class is usually encoded using label~$1$ and the negtative class using label~$0$ (for neural networks) or~$-1$ (for SVM-like algorithms~\cite{cortes1995support}).
 
 \begin{notation}[Dataset]\label{not: dataset}
   In the rest of the work,, we follow the notation used for neural networks, i.e. we use~$1$ as positive label and~$0$ as negative label. Moreover, by dataset of size~$n \in \N$ we mean set in the form
-  \begin{equation*}\label{eq: train set bin}
+  \begin{equation*}
     \D = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
   \end{equation*}
   where~$\bm{x}_i \in \R^d$ represents samples,~$d \in \N$ its dimension and~$y_i \in \{0, 1\}$ represents corresponding labels. To simplify future notation, we denote set of all indices of dataset~$\D$ as~$\I = \I^- \cup \I^+,$ where
@@ -33,37 +33,39 @@ The previous definitions of training and test set are general for classification
       \I^+ & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
     \end{aligned}
   \end{equation*}
-  We also denote the number of negative samples in~$\D$ set as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in~$\D$ as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of samples is~$n = n^- + n^+.$ 
+  We also denote the number of negative samples in~$\D$ as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in~$\D$ as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of samples is~$n = n^- + n^+.$ 
 \end{notation}
 
-\todo[inline]{Add description of binary classification goal}
-
-Generally, the problem of binary classification can be written as follows
+The goal of any classification problem is to classify given samples with the highest possible accuracy or in other words with the lowest possible error. In the case of binary classification, there are two types of error: positive samples classified as negative and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
 \begin{mini}{\bm{w}, t}{
     \lambda_1 \sum_{i \in \I^-} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \I^+} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
 \end{mini}
-where~$\lambda_1, \lambda_2 \in \R,$ the function~$f \colon \R^d \to \R$ represents the model and maps samples~$\bm{x}_i$ to classification scores~$s_i$ and~$\Iverson{\cdot{}}$ represents Iverson function that is used to counts misclassified samples and is defined as
+where~$\lambda_1, \lambda_2 \in \R,$ the function~$f \colon \R^d \to \R$ and~$\Iverson{\cdot{}}$ is Iverson function that is used to counts misclassified samples and is defined as
 \begin{equation}\label{eq: iverson}
   \Iverson{x} = \begin{cases}
-    0 & \text{if } x \text{ is false}, \\
-    1 & \text{if } x \text{ is true}. \\
+    0 & \quad \text{if } x \text{ is false}, \\
+    1 & \quad \text{if } x \text{ is true}. \\
   \end{cases}
 \end{equation}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases it is fixed. For example, for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, it makes sense to set the decision threshold to~$t = 0.5$ and classify the sample as positive if its classification score is larger than this threshold.
-
-\todo[inline]{Add definition of classification scores and describe model weights (parameters).}
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ is a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of classification algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases it is fixed. For example, for many algorithms the classification score~$s_i$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, the decision threshold is set to~$t = 0.5$ and the sample is classified as positive if its classification score is larger than this threshold. In Notation~\ref{not: classifier}, we summarize the notation that is used in the rest of the work. 
 
 \begin{notation}[Classifier]\label{not: classifier}
-  By classifier, we always mean pair of model~$f \colon \R^d \to \R$ which maps~$\bm{x}$ to classification scores~$s$ and corresponding decision threshold~$t \in \R$. Prediction~$\hat{y}$ for the given classifier is define as follows
+  By classifier, we always mean pair of model~$f$ and corresponding decision threshold~$t \in \R$. By model, we mean a function $f \colon \R^d \to \R$ which maps samples~$\bm{x}$ to its classification scores~$s$, i.e. for all~$i \in \I$ the classification score is defined as
   \begin{equation*}
-    \hat{y} = \begin{cases}
-      1 \ldots & \text{if } f(\bm{x}; \bm{w}) \ge t, \\
-      0 \ldots & \text{otherwise.}
+    s_i = f(\bm{x}_i; \; \bm{w}),
+  \end{equation*}
+  where~$\bm{w}$ represents trainable parameters (weights) of the model. Predictions are defined ~$i \in \I$ in the following way
+  \begin{equation*}
+    \hat{y}_i = \begin{cases}
+      1 & \quad \text{if } s_i \ge t, \\
+      0 & \quad \text{otherwise.}
     \end{cases}
   \end{equation*}
 \end{notation}
+
+\todo[inline]{Add description of differrent binary classification problems such as SVm, logistric regression ...}
 
 \section{Performance Evaluation}
 
@@ -86,22 +88,6 @@ Using these four categories, we can construct a so-called confusion matrix (some
     \fp(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i \ge t}.
   \end{aligned}
 \end{equation}
-In the following text, we will sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (similarly fo the other counts) for example to define classification metrics. In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation we can simply define true-positive, false-positive, true-negative and false-negative rates as follows
-\begin{equation}\label{eq: confusion rates}
-  \begin{aligned}
-    \tpr & = \frac{\tp}{n^{+}}, & \quad
-    \fnr & = \frac{\fn}{n^{+}}, & \quad
-    \tnr & = \frac{\tn}{n^{-}}, & \quad
-    \fpr & = \frac{\fp}{n^{-}}. \\
-  \end{aligned}
-\end{equation}
-Figure~\ref{fig: scores and rates} show the relation between these for classification rates and the classification scores and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~\eqref{eq: confusion rates} and rewrite the problem~\eqref{eq: Binary classification} to the following form
-\begin{mini}{\bm{w}, t}{
-    \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
-  }{\label{eq: Binary classification counts}}{}
-  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I.}
-\end{mini}
-The parameters~$\lambda_1, \; \lambda_2 \in \R$ are used to specify which error is more serious for the particular classification task.
 
 \begin{figure}
   \centering
@@ -147,12 +133,30 @@ The parameters~$\lambda_1, \; \lambda_2 \in \R$ are used to specify which error 
   \label{fig: confusion matrix}
 \end{figure}
 
+\noindent In the following text, we will sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (and similar notation for other counts) for example to define classification metrics. In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation we can simply define true-positive, false-positive, true-negative and false-negative rates as follows
+\begin{equation}\label{eq: confusion rates}
+  \begin{aligned}
+    \tpr & = \frac{\tp}{n^{+}}, & \quad
+    \fnr & = \frac{\fn}{n^{+}}, & \quad
+    \tnr & = \frac{\tn}{n^{-}}, & \quad
+    \fpr & = \frac{\fp}{n^{-}}. \\
+  \end{aligned}
+\end{equation}
+Figure~\ref{fig: scores and rates} show the relation between classification rates and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~\eqref{eq: confusion rates} and rewrite the problem~\eqref{eq: Binary classification} to the following form
+\begin{mini}{\bm{w}, t}{
+    \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+  }{\label{eq: Binary classification counts}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I.}
+\end{mini}
+The parameters~$\lambda_1, \; \lambda_2 \in \R$ are used to specify which error is more serious for the particular classification task.
+
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{images/confusion_rates.pdf}
   \caption{The relation between classification scores and  rates. The blue curve represents theoretical distribution of the scores of negative samples and the red curve the same for the score of positive samples. Filled areas with light blue or red color represent true-negative and true-positive rates respectively. Similarly the filled areas with dark blue or red color represent false-positive and false-negaives rates.}
   \label{fig: scores and rates}
 \end{figure}
+
 In addition to the confusion matrix, there are many other classification metrics, and many of them are derived directly from the confusion matrix. As an example, we can mention accuracy and the balanced accuracy. Accuracy is defined as the ratio of correctly classified samples from all samples~\cite{metz1978basic}
 \begin{equation*}
   \accuracy = \frac{\tp + \tn}{n}.
@@ -169,7 +173,7 @@ Even though we know, that the classifier totally ignores negative samples, the a
 \begin{equation*}
   \baccuracy = \Brac{\frac{90}{90} + \frac{0}{10}} = 0.5.
 \end{equation*}
-In this case the balanced accuracy is only 50\% which is very poor, but is more relevant to the unbalanced dataset. There are many more classification metrics that are based on the confusion matrix~\cite{fawcett2006introduction, metz1978basic, brodersen2010balanced, hossin2015review}. In this work, however, we will use mainly those that we have presented in this section.
+In this case the balanced accuracy is only 50\% which is very poor, but is more relevant to the unbalanced dataset. There are many more classification metrics that are based on the confusion matrix~\cite{fawcett2006introduction, metz1978basic, brodersen2010balanced, hossin2015review}. In this work, however, we will use mainly those that we have presented in this section. For simplicity, Table~\ref{tab: classification metrics} provides a summary of binary classification metrics used in this work. 
 
 \begin{table}
   \centering
@@ -214,7 +218,7 @@ In this case the balanced accuracy is only 50\% which is very poor, but is more 
       & $\precision = \frac{\tp}{\tp + \fp}$ \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Classicication metrics}
+  \caption{Summary of classification metrics derived from confusion matrix.}
   \label{tab: classification metrics}
 \end{table}
 
@@ -241,6 +245,8 @@ While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar be
 
 \subsection{Ranking problems}
 
+\todo[inline]{Add proper introduction to ranking problems}
+
 \textbf{Ranking problems:} Ranking problems~\cite{freund2003efficient, agarwal2011infinite, rudin2009pnorm, li2014top} select the most relevant samples and rank them. To each sample, a numerical score is assigned, and the ranking is performed based on this score. Often, only scores above a threshold are considered. As an example, we can mention search engines such as Google, DucDucGo or Yahoo. In such a case, the goal is to provide most relevant results on the first two or three pages. The results on page 50 are usually of no interest to anyone, so it is important to move the most relevant results to the few first pages~\cite{cortes2003auc}.
 
 The first category of problems that is tightly related to binary classification at the top, is the category of ranking problems. Ranking problems have become very important in many different fields
@@ -259,6 +265,8 @@ Many methods, such as \emph{RankBoost}~\cite{freund2003efficient}, \emph{Infinit
 
 \subsection{Accuracy at the Top}
 
+\todo[inline]{Add proper introduction to Accuracy a the Top}
+
 \textbf{Accuracy at the Top:} Accuracy at the Top~\cite{boyd2012accuracy, grill2016learning} is similar to ranking problems. However, instead of ranking the most relevant samples, it only maximizes the number of positive samples (equivalently minimizes the misclassification)  above the top~$\tau$-quantile of scores. The Accuracy at the Top can be very useful for search engines or in applications where identified samples undergo expensive post-processing such as human evaluation. As an example, we can mention cyber security~\cite{grill2016learning}, where a low false-negative rate is crucial as a high number of false alarms would result in the software being uninstalled, or drug development, where potentially useful drugs need to be preselected and manually investigated.
 
 Accuracy at the Top ($\tau$-quantile) was formally defined in~\cite{boyd2012accuracy} and maximizes the number of relevant samples in the top~$\tau$-fraction of ranked samples. When the threshold equals the top~$\tau$-quantile of all scores, this problem falls into our framework. The early approaches aim at solving approximations, for example,~\cite{joachims2005svm} optimizes a convex upper bound on the number of errors among the top samples. Due to the presence of exponentially many constraints, the method is computationally expensive.~\cite{boyd2012accuracy} presented an SVM-like formulation which fixes the index of the quantile and solves~$n$ problems. While this removes the necessity to handle the (difficult) quantile constraint, the algorithm is computationally infeasible for a large number of samples.~\cite{kar2015surrogate} derived upper approximations, their error bounds and solved these approximations.~\cite{grill2016learning} proposed the projected gradient descent method where after each gradient step, the quantile is recomputed.~\cite{eban2017scalable} suggested new formulations for various criteria and argued that they keep desired properties such as convexity.~\cite{tasche2018plug} showed that accuracy at the top is maximized by thresholding the posterior probability of the relevant class. The closest approach to our framework is~\cite{lapin2015top,lapin2018analysis}, where the authors considered multi-class classification problems, and their goal was to optimize the performance on the top few classes and~\cite{mackey2018constrained}, where the authors implicitly removed some variables and derived an efficient algorithm.
@@ -266,6 +274,8 @@ Accuracy at the Top ($\tau$-quantile) was formally defined in~\cite{boyd2012accu
 \AccatTop~\cite{boyd2012accuracy} focuses on maximizing the number of positive samples above the top~$\tau$-quantile of scores. There are many methods on how to solve accuracy at the top. In~\cite{boyd2012accuracy}, the authors assume that the top quantile is one of the samples, construct~$n$ unconstrained optimization problems with fixed thresholds, solve them and select the best solution. This method is computationally expensive. In~\cite{grill2016learning} the authors propose a fast projected gradient descent method. In our previous paper, we proposed a convex approximation of the accuracy at the top called \PatMat. This method is reasonably fast and guaranteed the existence of global optimum.
 
 \subsection{Hypothesis Testing}
+
+\todo[inline]{Add proper introduction to Hypothesis testing}
 
 \textbf{Hypothesis testing} states a null and an alternative hypothesis. The Neyman-Pearson problem minimizes the Type II error (the null hypothesis is false but it fails to be rejected) while keeping the Type I error (the null hypothesis is true but is rejected) small. If the null hypothesis states that a sample has the positive label, then Type II error happens when a positive sample is below the threshold and thus minimizing the Type II error amounts to minimizing the positives below the threshold.
 
