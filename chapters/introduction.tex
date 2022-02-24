@@ -26,19 +26,19 @@ The previous definitions of training and test set are general for classification
   \begin{equation*}
     \D = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
   \end{equation*}
-  where~$\bm{x}_i \in \R^d$ represents samples,~$d \in \N$ its dimension and~$y_i \in \{0, 1\}$ represents corresponding labels. To simplify future notation, we denote set of all indices of dataset~$\D$ as~$\I = \I^- \cup \I^+,$ where
+  where~$\bm{x}_i \in \R^d$ represents samples,~$d \in \N$ its dimension and~$y_i \in \{0, 1\}$ represents corresponding labels. To simplify future notation, we denote set of all indices of dataset~$\D$ as~$\I = \Ineg \cup \Ipos,$ where
   \begin{equation*}
     \begin{aligned}
-      \I^- & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
-      \I^+ & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
+      \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
+      \Ipos & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
     \end{aligned}
   \end{equation*}
-  We also denote the number of negative samples in~$\D$ as~$n^- = \Brac[v]{\I^-}$ and the number of positive samples in~$\D$ as~$n^+ = \Brac[v]{\I^+},$ i.e. total number of samples is~$n = n^- + n^+.$ 
+  We also denote the number of negative samples in~$\D$ as~$\nneg = \Brac[v]{\Ineg}$ and the number of positive samples in~$\D$ as~$\npos = \Brac[v]{\Ipos},$ i.e. total number of samples is~$n = \nneg + \npos.$ 
 \end{notation}
 
 The goal of any classification problem is to classify given samples with the highest possible accuracy or in other words with the lowest possible error. In the case of binary classification, there are two types of error: positive samples classified as negative and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
 \begin{mini}{\bm{w}, t}{
-    \lambda_1 \sum_{i \in \I^-} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \I^+} \Iverson{s_i < t}
+    \lambda_1 \sum_{i \in \Ineg} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
 \end{mini}
@@ -82,10 +82,10 @@ Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm
 Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\D$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by model~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for all~$i \in \I,$ we can compute all fields of the confusion matrix as follows
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
-    \tp(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i \ge t}, & \quad
-    \fn(\bm{s}, t) & = \sum_{i \in \I^+}\Iverson{s_i < t}, \\
-    \tn(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i < t}, & \quad
-    \fp(\bm{s}, t) & = \sum_{i \in \I^-}\Iverson{s_i \ge t}.
+    \tp(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i \ge t}, & \quad
+    \fn(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i < t}, \\
+    \tn(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i < t}, & \quad
+    \fp(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i \ge t}.
   \end{aligned}
 \end{equation}
 
@@ -109,7 +109,7 @@ Using these four categories, we can construct a so-called confusion matrix (some
       \longcell{false \\ positives \\ (\textbf{fp})}
     }
     & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ negatives \\ ($n^{-}$)}} \\
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ negatives \\ ($\nneg$)}} \\
     & $y = 1$
     & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
       \longcell{false \\ negatives \\ (\textbf{fn})}
@@ -118,7 +118,7 @@ Using these four categories, we can construct a so-called confusion matrix (some
       \longcell{true \\ positives \\ (\textbf{tp})}
     }
     & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ positives \\ ($n^{+}$)}} \\
+    & \Block[draw=black, rounded-corners]{1-1}{\longcell{all \\ positives \\ ($\npos$)}} \\
     && $\downarrow$
     &  $\downarrow$ \\
     \Block{1-2}{\longcell{\textbf{Column} \\ \textbf{total:}}}
@@ -136,10 +136,10 @@ Using these four categories, we can construct a so-called confusion matrix (some
 \noindent In the following text, we will sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (and similar notation for other counts) for example to define classification metrics. In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation we can simply define true-positive, false-positive, true-negative and false-negative rates as follows
 \begin{equation}\label{eq: confusion rates}
   \begin{aligned}
-    \tpr & = \frac{\tp}{n^{+}}, & \quad
-    \fnr & = \frac{\fn}{n^{+}}, & \quad
-    \tnr & = \frac{\tn}{n^{-}}, & \quad
-    \fpr & = \frac{\fp}{n^{-}}. \\
+    \tpr & = \frac{\tp}{\npos}, & \quad
+    \fnr & = \frac{\fn}{\npos}, & \quad
+    \tnr & = \frac{\tn}{\nneg}, & \quad
+    \fpr & = \frac{\fp}{\nneg}. \\
   \end{aligned}
 \end{equation}
 Figure~\ref{fig: scores and rates} show the relation between classification rates and the decision threshold. The blue and red curves represent theoretical distribution of the scores of negative and positive samples samples respectively. The position of the decision threshold determines the values of the classification rates. The higher the value of the decision threshold, the smaller the false-positive rate, but at the same time the higher the false-negative rate. Similarly, the smaller the value of the decision threshold, the higher the false-positive rate and the smaller the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible and therefore we have to try to find some trade-off between false positive and a false negative rate. There is no universal truth, which error is worse. For example, we may want to detect cancer from some medical data. In this case, it is probably better to classify a healthy patient as sick than the other way around. On the other hand, in the computer security we do not want an antivirus program that makes a lot of false-positive alerts since it will be disruptive for the user. If we get look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, we can see, that the objective function is in fact just the weighted sum of false positive and false negative samples, i.e. we can use the notation~\eqref{eq: confusion rates} and rewrite the problem~\eqref{eq: Binary classification} to the following form
@@ -186,26 +186,26 @@ In this case the balanced accuracy is only 50\% which is very poor, but is more 
       & $\tn$ \\
     false positives
       & Type I error, false alarm
-      & $\fp = n^- - \tn$ \\
+      & $\fp = \nneg - \tn$ \\
     true positives
       & hity
       & $\tp$ \\
     false negatives
       & Type II error
-      & $\fn = n^+ - \tp$ \\
+      & $\fn = \npos - \tp$ \\
     \midrule
     true negative rate
       & specificity, selectivity
-      & $\tnr = \frac{\tn}{n^-}$ \\
+      & $\tnr = \frac{\tn}{\nneg}$ \\
     false positive rate
       & fall-out
-      & $\fpr = \frac{\fp}{n^-} = 1 - \tnr$ \\
+      & $\fpr = \frac{\fp}{\nneg} = 1 - \tnr$ \\
     true positive rate
       & sensitivity, recall, hit rate
-      & $\tpr = \frac{\tp}{n^+}$ \\
+      & $\tpr = \frac{\tp}{\npos}$ \\
     false negative rate
       & miss rate
-      & $\fnr = \frac{\fn}{n^+} = 1 - \tpr$ \\
+      & $\fnr = \frac{\fn}{\npos} = 1 - \tpr$ \\
     \midrule
     accuracy
       & ---
@@ -232,7 +232,7 @@ In the previous section, we defined general binary clasification problem as a mi
 
 The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
 \begin{equation*}
-  \postop(\bm{s}) = \frac{1}{n^+} \sum_{i \in \I^+} \Iverson{s_i \ge \max_{j \in \I^-}\{s_j\}}.
+  \postop(\bm{s}) = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \ge \max_{j \in \Ineg}\{s_j\}}.
 \end{equation*}
 While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2. In the rest of the chapter, we will present three main categories of problems that are closely related to the binary classification but do not focus on optimizing overall performance.
 

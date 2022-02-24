@@ -37,22 +37,22 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
 \begin{proof}[Proof of Theorem~\ref{thm:TopPushK dual} on page~\pageref{thm:TopPushK dual}]
   Recall the primal formulation of the \TopPushK problem~\eqref{eq:TopPushK primal}
   \begin{equation*}
-    \minimize{\bm{w}} \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}.
+    \minimize{\bm{w}} \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}.
   \end{equation*}
   Using~\cite[Lemma~1]{ogryczak2003minimizing} and the fact that the surrogate function~$l$ is non-decreasing, we can write
   \begin{align*}
-    \sum_{i = 1}^{n^+} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}
-    & = \sum_{i = 1}^{n^+} l\Brac{ \frac{1}{K} \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{n^-} \max\{0, s^-_j - t\}} - \bm{w}^{\top}\bm{x}^+_{i}} \\
-    & = \min_{t} \sum_{i = 1}^{n^+} l\Brac{  t + \frac{1}{K} \sum_{j = 1}^{n^-} \max\{0, \bm{w}^{\top}\bm{x}^-_{j} - t\} - \bm{w}^{\top}\bm{x}^+_{i}}.
+    \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}
+    & = \sum_{i = 1}^{\npos} l\Brac{ \frac{1}{K} \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\{0, s^-_j - t\}} - \bm{w}^{\top}\bm{x}^+_{i}} \\
+    & = \min_{t} \sum_{i = 1}^{\npos} l\Brac{  t + \frac{1}{K} \sum_{j = 1}^{\nneg} \max\{0, \bm{w}^{\top}\bm{x}^-_{j} - t\} - \bm{w}^{\top}\bm{x}^+_{i}}.
   \end{align*}
-  Using auxiliary variables~$\bm y \in \R^{n^+}$ and~$\bm{z} \in \R^{n^-},$ we observe that~\eqref{eq:TopPushK primal} is equivalent to
+  Using auxiliary variables~$\bm y \in \R^{\npos}$ and~$\bm{z} \in \R^{\nneg},$ we observe that~\eqref{eq:TopPushK primal} is equivalent to
   \begin{alignat*}{2}
     \minimize{\bm{w}, t, \bm{y}, \bm{z}}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{n^+} l(y_i) \span \span \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i) \span \span \\
     \st
-    & y_i = t + \frac{1}{K} \sum_{j = 1}^{n^-} z_j - \bm{w}^\top\bm{x}^+_i, & \quad & \forall i = 1, 2, \ldots n^+, \\
-    & z_j \geq \bm{w}^\top\bm{x}^-_j - t, & \quad & \forall j = 1, 2, \ldots n^-, \\
-    & z_j \geq 0, & \quad & \forall j = 1, 2, \ldots n^-.
+    & y_i = t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top\bm{x}^+_i, & \quad & \forall i = 1, 2, \ldots \npos, \\
+    & z_j \geq \bm{w}^\top\bm{x}^-_j - t, & \quad & \forall j = 1, 2, \ldots \nneg, \\
+    & z_j \geq 0, & \quad & \forall j = 1, 2, \ldots \nneg.
   \end{alignat*}
 
   The dual objective function is~$g(\bm{\alpha}, \bm{\beta}, \bm{\gamma}) = \min_{\bm{w}, t, \bm{y}, \bm{z}} L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma}),$ where the Lagrange function~$L$ is defined by
@@ -60,26 +60,26 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
     \begin{aligned}
       L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma})
       & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-        + C \sum_{i = 1}^{n^+} l(y_i)
-        + \sum_{i = 1}^{n^+} \alpha_i(t + \frac{1}{K} \sum_{j = 1}^{n^-} z_j - \bm{w}^\top\bm{x}^+_i - y_i) \\ 
-      & + \sum_{j = 1}^{n^-} \beta_j (\bm{w}^{\top}\bm{x}^-_j - t - z_j)
-        - \sum_{j = 1}^{n^-} \gamma_j z_j
+        + C \sum_{i = 1}^{\npos} l(y_i)
+        + \sum_{i = 1}^{\npos} \alpha_i(t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top\bm{x}^+_i - y_i) \\ 
+      & + \sum_{j = 1}^{\nneg} \beta_j (\bm{w}^{\top}\bm{x}^-_j - t - z_j)
+        - \sum_{j = 1}^{\nneg} \gamma_j z_j
     \end{aligned}
   \end{equation}
   Since this function is separable in primal variables, it can be minimized with respect to each variable separately. Optimality conditions with respect to~$t$ and~$\bm{z}$ read
   \begin{alignat*}{2}
-    \sum_{i = 1}^{n^+} \alpha_i - \sum_{j = 1}^{n^-} \beta_j     & = 0, \\
-    \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i - \beta_j - \gamma_j & = 0, & \quad \forall j = 1, 2, \ldots n^-.
+    \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j     & = 0, \\
+    \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j & = 0, & \quad \forall j = 1, 2, \ldots \nneg.
   \end{alignat*}
   From the first condition we deduce constraint~\eqref{eq:TopPushK dual constraint 1}. Plugging the feasibility condition~$\gamma_j \geq 0$ into the second optimal condition and combining it with the feasibility conditions~$\beta_j \geq 0$ yields constraint~\eqref{eq:TopPushK dual constraint 2}. By minimizing~\eqref{eq:TopPushK with quadratic Lagrange function} with respect to~$\bm{w}$ we deduce
   \begin{equation*}
     \bm{w}
-        = \sum_{i = 1}^{n^+} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{n^-} \beta_j \bm{x}^-_j
+        = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j
         = \Matrix{\X^+ \\ - \X^-}^\top \Matrix{\bm{\alpha} \\ \bm{\beta}},
   \end{equation*}
   where~$\X^+,$~$\X^-$ are matrices of positive and negative samples respectively (each row corresponds to one sample). Finally, minimization of~\eqref{eq:TopPushK with quadratic Lagrange function} with respect to~$\bm{y}$ yields
   \begin{equation*}
-    C \min_{y_i} \Brac{l(y_i) - \frac{\alpha_i}{C} y_i} = - C l^{\star} \Brac{\frac{\alpha_i}{C}}, \quad \forall i = 1, 2, \ldots n^+.
+    C \min_{y_i} \Brac{l(y_i) - \frac{\alpha_i}{C} y_i} = - C l^{\star} \Brac{\frac{\alpha_i}{C}}, \quad \forall i = 1, 2, \ldots \npos.
   \end{equation*}
   Plugging all these relations into~\eqref{eq:TopPushK with quadratic Lagrange function} yields the objective function of~\eqref{eq:TopPushK dual}, which finishes the proof.
 \end{proof}
@@ -89,31 +89,31 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
   Let us first realize that the primal \PatMat  problem~\eqref{eq:PatMat primal} is equivalent to
   \begin{alignat*}{2}
     \minimize{\bm{w}, t, \bm{y}, \bm{z}}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l_1(y_i) \span \span \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l_1(y_i) \span \span \\
     \st 
-    & \sum_{j = 1}^{n^-} l_2(z_j) \leq n \tau, \\
-    & y_i = t - \bm{w}^{\top}\bm{x}^+_{i}, && \quad \forall i = 1, 2, \ldots, n^+, \\
-    & z_j = \bm{w}^{\top}\bm{x}_{j}^- - t, && \quad \forall j = 1, 2, \ldots, n^-.
+    & \sum_{j = 1}^{\nneg} l_2(z_j) \leq n \tau, \\
+    & y_i = t - \bm{w}^{\top}\bm{x}^+_{i}, && \quad \forall i = 1, 2, \ldots, \npos, \\
+    & z_j = \bm{w}^{\top}\bm{x}_{j}^- - t, && \quad \forall j = 1, 2, \ldots, \nneg.
   \end{alignat*}
   Then the dual function is~$g(\bm{\alpha}, \bm{\beta}, \bm{\delta}) = \min_{\bm{w}, t, \bm{y}, \bm{z}} L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\delta}),$ where the Lagrange function~$L$ is defined by
   \begin{equation}\label{eq:PatMat with quadratic Lagrange function}
     \begin{aligned}
       L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta)
       & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-        + C \sum_{i = 1}^{n^+} l_1(y_i)
-        + \sum_{i = 1}^{n^+} \alpha_i(t - \bm{w}^{\top}\bm{x}^+_{i} - y_i) \\
-      & + \sum_{j = 1}^{n^-} \beta_j(\bm{w}^{\top}\bm{x}_j^- - t - z_j)
-        + \delta \Brac{\sum_{j = 1}^{n^-} l_2(z_j) - n \tau}. 
+        + C \sum_{i = 1}^{\npos} l_1(y_i)
+        + \sum_{i = 1}^{\npos} \alpha_i(t - \bm{w}^{\top}\bm{x}^+_{i} - y_i) \\
+      & + \sum_{j = 1}^{\nneg} \beta_j(\bm{w}^{\top}\bm{x}_j^- - t - z_j)
+        + \delta \Brac{\sum_{j = 1}^{\nneg} l_2(z_j) - n \tau}. 
     \end{aligned}
   \end{equation}
   Since this function is separable in primal variables, it can be minimized with respect to each variable separately. Optimality condition with respect to~$t$ read
   \begin{equation*}
-      \sum_{i = 1}^{n^+} \alpha_i - \sum_{j = 1}^{n^-} \beta_j = 0, \\
+      \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j = 0, \\
   \end{equation*}
   from which we deduce constraint~\eqref{eq:PatMat dual constraint 1}. By minimizing~\eqref{eq:PatMat with quadratic Lagrange function} with respect to~$\bm{w}$ we deduce
   \begin{equation*}
     \bm{w}
-    = \sum_{i = 1}^{n^+} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{n^-} \beta_j \bm{x}_j^-
+    = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}_j^-
     = \Matrix{\X^+ \\ - \X^-}^\top \Matrix{\bm{\alpha} \\ \bm{\beta}},
   \end{equation*}
   where~$\X,$~$\X^+$ are matrices of all and positive samples respectively (each row corresponds to one sample). Finally, minimization of~\eqref{eq:PatMat with quadratic Lagrange function} with respect to~$\bm{y}$ and~$\bm{z}$ yields
@@ -145,16 +145,16 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
   \end{equation}
   which amounts to~\eqref{eq:Optimal delta}. Before discussing the three update rules~\eqref{eq:Update rules}, we realize that~\eqref{eq:TopPushK dual quadratic constraint 1} is always satisfied after the update. For the three updates we have:
   \begin{itemize}
-    \item For update rule~\eqref{eq:Update rule a,a} with~$1\le k, l \le n^+$, constraint~\eqref{eq:TopPushK dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$-\alpha_k \leq \Delta \leq \alpha_l$ and objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
+    \item For update rule~\eqref{eq:Update rule a,a} with~$1\le k, l \le \npos$, constraint~\eqref{eq:TopPushK dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$-\alpha_k \leq \Delta \leq \alpha_l$ and objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta^2}(\alpha_k - \alpha_l)} \Delta + c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
 
-    \item For update rule~\eqref{eq:Update rule a,b} with~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n^+ + n^-$ we define~$\hat{l} = l - n^+.$ Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$\Delta \geq - \alpha_k.$ Denoting~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, n^- \} \setminus \{\hat l\}} \beta_j,$ then for any~$K \geq 2$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} reads
+    \item For update rule~\eqref{eq:Update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \nneg$ we define~$\hat{l} = l - \npos.$ Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$\Delta \geq - \alpha_k.$ Denoting~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j,$ then for any~$K \geq 2$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} reads
     \begin{equation}\label{eq: TopPushK dual quadratic a,b - bounds}
       \begin{aligned}
-        0 & \leq \beta_{\hat{l}} + \Delta \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i + \frac{1}{K} \Delta, \\
-        0 & \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i + \frac{1}{K} \Delta.
+        0 & \leq \beta_{\hat{l}} + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta, \\
+        0 & \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta.
       \end{aligned}
     \end{equation}
     If~$K = 1,$ the upper bounds for~$\beta_j$ may be omitted as discussed in Section~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}. Combining this with~$\Delta \geq - \alpha_k$ yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq:Update rule a,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
@@ -162,11 +162,11 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}} \Delta^2 - \Brac[s]{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alpha_k} \Delta + c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
 
-    \item For update rule~\eqref{eq:Update rule b,b} with~$n^+ + 1\le k,l \le n^+ + n^-$ we define~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:TopPushK dual quadratic constraint 2} is always satisfied. Moreover, since we update only two coordinates of~$\bm{\beta},$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} for any~$K \geq 2$ reads
+    \item For update rule~\eqref{eq:Update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:TopPushK dual quadratic constraint 2} is always satisfied. Moreover, since we update only two coordinates of~$\bm{\beta},$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} for any~$K \geq 2$ reads
     \begin{equation}\label{eq: TopPushK dual quadratic b,b - bounds}
       \begin{aligned}
-        0 \leq \beta_{\hat{k}} + \Delta \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i, \\
-        0 \leq \beta_{\hat{l}} - \Delta \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i,
+        0 \leq \beta_{\hat{k}} + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \\
+        0 \leq \beta_{\hat{l}} - \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i,
       \end{aligned}
     \end{equation}
     As in the previous case, the upper bounds for~$\beta_j$ may be omitted for~$K = 1$. Combining the previous results yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq:Update rule b,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
@@ -184,12 +184,12 @@ Plugging the conjugate~\eqref{eq:Conjugate of truncated quadratic loss} of the t
 \begin{subequations}\label{eq:PatMat dual quadratic}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}, \delta}
-      & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta_1} \sum_{i = 1}^{n^+} \alpha_i - \frac{1}{4 C \vartheta_1^2} \sum_{i = 1}^{n^+} \alpha_i^2 \span \span \notag \\
-      & + \frac{1}{\vartheta_2} \sum_{j = 1}^{n^-} \beta_j - \frac{1}{4 \delta \vartheta_2^2} \sum_{j = 1}^{n^-} \beta_j^2 - \delta n \tau \span \span \label{eq:PatMat dual quadratic objective} \\
+      & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta_1} \sum_{i = 1}^{\npos} \alpha_i - \frac{1}{4 C \vartheta_1^2} \sum_{i = 1}^{\npos} \alpha_i^2 \span \span \notag \\
+      & + \frac{1}{\vartheta_2} \sum_{j = 1}^{\nneg} \beta_j - \frac{1}{4 \delta \vartheta_2^2} \sum_{j = 1}^{\nneg} \beta_j^2 - \delta n \tau \span \span \label{eq:PatMat dual quadratic objective} \\
     \st 
-      & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n^-} \beta_j, \label{eq:PatMat dual quadratic constraint 1} \\
-      & \alpha_i \geq 0, && \quad \forall i = 1, 2, \ldots, n^+, \label{eq:PatMat dual quadratic constraint 2} \\
-      & \beta_j \geq 0,  && \quad \forall j = 1, 2, \ldots, n^-, \label{eq:PatMat dual quadratic constraint 3} \\
+      & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{\nneg} \beta_j, \label{eq:PatMat dual quadratic constraint 1} \\
+      & \alpha_i \geq 0, && \quad \forall i = 1, 2, \ldots, \npos, \label{eq:PatMat dual quadratic constraint 2} \\
+      & \beta_j \geq 0,  && \quad \forall j = 1, 2, \ldots, \nneg, \label{eq:PatMat dual quadratic constraint 3} \\
       & \delta \geq 0, \label{eq:PatMat dual quadratic constraint 4}
   \end{alignat}
 \end{subequations}
@@ -202,21 +202,21 @@ The following theorem provides a formula for the optimal step~$\Delta^\star$ for
   \end{equation}
   where there are the following three cases (each correspoding to one update rule in~\eqref{eq:Update rules}):
   \begin{itemize}
-    \item If~$1\le k, l \le n^+$, then we have
+    \item If~$1\le k, l \le \npos$, then we have
     \begin{align*}
       \Delta_{lb} & = -\alpha_k, \\
       \Delta_{ub} & = \alpha_l, \\
       \gamma      & = -\frac{s_k - s_l + \frac{\alpha_k - \alpha_l}{2C\vartheta_1^2}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}}, \\
       \delta^{*}  & = \delta.
     \end{align*}
-    \item If~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n$, then defining~$\hat{l} = l - n^+$ we have
+    \item If~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$, then defining~$\hat{l} = l - \npos$ we have
     \begin{align*}
       \Delta_{lb} & = \max\{- \alpha_k, - \beta_{\hat{l}}\}, \\
       \Delta_{ub} & = +\infty, \\
       \gamma      & = -\frac{s_k + s_l  - \frac{1}{\vartheta_1} + \frac{\alpha_k}{2C\vartheta_1^2} - \frac{1}{\vartheta_2} + \frac{\beta_{\hat{l}}}{2\delta\vartheta_2^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}}, \\
       \delta^{*}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta_2 n \tau}({\Delta^{*}}^2 + 2 \Delta^{*} \beta_{\hat{l}})}.
     \end{align*}
-    \item If~$n^+ + 1\le k,l \le n$, then defining~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+$ we have
+    \item If~$\npos + 1\le k,l \le n$, then defining~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ we have
     \begin{align*}
       \Delta_{lb} & = - \beta_{\hat{k}}, \\
       \Delta_{ub} & = \beta_{\hat{l}}, \\
@@ -230,7 +230,7 @@ The following theorem provides a formula for the optimal step~$\Delta^\star$ for
   In the beginning of this subsection we derived problem~\eqref{eq:PatMat dual quadratic}. As in the proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss}, we show, that for each of update rules~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta},$~$\delta,$ this problem can be rewritten as a simple one-dimensional quadratic problem with bound constraints. In this case, however, we have to also consider the third primal variable~$\delta.$ For fixed~$\bm{\alpha}$ and~$\bm{\beta},$, maximizing objective function~\eqref{eq:PatMat dual quadratic objective} with respect to~$\delta$ leads to the
   \begin{align*}
     \maximize{\delta}
-      & - (n\tau) \delta - \Brac{\frac{1}{4\vartheta_2^2} \sum_{j = 1}^{n^-} \beta_j^2} \frac{1}{\delta}, \\
+      & - (n\tau) \delta - \Brac{\frac{1}{4\vartheta_2^2} \sum_{j = 1}^{\nneg} \beta_j^2} \frac{1}{\delta}, \\
     \st
       & \delta \geq 0.
   \end{align*}
@@ -240,13 +240,13 @@ The following theorem provides a formula for the optimal step~$\Delta^\star$ for
   \end{equation}
   In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
   \begin{itemize}
-    \item For update rule~\eqref{eq:Update rule a,a} and any~$1\le k, l \le n^+$, constraint~\eqref{eq:PatMat dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq:PatMat dual quadratic constraint 2} reads~$-\alpha_k \leq \Delta \leq \alpha_l$ while objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
+    \item For update rule~\eqref{eq:Update rule a,a} and any~$1\le k, l \le \npos$, constraint~\eqref{eq:PatMat dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq:PatMat dual quadratic constraint 2} reads~$-\alpha_k \leq \Delta \leq \alpha_l$ while objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta_1^2}(\alpha_k - \alpha_l)} \Delta + c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
     Since optimal~$\delta$ is given by~\eqref{eq:PatMat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 
-    \item For update rule~\eqref{eq:Update rule a,b} with~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n$ we define~$\hat{l} = l - n^+.$ In this case, constraints~(\ref{eq:PatMat dual quadratic constraint 2},\ref{eq:PatMat dual quadratic constraint 3}) can be written in a simple form~$\Delta \geq \max \{- \alpha_k, - \beta_{\hat{l}}\}$ and~$\Delta$ has no upper bound. Objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
+    \item For update rule~\eqref{eq:Update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos.$ In this case, constraints~(\ref{eq:PatMat dual quadratic constraint 2},\ref{eq:PatMat dual quadratic constraint 3}) can be written in a simple form~$\Delta \geq \max \{- \alpha_k, - \beta_{\hat{l}}\}$ and~$\Delta$ has no upper bound. Objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
     \begin{equation*}
       \begin{split}
         - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 \dots \qquad\qquad \\ 
@@ -260,7 +260,7 @@ The following theorem provides a formula for the optimal step~$\Delta^\star$ for
       = \sqrt{\delta^2 + \frac{1}{4\vartheta_2^2 n \tau} (\Delta^{\star2} + 2\Delta^\star \beta_{\hat{l}})}.
     \end{equation*}
 
-    \item For update rule~\eqref{eq:Update rule b,b} with~$n^+ + 1\le k,l \le n^+ + n^-$ we define~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:PatMat dual quadratic constraint 2} is always satisfied. Constraint~\eqref{eq:PatMat dual quadratic constraint 3} can be written in a simple form~$-\beta_{\hat{k}} \leq \Delta \leq \beta_{\hat{l}}$ and objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
+    \item For update rule~\eqref{eq:Update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:PatMat dual quadratic constraint 2} is always satisfied. Constraint~\eqref{eq:PatMat dual quadratic constraint 3} can be written in a simple form~$-\beta_{\hat{k}} \leq \Delta \leq \beta_{\hat{l}}$ and objective~\eqref{eq:PatMat dual quadratic objective} can be rewritten as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{\beta_{\hat{k}} - \beta_{\hat{l}}}{\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
@@ -284,11 +284,11 @@ Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqr
 \begin{subequations}\label{eq:TopPushK dual hinge}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}}
-    & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta} \sum_{i = 1}^{n^+} \alpha_i \span \span \label{eq:TopPushK dual hinge objective} \\
+    & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta} \sum_{i = 1}^{\npos} \alpha_i \span \span \label{eq:TopPushK dual hinge objective} \\
     \st 
-    & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n^-} \beta_j, \label{eq:TopPushK dual hinge constraint 1} \\
-    & 0 \leq \alpha_i \leq C \vartheta, && \quad \forall i = 1, 2, \ldots, n^+, \label{eq:TopPushK dual hinge constraint 2} \\
-    & 0 \leq \beta_j  \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i, && \quad \forall j = 1, 2, \ldots, n^-. \label{eq:TopPushK dual hinge constraint 3}
+    & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{\nneg} \beta_j, \label{eq:TopPushK dual hinge constraint 1} \\
+    & 0 \leq \alpha_i \leq C \vartheta, && \quad \forall i = 1, 2, \ldots, \npos, \label{eq:TopPushK dual hinge constraint 2} \\
+    & 0 \leq \beta_j  \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, && \quad \forall j = 1, 2, \ldots, \nneg. \label{eq:TopPushK dual hinge constraint 3}
   \end{alignat}
 \end{subequations}
 This is a convex quadratic problem. Moreover, for~$K = 1,$ the upper limit in~\eqref{eq:TopPushK dual hinge constraint 3} is always satisfied due to~\eqref{eq:TopPushK dual hinge constraint 1} and the problem can be simplified. The following theorem provides a formula for optimal~$\Delta$ for each of update rules~\eqref{eq:Update rules}.
@@ -300,37 +300,37 @@ This is a convex quadratic problem. Moreover, for~$K = 1,$ the upper limit in~\e
   \end{equation*}
   where there are the following cases:
   \begin{itemize}
-    \item For any~$1\le k, l \le n^+$ we have
+    \item For any~$1\le k, l \le \npos$ we have
     \begin{align*}
       \Delta_{lb} & = \min\{- \alpha_k,\; \alpha_l - C \vartheta \}, \\
       \Delta_{ub} & = \max\{C \vartheta - \alpha_k,\; \alpha_l \}, \\
       \gamma      & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
     \end{align*}
-    \item For any~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n$ we define~$\hat{l} = l - n^+$ and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, n^- \} \setminus \{\hat l\}} \beta_j.$ Then we have
+    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos$ and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
           \min \Brac[c]{- \alpha_k,\;  -\beta_{\hat{l}}} & K = 1, \\
-          \min \Brac[c]{- \alpha_k,\;  -\beta_{\hat{l}}, \; K\beta_{\max} - \sum_{i = 1}^{n^+} \alpha_i} & \textrm{otherwise},
+          \min \Brac[c]{- \alpha_k,\;  -\beta_{\hat{l}}, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
             C \vartheta - \alpha_k & K = 1, \\
-            \max \Brac[c]{C \vartheta - \alpha_k, \; \frac{1}{K-1}\Brac{\sum_{i = 1}^{n^+} \alpha_i - K \beta_{\hat{l}}}}  & \textrm{otherwise}.
+            \max \Brac[c]{C \vartheta - \alpha_k, \; \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \beta_{\hat{l}}}}  & \textrm{otherwise}.
         \end{cases*} \\
       \gamma & = - \frac{s_k + s_l - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}.
     \end{align*}
-    \item For any~$n^+ + 1\le k,l \le n^+ + n^-$ we define~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+$ and then we have
+    \item For any~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then we have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
           - \beta_{\hat{k}} & K = 1, \\
-          \min \Brac[c]{- \beta_{\hat{k}},\; \beta_{\hat{l}} - \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i} & \textrm{otherwise},
+          \min \Brac[c]{- \beta_{\hat{k}},\; \beta_{\hat{l}} - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
           \beta_{\hat{l}} & K = 1, \\
-          \max \Brac[c]{\frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i - \beta_{\hat{k}},\; \beta_{\hat{l}}} & \textrm{otherwise}.
+          \max \Brac[c]{\frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_{\hat{k}},\; \beta_{\hat{l}}} & \textrm{otherwise}.
         \end{cases*} \\
       \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
     \end{align*}
@@ -343,10 +343,10 @@ Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqr
 \begin{subequations}\label{eq:PatMat dual hinge}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}, \delta}
-    & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta_1} \sum_{i = 1}^{n^+} \alpha_i + \frac{1}{\vartheta_2} \sum_{j = 1}^{n} \beta_j - \delta  n \tau \span \span \label{eq:PatMat dual hinge objective} \\
+    & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta_1} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{\vartheta_2} \sum_{j = 1}^{n} \beta_j - \delta  n \tau \span \span \label{eq:PatMat dual hinge objective} \\
     \st 
-    & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n} \beta_j, \label{eq:PatMat dual hinge constraint 1} \\
-    & 0 \leq \alpha_i \leq C \vartheta_1, && \quad \forall i = 1, 2, \ldots, n^+, \label{eq:PatMat dual hinge constraint 2} \\
+    & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{n} \beta_j, \label{eq:PatMat dual hinge constraint 1} \\
+    & 0 \leq \alpha_i \leq C \vartheta_1, && \quad \forall i = 1, 2, \ldots, \npos, \label{eq:PatMat dual hinge constraint 2} \\
     & 0 \leq \beta_j  \leq \delta \vartheta_2, && \quad \forall j = 1, 2, \ldots, n, \label{eq:PatMat dual hinge constraint 3} \\
     & \delta \geq 0, \label{eq:PatMat dual hinge constraint 4}
   \end{alignat}
@@ -360,7 +360,7 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
   \end{equation*}
   where there are the following cases:
   \begin{itemize}
-    \item For any~$1\le k, l \le n^+$ we have
+    \item For any~$1\le k, l \le \npos$ we have
     \begin{align*}
       \Delta_{lb} & = \min\{- \alpha_k,\; \alpha_l - C \vartheta_1\}, \\
       \Delta_{ub} & = \max\{C \vartheta_1 - \alpha_k,\; \alpha_l\}, \\
@@ -368,7 +368,7 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
       \delta^{*}  & = \delta.
     \end{align*}
 
-    \item For any~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n^+$ we define~$\hat{l} = l - n^+$ and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat l\}} \beta_j.$ Then we have
+    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos$ we define~$\hat{l} = l - \npos$ and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat l\}} \beta_j.$ Then we have
     \begin{alignat*}{2}
       \Delta_{lb} & = \max\{- \alpha_k,\; -\beta_{\hat{l}} \}, & \qquad
       \Delta_{ub} & = C \vartheta_1 - \alpha_k
@@ -387,7 +387,7 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
       \end{align*}
     \end{enumerate}
 
-    \item For any~$n^+ + 1\le k,l \le n$ we define~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+.$ Then we have
+    \item For any~$\npos + 1\le k,l \le n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Then we have
     \begin{alignat*}{2}
       \Delta_{lb} & = - \beta_{\hat{k}}, & \qquad
       \Delta_{ub} & = \beta_{\hat{l}},

@@ -20,7 +20,7 @@ Here,~$\bm{w} \in \R^{d}$ is the normal vector to the separating hyperplane and~
 \begin{equation}\label{eq:General problem}
   \begin{aligned}
     \minimize{\bm{w}, t}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} [t - \bm{w}^{\top}\bm{x}^+_{i}] \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} [t - \bm{w}^{\top}\bm{x}^+_{i}] \\
     \st
     & \textnormal{threshold} \ t \ \textnormal{is a function of } \{\bm{w}^{\top} \bm{x_i}\}_{i=1}^n,
   \end{aligned}
@@ -38,7 +38,7 @@ where~$\vartheta > 0$ is a scaling parameter. In the following text, we use the 
 \begin{equation}\label{eq:General surrogate problem}
   \begin{aligned}
     \minimize{\bm{w}, t}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
     \st
     & \textnormal{threshold} \ t \ \textnormal{is a function of } \{\bm{w}^{\top} \bm{x_i}\}_{i=1}^n.
   \end{aligned}
@@ -57,10 +57,10 @@ Writing this more formally, define vector~$\bm{s}$ of all scores as~$s_i = \bm{w
 \begin{equation}\label{eq:TopPushK primal}
   \begin{aligned}
     \minimize{\bm{w}, t, \bm s^-}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
     \st
     & t = \frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]}, \\
-    & s_j^- = \bm{w}^\top \bm x_j^-, \quad \forall j = 1, 2, \ldots, n^-.
+    & s_j^- = \bm{w}^\top \bm x_j^-, \quad \forall j = 1, 2, \ldots, \nneg.
   \end{aligned}
 \end{equation}
 It can be showed that this problem is convex and that for~$K = 1$ we get the original \TopPush.
@@ -76,10 +76,10 @@ and show the form of the \TopPushK dual problem\footnote{To keep the readability
   \begin{subequations}\label{eq:TopPushK dual}
     \begin{alignat}{2}
       \maximize{\bm{\alpha}, \bm{\beta}}
-      & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} - C \sum_{i = 1}^{n^+} l^{\star}\Brac{\frac{\alpha_i}{C}} \span \span \label{eq:TopPushK dual objective} \\
+      & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}} \span \span \label{eq:TopPushK dual objective} \\
       \st
-      & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n^-} \beta_j, \label{eq:TopPushK dual constraint 1} \\
-      & 0 \leq \beta_j \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i,  && \quad \forall j = 1, 2, \ldots, n^-, \label{eq:TopPushK dual constraint 2}
+      & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{\nneg} \beta_j, \label{eq:TopPushK dual constraint 1} \\
+      & 0 \leq \beta_j \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i,  && \quad \forall j = 1, 2, \ldots, \nneg, \label{eq:TopPushK dual constraint 2}
     \end{alignat}
     where~$l^{\star}$ is a conjugate of the surrogate loss function~$l$ from~\eqref{eq:TopPushK primal} and~$\K$ was defined in~\eqref{eq:kernel_linear}.
   \end{subequations}
@@ -89,26 +89,26 @@ and show the form of the \TopPushK dual problem\footnote{To keep the readability
 
 The second problem \AccatTop was introduced in~\cite{boyd2012accuracy}. On the contrary to \TopPushK, which focuses on the minimization of the number of positive samples below~$K$~highest ranked negatives, the \AccatTop minimizes the number of positive samples below the top~$\tau$-quantile from negative samples defined as
 \begin{equation}\label{eq:Quantile}
-    t = \max \Set{t}{\sum_{j = 1}^{n^-} [\bm{w}^\top \bm{x}_j^- - t] \geq n \tau}.
+    t = \max \Set{t}{\sum_{j = 1}^{\nneg} [\bm{w}^\top \bm{x}_j^- - t] \geq n \tau}.
 \end{equation}
 Then \AccatTop is an optimization problem written as follows
 \begin{equation}\label{eq:AccAtTop}
   \begin{aligned}
     \minimize{\bm{w}, t}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l_1(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l_1(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
     \st
     & t \ \textnormal{is the surrogate top} \ \tau\textnormal{-quantile: it solves~\eqref{eq:Quantile}}.
   \end{aligned}
 \end{equation}
 Since it is known that the quantile function~\eqref{eq:Quantile} is non-convex, we derived its convex surrogate approximation
 \begin{equation}\label{eq:Surrogate quantile}
-  t \quad \textnormal{solves} \quad \sum_{j = 1}^{n^-} l_2(\bm{w}^{\top}\bm{x}_{j}^- - t) \leq n \tau.
+  t \quad \textnormal{solves} \quad \sum_{j = 1}^{\nneg} l_2(\bm{w}^{\top}\bm{x}_{j}^- - t) \leq n \tau.
 \end{equation}
 Replacing the true quantile~\eqref{eq:Quantile} by its surrogate approximation~\eqref{eq:Surrogate quantile} yields
 \begin{equation}\label{eq:PatMat primal}
   \begin{aligned}
     \minimize{\bm{w}, t}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{n^+} l_1(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
+    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l_1(t - \bm{w}^{\top}\bm{x}^+_{i}) \\
     \st & t \ \textnormal{is the top} \ \tau\textnormal{-quantile: it solves~\eqref{eq:Surrogate quantile}}.
   \end{aligned}
 \end{equation}
@@ -119,9 +119,9 @@ In~\cite{adam2021general}, we called the convex problem~\eqref{eq:PatMat primal}
   \begin{subequations}\label{eq:PatMat dual}
     \begin{align}
       \maximize{\bm{\alpha}, \bm{\beta}, \delta}
-      & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} - C \sum_{i = 1}^{n^+} l_1^{\star} \Brac{\frac{\alpha_i}{C}} - \delta \sum_{j = 1}^{n^-} l_2^{\star} \Brac{\frac{\beta_j}{\delta}} - \delta n \tau \label{eq:PatMat dual objective} \\
+      & -\frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} - C \sum_{i = 1}^{\npos} l_1^{\star} \Brac{\frac{\alpha_i}{C}} - \delta \sum_{j = 1}^{\nneg} l_2^{\star} \Brac{\frac{\beta_j}{\delta}} - \delta n \tau \label{eq:PatMat dual objective} \\
       \st
-      & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n^-} \beta_j, \label{eq:PatMat dual constraint 1} \\
+      & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{\nneg} \beta_j, \label{eq:PatMat dual constraint 1} \\
       & \delta \geq 0, \label{eq:PatMat dual constraint 2} 
     \end{align}
     where~$l_1^{\star}$,~$l_2^{\star}$ are conjugates of the surrogate loss functions~$l_1,$~$l_2$ from~\eqref{eq:PatMat primal} and~$\K$ was defined in~\eqref{eq:kernel_linear}.
@@ -136,7 +136,7 @@ In the previous section, we derived the dual formulations for the \TopPushK and 
 
 To add kernels, we realize first that from the proofs of Theorems~\ref{thm:TopPushK dual} and~\ref{thm:PatMat dual} for any~$\bm{z}\in\R^d$ we have
 \begin{equation}\label{eq:pred_linear}
-  \bm{w}^\top \bm{z} = \sum_{i = 1}^{n^+} \alpha_i \bm{z}^\top \bm{x}^+_i - \sum_{j = 1}^{n^-} \beta_j \bm{z}^\top \bm{x}^-_j
+  \bm{w}^\top \bm{z} = \sum_{i = 1}^{\npos} \alpha_i \bm{z}^\top \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{z}^\top \bm{x}^-_j
 \end{equation}
 Consider now any kernel function~$k:\R^d\times\R^d\to\R$. Using the standard trick, we replace the kernel matrix~\eqref{eq:kernel_linear} by\footnote{
 The first part of the objective of~\eqref{eq:TopPushK dual} and~\eqref{eq:PatMat dual} amounts to
@@ -151,7 +151,7 @@ from which~\eqref{eq:kernel_nonlinear} follows.}
 \end{equation}
 where~$k(\cdot,\cdot)$ is applied to all rows of both arguments. Then for a new sample~$\bm{z}$, the prediction~\eqref{eq:pred_linear} is replaced by
 \begin{equation}\label{eq:pred_nonlinear}
-  \textrm{pred}(\bm{z}) = \sum_{i = 1}^{n^+} \alpha_i k\left(\bm{z}, \bm{x}^+_i\right) - \sum_{j = 1}^{n^-} \beta_j k\left(\bm{z}, \bm{x}^-_j\right),
+  \textrm{pred}(\bm{z}) = \sum_{i = 1}^{\npos} \alpha_i k\left(\bm{z}, \bm{x}^+_i\right) - \sum_{j = 1}^{\nneg} \beta_j k\left(\bm{z}, \bm{x}^-_j\right),
 \end{equation}
 where~$\bm{\alpha}$ and~$\bm{\beta}$ are the optimal solution of~\eqref{eq:TopPushK dual} or~\eqref{eq:PatMat dual}.
 
@@ -254,11 +254,11 @@ Plugging the conjugate~\eqref{eq:Conjugate of truncated quadratic loss} of the t
 \begin{subequations}\label{eq:TopPushK dual quadratic}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}}
-    & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta} \sum_{i = 1}^{n^+} \alpha_i - \frac{1}{4 C \vartheta^2} \sum_{i = 1}^{n^+} \alpha_i^2 \span \span \label{eq:TopPushK dual quadratic objective} \\
+    & - \frac{1}{2} \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}} + \frac{1}{\vartheta} \sum_{i = 1}^{\npos} \alpha_i - \frac{1}{4 C \vartheta^2} \sum_{i = 1}^{\npos} \alpha_i^2 \span \span \label{eq:TopPushK dual quadratic objective} \\
     \st 
-    & \sum_{i = 1}^{n^+} \alpha_i = \sum_{j = 1}^{n^-} \beta_j, \label{eq:TopPushK dual quadratic constraint 1} \\
-    & \alpha_i \geq 0, && \quad \forall i = 1, 2, \ldots, n^+, \label{eq:TopPushK dual quadratic constraint 2} \\
-    & 0 \leq \beta_j  \leq \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i, && \quad \forall j = 1, 2, \ldots, n^-. \label{eq:TopPushK dual quadratic constraint 3}
+    & \sum_{i = 1}^{\npos} \alpha_i = \sum_{j = 1}^{\nneg} \beta_j, \label{eq:TopPushK dual quadratic constraint 1} \\
+    & \alpha_i \geq 0, && \quad \forall i = 1, 2, \ldots, \npos, \label{eq:TopPushK dual quadratic constraint 2} \\
+    & 0 \leq \beta_j  \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, && \quad \forall j = 1, 2, \ldots, \nneg. \label{eq:TopPushK dual quadratic constraint 3}
   \end{alignat}
 \end{subequations}
 This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in~\eqref{eq:TopPushK dual quadratic constraint 3} automatically follows from~\eqref{eq:TopPushK dual quadratic constraint 1} and the problem can be simplified. In the following theorem, we show that for each of update rules~\eqref{eq:Update rules}, problem~\eqref{eq:TopPushK dual quadratic} has a simple closed-form solution. For simplicity, we use~$\clip{a}{b}{c}$ to denote clipping (projecting)~$c$ to the interval~$[a,b]$.
@@ -270,227 +270,39 @@ This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in
   \end{equation}
   where there are the following three cases (each corresponding to one update rule in~\eqref{eq:Update rules}):
   \begin{itemize}
-    \item For any~$1\le k, l \le n^+$ we have
+    \item For any~$1\le k, l \le \npos$ we have
     \begin{align*}
       \Delta_{lb} & = -\alpha_k, \\
       \Delta_{ub} & = \alpha_l, \\
       \gamma      & = -\frac{s_k - s_l + \frac{1}{2C\vartheta^2}(\alpha_k - \alpha_l)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}}.
     \end{align*}
-    \item For any~$1 \le k \le n^+$ and~$n^+ + 1 \le l \le n$ we define~$\hat{l} = l - n^+$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, n^- \} \setminus \{\hat l\}} \beta_j.$ Then we have
+    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
           \max \Brac[c]{- \alpha_k,\;  -\beta_{\hat l}} & K = 1, \\
-          \max \Brac[c]{- \alpha_k,\;  -\beta_{\hat l}, \; K\beta_{\max} - \sum_{i = 1}^{n^+} \alpha_i} & \textrm{otherwise},
+          \max \Brac[c]{- \alpha_k,\;  -\beta_{\hat l}, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
           + \infty & K = 1, \\
-          \frac{1}{K-1}\Brac{\sum_{i = 1}^{n^+} \alpha_i - K \beta_{\hat l}} & \textrm{otherwise},
+          \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \beta_{\hat l}} & \textrm{otherwise},
         \end{cases*} \\
       \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alpha_k}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
     \end{align*}
-    \item For any~$n^+ + 1\le k,l \le n$ we define~$\hat{k} = k - n^+,$~$\hat{l} = l - n^+$ and then  have
+    \item For any~$\npos + 1\le k,l \le n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then  have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
           -\beta_{\hat k} & K = 1, \\
-          \max \Brac[c]{- \beta_{\hat k},\; \beta_{\hat l} - \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i} & \textrm{otherwise},
+          \max \Brac[c]{- \beta_{\hat k},\; \beta_{\hat l} - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
           \beta_{\hat l} & K = 1, \\
-          \min \Brac[c]{\beta_{\hat l},\; \frac{1}{K} \sum_{i = 1}^{n^+} \alpha_i - \beta_{\hat k}} & \textrm{otherwise},
+          \min \Brac[c]{\beta_{\hat l},\; \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_{\hat k}} & \textrm{otherwise},
         \end{cases*} \\
       \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
     \end{align*}
   \end{itemize}
 \end{restatable}
-
-\section{Numerical experiments}\label{sec:Numerical experiments}
-
-In this section, we present numerical results. All codes were implemented in the Julia language~\cite{bezanson2017julia} and are available online.\footnote{All codes are available at \url{https://github.com/VaclavMacha/ClassificationOnTop_new.jl}}
-
-\subsection{Performance criteria}
-
-For the evaluation of numerical experiments, we use precision and recall. For a threshold~$t$ they are defined by
-\begin{equation}\label{eq:prec_rec}
-  \begin{alignedat}{2}
-      \precision
-      & = \frac{\sum_{i = 1}^{n^+} [\bm{w}^{\top}\bm{x}^+_{i} - t]}{\sum_{i = 1}^{n} [\bm{w}^{\top}\bm{x}_{i} - t]}, & \qquad
-      \recall
-      & = \frac{1}{n^+} \sum_{i = 1}^{n^+} [\bm{w}^{\top}\bm{x}^+_{i} - t].
-  \end{alignedat}
-\end{equation}
-We also use the Precision-Recall (PR) curve that are commonly used for unbalanced data~\cite{davis2006relationship} and precision at a certain level of recall which we denote by~$\pratrec$.
-
-\subsection{Hyperparameter choice}
-
-In Section~\ref{sec:New method for solving dual problems} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq:TopPushK dual},~\ref{eq:PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\beta})$. We use the linear and Gaussian kernels defined by
-\begin{align}
-  k_{\textrm{lin}}(\bm{x}, \bm{y})   & = \bm{x}^{\top} \bm{y}, \label{eq:Linear kernel} \\
-  k_{\textrm{gauss}}(\bm{x}, \bm{y}) & = \exp\{-\sigma \norm{\bm{x} - \bm{y}}_2^2\} \label{eq:Gaussian kernel}
-\end{align}
-and the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} with~$\vartheta = 1$ as a surrogate. 
-
-The classifiers were trained on the training set. We selected the optimal hyperparameter from
-\begin{equation*}
-  \begin{aligned}
-    \tau   & \in \{0.01,\ 0.05,\ 0.1\}, &
-    K      & \in \{5,\ 10\}, &
-    C      & \in \{0.1,\ 1,\ 10\}, &
-    \sigma & \in \{0.01,\ 0.05\} 
-  \end{aligned}
-\end{equation*}
-which gave the best performance on the validation set. All presented result are shown on the testing set which was not part of the training process.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{@{}lllllllll@{}}
-      \toprule
-      &&& \multicolumn{2}{c}{Training}
-        & \multicolumn{2}{c}{Validation}
-        & \multicolumn{2}{c}{Testing} \\
-      \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
-        & $y^+$
-        & $d$
-        & $n$
-        & $\frac{n^+}{n}$
-        & $n$
-        & $\frac{n^+}{n}$
-        & $n$
-        & $\frac{n^+}{n}$ \\
-      \midrule
-      sigillito1989classification
-        & -- & 34 & 176 & 64.2\% & 87 & 64.4\% & 88 & 63.6\% \\
-      Spambase
-        & -- & 57 & 2301 & 39.4\% & 1150 & 39.4\% & 1150 & 39.4\% \\
-      WhiteWineQuality
-        & 7, 8, 9 & 11 & 2449 & 21.6\% & 1224 & 21.7\% & 1225 & 21.6\% \\
-      RedWineQuality
-        & 7, 8 & 11 & 800 & 13.5\% & 400 & 13.8\% & 399 & 13.5\% \\
-      Fashion-MNIST
-        & 0 & 784 & 50000 & 10.0\% & 10000 & 10.0\% & 10000 & 10.0\% \\
-      \bottomrule
-  \end{tabular}
-  \caption{Summary of the used datasets. It shows which original labels~$y^+$ were selected as the positive class, the number of features~$d,$ samples~$n,$ and the fraction of positive samples~$\frac{n^+}{n}$.}
-  \label{tab:Datasets}
-\end{table}
-
-\subsection{Dataset description}
-
-For numerical experiments, we consider the FashionMNIST dataset~\cite{xiao2017fashionmnist} and four smaller datasets from the UCI repository~\cite{dua2019uci}: sigillito1989classification~\cite{sigillito1989classification}, Spambase, WhiteWineQuality~\cite{cortez2009modeling} and RedWineQuality~\cite{cortez2009modeling}. Datasets that do not contain testing set were randomly divided into a training (50\%), validation (25\%) and testing (25\%) sets. For datasets that contain a testing set, the training set was randomly divided into a training and a validation set, where the validation set has the same size as the testing set. FashionMNIST dataset was converted to binary classification tasks by selecting class with label 0 as the positive class and the rest as the negative class. All datasets are summarized in Table~\ref{tab:Datasets}.
-
-\subsection{Experiments}
-
-In Figure~\ref{fig:PR comparison} we present the PR curves for all methods with two different kernels evaluated on the FashionMNIST dataset. The left column corresponds to the linear kernel~\eqref{eq:Linear kernel} while the right one to the Gaussian kernel~\eqref{eq:Gaussian kernel} with~$\sigma = 0.01$. The nonlinear Gaussian kernel significantly outperforms the linear kernel. This will be confirmed later in Table~\ref{tab:Metrics comparison} where we present a comparison from multiple datasets. 
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results1.pdf}
-  \caption{PR curves for all methods and  FashionMNIST dataset. The left column corresponds to the linear kernel~\eqref{eq:Linear kernel} and the right column corresponds to the Gaussian kernel~\eqref{eq:Gaussian kernel}.}
-  \label{fig:PR comparison}
-\end{figure}
-
-For a better illustration of how the methods from Figure~\ref{fig:PR comparison} work, we present density estimates of scores~$\bm s$ from \eqref{eq:defin_s}. High scores predict positive labels while low scores predict negative labels. The rows of Figure~\ref{fig:Scores comparison} depict the linear \eqref{eq:Linear kernel} and the Gaussian kernels \eqref{eq:Gaussian kernel} with~$\sigma = 0.01$ while each column corresponds to one method. The black vertical lines depict the top 5\%-quantile of all scores (on the testing set). Since a smaller overlap of scores of samples with positive and negative labels implies a better separation, we deduce the benefit of the Gaussian over the linear kernel.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results2.pdf}
-  \caption{Density estimates for scores corresponding to samples with positive and negative labels for the FashionMNIST dataset.}
-  \label{fig:Scores comparison}
-\end{figure}
-
-In Table~\ref{tab:Metrics comparison} we present the precision of all methods across all datasets from Table~\ref{tab:Datasets}. For each dataset, we trained each method and computed precision at certain levels of recall. The depicted values are averages over all datasets. For each kernel and each level of recall, the best precision is highlighted in light green. Moreover, the best overall precision for each level of recall is depicted in dark green. We can make several observations from Table~\ref{tab:Metrics comparison}:
-\begin{itemize}
-  \item All methods perform better with the Gaussian kernels than with the linear kernel. 
-  \item \TopPush and \TopPushK perform better for sufficiently small recall. This happened because they consider the threshold to be the maximal~$K$ negative scores and small recall corresponds to high threshold. However, for the same reason, \TopPush is not robust.
-  \item \PatMat is the best for all kernels if the recall is sufficiently large. The reason is again the form of the decision threshold.
-\end{itemize}
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{@{}c|llllllll@{}}
-    \toprule
-    \multicolumn{3}{c}{} & \multicolumn{6}{c}{$\pratrec$}  \\
-    \cmidrule(lr){4-9}
-    \multicolumn{3}{c}{}
-      & 0.05 & 0.1 & 0.2 & 0.4 & 0.6 & 0.8 \\
-    \midrule
-    \multirow{6}{*}{\rotatecell{Linear kernel}}
-    & \TopPush
-      & & \best 79.83 & 64.27 & \best 65.55 & 61.85 & 57.89 & 51.83 \\
-    & \TopPushK & $K = 5$
-      & 73.96 & \best 65.41 & 64.82 & 60.28 & 56.94 & 50.52 \\
-    & & $K = 10$
-      & 60.63 & 61.97 & 59.69 & 56.89 & 54.40 & 49.83 \\
-    & \PatMat & $\tau = 0.01$
-      & 63.67 & 60.30 & 58.74 & 57.75 & 53.32 & 48.42 \\
-    & & $\tau = 0.05$
-      & 54.05 & 60.91 & 63.32 & 55.24 & 52.55 & 48.30 \\
-    & & $\tau = 0.1$
-      & 57.02 & 61.24 & 62.49 & \best 63.11 & \best 59.91 & \best 52.14 \\
-    \midrule
-    \multirow{6}{*}{\rotatecell{Gaussian kernel}}
-    & \TopPush
-      & & \besttotal 97.50 & 86.06 & 81.28 & 76.15 & 71.13 & 60.17 \\
-    & \TopPushK & $K = 5$
-      & 92.50 & 87.56 & 85.31 & 78.47 & 70.77 & 57.10 \\
-    & & $K = 10$
-      & 89.50 & 87.56 & 83.15 & 79.09 & 71.88 & 59.27 \\
-    & \PatMat & $\tau = 0.01$
-      & 89.65 & \besttotal 89.11 & \besttotal 86.75 & 80.77 & 75.44 & 65.95 \\
-    & & $\tau = 0.05$
-      & 80.77 & 81.28 & 85.74 & 82.92 & 74.91 & 65.04 \\
-    & & $\tau = 0.1$
-      & 81.30 & 84.14 & 82.58 & \besttotal 83.12 & \besttotal 77.82 & \besttotal 66.50 \\
-    \bottomrule
-  \end{tabular}
-  \caption{The precision of all methods averaged across all datasets from Table~\ref{tab:Datasets}. Each column represents precision at a certain level of recall. Light green depicts the best method for the given kernel and dark green depicts the best overall method.}
-  \label{tab:Metrics comparison}
-\end{table}
-
-In Figure~\ref{fig:Convergence comparison}, we investigate the convergence of methods. In each column, we show the convergence of primal and dual problems for one method. To solve the primal problem, we use the gradient method proposed in~\cite{adam2021general}. For the dual problem, we use our Algorithm~\ref{alg:Coordinate descent}. Since~\cite{adam2021general} considers only linear kernels, we present them. Moreover, since the computation of the objective is expensive, the results are presented for the sigillito1989classification dataset. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual problems. This means that the problem was solved to optimality. However, there is a little gap between optimal solution of primal and dual problems for \PatMat.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results3.pdf}
-  \caption{Convergence of the objectives for the primal (red line) and dual (blue line) problems for the sigillito1989classification dataset with linear kernel.}
-  \label{fig:Convergence comparison}
-\end{figure}
-
-Finally, Table~\ref{tab:Time comparison} depicts the time comparison for all methods and all datasets. It shows the average time in milliseconds needed for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The time is relatively stable and for most of the datasets it is below one millisecond. Since we run all experiments for 20000 \repeatloop loops, the evaluation of one method with one hyperparameter setting takes a few seconds for smaller datasets and approximately 7 minutes for FashionMNIST. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods. It is almost the same for all datasets, which corresponds to the fact that the complexity of step~\ref{alg: line 5} is independent of the size of the dataset. Note that in all experiments we used precomputed kernel matrix~$\K$ saved on the hard drive and not in memory.
-
-\begin{table}[ht]
-  \centering
-  \begin{tabular}{@{}c|llll@{}}
-      \toprule
-      \multicolumn{2}{c}{}
-        & \TopPush & \TopPushK & \PatMat \\
-      \midrule
-      \multirow{5}{*}{\rotatecell{One \repeatloop \\ loop [ms]}}
-      & sigillito1989classification
-        & $ 0.04 \pm 0.00 $ & $ 0.03 \pm 0.00 $ & $ 0.03 \pm 0.00 $ \\
-      & Spambase
-        & $ 0.56 \pm 0.02 $ & $ 0.49 \pm 0.01 $ & $ 0.50 \pm 0.01 $ \\
-      & WhiteWineQuality
-        & $ 0.62 \pm 0.03 $ & $ 0.53 \pm 0.01 $ & $ 0.54 \pm 0.01 $ \\
-      & RedWineQuality
-        & $ 0.17 \pm 0.01 $ & $ 0.14 \pm 0.01 $ & $ 0.15 \pm 0.01 $ \\
-      & Fashion-MNIST
-        & $ 17.16 \pm 0.74 $ & $ 15.95 \pm 0.14 $ & $ 15.54 \pm 0.80 $ \\
-      \bottomrule
-  \end{tabular}
-  \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods.}
-  \label{tab:Time comparison}
-\end{table}
-
-\section{Conclusion}\label{sec:Conclusion}
-
-In this paper, we analyzed and extended the general framework for binary classification on top samples from~\cite{adam2021general} to nonlinear problems. Achieved results can be summarized as follows:
-\begin{itemize}
-    \item We derived the dual formulations for \TopPush, \TopPushK and \PatMat.
-    \item We proposed a new method for solving the dual problems. We performed its complexity analysis. For selected surrogate functions we also derived the exact formulas needed in the method.
-    \item We performed a numerical analysis of the proposed method. We showed its good convergence as well as improved performance of nonlinear kernels over the linear one.
-\end{itemize}
-Based on the numerical analysis from Section~\ref{sec:Numerical experiments}, we recommend using \TopPush or \TopPushK for problems where the resulting recall should be small. Otherwise, we recommend using \PatMat with an appropriately selected~$\tau$ parameter.
