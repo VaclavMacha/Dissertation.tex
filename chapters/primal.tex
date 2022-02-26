@@ -12,10 +12,7 @@ where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In su
   \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
 \end{mini*}
 
-
-\section{Theoretical Analysis of the Framework}\label{sec:theory}
-
-In this section, we provide a theoretical analysis of the unified framework from Chapter~\ref{chap: framework} with linear classifier. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. The overview of all formulations that falls into the framework~\eqref{eq: aatp surrogate} is in Table~\ref{tab: summary formulations}. We focus mainly on the following desirable properties:
+In this chapter, we provide a theoretical analysis of the unified framework from Chapter~\ref{chap: framework} with linear classifier. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. The overview of all formulations that falls into the framework~\eqref{eq: aatp surrogate} is in Table~\ref{tab: summary formulations}. We focus mainly on the following desirable properties:
 \begin{itemize}
   \item \textit{Convexity} implies a guaranteed convergence for many optimization algorithms or their better convergence rates~\cite{boyd2004convex}.
   \item \textit{Differentiability} increases the speed of convergence.
@@ -23,7 +20,7 @@ In this section, we provide a theoretical analysis of the unified framework from
 \end{itemize}
 For a nicer flow of text, we postpone the proofs to Appendix~\ref{chap: linear}. Moreover, we show the results only for formulations from Section~\ref{sec: ranking} and~\ref{sec: aatp}. The results for methods from Section~\ref{sec: Neyman-Pearson} are identical to the one for methods in Section~\ref{sec: aatp}. 
 
-\subsection{Convexity}\label{sec: convexity}
+\section{Convexity}\label{sec: convexity}
 
 Convexity is one of the most important properties in numerical optimization. It ensures that the optimization problem has neither stationary points nor local minima. All points of interest are global minima. Moreover, it allows for faster convergence rates. Before we present any results, we recall the form of the decision threshold from Section~\ref{sec: aatp}
 \begin{equation*}
@@ -51,7 +48,7 @@ where we use Notation~\ref{not: scores}. Note that we denote the thresholds as f
 
 \noindent While the proof of Theorem~\ref{thm:convex} is simple, it points to the necessity of considering only false-negatives in the objective of the formulations in Chapter~\ref{chap: framework}. In such a case, \TopPush, \TopPushK, \TopMeanK, \tauFPL, \PatMat and \PatMatNP are convex problems. At the same time, \Grill and \GrillNP are not convex problems.
 
-\subsection{Differentiability}
+\section{Differentiability}
 
 Similarly to convexity, differentiability allows for faster convergence rate and in some algorithms, better termination criteria. The next theorem shows which formulations are differentiable.
 
@@ -65,7 +62,7 @@ Similarly to convexity, differentiability allows for faster convergence rate and
 
 \noindent This theorem shows that the objective functions of \PatMat and \PatMatNP are differentiable. This allows us to prove the convergence of the stochastic gradient descent for these two formulations in Section~\ref{sec:convergence}.
 
-\subsection{Stability}\label{sec: stability}
+\section{Stability}\label{sec: stability}
 
 We first provide a simple example and show that many formulations from Table~\ref{tab: summary formulations} are degenerate for it. Then we analyze general conditions under which this degenerate behaviour happens.
 
@@ -191,7 +188,78 @@ The right-hand sides of \eqref{eq:stability1} and \eqref{eq:stability2} are the 
 
 At the same time, there may be a huge difference in the stability of both formulations. Since the scores of positive samples should be above the scores of negative samples, the scores~$\bm{s}$ may be interpreted as performance. Then formula \eqref{eq:stability1} states that if the mean performance of a \emph{small number of the best} negative samples is larger than the average performance of \emph{all} positive samples, then \tauFPL fails. On the other hand, formula \eqref{eq:stability2} states that if the average performance of \emph{all} positive samples is better than the average performance of \emph{all} negative samples, then \PatMatNP is stable. The former may well happen as accuracy at the top is interested in a good performance of only a small number of positive samples.
 
-\subsection{Method comparison}
+\section{Convergence of stochastic gradient descent}\label{sec:convergence}
+
+The previous section analyzed the formulations from Chapter~\ref{chap: framework} but did not consider any optimization algorithms. In this section, we show a basic version of the stochastic gradient descent and then show its convergent version. Since due to considering the threshold, gradient computed on a minibatch is a biased estimate of the true gradient, we need to use variance reduction techniques, and the proof is rather complex.
+
+Many optimization algorithms for solving the formulations from Chapter~\ref{chap: framework} use primal-dual or purely dual formulations.~\cite{eban2017scalable} introduced dual variables and used alternating optimization to the resulting min-max problem. ~\cite{li2014top} and~\cite{zhang2018tau} dualized the problem and solved it with the steepest gradient ascent.~\cite{macha2020nonlinear} followed the same path but added kernels to handle non-linearity. We follow the ideas of~\cite{mackey2018constrained} and~\cite{adam2019machine} and solve the problems directly in their primal formulations. Therefore, even though we use the same formulation for \TopPush as~\cite{li2014top} or for \tauFPL as~\cite{zhang2018tau}, our solution process is different. However, due to convexity, both algorithms should converge to the same point.
+
+The decision variables in \eqref{eq: aatp surrogate} are the normal vector of the separating hyperplane~$\bm{w}$ and the threshold~$t$. To apply an efficient optimization method, we need to compute gradients. The simplest idea~\cite{grill2016learning} is to compute the gradient only with respect to~$\bm{w}$ and then recompute~$t$. A more sophisticated way is based on the chain rule. For each~$\bm{w}$, the threshold~$t$ can be computed uniquely. We stress this dependence by writing~$t(\bm{w})$ instead of~$t$. By doing so, we effectively remove the threshold~$t$ from the decision variables and~$\bm{w}$ remains the only decision variable. Note that the convexity is preserved. Then we can compute the derivative via the chain rule
+\begin{equation}\label{eq:derivatives}
+  \begin{aligned}
+  L(\bm{w})
+    & = \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}) - \bm{w}^\top \bm{x}_i) + \frac{\lambda}{2}\norm{\bm{w}}^2, \\
+  \nabla L(\bm{w})
+    & = \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^\top \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i) + \lambda \bm{w}.
+  \end{aligned}
+\end{equation}
+The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for~$\nabla t_1(\bm{w})$ and~$\nabla t_2(\bm{w})$ and Theorem~\ref{thm:derivative} shows the computation for~$\nabla t_3(\bm{w})$. Moreover, Appendix~\ref{app:threshold} provides an efficient computation method for~$t_3(\bm{w})$. Having derivative \eqref{eq:derivatives}, deriving the stochastic gradient is simple. It partitions the dataset into minibatches and provides an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in \eqref{eq:derivatives} by a mean over the minibatch.
+
+\subsection{SGD: Convergent for \PatMat and \PatMatNP}
+
+For the convergence proof, we need differentiability which is due to Theorem~\ref{thm:derivative} possessed only by \PatMat and \PatMatNP. Therefore, we consider only these two formulations and for simplicity, show it only for \PatMat. We apply a variance reduction technique based on delayed values similar to SAG~\cite{schmidt2017minimizing}. 
+
+At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the score vector~$\bm{s}^k$ only on the active minibatch by setting
+\begin{equation}\label{eq:defin_z}
+  s_i^k = \begin{cases}
+    \bm{x}_i^\top \bm{w}^k & \text{for all } i \in \Imb^k, \\
+    s_i^{k-1} & \text{otherwise.}
+  \end{cases} 
+\end{equation}
+We keep scores from previous minibatches intact. We use Appendix~\ref{app:threshold} to compute the surrogate quantile~$t^k$ as the unique solution of
+\begin{equation}\label{eq:update_t}
+  \sum_{i \in \I}l\Brac{\vartheta(s_i^k - t^k)} = n\tau.
+\end{equation}
+This is an approximation of the surrogate quantile~$t(\bm{w}^k)$ from \eqref{eq: aatp quantile surrogate}. The only difference from the true value~$t(\bm{w}^k)$ is that we use delayed scores. Then we introduce artificial variable
+\begin{equation}\label{eq:update_a}
+  \bm{a}^k = \sum_{i \in \Imb^k} l'\Brac{\vartheta(s_i^k - t^k)}\bm{x}_i.
+\end{equation}
+Finally, we approximate the derivative~$\nabla f(\bm{w}^k)$ from \eqref{eq:derivatives} by
+\begin{equation}\label{eq:update_g}
+  g(\bm{w}^k) = \frac{1}{\nmbpos^k} \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
+\end{equation}
+where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm:derivative} defined by
+\begin{equation}\label{eq:update_nablat}
+  \nabla t^k
+    = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta(s_i^k - t^k)}}.
+\end{equation}
+A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of \eqref{eq:update_nablat}. However, choice \eqref{eq:update_nablat} enables us to prove the convergence and it adds stability to the algorithm for small minibatches.
+
+The whole procedure does not perform any vector operations outside of the current minibatch~$\Imb^k$. We summarize it in Algorithm~\ref{alg:sgd}. Note that a proper initialization for the first~$m$ iterations is needed. We finish the theoretical part by the convergence proof.
+
+\begin{algorithm}
+  \begin{algorithmic}[1]
+    \Require Dataset~$\D$, Minibatches~$\Imb^1,\; \Imb^2, \ldots, \; \Imb^m$, Stepsize~$\alpha^k$
+    \State Initialize weights~$\bm{w}^0$
+    \For{$k = 0, \; 1, \ldots $}
+    \State Select a minibatch~$\Imb^k$
+    \State Compute~$s_i^k$ for all~$i \in \Imb^k$ according to \eqref{eq:defin_z}
+    \State Compute~$t^k$ according to \eqref{eq:update_t}
+    \State Compute~$\bm{a}^k$ according to \eqref{eq:update_a}
+    \State Compute~$\nabla t^k$ according to \eqref{eq:update_nablat}
+    \State Compute~$g(\bm{w}^k)$ according to \eqref{eq:update_g}
+    \State Set~$\bm{w}^{k+1} \gets \bm{w}^k - \alpha^k g(\bm{w}^k)$
+    \EndFor
+  \end{algorithmic}
+  \caption{Stochastic gradient descent for maximizing accuracy at the top}
+  \label{alg:sgd}
+\end{algorithm}
+
+\begin{restatable}{theorem}{sgd}\label{thm:sgd}
+  Consider the \PatMat or \PatMatNP formulation, stepsizes~$\alpha^k = \nicefrac{\alpha^0}{k+1}$ and piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened (Huberized) hinge function, then Algorithm~\ref{alg:sgd} converges to the global minimum of \eqref{eq: patmat}.
+\end{restatable}
+
+\section{Summary}
 
 We provide a summary of the obtained results in Table~\ref{tab:methods}. There we give basic characterizations of the formulations such as their definition label, their source, the hyperparameters, whether the formulation is differentiable and convex, and whether it has stability problems with~$\bm{w}=\bm{0}$ being the global minimum. 
 
@@ -270,74 +338,3 @@ A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in gre
   \caption{Summary of the formulations from Chapter~\ref{chap: framework}. Methods in green are convex, while formulations in red are non-convex. Methods in light green are vulnerable to have the global minimum at~$\bm{w}=0$. Full (dotted) arrow pointing from one formulation to another show that the latter formulation has always (usually) smaller threshold.}
   \label{fig:thresholds}
 \end{figure}
-
-\section{Convergence of stochastic gradient descent}\label{sec:convergence}
-
-The previous section analyzed the formulations from Chapter~\ref{chap: framework} but did not consider any optimization algorithms. In this section, we show a basic version of the stochastic gradient descent and then show its convergent version. Since due to considering the threshold, gradient computed on a minibatch is a biased estimate of the true gradient, we need to use variance reduction techniques, and the proof is rather complex.
-
-Many optimization algorithms for solving the formulations from Chapter~\ref{chap: framework} use primal-dual or purely dual formulations.~\cite{eban2017scalable} introduced dual variables and used alternating optimization to the resulting min-max problem. ~\cite{li2014top} and~\cite{zhang2018tau} dualized the problem and solved it with the steepest gradient ascent.~\cite{macha2020nonlinear} followed the same path but added kernels to handle non-linearity. We follow the ideas of~\cite{mackey2018constrained} and~\cite{adam2019machine} and solve the problems directly in their primal formulations. Therefore, even though we use the same formulation for \TopPush as~\cite{li2014top} or for \tauFPL as~\cite{zhang2018tau}, our solution process is different. However, due to convexity, both algorithms should converge to the same point.
-
-The decision variables in \eqref{eq: aatp surrogate} are the normal vector of the separating hyperplane~$\bm{w}$ and the threshold~$t$. To apply an efficient optimization method, we need to compute gradients. The simplest idea~\cite{grill2016learning} is to compute the gradient only with respect to~$\bm{w}$ and then recompute~$t$. A more sophisticated way is based on the chain rule. For each~$\bm{w}$, the threshold~$t$ can be computed uniquely. We stress this dependence by writing~$t(\bm{w})$ instead of~$t$. By doing so, we effectively remove the threshold~$t$ from the decision variables and~$\bm{w}$ remains the only decision variable. Note that the convexity is preserved. Then we can compute the derivative via the chain rule
-\begin{equation}\label{eq:derivatives}
-  \begin{aligned}
-  L(\bm{w})
-    & = \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}) - \bm{w}^\top \bm{x}_i) + \frac{\lambda}{2}\norm{\bm{w}}^2, \\
-  \nabla L(\bm{w})
-    & = \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^\top \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i) + \lambda \bm{w}.
-  \end{aligned}
-\end{equation}
-The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for~$\nabla t_1(\bm{w})$ and~$\nabla t_2(\bm{w})$ and Theorem~\ref{thm:derivative} shows the computation for~$\nabla t_3(\bm{w})$. Moreover, Appendix~\ref{app:threshold} provides an efficient computation method for~$t_3(\bm{w})$. Having derivative \eqref{eq:derivatives}, deriving the stochastic gradient is simple. It partitions the dataset into minibatches and provides an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in \eqref{eq:derivatives} by a mean over the minibatch.
-
-\subsection{SGD: Convergent for \PatMat and \PatMatNP}
-
-For the convergence proof, we need differentiability which is due to Theorem~\ref{thm:derivative} possessed only by \PatMat and \PatMatNP. Therefore, we consider only these two formulations and for simplicity, show it only for \PatMat. We apply a variance reduction technique based on delayed values similar to SAG~\cite{schmidt2017minimizing}. 
-
-At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\I^k$. First, we update the score vector~$\bm{s}^k$ only on the active minibatch by setting
-\begin{equation}\label{eq:defin_z}
-  s_i^k = \begin{cases}
-    (\bm{w}^k)^\top \bm{x}_i & \text{for all } i \in \I^k, \\
-    s_i^{k-1} & \text{otherwise.}
-  \end{cases} 
-\end{equation}
-We keep scores from previous minibatches intact. We use Appendix~\ref{app:threshold} to compute the surrogate quantile~$t^k$ as the unique solution of
-\begin{equation}\label{eq:update_t}
-  \sum_{i \in \I}l\Brac{\vartheta(s_i^k - t^k)} = n\tau.
-\end{equation}
-This is an approximation of the surrogate quantile~$t(\bm{w}^k)$ from \eqref{eq: aatp quantile surrogate}. The only difference from the true value~$t(\bm{w}^k)$ is that we use delayed scores. Then we introduce artificial variable
-\begin{equation}\label{eq:update_a}
-  \bm{a}^k = \sum_{i \in \I^k} l'\Brac{\vartheta(s_i^k - t^k)}\bm{x}_i.
-\end{equation}
-Finally, we approximate the derivative~$\nabla f(\bm{w}^k)$ from \eqref{eq:derivatives} by
-\begin{equation}\label{eq:update_g}
-  g(\bm{w}^k) = \frac{1}{\npos^k} \sum_{i \in \Ipos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
-\end{equation}
-where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm:derivative} defined by
-\begin{equation}\label{eq:update_nablat}
-  \nabla t^k
-    = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta(s_i^k - t^k)}}.
-\end{equation}
-A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of \eqref{eq:update_nablat}. However, choice \eqref{eq:update_nablat} enables us to prove the convergence and it adds stability to the algorithm for small minibatches.
-
-The whole procedure does not perform any vector operations outside of the current minibatch~$\I^k$. We summarize it in Algorithm~\ref{alg:sgd}. Note that a proper initialization for the first~$m$ iterations is needed. We finish the theoretical part by the convergence proof.
-
-\begin{algorithm}[!ht]
-  \begin{algorithmic}[1]
-    \Require Dataset~$\D$, Minibatches~$\I^1,\; \I^2, \ldots, \; \I^m$, Stepsize~$\alpha^k$
-    \State Initialize weights~$\bm{w}^0$
-    \For{$k = 0, \; 1, \ldots $}
-    \State Select a minibatch~$\I^k$
-    \State Compute~$s_i^k$ for all~$i \in \I^k$ according to \eqref{eq:defin_z}
-    \State Compute~$t^k$ according to \eqref{eq:update_t}
-    \State Compute~$\bm{a}^k$ according to \eqref{eq:update_a}
-    \State Compute~$\nabla t^k$ according to \eqref{eq:update_nablat}
-    \State Compute~$g(\bm{w}^k)$ according to \eqref{eq:update_g}
-    \State Set~$\bm{w}^{k+1} \gets \bm{w}^k - \alpha^k g(\bm{w}^k)$
-    \EndFor
-  \end{algorithmic}
-  \caption{Stochastic gradient descent for maximizing accuracy at the top}
-  \label{alg:sgd}
-\end{algorithm}
-
-\begin{restatable}{theorem}{sgd}\label{thm:sgd}
-  Consider the \PatMat or \PatMatNP formulation, stepsizes~$\alpha^k = \frac{\alpha^0}{k+1}$ and piecewise disjoint minibatches~$\I^1, \; \I^2, \ldots, \; \I^m$ which cycle periodically~$\I^{k+m} = \I^k$. If~$l$ is the smoothened (Huberized) hinge function, then Algorithm~\ref{alg:sgd} converges to the global minimum of \eqref{eq: patmat}.
-\end{restatable}

@@ -164,15 +164,6 @@ where~$\vartheta > 0$ is scaling parameter.Since this threshold uses the surroga
 \end{mini}
 Note that \Grill minimizes the convex combination of false-positives and false-negatives while~\eqref{eq: topmeank} and~\eqref{eq: patmat} minimize only the false-negatives. The reason for this will be evident in Section~\ref{sec: convexity} and amounts to preservation of convexity for linear model. Moreover, problem~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem and for linear model is easily solvable due to convexity and requires almost no tuning. For this reason we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
 
-The following proposition compares the thresholds defined in this section in terms of approximation quality.
-\begin{proposition}[Thresholds relation~\cite{zhang2018tau}]\label{prop: threholds}
-  We always have
-  \begin{equation*}
-    t_1(\bm{s}) \le t_2(\bm{s}) \le t_3(\bm{s}).
-  \end{equation*}
-\end{proposition}
-Whenever the objective contains only false-negatives, a lower threshold~$t$ means a lower objective function. Therefore, a lower threshold is preferred.
-
 \section{Neyman-Pearson problem}\label{sec: Neyman-Pearson}
 
 Another category falling into the framework of~\eqref{eq: aatp counts} and~\eqref{eq: aatp surrogate} is the Neyman-Pearson problem which is closely related to hypothesis testing, where null~$H_0$ and alternative~$H_1$ hypotheses are given. Type~I error occurs when~$H_0$ is true but is rejected, and Type II error happens when~$H_0$ is false, but it fails to be rejected. The standard technique is to minimize Type II error while a bound for Type I error is given.
