@@ -4,7 +4,7 @@
 
 These problems can be generally written as pushing the positive samples above some decision threshold. The methods differ in the definition of the decision threshold. In our previous work~\cite{adam2021general}, we introduced a general framework that unifies these methods. We showed that several problem classes, which were considered as separate problems so far, fit into the framework. The deficiency of methods from this framework is that they usually cover only linear classifiers. However, as many problems are not linearly separable, nonlinear classifiers are needed. In this work, we show how to extend our framework into nonlinear classification problems. To do so, we use the fact that our framework is similar to the primal formulation of support vector machines~\cite{cortes1995support}. The classical way to incorporate nonlinearity into SVM is to derive the dual formulation~\cite{boyd2004convex} and to employ the kernels method~\cite{scholkopf2001learning}. In this work, we follow this approach, derive dual formulations for the considered problems and add nonlinear kernels to them. Moreover, as dual problems are generally expensive to solve, we derive a quick method to solve them. This is a modification of the coordinate-wise dual ascent from~\cite{hsieh2008dual}. For a review of other approaches see~\cite{batmaz2019review,werner2019review}.
 
-The paper is organized as follows: In Section~\ref{sec:Derivation of dual problems} we recall the unified framework derived in~\cite{adam2021general} and two class of problems that falls into it. Moreover, for selected methods, we derive their dual formulations. Namely, we focus on \TopPush, \TopPushK and \PatMat. In Section~\ref{sec:New method for solving dual problems}, we show how to add nonlinear kernels into dual formulations, derive a new method for solving these dual problems and perform its complexity analysis. Since our method depends on the chosen problem and surrogate function, we provide a concrete form of the solution for \TopPushK with the truncated quadratic loss. Solutions for other problems are provided in Appendix~\ref{sec:Computing Delta with truncated quadratic surrogate} and~\ref{sec:Computing Delta with hinge surrogate}. Finally, in Section~\ref{sec:Numerical experiments} we present the description of performance criteria, choice of hyperparameters and description of datasets. The rest of the section is focused on the results of numerical experiments. Here we compare all methods in terms of overall accuracy and accuracy at a given threshold. We also discuss the convergence and time consumption of all methods. All our codes are available online.\footnote{\texttt{https://github.com/VaclavMacha/ClassificationOnTop\_nonlinear.jl}}
+The paper is organized as follows: In Section~\ref{sec:Derivation of dual problems} we recall the unified framework derived in~\cite{adam2021general} and two class of problems that falls into it. Moreover, for selected methods, we derive their dual formulations. Namely, we focus on \TopPush, \TopPushK and \PatMat. In Section~\ref{sec:New method for solving dual problems}, we show how to add nonlinear kernels into dual formulations, derive a new method for solving these dual problems and perform its complexity analysis. Since our method depends on the chosen problem and surrogate function, we provide a concrete form of the solution for \TopPushK with the truncated quadratic loss. Solutions for other problems are provided in Appendix~\ref{sec: Delta for quadratic hinge} and~\ref{sec: Delta for hinge loss}. Finally, in Section~\ref{sec:Numerical experiments} we present the description of performance criteria, choice of hyperparameters and description of datasets. The rest of the section is focused on the results of numerical experiments. Here we compare all methods in terms of overall accuracy and accuracy at a given threshold. We also discuss the convergence and time consumption of all methods. All our codes are available online.\footnote{\texttt{https://github.com/VaclavMacha/ClassificationOnTop\_nonlinear.jl}}
 
 \section{Derivation of dual problems}\label{sec:Derivation of dual problems}
 
@@ -94,10 +94,11 @@ and show the form of the \TopPushK dual problem\footnote{To keep the readability
 \begin{restatable}{theorem}{topdual}\label{thm: Top dual}
   Consider formulations \TopPush, \TopPushK, \TopMeanK and \tauFPL from Table~\ref{tab: summary formulations} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
   \begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
-    - \frac{1}{2} \vecab^\top \K \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
+    - \frac{1}{2} \vecab^\top \K \vecab
+    - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
     }{}{}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\tilde{n}} \beta_j}
-    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \tilde{n},}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
   \end{maxi*}
   where~$l^{\star}$ is conjugate function of~$l$ and
   \begin{align*}
@@ -105,7 +106,7 @@ and show the form of the \TopPushK dual problem\footnote{To keep the readability
       \Kall & \quad \text{for \TopMeanK}, \\
       \Kneg & \quad \text{otherwise}, \\
     \end{cases} &
-    \tilde{n} & = \begin{cases}
+    \ntil & = \begin{cases}
       \nall & \quad \text{for \TopMeanK}, \\
       \nneg & \quad \text{otherwise}. \\
     \end{cases}
@@ -153,18 +154,21 @@ In~\cite{adam2021general}, we called the convex problem~\eqref{eq: PatMatNP prim
 \begin{restatable}[Dual formulation 2]{theorem}{patdual}\label{thm: Pat dual}
   Consider formulations \PatMat and \PatMatNP from Table~\ref{tab: summary formulations} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
   \begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
-    - \frac{1}{2} \vecab^\top \K \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}} - \delta \sum_{j = 1}^{\tilde{n}} l^{\star} \Brac{\frac{\beta_j}{\delta}} - \delta \tilde{n} \tau
+    - \frac{1}{2} \vecab^\top \K \vecab
+    - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
+    - \delta \sum_{j = 1}^{\ntil} l^{\star} \Brac{\frac{\beta_j}{\delta\vartheta }}
+    - \delta \ntil \tau
     }{}{}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\tilde{n}} \beta_j}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
     \addConstraint{\delta }{\ge 0,}
   \end{maxi*}
-  where~$l^{\star}$ is conjugate function of~$l$ and
+  where~$l^{\star}$ is conjugate function of~$l,$~$\vartheta > 0$ is a scaling parameter and
   \begin{align*}
     \K & = \begin{cases}
       \Kall & \quad \text{for \PatMat}, \\
       \Kneg & \quad \text{otherwise}, \\
     \end{cases} &
-    \tilde{n} & = \begin{cases}
+    \ntil & = \begin{cases}
       \nall & \quad \text{for \PatMat}, \\
       \nneg & \quad \text{otherwise}. \\
     \end{cases}
@@ -173,7 +177,7 @@ In~\cite{adam2021general}, we called the convex problem~\eqref{eq: PatMatNP prim
 
 \section{New method for solving dual problems}\label{sec:New method for solving dual problems}
 
-In the previous section, we derived the dual formulations for the \TopPushK and \PatMat problems. These dual formulations allow us to incorporate nonlinearity using kernels~\cite{scholkopf2001learning} in the same way as in SVM. Since the dimension of~\eqref{eq: TopPushK dual} and~\eqref{eq: PatMatNP dual} equals to the number of samples~$n$, it is computationally expensive to use standard techniques such as the gradient descent. To handle this issue, the coordinate descent algorithm~\cite{chang2008coordinate,hsieh2008dual} has been proposed in the context of SVMs. Since problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMatNP dual}) differ from original SVMs by additional constraints (\ref{eq: TopPushK dual c1},~\ref{eq: PatMatNP dual c1}), the key idea of our algorithm is to update two coordinates (instead of one) of~$\bm{\alpha},$~$\bm{\beta}$ at every iteration. To summarize, we will solve the original tasks~(\ref{eq: TopPushK dual},~\ref{eq: PatMatNP dual}) by an iterative procedure where in every iteration we need to find a solution of a one-dimensional quadratic optimization problem. As we will show later, these one-dimensional problems have a closed form solution, which means that every iteration is cheap.
+In the previous section, we derived the dual formulations for the \TopPushK and \PatMat problems. These dual formulations allow us to incorporate nonlinearity using kernels~\cite{scholkopf2001learning} in the same way as in SVM. Since the dimension of~\eqref{eq: TopPushK dual} and~\eqref{eq: PatMat dual} equals to the number of samples~$n$, it is computationally expensive to use standard techniques such as the gradient descent. To handle this issue, the coordinate descent algorithm~\cite{chang2008coordinate,hsieh2008dual} has been proposed in the context of SVMs. Since problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}) differ from original SVMs by additional constraints (\ref{eq: TopPushK dual c1},~\ref{eq: PatMatNP dual c1}), the key idea of our algorithm is to update two coordinates (instead of one) of~$\bm{\alpha},$~$\bm{\beta}$ at every iteration. To summarize, we will solve the original tasks~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}) by an iterative procedure where in every iteration we need to find a solution of a one-dimensional quadratic optimization problem. As we will show later, these one-dimensional problems have a closed form solution, which means that every iteration is cheap.
 
 \subsection{Adding kernels}
 
@@ -182,7 +186,7 @@ To add kernels, we realize first that from the proofs of Theorems~\ref{thm: TopP
   \bm{w}^\top \bm{z} = \sum_{i = 1}^{\npos} \alpha_i \bm{z}^\top \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{z}^\top \bm{x}^-_j
 \end{equation}
 Consider now any kernel function~$k:\R^d\times\R^d\to\R$. Using the standard trick, we replace the kernel matrix~\eqref{eq:kernel_linear} by\footnote{
-The first part of the objective of~\eqref{eq: TopPushK dual} and~\eqref{eq: PatMatNP dual} amounts to
+The first part of the objective of~\eqref{eq: TopPushK dual} and~\eqref{eq: PatMat dual} amounts to
 \begin{equation*}
   \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \K \Matrix{\bm{\alpha} \\ \bm{\beta}}
   = \Matrix{\bm{\alpha} \\ \bm{\beta}}^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} }\Matrix{\bm{\alpha} \\ \bm{\beta}}
@@ -196,7 +200,7 @@ where~$k(\cdot,\cdot)$ is applied to all rows of both arguments. Then for a new 
 \begin{equation}\label{eq:pred_nonlinear}
   \textrm{pred}(\bm{z}) = \sum_{i = 1}^{\npos} \alpha_i k\left(\bm{z}, \bm{x}^+_i\right) - \sum_{j = 1}^{\nneg} \beta_j k\left(\bm{z}, \bm{x}^-_j\right),
 \end{equation}
-where~$\bm{\alpha}$ and~$\bm{\beta}$ are the optimal solution of~\eqref{eq: TopPushK dual} or~\eqref{eq: PatMatNP dual}.
+where~$\bm{\alpha}$ and~$\bm{\beta}$ are the optimal solution of~\eqref{eq: TopPushK dual} or~\eqref{eq: PatMat dual}.
 
 \subsection{Update of dual optimization variables}
 
@@ -206,31 +210,31 @@ Let us consider the kernel matrix~$\K$ as in~\eqref{eq:kernel_nonlinear} and def
 \end{equation}
 There are three possible update rules which modify two coordinates of~$\bm{\alpha},$~$\bm{\beta}$ and which satisfy constraints (\ref{eq: TopPushK dual c1},~\ref{eq: PatMatNP dual c1}) and keep~\eqref{eq:defin_s} satisfied. The first one updates two components of~$\bm{\alpha}$
 \begin{subequations}\label{eq:Update rules}
-  \begin{equation}\label{eq:Update rule a,a}
+  \begin{equation}\label{eq: update rule a,a}
     \begin{alignedat}{2}
       \alpha_k & \rightarrow \alpha_k + \Delta, & \qquad
       \alpha_l & \rightarrow \alpha_l - \Delta, & \qquad
       \bm{s}   & \rightarrow \bm{s} + (\K_{\bullet k} - \K_{\bullet l})\Delta,
-    \end{alignedat}
+    \end{alignedat}\tag{$\updateaa$}
   \end{equation}
   where~$K_{\bullet i}$ denotes~$i$-th column of~$\K.$ Note that the update rule for~$\bm{s}$ does not use matrix multiplication but only vector addition. The second rule updates one component of~$\bm{\alpha}$ and one component of~$\bm{\beta}$ 
-  \begin{equation}\label{eq:Update rule a,b}
+  \begin{equation}\label{eq: update rule a,b}
     \begin{alignedat}{2}
       \alpha_k & \rightarrow \alpha_k + \Delta, & \qquad
       \beta_l  & \rightarrow \beta_l  + \Delta, & \qquad
       \bm{s}   & \rightarrow \bm{s} + (\K_{\bullet k} + \K_{\bullet l})\Delta,
-    \end{alignedat}
+    \end{alignedat}\tag{$\updateab$}
   \end{equation}
   and the last one updates two components of~$\bm{\beta}$
-  \begin{equation}\label{eq:Update rule b,b}
+  \begin{equation}\label{eq: update rule b,b}
     \begin{alignedat}{2}
       \beta_k & \rightarrow \beta_k + \Delta, & \qquad
       \beta_l & \rightarrow \beta_l - \Delta, & \qquad
       \bm{s}  & \rightarrow \bm{s} + (\K_{\bullet k} - \K_{\bullet l})\Delta.
-    \end{alignedat}
+    \end{alignedat}\tag{$\updatebb$}
   \end{equation}
 \end{subequations}
-These three update rules hold true for any surrogate function. However, the calculation of the optimal~$\Delta$ depends on the used problem formulation and surrogate function. In Subsection~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}, we show the closed-form formula for~$\Delta$ for \TopPushK problem~\eqref{eq: TopPushK dual} with truncated quadratic surrogate function~\eqref{eq:Truncated quadratic loss}. Computation of~$\Delta$ for the hinge surrogate or \PatMat is presented in Appendices~\ref{sec:Computing Delta with truncated quadratic surrogate} and~\ref{sec:Computing Delta with hinge surrogate}. 
+These three update rules hold true for any surrogate function. However, the calculation of the optimal~$\Delta$ depends on the used problem formulation and surrogate function. In Subsection~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}, we show the closed-form formula for~$\Delta$ for \TopPushK problem~\eqref{eq: TopPushK dual} with truncated quadratic surrogate function~\eqref{eq:Truncated quadratic loss}. Computation of~$\Delta$ for the hinge surrogate or \PatMat is presented in Appendices~\ref{sec: Delta for quadratic hinge} and~\ref{sec: Delta for hinge loss}. 
 
 \subsection{Algorithm summary and Complexity analysis}
 
@@ -291,9 +295,9 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
 
 \subsection{Computing~$\Delta$ for \TopPushK with truncated quadratic loss}\label{sec:Computing Delta for TopPushK with truncated quadratic loss}
 
-In this section, we show how to compute the stepsize~$\Delta$ from~\eqref{eq:Update rules} for \TopPushK~\eqref{eq: TopPushK dual} with the truncated quadratic surrogate function~\eqref{eq:Truncated quadratic loss}. Optimal~$\Delta$ for \PatMat can be found in a similar way as we show in Appendix~\ref{sec:Computing Delta with truncated quadratic surrogate}. In Appendix~\ref{sec:Computing Delta with hinge surrogate} we present the computation of optimal~$\Delta$ for \TopPushK and \PatMat with the hinge loss function~\eqref{eq:Hinge loss}.
+In this section, we show how to compute the stepsize~$\Delta$ from~\eqref{eq:Update rules} for \TopPushK~\eqref{eq: TopPushK dual} with the truncated quadratic surrogate function~\eqref{eq:Truncated quadratic loss}. Optimal~$\Delta$ for \PatMat can be found in a similar way as we show in Appendix~\ref{sec: Delta for quadratic hinge}. In Appendix~\ref{sec: Delta for hinge loss} we present the computation of optimal~$\Delta$ for \TopPushK and \PatMat with the hinge loss function~\eqref{eq:Hinge loss}.
 
-Plugging the conjugate~\eqref{eq:Conjugate of truncated quadratic loss} of the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} into \TopPushK dual formulation~\eqref{eq: TopPushK dual} yields
+Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} into \TopPushK dual formulation~\eqref{eq: TopPushK dual} yields
 \begin{subequations}\label{eq:TopPushK dual quadratic}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}}
