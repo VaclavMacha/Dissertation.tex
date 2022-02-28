@@ -184,7 +184,7 @@ We also use the Precision-Recall (PR) curve that are commonly used for unbalance
 
 \subsection{Hyperparameter choice}
 
-In Section~\ref{sec:New method for solving dual problems} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq:TopPushK dual},~\ref{eq:PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\beta})$. We use the linear and Gaussian kernels defined by
+In Section~\ref{sec:New method for solving dual problems} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\beta})$. We use the linear and Gaussian kernels defined by
 \begin{align}
   k_{\textrm{lin}}(\bm{x}, \bm{y})   & = \bm{x}^{\top} \bm{y}, \label{eq:Linear kernel} \\
   k_{\textrm{gauss}}(\bm{x}, \bm{y}) & = \exp\{-\sigma \norm{\bm{x} - \bm{y}}_2^2\} \label{eq:Gaussian kernel}

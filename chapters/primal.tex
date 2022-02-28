@@ -6,7 +6,7 @@ In this chapter, we focus on the special case when the model~$f$ is linear
 \end{equation*}
 where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In such a case, the framework~\eqref{eq: aatp surrogate} simplifies into the following form
 \begin{mini*}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
@@ -276,51 +276,51 @@ We provide a summary of the obtained results in Table~\ref{tab:methods}. There w
     \midrule
     \TopPush
       & \eqref{eq: toppush surrogate}
-      & $\lambda_0$
+      & ---
       & \yesmark
       & \nomark
       & \nomark \\
     \TopPushK
       & \eqref{eq: toppushK surrogate}
-      & $\lambda_0$, $K$
+      & $K$
       & \yesmark
       & \nomark
       & \nomark \\
     \midrule
     \Grill
       & \eqref{eq: grill}
-      & $\lambda_0$, $\tau$
+      & $\tau$
       & \nomark
       & \nomark
       & \yesmark \\
     \PatMat
       & \eqref{eq: patmat}
-      & $\lambda_0$, $\tau$, $\vartheta$
+      & $\tau$, $\vartheta$
       & \yesmark
       & \yesmark
       & \yesmark \\ 
     \TopMeanK
       & \eqref{eq: topmeank}
-      & $\lambda_0$, $\tau$
+      & $\tau$
       & \yesmark
       & \nomark
       & \nomark \\
     \midrule
     \GrillNP
       & \eqref{eq: grill np}
-      & $\lambda_0$, $\tau$
+      & $\tau$
       & \nomark
       & \nomark
       & \yesmark \\
     \PatMatNP
       & \eqref{eq: patmat np}
-      & $\lambda_0$, $\tau$, $\vartheta$
+      & $\tau$, $\vartheta$
       & \yesmark
       & \yesmark
       & \yesmark \\
     \tauFPL
       & \eqref{eq: tau-fpl}
-      & $\lambda_0$, $\tau$
+      & $\tau$
       & \yesmark
       & \nomark
       & \nomark\\

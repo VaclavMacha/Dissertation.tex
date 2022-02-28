@@ -1,130 +1,249 @@
 \chapter{Appendix for Chapter~\ref{chap: dual}}
 
-\section{Convex conjugate}
+In this chapter we provide proofs and additional results for the Chapter~\ref{chap: dual}. In the first part, we introduce concept of conjugate functions. In the second part, we derive dual formulation to the formulations from Table~\ref{tab: summary formulations}. Finally, the last part focuses on how to efficiently solve these dual formulations.
 
-Recall that for a convex lower semi-continuous function~$f$, its convex conjugate~$f^*$ is defined by
-\begin{equation*}
-  f^{\star} (\bm{y})
-  =  \sup_{\bm{x} \in \domain f} \{\bm{y}^{\top}\bm{x} - f(\bm{x})\}
-  = -\inf_{\bm{x} \in \domain f} \{f(\bm{x}) - \bm{y}^{\top}\bm{x}\}.    
-\end{equation*}
-For details, see~\cite[page~91]{boyd2004convex}. For the hinge loss function, it is well-known~\cite{shnlev2014accelerated} that 
-\begin{equation}\label{eq:Conjugate of hinge loss}
-  \begin{aligned}
-    l_{hinge}(x) & = \max\{0,1 + \vartheta x\}, \\
-    l_{hinge}^{\star}(y) & =
-      \begin{dcases*}
-        -\frac{y}{\vartheta} & if~$y \in [0, \vartheta]$, \\
-        \infty & otherwise.
-      \end{dcases*}  
-  \end{aligned}
-\end{equation}
-Similarly, for the truncated quadratic loss function, it is well-known~\cite{kanamori2013conjugate} that
-\begin{equation}\label{eq:Conjugate of truncated quadratic loss}
-  \begin{aligned}
-    l_{quad}(x) &= (\max\{0,1 + \vartheta x\} )^2, \\
-    l_{quad}^{\star}(y) & =
-      \begin{dcases*}
-        \frac{y^2}{4\vartheta^2} - \frac{y}{\vartheta} & if~$y \geq 0$, \\
-        \infty & otherwise. \\
-      \end{dcases*}  
-  \end{aligned}
-\end{equation}
-
-\section{Proofs for dual problems}
-
-\toppushkdual*
-\begin{proof}[Proof of Theorem~\ref{thm:TopPushK dual} on page~\pageref{thm:TopPushK dual}]
-  Recall the primal formulation of the \TopPushK problem~\eqref{eq:TopPushK primal}
+\section{Convex Conjugate}
+\begin{definition}[Convex conjugate~\cite{boyd2004convex}]\label{def: conjugate}
+  Let~$l \colon \R^n \to \R.$ The function~$l^{\star} \colon \R^n \to \R,$ defined as
   \begin{equation*}
-    \minimize{\bm{w}} \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}.
+    l^{\star} (\bm{y})
+      =  \sup_{\bm{x} \in \domain l} \{\bm{y}^{\top}\bm{x} - l(\bm{x})\}
+      = -\inf_{\bm{x} \in \domain l} \{l(\bm{x}) - \bm{y}^{\top}\bm{x}\}.
   \end{equation*}
-  Using~\cite[Lemma~1]{ogryczak2003minimizing} and the fact that the surrogate function~$l$ is non-decreasing, we can write
-  \begin{align*}
-    \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - \bm{w}^{\top}\bm{x}^+_{i}}
-    & = \sum_{i = 1}^{\npos} l\Brac{ \frac{1}{K} \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\{0, s^-_j - t\}} - \bm{w}^{\top}\bm{x}^+_{i}} \\
-    & = \min_{t} \sum_{i = 1}^{\npos} l\Brac{  t + \frac{1}{K} \sum_{j = 1}^{\nneg} \max\{0, \bm{w}^{\top}\bm{x}^-_{j} - t\} - \bm{w}^{\top}\bm{x}^+_{i}}.
-  \end{align*}
-  Using auxiliary variables~$\bm y \in \R^{\npos}$ and~$\bm{z} \in \R^{\nneg},$ we observe that~\eqref{eq:TopPushK primal} is equivalent to
-  \begin{alignat*}{2}
-    \minimize{\bm{w}, t, \bm{y}, \bm{z}}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i) \span \span \\
-    \st
-    & y_i = t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top\bm{x}^+_i, & \quad & \forall i = 1, 2, \ldots \npos, \\
-    & z_j \geq \bm{w}^\top\bm{x}^-_j - t, & \quad & \forall j = 1, 2, \ldots \nneg, \\
-    & z_j \geq 0, & \quad & \forall j = 1, 2, \ldots \nneg.
-  \end{alignat*}
+  is called conjugate function of~$l.$
+\end{definition}
+Recall the hinge loss and quadratic hinge loss function defined in Notation~\ref{not: surrogates} as follows
+\begin{equation*}
+  \begin{aligned}
+    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + s}, \\
+    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.\\
+  \end{aligned}
+\end{equation*}
+The conjugate for the hinge loss can be found in~\cite{shnlev2014accelerated} and has the following form
+\begin{equation}\label{eq:Conjugate of hinge loss}
+  l_{\text{hinge}}^{\star}(y) =
+  \begin{cases}
+    -y & \text{if } y \in [0, 1], \\
+    \infty & \text{otherwise.}
+  \end{cases}  
+\end{equation}
+Similarly, the conjugate for the quadratic hinge is defuined in~\cite{kanamori2013conjugate} as
+\begin{equation}\label{eq:Conjugate of truncated quadratic loss}
+  l_{\text{quadratic}}^{\star}(y) =
+  \begin{cases}
+    \frac{y^2}{4} - y & \text{if } y \geq 0, \\
+    \infty & \text{otherwise.}
+  \end{cases}
+\end{equation}
 
-  The dual objective function is~$g(\bm{\alpha}, \bm{\beta}, \bm{\gamma}) = \min_{\bm{w}, t, \bm{y}, \bm{z}} L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma}),$ where the Lagrange function~$L$ is defined by
-  \begin{equation}\label{eq:TopPushK with quadratic Lagrange function}
+\section{Dual formulations}
+
+In this section, we show how to derive the dual formulations to the formulations from Table Table~\ref{tab: summary formulations}. 
+
+\subsection{Ranking Problems}
+
+In this section, we derive the dual formulation of \TopPushK. Table~\ref{tab: summary formulations} shows, that \TopPush is a special is a special case of the \TopPushK for~$K = 1.$ Therefore, it is sufficient to show the dual form only for \TopPushK. Firstly, we introduce the alternative form of the \TopPushK.
+
+\begin{lemma}[\TopPushK alternative formulation.]\label{lem: TopPushK primal alternative}
+  The problem~\eqref{eq:TopPushK primal} can be equivalently written as follows
+  \begin{maxi}{\bm{w}, t, \bm{y}, \bm{z}}{
+    \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i)
+    }{\label{eq: TopPushK primal alternative}}{}
+    \addConstraint{y_i}{= t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top \bm{x}^+_i, \quad}{i = 1, \; 2, \ldots, \; \npos.}
+    \addConstraint{z_j}{\geq \bm{w}^\top \bm{x}^-_j - t,}{j = 1, \; 2, \ldots, \; \nneg}
+    \addConstraint{z_j}{\geq 0,}{j = 1, \; 2, \ldots, \; \nneg}
+  \end{maxi}
+\end{lemma}
+\begin{proof}
+  Firstly, we rewrite the formula for the decision threshold from~\eqref{eq:TopPushK primal}using the Lemma~1 from~\cite{ogryczak2003minimizing}
+  \begin{equation*}
+    \sum_{j = 1}^{K} s^{-}_{[j]} = \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\{0, \; s^-_j - t\}}.
+  \end{equation*}
+  Substituing this formula into the objective function from~\eqref{eq:TopPushK primal}, we get
+  \begin{align*}
+    \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - s^+_{i}}
+      & = \sum_{i = 1}^{\npos} l\Brac{ \frac{1}{K} \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\Brac[c]{0, \; s^-_j - t}} - s^+_{i}} \\
+      & = \min_{t} \; \sum_{i = 1}^{\npos} l\Brac{t + \frac{1}{K} \sum_{j = 1}^{\nneg} \max\Brac[c]{0, \; s^-_j - t} - s^+_{i}}.
+  \end{align*}
+  where the last equality follows from the fact, that the surrogate function is~$l$ is non-decreasing. The max operator can be replaced using auxiliary variable~$\bm{z} \in \R^{\nneg}$ which for all~$j = 1, \; 2, \ldots, \; \nneg$ fullfills~$z _j \geq s^-_j - t$ and at the same time~$z _j \geq 0.$ Moreover, we introduce new variable~$\bm{y} \in \R^{\nneg}$ defined for all~$i = 1, \; 2, \ldots, \; \npos$ as
+  \begin{equation*}
+    y_i = t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - s^+_i.
+  \end{equation*}
+  Altogether, we get the formulation~\eqref{eq: TopPushK primal alternative}, where we use the fact, that we have linear model and therefore~$s^-_j = \bm{w}^\top \bm{x}^-_j$ for all~$j = 1, \; 2, \ldots, \; \nneg$ and ~$s^+_i = \bm{w}^\top \bm{x}^+_i$ for all~$i = 1, \; 2, \ldots, \; \npos$.
+\end{proof}
+
+\pagebreak
+
+\begin{theorem}[Dual formulation of \TopPush and \TopPushK ]\label{thm: TopPushK dual}
+  Consider \TopPushK formulation~\eqref{eq: toppush surrogate} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
+  \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
+    - \frac{1}{2} \vecab^\top \Kneg \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
+    }{\label{eq: TopPushK dual}}{\label{eq: TopPushK dual L}}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nneg} \beta_j \label{eq: TopPushK dual c1}}
+    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \nneg, \label{eq: TopPushK dual c2}}
+  \end{maxi!}
+  where~$l^{\star}$ is conjugate function of~$l.$ If~$K = 1,$ the upper bound in the second constrainet vanishes due to the first constraint and we get the dual form of \TopPush.
+\end{theorem}
+\begin{proof}
+  In Lemma~\ref{lem: TopPushK primal alternative} we derived alternative fomrulation of \TopPushK with Lagrangian in the following form
+  \begin{align*}
+    \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma})
+     & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+       + C \sum_{i = 1}^{\npos} l(y_i)
+       + \sum_{i = 1}^{\npos} \alpha_i \Brac{t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top \bm{x}^+_i - y_i} \\
+     & + \sum_{j = 1}^{\nneg} \beta_j \Brac{\bm{w}^\top \bm{x}^-_j - t - z_j}
+       + \sum_{j = 1}^{\nneg} \gamma_j z_j,
+  \end{align*}
+  with feasibility conditions~$\beta_j \ge 0$ and~$\gamma_j \ge 0$ for all~$j = 1, \; 2, \ldots, \; \nneg.$ Then the corresponding dual objective function reads
+  \begin{equation*}
+    g(\bm{\alpha}, \bm{\beta}, \bm{\gamma})
+      = \min_{\bm{w}, t, \bm{y}, \bm{z}} \; \mathcal{L}(\bm{w}, t, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma}),
+  \end{equation*}
+  Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately, i.e., the dual function can be rewritten as follows
+  \begin{equation}\label{eq: TopPushK dual function}
     \begin{aligned}
-      L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma})
-      & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-        + C \sum_{i = 1}^{\npos} l(y_i)
-        + \sum_{i = 1}^{\npos} \alpha_i(t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^\top\bm{x}^+_i - y_i) \\ 
-      & + \sum_{j = 1}^{\nneg} \beta_j (\bm{w}^{\top}\bm{x}^-_j - t - z_j)
-        - \sum_{j = 1}^{\nneg} \gamma_j z_j
+      g(\bm{\alpha}, \bm{\beta}, \bm{\gamma})
+        & = \min_{\bm{w}} \; \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+          - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j} \\
+        & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j} \\
+        & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \\
+        & + \min_{\bm{z}} \; \sum_{j = 1}^{\nneg} \Brac{\sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j}z_j
     \end{aligned}
   \end{equation}
-  Since this function is separable in primal variables, it can be minimized with respect to each variable separately. Optimality conditions with respect to~$t$ and~$\bm{z}$ read
-  \begin{alignat*}{2}
-    \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j     & = 0, \\
-    \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j & = 0, & \quad \forall j = 1, 2, \ldots \nneg.
-  \end{alignat*}
-  From the first condition we deduce constraint~\eqref{eq:TopPushK dual constraint 1}. Plugging the feasibility condition~$\gamma_j \geq 0$ into the second optimal condition and combining it with the feasibility conditions~$\beta_j \geq 0$ yields constraint~\eqref{eq:TopPushK dual constraint 2}. By minimizing~\eqref{eq:TopPushK with quadratic Lagrange function} with respect to~$\bm{w}$ we deduce
+  From optimality conditions with respect to~$\bm{w}$ we deduce 
   \begin{equation*}
     \bm{w}
         = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j
-        = \Matrix{\X^+ \\ - \X^-}^\top \Matrix{\bm{\alpha} \\ \bm{\beta}},
+        = \Matrix{\X^+ \\ - \X^-}^\top \vecab,
   \end{equation*}
-  where~$\X^+,$~$\X^-$ are matrices of positive and negative samples respectively (each row corresponds to one sample). Finally, minimization of~\eqref{eq:TopPushK with quadratic Lagrange function} with respect to~$\bm{y}$ yields
+  where we use Notation~\ref{not: kernel matrix}. Using this relation, we get the first part of the objective function~\eqref{eq: TopPushK dual L} 
   \begin{equation*}
-    C \min_{y_i} \Brac{l(y_i) - \frac{\alpha_i}{C} y_i} = - C l^{\star} \Brac{\frac{\alpha_i}{C}}, \quad \forall i = 1, 2, \ldots \npos.
+    \frac{1}{2} \norm{\bm{w}}_{2}^{2} - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j}
+      = - \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+      = - \frac{1}{2} \bm{w}^{\top} \bm{w}
+      = - \frac{1}{2} \vecab^{\top} \Kneg \vecab,
   \end{equation*}
-  Plugging all these relations into~\eqref{eq:TopPushK with quadratic Lagrange function} yields the objective function of~\eqref{eq:TopPushK dual}, which finishes the proof.
+  where~$\Kneg$ is defined in Notation~\ref{not: kernel matrix}. Optimality condition with respect to~$t$ reads 
+  \begin{equation*}
+    \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j = 0,
+  \end{equation*}
+  and implies constrain in~\eqref{eq: TopPushK dual c1}. Similarly, Optimality condition with respect to~$\bm{z}$ reads for all $j = 1, \; 2, \ldots, \; \nneg$ as 
+  \begin{equation*}
+    \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j = 0.
+  \end{equation*}
+  Plugging the feasibility condition~$\gamma_j \geq 0$ into this equality and combining it with the feasibility conditions~$\beta_j \geq 0$ yields constraint~\eqref{eq: TopPushK dual c2}. Finally, minimization of the Lagrangian with respect to~$\bm{y}$ yields for all $i = 1, \; 2, \ldots, \; \npos$ 
+  \begin{equation*}
+    C \min_{y_i} \Brac{l(y_i) - \frac{\alpha_i}{C} y_i} = - C l^{\star} \Brac{\frac{\alpha_i}{C}}.
+  \end{equation*}
+  where the equality follows from Definition~\ref{def: conjugate}. Plugging this back into the Lagrange function yields the second part of the objective function~\eqref{eq: TopPushK dual L}, which finishes the proof for \TopPushK. For \TopPush, we have~$K = 1.$ From~\eqref{eq: TopPushK dual c1} and non-negativity of~$\beta_j$ we deduce, that the upper bound in constraint~\eqref{eq: TopPushK dual c2} is always fullfiled and therefore can be ommited, which finishes the proof. 
 \end{proof}
 
-\patmatdual*
-\begin{proof}[Proof of Theorem~\ref{thm:PatMat dual} on page~\pageref{thm:PatMat dual}]
-  Let us first realize that the primal \PatMat  problem~\eqref{eq:PatMat primal} is equivalent to
-  \begin{alignat*}{2}
-    \minimize{\bm{w}, t, \bm{y}, \bm{z}}
-    & \frac{1}{2} \norm{\bm{w}}_{2}^{2} + C \sum_{i = 1}^{\npos} l_1(y_i) \span \span \\
-    \st 
-    & \sum_{j = 1}^{\nneg} l_2(z_j) \leq n \tau, \\
-    & y_i = t - \bm{w}^{\top}\bm{x}^+_{i}, && \quad \forall i = 1, 2, \ldots, \npos, \\
-    & z_j = \bm{w}^{\top}\bm{x}_{j}^- - t, && \quad \forall j = 1, 2, \ldots, \nneg.
-  \end{alignat*}
-  Then the dual function is~$g(\bm{\alpha}, \bm{\beta}, \bm{\delta}) = \min_{\bm{w}, t, \bm{y}, \bm{z}} L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\delta}),$ where the Lagrange function~$L$ is defined by
-  \begin{equation}\label{eq:PatMat with quadratic Lagrange function}
-    \begin{aligned}
-      L(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta)
-      & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-        + C \sum_{i = 1}^{\npos} l_1(y_i)
-        + \sum_{i = 1}^{\npos} \alpha_i(t - \bm{w}^{\top}\bm{x}^+_{i} - y_i) \\
-      & + \sum_{j = 1}^{\nneg} \beta_j(\bm{w}^{\top}\bm{x}_j^- - t - z_j)
-        + \delta \Brac{\sum_{j = 1}^{\nneg} l_2(z_j) - n \tau}. 
-    \end{aligned}
-  \end{equation}
-  Since this function is separable in primal variables, it can be minimized with respect to each variable separately. Optimality condition with respect to~$t$ read
+\subsection{Accuracy at the Top}
+
+In Section~\ref{sec: aatp} we derived three problem formulations that fall into our framework~\eqref{eq: aatp surrogate}. Namely: \Grill, \TopMeanK and \PatMat. We focus only on \TopMeanK and \PatMat formulations, since as showed in Chapter~\ref{chap: linear}, these two formulations are convex for linear model.
+
+\begin{theorem}[Dual formulation of \TopMeanK]\label{thm: TopMeanK dual}
+  Consider \TopMeanK formulation~\eqref{eq: topmeank} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
+  \begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
+    - \frac{1}{2} \vecab^\top \Kall \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
+    }{}{}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nall} \beta_j}
+    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \nall,}
+  \end{maxi*}
+  where~$l^{\star}$ is conjugate function of~$l$ and~$K = \nall \tau.$
+\end{theorem}
+\begin{proof}
+  \TopMeanK formulation is similar to the \TopPushK and therefore also dual formulations are similar. The main difference is, that the decision threshold for \TopMeanK is computed from all socres and not only from the negative ones as for \TopPushK. Due to that, the dual variable~$\bm{\beta}$ has different size and the kernel matrix has slightly different form as can be seen in Notation~\ref{not: kernel matrix}. Besides that dual formulations of \TopMeanK and \TopMeanK are identical and the proof of Theorem~\ref{thm: TopMeanK dual} is almost identical to the proof of Theorem~\ref{thm: TopPushK dual}.
+\end{proof}
+
+\begin{theorem}[Dual formulation of \PatMat]\label{thm: PatMat dual}
+  Consider \PatMat formulation~\eqref{eq: patmat} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
+  \begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
+    - \frac{1}{2} \vecab^\top \Kall \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}} - \delta \sum_{j = 1}^{\nall} l^{\star} \Brac{\frac{\beta_j}{\delta}} - \delta \nall \tau
+    }{\label{eq: PatMat dual}}{\label{eq: PatMat dual L}}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nall} \beta_j \label{eq: PatMat dual c1}}
+    \addConstraint{\delta }{\ge 0, \label{eq: PatMat dual c2}}
+  \end{maxi!}
+  where~$l^{\star}$ is conjugate function of~$l.$
+\end{theorem}
+\begin{proof}
+  Let us first realize tha \PatMat formulation~\eqref{eq: patmat} with linear model is equivalent to
+  \begin{mini*}{\bm{w}, t, \bm{y}, \bm{z}}{
+    \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i)
+    }{}{}
+    \addConstraint{\sum_{j = 1}^{\nall} l(z_i)}{\le \nall \tau}{}
+    \addConstraint{y_i}{= t - \bm{w}^\top \bm{x}^+_i,}{i = 1, \; 2, \ldots, \; \npos.}
+    \addConstraint{z_j}{= \bm{w}^\top \bm{x}_j - t, \quad}{j = 1, \; 2, \ldots, \; \nall}
+  \end{mini*}
+  Corresponding Lagrangian is in the following form
+  \begin{align*}
+    \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta)
+    & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+      + C \sum_{i = 1}^{\npos} l(y_i)
+      + \sum_{i = 1}^{\npos} \alpha_i (t - \bm{w}^{\top}\bm{x}^+_{i} - y_i) \\
+    & + \sum_{j = 1}^{\nall} \beta_j(\bm{w}^{\top}\bm{x}_j - t - z_j)
+      + \delta \Brac{\sum_{j = 1}^{\nall} l(z_j) - \nall \tau}.
+  \end{align*}
+  with feasibility condition~$\delta \ge 0.$ Then the corresponding dual objective function reads
   \begin{equation*}
-      \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j = 0, \\
+    g(\bm{\alpha}, \bm{\beta}, \delta)
+      = \min_{\bm{w}, t, \bm{y}, \bm{z}} \; \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta),
   \end{equation*}
-  from which we deduce constraint~\eqref{eq:PatMat dual constraint 1}. By minimizing~\eqref{eq:PatMat with quadratic Lagrange function} with respect to~$\bm{w}$ we deduce
+  Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately, i.e., the dual function can be rewritten as follows
+  \begin{align*}
+    g(\bm{\alpha}, \bm{\beta}, \delta)
+      & = \min_{\bm{w}} \; \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+        - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j} \\
+      & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nall} \beta_j} \\
+      & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \\
+      & + \min_{\bm{z}} \; \delta \sum_{j = 1}^{\nall} \Brac{l(z_j) - \frac{\beta_j}{\delta}z_j} \\
+      & - \delta \nall \tau.
+  \end{align*}
+  Note that resulting dual function is very similar to the dual function~\eqref{eq: TopPushK dual function} for \TopPushK, i.e. minimization of the Lagrangian with respect to~$\bm{w}$,~$t$ and~$\bm{y}$ yields similar results. From optimality conditions with respect to~$\bm{w}$ we deduce 
   \begin{equation*}
     \bm{w}
-    = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}_j^-
-    = \Matrix{\X^+ \\ - \X^-}^\top \Matrix{\bm{\alpha} \\ \bm{\beta}},
+        = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j
+        = \Matrix{\X^+ \\ - \X}^\top \vecab,
   \end{equation*}
-  where~$\X,$~$\X^+$ are matrices of all and positive samples respectively (each row corresponds to one sample). Finally, minimization of~\eqref{eq:PatMat with quadratic Lagrange function} with respect to~$\bm{y}$ and~$\bm{z}$ yields
-  \begin{alignat*}{2}
-      C \min_{y_i} \Brac{l_1(y_i) - \frac{\alpha_i}{C} y_i}
-      & = - C l_1^{\star} \Brac{\frac{\alpha_i}{C}}, \\
-      \delta \min_{z_j} \Brac{l_2(z_j) - \frac{\beta_j}{\delta} z_j}
-      & = - \delta l_2^{\star} \Brac{\frac{\beta_j}{\delta}}.
-  \end{alignat*}
-  Plugging all these relations into~\eqref{eq:PatMat with quadratic Lagrange function} yields the objective function of~\eqref{eq:PatMat dual}, which finishes the proof.
+  where we use Notation~\ref{not: kernel matrix}. Using this relation, we get the first part of the objective function~\eqref{eq: PatMat dual L} 
+  \begin{equation*}
+    \frac{1}{2} \norm{\bm{w}}_{2}^{2} - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j}
+      = - \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+      = - \frac{1}{2} \bm{w}^{\top} \bm{w}
+      = - \frac{1}{2} \vecab^{\top} \Kall \vecab,
+  \end{equation*}
+  where~$\Kall$ is defined in Notation~\ref{not: kernel matrix}. Optimality condition with respect to~$t$ reads 
+  \begin{equation*}
+    \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nall} \beta_j = 0,
+  \end{equation*}
+  and implies constrain in~\eqref{eq: PatMat dual c1}. The optimality condition with respect to~$\bm{y}$ is identical to the one in the proof of Theorem~\ref{thm: TopPushK dual}. Finally, inimization of the Lagrangian with respect to~$\bm{z}$ yields for all $j = 1, \; 2, \ldots, \; \nall$ 
+  \begin{equation*}
+    \delta \min_{\bm{z}} \; \Brac{l(z_j) - \frac{\beta_j}{\delta}z_j} = - \delta l^{\star} \Brac{\frac{\beta_i}{\delta}},
+  \end{equation*}
+  where the equality follows from Definition~\ref{def: conjugate}. Plugging this back into the Lagrange function yields the second part of the objective function~\eqref{eq: PatMat dual L}, which finishes the proof.
 \end{proof}
+
+\subsection{Hypothesis Testing}
+
+In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that fall into our framework~\eqref{eq: aatp surrogate}. Namely: \GrillNP, \tauFPL and \PatMatNP. Similarly to the previous section, we focus only on \tauFPL and \PatMatNP. Since \tauFPL is a special case of \TopPushK for~$K = \nneg \tau,$ the dual formulation is identical to the one in~\ref{thm: TopPushK dual}.
+
+\begin{theorem}[Dual formulation of \PatMatNP]\label{thm: PatMatNP dual}
+  Consider \PatMatNP formulation~\eqref{eq: patmat np} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
+  \begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
+    - \frac{1}{2} \vecab^\top \Kneg \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}} - \delta \sum_{j = 1}^{\nneg} l^{\star} \Brac{\frac{\beta_j}{\delta}} - \delta \nneg \tau
+    }{}{}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nneg} \beta_j}
+    \addConstraint{\delta }{\ge 0,}
+  \end{maxi*}
+  where~$l^{\star}$ is conjugate function of~$l.$
+\end{theorem}
+\begin{proof}
+  \PatMatNP formulation is similar to the \PatMat and therefore also dual formulations are similar. The main difference is, that the decision threshold for \PatMatNP is computed from all socres and not only from the negative ones as for \PatMat. Due to that, the dual variable~$\bm{\beta}$ has different size and the kernel matrix has slightly different form as can be seen in Notation~\ref{not: kernel matrix}. Besides that dual formulations of \PatMatNP and \PatMat are identical and the proof of Theorem~\ref{thm: PatMatNP dual} is almost identical to the proof of Theorem~\ref{thm: PatMat dual}.
+\end{proof}
+
+\subsection{Summary}
+
+In previous sections we derived dual formulations of formulations from Table~\ref{tab: summary formulations}. We showed that dual formulations of \TopPush, \TopPushK, \TopMeanK and \tauFPL are very similary and can be written in general form summarized in Theorem~\ref{thm: Top dual}. Similarly, dual formulations of \PatMat and \PatMatNP are very similary and can be written in general form summarized in Theorem~\ref{thm: Pat dual}
 
 \section{Computing~$\Delta^{*}$ with truncated quadratic surrogate}\label{sec:Computing Delta with truncated quadratic surrogate}
 
@@ -180,7 +299,7 @@ Similarly, for the truncated quadratic loss function, it is well-known~\cite{kan
 
 \subsection{\PatMat}
 
-Plugging the conjugate~\eqref{eq:Conjugate of truncated quadratic loss} of the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} into \PatMat  dual formulation~\eqref{eq:PatMat dual} yields
+Plugging the conjugate~\eqref{eq:Conjugate of truncated quadratic loss} of the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} into \PatMat  dual formulation~\eqref{eq: PatMatNP dual} yields
 \begin{subequations}\label{eq:PatMat dual quadratic}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}, \delta}
@@ -280,7 +399,7 @@ In this section, we provide the results when the truncated quadratic surrogate i
 
 \subsection{\TopPushK}
 
-Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqref{eq:Hinge loss} into \TopPushK dual formulation~\eqref{eq:TopPushK dual} yields
+Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqref{eq:Hinge loss} into \TopPushK dual formulation~\eqref{eq: TopPushK dual} yields
 \begin{subequations}\label{eq:TopPushK dual hinge}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}}
@@ -339,7 +458,7 @@ This is a convex quadratic problem. Moreover, for~$K = 1,$ the upper limit in~\e
 
 \subsection{\PatMat}
 
-Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqref{eq:Hinge loss} into \PatMat  dual formulation~\eqref{eq:PatMat dual} yields
+Plugging the conjugate~\eqref{eq:Conjugate of hinge loss} of the hinge loss~\eqref{eq:Hinge loss} into \PatMat  dual formulation~\eqref{eq: PatMatNP dual} yields
 \begin{subequations}\label{eq:PatMat dual hinge}
   \begin{alignat}{2}
     \maximize{\bm{\alpha}, \bm{\beta}, \delta}

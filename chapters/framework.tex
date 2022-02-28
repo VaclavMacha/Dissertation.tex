@@ -42,7 +42,7 @@ To follow the notation from the previous chapter, we define surrogate approximat
 \end{equation}
 Since the surrogate function provides upper approximation of the Iverson function, the surrogate counts~\eqref{eq: confusion counts surrogate} provide upper approximations of the true counts~\eqref{eq: confusion counts}. Replacing the counts in~\eqref{eq: aatp counts} by their surrogate counterparts and adding a regularization results in
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
@@ -60,11 +60,11 @@ In the rest of the chapter, we show, that accuracy at the top, ranking problems 
   \begin{equation*}
     s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
   \end{equation*}
-  Similarly, we define vectors~$\bm{s}^- \in \R^{\nneg},$ $\bm{s}^+ \in \R^{\npos}$ of scores of all positive and negative samples with components defined as
+  Moreover, we denote negative samples as~$\bm{x}^-$ and positive samples as~$\bm{x}^+.$ Finally, we define vectors~$\bm{s}^- \in \R^{\nneg},$ $\bm{s}^+ \in \R^{\npos}$ of scores of all positive and negative samples with components defined as
   \begin{equation*}
     \begin{aligned}
-      s^-_i & = f(\bm{x}_i; \bm{w}), \quad i \in \Ineg, \\
-      s^+_i & = f(\bm{x}_i; \bm{w}), \quad i \in \Ipos,
+      s^-_i & = f(\bm{x}^-_i; \bm{w}), \quad i = 1, \; 2, \ldots, \; \nneg, \\
+      s^+_i & = f(\bm{x}^+_i; \bm{w}), \quad i = 1, \; 2, \ldots, \; \npos,
     \end{aligned}
   \end{equation*}
   and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
@@ -81,14 +81,14 @@ The first category of formulations falling into our framework~\eqref{eq: aatp co
 \end{mini}
 Since the threshold~$t$ is a function of score, the problem~\eqref{eq: toppush} is a special case of~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \nicefrac{1}{\npos}$. The authors in~\cite{li2014top} proposed an efficient method to solve the formulation above and called it \TopPush. They replaced the number of false-negative samples with its surrogate counterpart in the objective function of~\eqref{eq: toppush} and added the regularization term to arrive at
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: toppush surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-}
 \end{mini}
 Similarly to the original problem, this surrogate approximation falls into our framework of~\eqref{eq: aatp surrogate} for~$\lambda_1 = 0$ and~$\lambda_2 = \nicefrac{1}{\npos}$. However, \TopPush can be very sensitive to outliers. Especially when the linear model is used, as shown in Section~\ref{sec: stability}. To robustify \TopPush formulation, we follow the idea from~\cite{lapin2015top} and propose to replace the largest negative score by the mean of~$K$ largest negative scores. We call this approach \TopPushK and the resulting formulation is as follows
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: toppushK surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \sum_{i = 1}^{K} s_{[i]}^-},
@@ -131,7 +131,7 @@ where~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq: aatp ori
 
 Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{eq: aatp original combination}, where it replaces false-positive and false-negative counts in the objective function by their surrogate counterparts. This leads to
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}.}{~}
@@ -144,7 +144,7 @@ Apart from the quantile~\eqref{eq: aatp quantile}, there are two other possible 
 \end{equation}
 where for simplicity we assume, that~$n\tau$ is an integer. The quantile~\eqref{eq: aatp quantile} is sometimes denoted as VaR (value at risk) and the quantile~\eqref{eq: aatp quantile mean} as CVaR (conditional value of risk).The main purpose of~\eqref{eq: aatp quantile mean} is to provide a convex approximation of the non-convex quantile~\eqref{eq: aatp quantile}. In fact, it is known is that it is the tightest convex approximation of~\eqref{eq: aatp quantile}. Putting~\eqref{eq: aatp quantile mean} into the constraint results in the following problem, which we call \TopMeanK
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: topmeank}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \frac{1}{K} \sum_{i=1}^{K} s_{[i]},}
@@ -157,7 +157,7 @@ The second option how to approximate the true qunatile~\eqref{eq: aatp quantile}
 \end{equation}
 where~$\vartheta > 0$ is scaling parameter.Since this threshold uses the surrogate approximation, we will sometimes denote it as surrogate top~$\tau$-quantile. Similarly to the previous case, we can use the surrogate top~$\tau$-quantile in the constraint to arrive at
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: patmat}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau.}
@@ -185,7 +185,7 @@ This problem again falls within our framework for~\eqref{eq: aatp counts} for~$\
 
 The first way how to approximate the formulation~\eqref{eq: aatp counts} is to replace the true counts  in the objective function by their surrogate counterparts as in~\cite{grill2016learning}. This results in the Neyman-Pearson variant of \Grill formulation. To emphasize this relationship, we call this formulation \GrillNP
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \ge t} \ge \tau}.}{~}
@@ -196,7 +196,7 @@ The second option is to use approximation of the true quantile. In such a case, 
 \end{equation}
 For simplicity, we again assume, that~$\nneg\tau$ is an integer. Putting~\eqref{eq: np quantile mean} into the constraint results in the the Neyman-Pearson alternative to \TopMeanK defined as
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: tau-fpl}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s^-_{[i]}.}
@@ -209,7 +209,7 @@ Finally, it is possible to use surrogate counterparts to replace counts in~\eqre
 \end{equation}
 This approximation of the true quantile leads to the Neyman-Pearson alternative to \PatMat in the following form
 \begin{mini}{\bm{w}}{
-  \frac{\lambda_0}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: patmat np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\text{solves} \quad \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau,}
