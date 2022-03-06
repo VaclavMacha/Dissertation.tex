@@ -212,24 +212,24 @@ There are three possible update rules which modify two coordinates of~$\bm{\alph
 \begin{subequations}\label{eq:Update rules}
   \begin{equation}\label{eq: update rule a,a}
     \begin{alignedat}{2}
-      \alpha_k & \rightarrow \alpha_k + \Delta, & \qquad
-      \alpha_l & \rightarrow \alpha_l - \Delta, & \qquad
+      \alphak & \rightarrow \alphak + \Delta, & \qquad
+      \alphal & \rightarrow \alphal - \Delta, & \qquad
       \bm{s}   & \rightarrow \bm{s} + (\K_{\bullet k} - \K_{\bullet l})\Delta,
     \end{alignedat}\tag{$\updateaa$}
   \end{equation}
   where~$K_{\bullet i}$ denotes~$i$-th column of~$\K.$ Note that the update rule for~$\bm{s}$ does not use matrix multiplication but only vector addition. The second rule updates one component of~$\bm{\alpha}$ and one component of~$\bm{\beta}$ 
   \begin{equation}\label{eq: update rule a,b}
     \begin{alignedat}{2}
-      \alpha_k & \rightarrow \alpha_k + \Delta, & \qquad
-      \beta_l  & \rightarrow \beta_l  + \Delta, & \qquad
+      \alphak & \rightarrow \alphak + \Delta, & \qquad
+      \betal  & \rightarrow \betal  + \Delta, & \qquad
       \bm{s}   & \rightarrow \bm{s} + (\K_{\bullet k} + \K_{\bullet l})\Delta,
     \end{alignedat}\tag{$\updateab$}
   \end{equation}
   and the last one updates two components of~$\bm{\beta}$
   \begin{equation}\label{eq: update rule b,b}
     \begin{alignedat}{2}
-      \beta_k & \rightarrow \beta_k + \Delta, & \qquad
-      \beta_l & \rightarrow \beta_l - \Delta, & \qquad
+      \betak & \rightarrow \betak + \Delta, & \qquad
+      \betal & \rightarrow \betal - \Delta, & \qquad
       \bm{s}  & \rightarrow \bm{s} + (\K_{\bullet k} - \K_{\bullet l})\Delta.
     \end{alignedat}\tag{$\updatebb$}
   \end{equation}
@@ -319,23 +319,23 @@ This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in
   \begin{itemize}
     \item For any~$1\le k, l \le \npos$ we have
     \begin{align*}
-      \Delta_{lb} & = -\alpha_k, \\
-      \Delta_{ub} & = \alpha_l, \\
-      \gamma      & = -\frac{s_k - s_l + \frac{1}{2C\vartheta^2}(\alpha_k - \alpha_l)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}}.
+      \Delta_{lb} & = -\alphak, \\
+      \Delta_{ub} & = \alphal, \\
+      \gamma      & = -\frac{s_k - s_l + \frac{1}{2C\vartheta^2}(\alphak - \alphal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}}.
     \end{align*}
     \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
-          \max \Brac[c]{- \alpha_k,\;  -\beta_{\hat l}} & K = 1, \\
-          \max \Brac[c]{- \alpha_k,\;  -\beta_{\hat l}, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
+          \max \Brac[c]{- \alphak,\;  -\beta_{\hat l}} & K = 1, \\
+          \max \Brac[c]{- \alphak,\;  -\beta_{\hat l}, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
           + \infty & K = 1, \\
           \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \beta_{\hat l}} & \textrm{otherwise},
         \end{cases*} \\
-      \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alpha_k}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
+      \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
     \end{align*}
     \item For any~$\npos + 1\le k,l \le n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then  have
     \begin{align*}
