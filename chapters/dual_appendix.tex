@@ -247,21 +247,60 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   \PatMatNP formulation is similar to the \PatMat and therefore also dual formulations are similar. The main difference is, that the decision threshold for \PatMatNP is computed from all socres and not only from the negative ones as for \PatMat. Due to that, the dual variable~$\bm{\beta}$ has different size and the kernel matrix has slightly different form as can be seen in Notation~\ref{not: kernel matrix}. Besides that dual formulations of \PatMatNP and \PatMat are identical and the proof of Theorem~\ref{thm: PatMatNP dual} is almost identical to the proof of Theorem~\ref{thm: PatMat dual}.
 \end{proof}
 
-\subsection{Summary}
-
-In previous sections we derived dual formulations of formulations from Table~\ref{tab: summary formulations}. We showed that dual formulations of \TopPush, \TopPushK, \TopMeanK and \tauFPL are very similary and can be written in general form summarized in Theorem~\ref{thm: Top dual}. Similarly, dual formulations of \PatMat and \PatMatNP are very similary and can be written in general form summarized in Theorem~\ref{thm: Pat dual}
-
 \section{Coordinate descent}
 
-In Chapter~\ref{chap: dual} we showed general coordinate decscent algorithm, that can be used to optimize dual formulations introduced in Theorem~\ref{thm: Top dual} and~\ref{thm: Top dual}. In this chapter, we show concrete forms of update steps~$\Delta^{*}$ for these two dual formulations with two different surrogate functions.
+In previous sections we derived dual formulations of formulations from Table~\ref{tab: summary formulations}. We showed that dual formulations of \TopPush, \TopPushK, \TopMeanK and \tauFPL are very similary and can be written in general form summarized in Theorem~\ref{thm: Top dual}. Similarly, dual formulations of \PatMat and \PatMatNP are very similary and can be written in general form summarized in Theorem~\ref{thm: Pat dual}. In this section, we show concrete form of both dual formulations when the hinge loss or quadratic hinge loss function is used as surrogate. Moreover, we show coordinate descent algorithm that can be used to solve these formulations.
 
-\subsection{Hinge loss}\label{sec: Delta for hinge loss}
+Consider dual formulation from Theorem~\ref{thm: Top dual} or~\ref{thm: Pat dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Let us define vector of scores~$\bm{s}$ by
+\begin{equation}\label{eq: dual scores}
+  \bm{s} = \K \vecab.
+\end{equation}
+Our goal is to derive coordinate algorithm that can be used to solve this dual problem. Due to the constraint~\eqref{eq: top dual formulation c1} in each step of such algorithm we have to update at least two coordinates of vectors~$\bm{\alpha},$~$\bm{\beta}.$ Moreover, if we want to update two coordinates at once, there are only three update rules which modify two coordinates of~$\bm{\alpha},$~$\bm{\beta}$ and which satisfy constraints~\eqref{eq: top dual formulation c1} and keep~\eqref{eq: dual scores} satisfied. The first one updates two components of~$\bm{\alpha}$
+\begin{subequations}\label{eq: update rules}
+  \begin{align}\label{eq: update rule a,a}
+    \alphak & \to \alphak + \Delta, & \quad
+    \alphal & \to \alphal - \Delta, & \quad
+    \bm{s} & \to \bm{s} + \Brac{\K_{\bullet, k} - \K_{\bullet, l}}\Delta,
+  \end{align}
+  where~$K_{\bullet, i}$ denotes~$i$-th column of~$\K.$ Note that the update rule for~$\bm{s}$ does not use matrix multiplication but only vector addition. The second rule updates one component of~$\bm{\alpha}$ and one component of~$\bm{\beta}$ 
+  \begin{align}\label{eq: update rule a,b}
+    \alphak & \to \alphak + \Delta, & \quad
+    \betal  & \to \betal  + \Delta, & \quad
+    \bm{s} & \to \bm{s} + \Brac{\K_{\bullet, k} + \K_{\bullet, l}}\Delta,
+  \end{align}
+  and the last one updates two components of~$\bm{\beta}$
+  \begin{align}\label{eq: update rule b,b}
+    \betak & \to \betak + \Delta, & \quad
+    \betal & \to \betal - \Delta, & \quad
+    \bm{s}  & \to \bm{s} + \Brac{\K_{\bullet, k} - \K_{\bullet, l}}\Delta.
+  \end{align}
+\end{subequations}
+These three update rules hold true for any surrogate function. However, the calculation of the optimal~$\Delta$ depends on the used problem formulation and surrogate function. In the following subsections, we show the closed-form formula for~$\Delta$ for dual formulations from Theorem~\ref{thm: Top dual} and~\ref{thm: Pat dual} with hinge loss and quadratic hinge loss function as surrogate.
 
-In this section, we show how to compute optimal update step~$\Delta^{*}$ for dual formulations from Theorem~\ref{thm: Top dual} and~\ref{thm: Pat dual}, when the hinge loss is used. 
+\begin{notation}\label{not: dual update rules}
+  To avoid confusion, we use two different notation for indices. The length of the vector of scores~$\bm{s}$ is always~$\npos + \nall$ or~$\npos + \nneg.$ Then we use indices~$k,$~$l$ to denote
+  \todo[inline]{DEfine new notation for indices}
+\end{notation}
 
-\subsection*{Dual formulation from Theorem~\ref{thm: Top dual}}
+\subsection{Dual formulation from Theorem~\ref{thm: Top dual}}
 
-Firstly, we show the results for Theorem~\ref{thm: Top dual}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: Top dual} yields
+We start with dual formulation from Theorem~\ref{thm: Top dual}. Then using any of the update rules~\eqref{eq: update rules}, the dual formulation can be rewritten as a rewritten as a quadratic one-dimensional problem with respect to~$\Delta$
+\begin{maxi*}{\Delta}{
+  -\frac{1}{2} a(\bm{\alpha}, \bm{\beta}) \Delta^2
+  - b(\bm{\alpha}, \bm{\beta}) \Delta
+  - c(\bm{\alpha}, \bm{\beta})
+  }{}{}
+  \addConstraint{\Delta_{lb}(\bm{\alpha}, \bm{\beta})}{\leq \Delta \leq \Delta_{ub}(\bm{\alpha}, \bm{\beta})}
+\end{maxi*}
+where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~$\Delta.$ The optimal solution to this problem is
+\begin{equation}\label{eq:Delta_optimal}
+  \Delta^* = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
+\end{equation}
+where~$-\frac{b}{a}.$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: top dual formulation c1} is always satisfied after the update.
+
+\subsection*{Hinge loss}
+
+Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: Top dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -273,9 +312,7 @@ Firstly, we show the results for Theorem~\ref{thm: Top dual}. Plugging the conju
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil,
   \label{eq: Top dual hinge c3}}
 \end{maxi!}
-Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the problem can be simplified. Since the problem~\eqref{eq: Top dual hinge} is convex quadratic
-
-The following theorem provides a formula for optimal~$\Delta$ for each of update rules~\eqref{eq:Update rules}.
+Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the problem can be simplified. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
 
 \begin{lemma}[$\updateaa$ for Theorem~\ref{thm: Top dual} with hinge loss]
   For any~$1 \le k,\; l \le \npos$ we have
@@ -285,6 +322,10 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
     \gamma      & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
   \end{align*}
 \end{lemma}
+
+\begin{proof}
+  \todo[inline]{Add proof}
+\end{proof}
 
 \begin{lemma}[$\updateab$ for Theorem~\ref{thm: Top dual} with hinge loss]
   For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \ntil$ we define~$\hat{l} = l - \npos$ and
@@ -307,6 +348,10 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
   \end{align*}
 \end{lemma}
 
+\begin{proof}
+  \todo[inline]{Add proof}
+\end{proof}
+
 \begin{lemma}[$\updatebb$ for Theorem~\ref{thm: Top dual} with hinge loss]
   For any~$\npos + 1\le k,l \le \npos + \ntil$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then we have
     \begin{align*}
@@ -324,58 +369,121 @@ The following theorem provides a formula for optimal~$\Delta$ for each of update
     \end{align*}
 \end{lemma}
 
-\begin{theorem}[Update rule for~$\Delta^*$ for \TopPushK with hinge loss]\label{thm:Update rule TopPushK with hinge loss}
-  Consider general dual formulation from Theorem~\ref{thm: Top dual} with hinge loss function. Then the optimal update rule is
-  \begin{equation*}
-    \Delta^{*} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
-  \end{equation*}
-  where there are the following cases:
-  \begin{itemize}
-    \item For any~$1 \le k,\; l \le \npos$ we have
-    \begin{align*}
-      \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, \\
-      \Delta_{ub} & = \max\{C - \alphak,\; \alphal \}, \\
-      \gamma      & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
-    \end{align*}
-    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \ntil$ we define~$\hat{l} = l - \npos$ and
-    \begin{equation*}
-      \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
-    \end{equation*}
-    Then we have
-    \begin{align*}
-      \Delta_{lb} & = 
-        \begin{cases*}
-          \min \Brac[c]{- \alphak,\;  -\betal} & K = 1, \\
-          \min \Brac[c]{- \alphak,\;  -\betal, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
-        \end{cases*} \\
-      \Delta_{ub} & = 
-        \begin{cases*}
-            C - \alphak & K = 1, \\
-            \max \Brac[c]{C - \alphak, \; \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}}  & \textrm{otherwise}.
-        \end{cases*} \\
-      \gamma & = - \frac{s_k + s_l - 1}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}.
-    \end{align*}
-    \item For any~$\npos + 1\le k,l \le \npos + \ntil$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then we have
-    \begin{align*}
-      \Delta_{lb} & = 
-        \begin{cases*}
-          - \betak & K = 1, \\
-          \min \Brac[c]{- \betak,\; \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
-        \end{cases*} \\
-      \Delta_{ub} & = 
-        \begin{cases*}
-          \betal & K = 1, \\
-          \max \Brac[c]{\frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak,\; \betal} & \textrm{otherwise}.
-        \end{cases*} \\
-      \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
-    \end{align*}
-  \end{itemize}
-\end{theorem}
 \begin{proof}
   \todo[inline]{Add proof}
 \end{proof}
 
-\subsection*{Dual formulation from Theorem~\ref{thm: Pat dual}}
+\subsection*{Quadratic hinge loss}
+
+Plugging the conjugate~\eqref{eq: conjugate hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: Top dual} yields
+\begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
+  }{\label{eq: Top dual quadratic}}{\label{eq: Top dual quadratic L}}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j
+  \label{eq: Top dual quadratic c1}}
+  \addConstraint{0 \leq \alpha_i}{,}{i = 1, 2, \ldots, \npos
+  \label{eq: Top dual quadratic c2}}
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil,
+  \label{eq: Top dual quadratic c3}}
+\end{maxi!}
+Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the problem can be simplified. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
+
+\begin{lemma}[$\updateaa$ for Theorem~\ref{thm: Top dual} with quadratic hinge loss]
+  Consider problem~\ref{eq: Top dual quadratic} and indices~$1\le k, l \le \npos.$ Then the optimal step has the following form
+  \begin{align*}
+    \Delta_{lb} & = -\alphak, &
+    \Delta_{ub} & = \alphal, &
+    \gamma & = -\frac{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}}.
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+  For update rule~\eqref{eq: update rule a,a} with~$1\le k, l \le \npos$, constraint~\eqref{eq:TopPushK dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$-\alphak \leq \Delta \leq \alphal$ and objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta^2}(\alphak - \alphal)} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}[$\updateab$ for Theorem~\ref{thm: Top dual} with quadratic hinge loss]
+  For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
+  \begin{align*}
+    \Delta_{lb} & = 
+      \begin{cases*}
+        \max \Brac[c]{- \alphak,\;  -\betal} & K = 1, \\
+        \max \Brac[c]{- \alphak,\;  -\betal, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
+      \end{cases*} \\
+    \Delta_{ub} & = 
+      \begin{cases*}
+        + \infty & K = 1, \\
+        \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal} & \textrm{otherwise},
+      \end{cases*} \\
+    \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+  For update rule~\eqref{eq: update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \nneg$ we define~$\hat{l} = l - \npos.$ Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$\Delta \geq - \alphak.$ Denoting~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat{l}\}} \beta_j,$ then for any~$K \geq 2$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} reads
+    \begin{equation}\label{eq: TopPushK dual quadratic a,b - bounds}
+      \begin{aligned}
+        0 & \leq \betal + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta, \\
+        0 & \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta.
+      \end{aligned}
+    \end{equation}
+    If~$K = 1,$ the upper bounds for~$\beta_j$ may be omitted as discussed in Section~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}. Combining this with~$\Delta \geq - \alphak$ yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq: update rule a,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}} \Delta^2 - \Brac[s]{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+\end{proof}
+
+\begin{lemma}[$\updatebb$ for Theorem~\ref{thm: Top dual} with quadratic hinge loss]
+  For any~$\npos + 1\le k,l \le n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then  have
+  \begin{align*}
+    \Delta_{lb} & = 
+      \begin{cases*}
+        -\betak & K = 1, \\
+        \max \Brac[c]{- \betak,\; \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
+      \end{cases*} \\
+    \Delta_{ub} & = 
+      \begin{cases*}
+        \betal & K = 1, \\
+        \min \Brac[c]{\betal,\; \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak} & \textrm{otherwise},
+      \end{cases*} \\
+    \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+  For update rule~\eqref{eq: update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:TopPushK dual quadratic constraint 2} is always satisfied. Moreover, since we update only two coordinates of~$\bm{\beta},$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} for any~$K \geq 2$ reads
+    \begin{equation}\label{eq: TopPushK dual quadratic b,b - bounds}
+      \begin{aligned}
+        0 \leq \betak + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \\
+        0 \leq \betal - \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i,
+      \end{aligned}
+    \end{equation}
+    As in the previous case, the upper bounds for~$\beta_j$ may be omitted for~$K = 1$. Combining the previous results yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq: update rule b,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2 - \Brac[s]{s_k - s_l} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+\end{proof}
+
+\subsection{Dual formulation from Theorem~\ref{thm: Pat dual}}
+
+In the beginning of this subsection we derived problem~\eqref{eq: Pat quadratic}. As in the proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss}, we show, that for each of update rules~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta},$~$\delta,$ this problem can be rewritten as a simple one-dimensional quadratic problem with bound constraints. In this case, however, we have to also consider the third primal variable~$\delta.$ For fixed~$\bm{\alpha}$ and~$\bm{\beta},$, maximizing objective function~\eqref{eq: Pat quadratic L} with respect to~$\delta$ leads to the
+\begin{align*}
+  \maximize{\delta}
+    & - (n\tau) \delta - \Brac{\frac{1}{4\vartheta_2^2} \sum_{j = 1}^{\nneg} \beta_j^2} \frac{1}{\delta}, \\
+  \st
+    & \delta \geq 0.
+\end{align*}
+The solution of this problem equals to
+\begin{equation}\label{eq:PatMat dual quadratic optimal delta}
+  \delta^* = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \sum_{j = 1}^{n} \beta_j^2}.
+\end{equation}
+In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
+
+\subsection*{Hinge loss}
 
 Similarly to the previous section, Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: Pat dual} yields
 \begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
@@ -389,133 +497,88 @@ Similarly to the previous section, Plugging the conjugate~\eqref{eq: conjugate h
   \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
   \addConstraint{\delta }{\ge 0,}
 \end{maxi*}
-This is again a convex quadratic problem. The following theorem provides a formula for optimal~$\Delta$ for each of update rules~\eqref{eq:Update rules}.
+This is again a convex quadratic problem. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
 
-\begin{theorem}[Update rule for~$\Delta^*$ for \PatMat  with hinge loss]\label{thm:Update rule PatMat with hinge loss}
-  Consider general dual formulation from Theorem~\ref{thm: Pat dual} with hinge loss function. Then the optimal update rule is
-  \begin{equation*}
-      \Delta^{*} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
-  \end{equation*}
-  where there are the following cases:
-  \begin{itemize}
-    \item For any~$1\le k, l \le \npos$ we have
-    \begin{align*}
-      \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, \\
-      \Delta_{ub} & = \max\{C - \alphak,\; \alphal\}, \\
-      \gamma      & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-      \delta^{*}  & = \delta.
-    \end{align*}
+\begin{lemma}[$\updateaa$ for Theorem~\ref{thm: Pat dual} with hinge loss]
+  For any~$1\le k, l \le \npos$ we have
+  \begin{align*}
+    \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, \\
+    \Delta_{ub} & = \max\{C - \alphak,\; \alphal\}, \\
+    \gamma      & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
+    \delta^{*}  & = \delta.
+  \end{align*}
+\end{lemma}
 
-    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \ntil$ we define~$\hat{l} = l - \npos$ and
-    \begin{equation*}
-      \beta_{\max}
-        = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat{l}\}} \beta_j.
-    \end{equation*}
-    Then we have
-    \begin{alignat*}{2}
-      \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, & \qquad
-      \Delta_{ub} & = C - \alphak
-    \end{alignat*}
-    and the optimal solution is one of the two following possibilities which maximizes the original objective:
-    \begin{enumerate}
-      \item If~$\betal + \Delta^{*} \leq \beta_{\max}$, then
-      \begin{align*}
-        \gamma & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
-        \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
-      \end{align*}
-      \item If~$\betal + \Delta^{*} \ge \beta_{\max}$, then
-      \begin{align*}
-        \gamma & = -\frac{s_k + s_l - 1 - \frac{1 - n\tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
-        \delta^{*} & = \frac{\betal + \Delta^{*}}{\vartheta}.
-      \end{align*}
-    \end{enumerate}
-
-    \item For any~$\npos + 1\le k,l \le \npos + \ntil$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and
-    \begin{equation*}
-      \beta_{\max}
-        = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat{l}, \hat{k}\}} \beta_j.
-    \end{equation*}
-    Then we have
-    \begin{alignat*}{2}
-      \Delta_{lb} & = - \betak, & \qquad
-      \Delta_{ub} & = \betal,
-    \end{alignat*}
-    and the optimal solution is one of the three following possibilities which maximizes the original objective:
-    \begin{enumerate}
-      \item If~$\beta_{\max} \geq \max\{\betak + \Delta^{*}, \betal - \Delta^{*}\}$, then
-      \begin{align*}
-        \gamma     & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-        \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
-      \end{align*}
-      \item If~$\betak + \Delta^{*} \geq \max\{\beta_{\max} , \betal - \Delta^{*}\}$, then
-      \begin{align*}
-        \gamma     & = -\frac{s_k - s_l + \frac{n\tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-        \delta^{*} & = \frac{\betak + \Delta}{\vartheta}.
-      \end{align*}
-      \item If~$\betal - \Delta^{*} \geq \max\{\betak + \Delta^{*}, \beta_{\max}\}$, then
-      \begin{align*}
-        \gamma     & = -\frac{s_k - s_l - \frac{n\tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-        \delta^{*} & = \frac{\betak - \Delta^{*}}{\vartheta}.
-      \end{align*}
-    \end{enumerate}
-  \end{itemize}
-\end{theorem}
 \begin{proof}
   \todo[inline]{Add proof}
 \end{proof}
 
-\subsection{Quadratic hinge loss}\label{sec: Delta for quadratic hinge}
+\begin{lemma}[$\updateab$ for Theorem~\ref{thm: Pat dual} with hinge loss]
+  For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \ntil$ we define~$\hat{l} = l - \npos$ and
+  \begin{equation*}
+    \beta_{\max}
+      = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat{l}\}} \beta_j.
+  \end{equation*}
+  Then we have
+  \begin{alignat*}{2}
+    \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, & \qquad
+    \Delta_{ub} & = C - \alphak
+  \end{alignat*}
+  and the optimal solution is one of the two following possibilities which maximizes the original objective:
+  \begin{enumerate}
+    \item If~$\betal + \Delta^{*} \leq \beta_{\max}$, then
+    \begin{align*}
+      \gamma & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
+      \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
+    \end{align*}
+    \item If~$\betal + \Delta^{*} \ge \beta_{\max}$, then
+    \begin{align*}
+      \gamma & = -\frac{s_k + s_l - 1 - \frac{1 - n\tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
+      \delta^{*} & = \frac{\betal + \Delta^{*}}{\vartheta}.
+    \end{align*}
+  \end{enumerate}
+\end{lemma}
 
-\subsection*{Dual formulation from Theorem~\ref{thm: Top dual}}
-
-\toppushkupdatequadratic*
-\begin{proof}[Proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss} on page~\pageref{thm:Update rule TopPushK with quadratic loss}]
-  We will show that for each update rule~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta}$, problem~\eqref{eq:TopPushK dual quadratic} can be rewritten as a quadratic one-dimensional problem
-  \begin{align*}
-    \maximize{\Delta}
-    & -\frac{1}{2} a(\bm{\alpha}, \bm{\beta}) \Delta^2 - b(\bm{\alpha}, \bm{\beta}) \Delta - c(\bm{\alpha}, \bm{\beta}) \\
-    \st
-    & \Delta_{lb}(\bm{\alpha}, \bm{\beta}) \leq \Delta \leq \Delta_{ub}(\bm{\alpha}, \bm{\beta}).
-  \end{align*}
-  where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ do not depend on~$\Delta.$ The optimal solution to this problem is
-  \begin{equation}\label{eq:Delta_optimal}
-    \Delta^* = \clip{\Delta_{lb}}{\Delta_{ub}}{-\frac{b}{a}},
-  \end{equation}
-  which amounts to~\eqref{eq:Optimal delta}. Before discussing the three update rules~\eqref{eq:Update rules}, we realize that~\eqref{eq:TopPushK dual quadratic constraint 1} is always satisfied after the update. For the three updates we have:
-  \begin{itemize}
-    \item For update rule~\eqref{eq: update rule a,a} with~$1\le k, l \le \npos$, constraint~\eqref{eq:TopPushK dual quadratic constraint 3} is satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$-\alphak \leq \Delta \leq \alphal$ and objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
-    \begin{equation*}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta^2}(\alphak - \alphal)} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{equation*}
-
-    \item For update rule~\eqref{eq: update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le \npos + \nneg$ we define~$\hat{l} = l - \npos.$ Constraint~\eqref{eq:TopPushK dual quadratic constraint 2} reads~$\Delta \geq - \alphak.$ Denoting~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat{l}\}} \beta_j,$ then for any~$K \geq 2$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} reads
-    \begin{equation}\label{eq: TopPushK dual quadratic a,b - bounds}
-      \begin{aligned}
-        0 & \leq \betal + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta, \\
-        0 & \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{1}{K} \Delta.
-      \end{aligned}
-    \end{equation}
-    If~$K = 1,$ the upper bounds for~$\beta_j$ may be omitted as discussed in Section~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}. Combining this with~$\Delta \geq - \alphak$ yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq: update rule a,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
-    \begin{equation*}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}} \Delta^2 - \Brac[s]{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{equation*}
-
-    \item For update rule~\eqref{eq: update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq:TopPushK dual quadratic constraint 2} is always satisfied. Moreover, since we update only two coordinates of~$\bm{\beta},$ constraint~\eqref{eq:TopPushK dual quadratic constraint 3} for any~$K \geq 2$ reads
-    \begin{equation}\label{eq: TopPushK dual quadratic b,b - bounds}
-      \begin{aligned}
-        0 \leq \betak + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \\
-        0 \leq \betal - \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i,
-      \end{aligned}
-    \end{equation}
-    As in the previous case, the upper bounds for~$\beta_j$ may be omitted for~$K = 1$. Combining the previous results yields the lower and upper bound of~$\Delta.$ Using update rule~\eqref{eq: update rule b,b}, objective~\eqref{eq:TopPushK dual quadratic objective} can be rewritten as
-    \begin{equation*}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2 - \Brac[s]{s_k - s_l} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{equation*}
-  \end{itemize}
-  The proofs follows by plugging these cases into the solution~\eqref{eq:Delta_optimal}.
+\begin{proof}
+  \todo[inline]{Add proof}
 \end{proof}
 
-\subsection*{Dual formulation from Theorem~\ref{thm: Pat dual}}
+\begin{lemma}[$\updatebb$ for Theorem~\ref{thm: Pat dual} with hinge loss]
+  For any~$\npos + 1\le k,l \le \npos + \ntil$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and
+  \begin{equation*}
+    \beta_{\max}
+      = \max_{j \in \{1, 2, \ldots, n\} \setminus \{\hat{l}, \hat{k}\}} \beta_j.
+  \end{equation*}
+  Then we have
+  \begin{alignat*}{2}
+    \Delta_{lb} & = - \betak, & \qquad
+    \Delta_{ub} & = \betal,
+  \end{alignat*}
+  and the optimal solution is one of the three following possibilities which maximizes the original objective:
+  \begin{enumerate}
+    \item If~$\beta_{\max} \geq \max\{\betak + \Delta^{*}, \betal - \Delta^{*}\}$, then
+    \begin{align*}
+      \gamma     & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
+      \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
+    \end{align*}
+    \item If~$\betak + \Delta^{*} \geq \max\{\beta_{\max} , \betal - \Delta^{*}\}$, then
+    \begin{align*}
+      \gamma     & = -\frac{s_k - s_l + \frac{n\tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
+      \delta^{*} & = \frac{\betak + \Delta}{\vartheta}.
+    \end{align*}
+    \item If~$\betal - \Delta^{*} \geq \max\{\betak + \Delta^{*}, \beta_{\max}\}$, then
+    \begin{align*}
+      \gamma     & = -\frac{s_k - s_l - \frac{n\tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
+      \delta^{*} & = \frac{\betak - \Delta^{*}}{\vartheta}.
+    \end{align*}
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+  \todo[inline]{Add proof}
+\end{proof}
+
+\subsection*{Quadratic hinge loss}
 
 Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: Pat dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
@@ -539,81 +602,69 @@ Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hi
 \end{maxi!}
 This is again a convex quadratic problem. The following theorem provides a formula for the optimal step~$\Delta^\star$ for the update rule~\eqref{eq:Update rules}. Note that we do not perform a joint minimization in~$(\alphak, \; \beta_l, \; \delta)$ but perform a minimization with respect to~$(\alphak, \; \beta_l)$, update these two values and then optimize the objective with respect to~$\delta$. 
 
-\begin{theorem}[Update rule for~$\Delta^*$ for \PatMat  with truncated quadratic loss]\label{thm:Update rule PatMat with quadratic loss}
-  Consider problem~\eqref{eq: Pat quadratic}. Then the optimal step~$\Delta^\star$ equals to
-  \begin{equation}\label{eq:Delta_optimal2}
-    \Delta^{*} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
-  \end{equation}
-  where there are the following three cases (each correspoding to one update rule in~\eqref{eq:Update rules}):
-  \begin{itemize}
-    \item If~$1\le k, l \le \npos$, then we have
-    \begin{align*}
-      \Delta_{lb} & = -\alphak, \\
-      \Delta_{ub} & = \alphal, \\
-      \gamma      & = -\frac{s_k - s_l + \frac{\alphak - \alphal}{2C\vartheta_1^2}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}}, \\
-      \delta^{*}  & = \delta.
-    \end{align*}
-    \item If~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$, then defining~$\hat{l} = l - \npos$ we have
-    \begin{align*}
-      \Delta_{lb} & = \max\{- \alphak, - \betal\}, \\
-      \Delta_{ub} & = +\infty, \\
-      \gamma      & = -\frac{s_k + s_l  - \frac{1}{\vartheta_1} + \frac{\alphak}{2C\vartheta_1^2} - \frac{1}{\vartheta_2} + \frac{\betal}{2\delta\vartheta_2^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}}, \\
-      \delta^{*}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta_2 n \tau}({\Delta^{*}}^2 + 2 \Delta^{*} \betal)}.
-    \end{align*}
-    \item If~$\npos + 1\le k,l \le n$, then defining~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ we have
-    \begin{align*}
-      \Delta_{lb} & = - \betak, \\
-      \Delta_{ub} & = \betal, \\
-      \gamma      & = -\frac{s_k - s_l + \frac{\betak - \betal}{2\delta \vartheta_2^2}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{\delta \vartheta_2^2}}, \\
-      \delta^{*}  & = \sqrt{\delta^2 + \frac{1}{2 \vartheta_2 n \tau}({\Delta^{*}}^2 + \Delta^{*} (\betak - \betal))}.
-    \end{align*}
-  \end{itemize}
-\end{theorem}
+\begin{lemma}[$\updateaa$ for Theorem~\ref{thm: Pat dual} with quadratic hinge loss]
+  If~$1\le k, l \le \npos$, then we have
+  \begin{align*}
+    \Delta_{lb} & = -\alphak, \\
+    \Delta_{ub} & = \alphal, \\
+    \gamma      & = -\frac{s_k - s_l + \frac{\alphak - \alphal}{2C\vartheta_1^2}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}}, \\
+    \delta^{*}  & = \delta.
+  \end{align*}
+\end{lemma}
 
 \begin{proof}
-  In the beginning of this subsection we derived problem~\eqref{eq: Pat quadratic}. As in the proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss}, we show, that for each of update rules~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta},$~$\delta,$ this problem can be rewritten as a simple one-dimensional quadratic problem with bound constraints. In this case, however, we have to also consider the third primal variable~$\delta.$ For fixed~$\bm{\alpha}$ and~$\bm{\beta},$, maximizing objective function~\eqref{eq: Pat quadratic L} with respect to~$\delta$ leads to the
+  For update rule~\eqref{eq: update rule a,a} and any~$1\le k, l \le \npos$, constraint~\eqref{eq: Pat quadratic c3} is satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq: Pat quadratic c2} reads~$-\alphak \leq \Delta \leq \alphal$ while objective~\eqref{eq: Pat quadratic L} can be rewritten as
+  \begin{equation*}
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta_1^2}(\alphak - \alphal)} \Delta + c(\bm{\alpha}, \bm{\beta}).
+  \end{equation*}
+  Since optimal~$\delta$ is given by~\eqref{eq:PatMat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
+\end{proof}
+
+\begin{lemma}[$\updateab$ for Theorem~\ref{thm: Pat dual} with quadratic hinge loss]
+  If~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$, then defining~$\hat{l} = l - \npos$ we have
   \begin{align*}
-    \maximize{\delta}
-      & - (n\tau) \delta - \Brac{\frac{1}{4\vartheta_2^2} \sum_{j = 1}^{\nneg} \beta_j^2} \frac{1}{\delta}, \\
-    \st
-      & \delta \geq 0.
+    \Delta_{lb} & = \max\{- \alphak, - \betal\}, \\
+    \Delta_{ub} & = +\infty, \\
+    \gamma      & = -\frac{s_k + s_l  - \frac{1}{\vartheta_1} + \frac{\alphak}{2C\vartheta_1^2} - \frac{1}{\vartheta_2} + \frac{\betal}{2\delta\vartheta_2^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}}, \\
+    \delta^{*}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta_2 n \tau}({\Delta^{*}}^2 + 2 \Delta^{*} \betal)}.
   \end{align*}
-  The solution of this problem equals to
-  \begin{equation}\label{eq:PatMat dual quadratic optimal delta}
-    \delta^* = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \sum_{j = 1}^{n} \beta_j^2}.
-  \end{equation}
-  In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
-  \begin{itemize}
-    \item For update rule~\eqref{eq: update rule a,a} and any~$1\le k, l \le \npos$, constraint~\eqref{eq: Pat quadratic c3} is satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq: Pat quadratic c2} reads~$-\alphak \leq \Delta \leq \alphal$ while objective~\eqref{eq: Pat quadratic L} can be rewritten as
-    \begin{equation*}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta_1^2}(\alphak - \alphal)} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{equation*}
-    Since optimal~$\delta$ is given by~\eqref{eq:PatMat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
+\end{lemma}
 
-    \item For update rule~\eqref{eq: update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos.$ In this case, constraints~(\ref{eq: Pat quadratic c2},\ref{eq: Pat quadratic c3}) can be written in a simple form~$\Delta \geq \max \{- \alphak, - \betal\}$ and~$\Delta$ has no upper bound. Objective~\eqref{eq: Pat quadratic L} can be rewritten as
-    \begin{equation*}
-      \begin{split}
-        - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 \dots \qquad\qquad \\ 
-        - \Brac[s]{s_k + s_l - \frac{1}{\vartheta_1} - \frac{1}{\vartheta_2} + \frac{\alphak}{2C\vartheta_1^2} + \frac{\betal}{2\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
-      \end{split}
-    \end{equation*}
-    We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
-    \begin{equation*}
-      \delta^*
-      = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j\neq \hat{l}} \beta_j^2 + (\betal + \Delta^\star)^2}}
-      = \sqrt{\delta^2 + \frac{1}{4\vartheta_2^2 n \tau} (\Delta^{\star2} + 2\Delta^\star \betal)}.
-    \end{equation*}
+\begin{proof}
+  For update rule~\eqref{eq: update rule a,b} with~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos.$ In this case, constraints~(\ref{eq: Pat quadratic c2},\ref{eq: Pat quadratic c3}) can be written in a simple form~$\Delta \geq \max \{- \alphak, - \betal\}$ and~$\Delta$ has no upper bound. Objective~\eqref{eq: Pat quadratic L} can be rewritten as
+  \begin{equation*}
+    \begin{split}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 \dots \qquad\qquad \\ 
+      - \Brac[s]{s_k + s_l - \frac{1}{\vartheta_1} - \frac{1}{\vartheta_2} + \frac{\alphak}{2C\vartheta_1^2} + \frac{\betal}{2\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    \end{split}
+  \end{equation*}
+  We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
+  \begin{equation*}
+    \delta^*
+    = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j\neq \hat{l}} \beta_j^2 + (\betal + \Delta^\star)^2}}
+    = \sqrt{\delta^2 + \frac{1}{4\vartheta_2^2 n \tau} (\Delta^{\star2} + 2\Delta^\star \betal)}.
+  \end{equation*}
+\end{proof}
 
-    \item For update rule~\eqref{eq: update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq: Pat quadratic c2} is always satisfied. Constraint~\eqref{eq: Pat quadratic c3} can be written in a simple form~$-\betak \leq \Delta \leq \betal$ and objective~\eqref{eq: Pat quadratic L} can be rewritten as
-    \begin{equation*}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{\betak - \betal}{\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{equation*}
-    We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
-    \begin{equation*}
-      \delta^*
-      = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j \notin \{\hat{l}, \hat{k}\}} \beta_j^2 + (\betak + \Delta^\star)^2 + (\betal - \Delta^\star)^2}} 
-      = \sqrt{\delta + \frac{1}{2\vartheta_2^2 n \tau} (\Delta^{\star2} + \Delta^\star (\betak - \betal))}.
-    \end{equation*}
-  \end{itemize}
-  The proofs follows by plugging these cases into the solution~\eqref{eq:Delta_optimal2}.
+\begin{lemma}[$\updatebb$ for Theorem~\ref{thm: Pat dual} with quadratic hinge loss]
+  If~$\npos + 1\le k,l \le n$, then defining~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ we have
+  \begin{align*}
+    \Delta_{lb} & = - \betak, \\
+    \Delta_{ub} & = \betal, \\
+    \gamma      & = -\frac{s_k - s_l + \frac{\betak - \betal}{2\delta \vartheta_2^2}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{\delta \vartheta_2^2}}, \\
+    \delta^{*}  & = \sqrt{\delta^2 + \frac{1}{2 \vartheta_2 n \tau}({\Delta^{*}}^2 + \Delta^{*} (\betak - \betal))}.
+  \end{align*}
+\end{lemma}
+
+\begin{proof}
+  For update rule~\eqref{eq: update rule b,b} with~$\npos + 1\le k,l \le \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq: Pat quadratic c2} is always satisfied. Constraint~\eqref{eq: Pat quadratic c3} can be written in a simple form~$-\betak \leq \Delta \leq \betal$ and objective~\eqref{eq: Pat quadratic L} can be rewritten as
+  \begin{equation*}
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{\betak - \betal}{\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
+  \end{equation*}
+  We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
+  \begin{equation*}
+    \delta^*
+    = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j \notin \{\hat{l}, \hat{k}\}} \beta_j^2 + (\betak + \Delta^\star)^2 + (\betal - \Delta^\star)^2}} 
+    = \sqrt{\delta + \frac{1}{2\vartheta_2^2 n \tau} (\Delta^{\star2} + \Delta^\star (\betak - \betal))}.
+  \end{equation*}
 \end{proof}

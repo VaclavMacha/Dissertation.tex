@@ -93,13 +93,13 @@ and show the form of the \TopPushK dual problem\footnote{To keep the readability
 
 \begin{restatable}{theorem}{topdual}\label{thm: Top dual}
   Consider formulations \TopPush, \TopPushK, \TopMeanK and \tauFPL from Table~\ref{tab: summary formulations} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
-  \begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
+  \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
     - \frac{1}{2} \vecab^\top \K \vecab
     - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
-    }{}{}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
-  \end{maxi*}
+    }{\label{eq: top dual formulation}}{\label{eq: top dual formulation L}}
+    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j \label{eq: top dual formulation c1}}
+    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil, \label{eq: top dual formulation c2}}
+  \end{maxi!}
   where~$l^{\star}$ is conjugate function of~$l$ and
   \begin{align*}
     \K & = \begin{cases}
@@ -327,13 +327,13 @@ This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
-          \max \Brac[c]{- \alphak,\;  -\beta_{\hat l}} & K = 1, \\
-          \max \Brac[c]{- \alphak,\;  -\beta_{\hat l}, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
+          \max \Brac[c]{- \alphak,\;  -\betal} & K = 1, \\
+          \max \Brac[c]{- \alphak,\;  -\betal, \; K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
           + \infty & K = 1, \\
-          \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \beta_{\hat l}} & \textrm{otherwise},
+          \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal} & \textrm{otherwise},
         \end{cases*} \\
       \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
     \end{align*}
@@ -341,13 +341,13 @@ This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
-          -\beta_{\hat k} & K = 1, \\
-          \max \Brac[c]{- \beta_{\hat k},\; \beta_{\hat l} - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
+          -\betak & K = 1, \\
+          \max \Brac[c]{- \betak,\; \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i} & \textrm{otherwise},
         \end{cases*} \\
       \Delta_{ub} & = 
         \begin{cases*}
-          \beta_{\hat l} & K = 1, \\
-          \min \Brac[c]{\beta_{\hat l},\; \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_{\hat k}} & \textrm{otherwise},
+          \betal & K = 1, \\
+          \min \Brac[c]{\betal,\; \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak} & \textrm{otherwise},
         \end{cases*} \\
       \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
     \end{align*}
