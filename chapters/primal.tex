@@ -25,7 +25,7 @@ For a nicer flow of text, we postpone the proofs to Appendix~\ref{chap: linear}.
 Convexity is one of the most important properties in numerical optimization. It ensures that the optimization problem has neither stationary points nor local minima. All points of interest are global minima. Moreover, it allows for faster convergence rates. Before we present any results, we recall the form of the decision threshold from Section~\ref{sec: aatp}
 \begin{equation*}
   \begin{aligned}
-    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau} \\
+    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau} \\
     t_2(\bm{w}) & = \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \\
     t_3(\bm{w}) & \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, \\
   \end{aligned}
@@ -134,19 +134,19 @@ The convexity derived in the previous section guarantees that there are no local
 \begin{restatable}{theorem}{larget}\label{thm:large_t}
   Consider any of these formulations: \TopPush, \TopPushK, \TopMeanK or \tauFPL. Fix any~$\bm{w}$ and denote the corresponding objective function~$L(\bm{w})$ and threshold~$t(\bm{w})$. If we have
   \begin{equation}\label{eq:w_zero_nn}
-    t(\bm{w})\ge \frac{1}{\npos} \sum_{i \in \Ipos} \bm{w}^\top \bm{x}_i,
+    t(\bm{w})\geq \frac{1}{\npos} \sum_{i \in \Ipos} \bm{w}^\top \bm{x}_i,
   \end{equation}
-  then~$L(\bm{0}) \le L(\bm{w})$. Specifically, using notation~\ref{not: scores} we get the following implications
+  then~$L(\bm{0}) \leq L(\bm{w})$. Specifically, using notation~\ref{not: scores} we get the following implications
   \begin{equation}\label{eq:w_zero}
     \begin{aligned}
-    s_{[1]}^- \ge \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \le L(\bm{w}) \text{ for } \TopPush, \\
-    \frac{1}{K}\sum_{i=1}^K s_{[i]}^- \ge \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \le L(\bm{w}) \text{ for } \TopPushK, \\
-    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \le \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \le L(\bm{w}) \text{ for } \TopMeanK, \\
-    \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s_{[i]}^- \ge \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \le L(\bm{w}) \text{ for } \tauFPL. \\
+    s_{[1]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
+      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPush, \\
+    \frac{1}{K}\sum_{i=1}^K s_{[i]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
+      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPushK, \\
+    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \leq \sum_{i=1}^{\npos} s_{i}^+
+      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopMeanK, \\
+    \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s_{[i]}^- \geq \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+
+      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \tauFPL. \\
     \end{aligned}
   \end{equation}
 \end{restatable}
@@ -158,7 +158,7 @@ The convexity derived in the previous section guarantees that there are no local
 \end{corollary}
 
 \begin{corollary}\label{cor:topmean}
-  Consider the \TopMeanK formulation. If~$\npos\ge n\tau$, then~$\bm{w}=\bm{0}$ is the global minimum.
+  Consider the \TopMeanK formulation. If~$\npos\geq n\tau$, then~$\bm{w}=\bm{0}$ is the global minimum.
 \end{corollary}
 
 \noindent The proof of Theorem~\ref{thm:large_t} employs the fact that all formulations in the theorem statement have only false-negatives in the objective. If~$\bm{w}_0=\bm{0}$, then~$\bm{w}_0^\top \bm{x}_i = 0$ for all~$i \in \I,$ the threshold equals to~$t = 0$ and the objective equals to one. If the threshold is large for~$\bm{w}$, many positives are below the threshold, and the false-negatives have the average surrogate value larger than one. In such a case,~$\bm{w}_0 = \bm{0}$ becomes the global minimum. There are two fixes to this situation:

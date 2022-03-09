@@ -22,7 +22,7 @@ The problem~\eqref{eq: aatp counts} is difficult to handle, since the objective 
   We also use parameter~$\vartheta > 0$ to scale inputs to the surrogate functions.
 \end{notation}
 
-Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge loss with different scaling parameters. As can be seen, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \ge \Iverson{s \ge 0}$ for all~$s \in \R.$ Besides that, if the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1.
+Figure~\ref{fig: surrogates} compares Iverson function with hinge loss and quadratic hinge loss with different scaling parameters. As can be seen, the surrogate function always provides an upper approximation of the Iverson function, i.e.~$l(s) \geq \Iverson{s \geq 0}$ for all~$s \in \R.$ Besides that, if the scaling parameter is larger than 1, then the surrogate functions approximate the Iverson function better on the interval~$(-\infty, 0]$. However, the approximation on the interval~$[0, \infty)$ is worse. Even though the scaling parameter affects a lot the quality of the approximation, the usual choice is 1.
 
 \begin{figure}[t]
   \centering
@@ -58,7 +58,7 @@ In the rest of the chapter, we show, that accuracy at the top, ranking problems 
   \end{equation*}
   where~$f \colon \R^d \to \R$ represents arbitrary model. To simplify the upcoming sections, we define sorted version of the vector of scores~$\bm{s}_{[\cdot]}$ with decreasing components, i.e.
   \begin{equation*}
-    s_{[1]}   \ge s_{[2]} \ge \dots \ge s_{[n - 1]} \ge s_{[n]}.
+    s_{[1]}   \geq s_{[2]} \geq \dots \geq s_{[n - 1]} \geq s_{[n]}.
   \end{equation*}
   Moreover, we denote negative samples as~$\bm{x}^-$ and positive samples as~$\bm{x}^+.$ Finally, we define vectors~$\bm{s}^- \in \R^{\nneg},$ $\bm{s}^+ \in \R^{\npos}$ of scores of all positive and negative samples with components defined as
   \begin{equation*}
@@ -100,14 +100,14 @@ where we use Notation~\ref{not: scores}. We used the mean of highest~$K$ negativ
 The previous category considers formulations which minimize the number of positive samples below the highest-ranked negative sample, i.e. minimize the number of false-negative samples. Accuracy at the Top~\cite{boyd2012accuracy} takes a different approach and minimizes the number of negative samples with the score above the top~$\tau$-quantile of all scores defined by
 \begin{equation}\label{eq: aatp quantile} 
   t_1(\bm{s})
-    = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}.
+    = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.
 \end{equation}
 Then the Accuracy at the Top problem is defined by
 \begin{mini}{\bm{w}}{
   \frac{1}{\nneg} \fp(\bm{s}, t)
   }{\label{eq: aatp original}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}}{~}
 \end{mini}
 This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = 0$. However, this formulation can be rewritten using the following lemma.
 \begin{restatable}{lemma}{lemmaequivalence}\label{lemma:fnfp_equivalence}
@@ -125,7 +125,7 @@ This formulation already falls into our framework~~\eqref{eq: aatp counts} for~$
   \mu \fp(\bm{s},t) + (1 - \mu)\fn(\bm{s},t)
   }{\label{eq: aatp original combination}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau},}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau},}{~}
 \end{mini}
 where~$\mu \in [0,1]$. This problem with~$\mu = 0$ equals to~\eqref{eq: aatp original}, while with~$\mu = \nicefrac{\nneg}{n}$ it corresponds to the original definition (without regularization) from~\cite{boyd2012accuracy}.
 
@@ -134,7 +134,7 @@ Paper~\cite{grill2016learning} builds on the Accuracy at the Top problem~\eqref{
   \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}.}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.}{~}
 \end{mini}
 Based on the first author, we name this formulation \Grill. This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$.
 
@@ -171,15 +171,15 @@ Another category falling into the framework of~\eqref{eq: aatp counts} and~\eqre
 In the Neyman-Pearson problem, the null hypothesis~$H_0$ states that a sample~$\bm{x}$ has the negative label. Then Type I error occurs when the sample is false-positive while Type II error when the sample is false-negative, see Table~\ref{tab: classification metrics}. In other words, minimizing Type II error corresponds to minimizing the number of false-negative samples and the bound for Type I error is equivalent to the bound on the number of false-positive samples, i.e. if the bound on Type I error equals~$\tau$, we may write this as
 \begin{equation}\label{eq: NP quantile} 
   t_1^{\rm NP}(\bm{s})
-    = \max \Set{t}{\fp(\bm{s}, t) \ge \nneg \tau}
-    = \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \ge t} \ge \tau}.
+    = \max \Set{t}{\fp(\bm{s}, t) \geq \nneg \tau}
+    = \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.
 \end{equation}
 Note that in~\eqref{eq: NP quantile} we only count the false-positive samples instead of counting all positives in~\eqref{eq: aatp quantile}. Then, we may write the Neyman-Pearson problem as
 \begin{mini}{\bm{w}}{
   \frac{1}{\npos} \fn(\bm{s}, t)
   }{\label{eq: NP problem}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \ge t} \ge \tau}.}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.}{~}
 \end{mini}
 This problem again falls within our framework for~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Since formulation~\eqref{eq: NP problem} and~\eqref{eq: aatp original combination} are almost identical, we can derive approximations of~\eqref{eq: NP problem} in the exactly the same way as in Section~\ref{sec: aatp}.
 
@@ -188,7 +188,7 @@ The first way how to approximate the formulation~\eqref{eq: aatp counts} is to r
   \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \ge t} \ge \tau}.}{~}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.}{~}
 \end{mini}
 The second option is to use approximation of the true quantile. In such a case, the first choice is to replace the true qunatile by the mean of the~$\nneg\tau$ largest scores of negative samples 
 \begin{equation}\label{eq: np quantile mean} 
@@ -249,7 +249,7 @@ and we call it \PatMatNP.
       & \cite{grill2016learning}
       & $\frac{1}{\nneg}$
       & $\frac{1}{\npos}$
-      & $\max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau}$ \\
+      & $\max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}$ \\
     \TopMeanK
       & \eqref{eq: topmeank}
       & ---
@@ -268,7 +268,7 @@ and we call it \PatMatNP.
       & ---
       & $\frac{1}{\nneg}$ 
       & $\frac{1}{\npos}$
-      & $\max \Set{t}{ \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \ge t} \ge \tau}$ \\
+      & $\max \Set{t}{ \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}$ \\
     \tauFPL
       & \eqref{eq: tau-fpl}
       & \cite{zhang2018tau}
@@ -287,7 +287,7 @@ and we call it \PatMatNP.
       & \cite{mackey2018constrained}
       & $\frac{1}{\nneg}$
       & 0
-      & $\min \Set{t}{\frac{1}{\npos} \sum_{i \in \Ipos} s_i \le \tau}$ \\
+      & $\min \Set{t}{\frac{1}{\npos} \sum_{i \in \Ipos} s_i \leq \tau}$ \\
     \emph{Precision@K}
       & ---
       & ---

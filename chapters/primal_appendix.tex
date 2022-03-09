@@ -3,7 +3,7 @@
 Firstly we recall definitions of the thresholds defined in Section~\ref{sec: aatp}
 \begin{equation*}
   \begin{aligned}
-    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \ge t} \ge \tau} \\
+    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau} \\
     t_2(\bm{w}) & = \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \\
     t_3(\bm{w}) & \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, \\
   \end{aligned}
@@ -21,7 +21,7 @@ and also recall, that we assume linear classifier, i.e. scores are defined for a
   where we for simplicity set~$\vartheta = 1.$ Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \hat{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\hat{t} = t_3(\hat{\bm{w}})$. Then for any~$\lambda\in[0,1]$ we have 
   \begin{equation}\label{eq:proof_conv1}
     g\Brac{\lambda \bm{w} + (1 - \lambda)\hat{\bm{w}}, \;\lambda t + (1 - \lambda)\hat{t}}
-    \le \lambda g(\bm{w}, t) + (1 - \lambda) g(\hat{\bm{w}}, \hat{t}) = 0,
+    \leq \lambda g(\bm{w}, t) + (1 - \lambda) g(\hat{\bm{w}}, \hat{t}) = 0,
   \end{equation}
   where the inequality follows from the convexity of~$g$ and the equality from
   \begin{equation*}
@@ -34,7 +34,7 @@ and also recall, that we assume linear classifier, i.e. scores are defined for a
   Since~$g$ is non-increasing in the second variable, from~\eqref{eq:proof_conv1} and~\eqref{eq:proof_conv2} we deduce
   \begin{equation*}
     t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})
-    \le \lambda t + (1-\lambda)\hat{t}
+    \leq \lambda t + (1-\lambda)\hat{t}
     =   \lambda t_3(\bm{w})+(1-\lambda) t_3(\hat{\bm{w}}),
   \end{equation*}
   which implies that function~$\bm{w}\mapsto t_3(\bm{w})$ is convex.
@@ -79,20 +79,20 @@ and consequently the value of the objective function is
     = l(t - 0)
     = 1 + t,
 \end{equation}
-where the last equality follows from definition of the hinge loss function and the fact that~$t \ge 0.$ This finishes the computation for~$\bm{w}_0$. For~$\bm{w}_1 = (1,0)$ the computation goes similar. Since~$\bm{w}_1^\top \bm{x}$  for~$i \in \I$ has the uniform distribution on~$[-1,1],$ we have
+where the last equality follows from definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$. For~$\bm{w}_1 = (1,0)$ the computation goes similar. Since~$\bm{w}_1^\top \bm{x}$  for~$i \in \I$ has the uniform distribution on~$[-1,1],$ we have
 \begin{equation*}
   \tau
     = \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
     \approx \frac{1}{2}\int_{-1}^{1} l\Brac{\vartheta(s-t)} \dd{s}
     = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s}
 \end{equation*}
-If~$\vartheta \le \tau$, then
+If~$\vartheta \leq \tau$, then
 \begin{equation*}
   1 + \vartheta(s - t)
-    \ge 1 + \vartheta(-1 - t)
+    \geq 1 + \vartheta(-1 - t)
     = 1 - \vartheta - 1 + \tau
     = \tau - \beta
-    \ge 0.
+    \geq 0.
 \end{equation*}
 Using this inequality, we can ignore the max operator in the relation for the~$\tau$ above and get
 \begin{equation}\label{eq:example1}
@@ -118,14 +118,14 @@ Results for \PatMatNP can be obtained in a similar way. In the rest of the secti
     L(\bm{w})
       = \frac{1}{\npos}\sum_{i \in \Ipos}l(t - \bm{w}^\top \bm{x}_i)
   \end{equation*}
-  Due to~$l(0) = 1$ and the convexity of~$l$ we have~$l(s) \ge 1 + cs$, where~$c$ equals to the derivative of~$l$ at~$0$. Then we have
+  Due to~$l(0) = 1$ and the convexity of~$l$ we have~$l(s) \geq 1 + cs$, where~$c$ equals to the derivative of~$l$ at~$0$. Then we have
   \begin{equation*}
     L(\bm{w}) 
-      \ge \frac{1}{\npos} \sum_{i \in \Ipos}(1 + c(t-\bm{w}^\top \bm{x}_i))
+      \geq \frac{1}{\npos} \sum_{i \in \Ipos}(1 + c(t-\bm{w}^\top \bm{x}_i))
       = 1 + c\Brac{t - \frac{1}{\npos}\sum_{i \in \Ipos}\bm{w}^\top \bm{x}}
-      \ge 1,
+      \geq 1,
   \end{equation*}
-  where the last inequality follows from assumption~\eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for~$\bm{w}=0$ equals to~$t=0$, and thus~$L(\bm{0})=1$. But then~$L(\bm{0}) \le L(\bm{w})$. The second part of the result follows from the form of thresholds~$t(\bm{w})$.
+  where the last inequality follows from assumption~\eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for~$\bm{w}=0$ equals to~$t=0$, and thus~$L(\bm{0})=1$. But then~$L(\bm{0}) \leq L(\bm{w})$. The second part of the result follows from the form of thresholds~$t(\bm{w})$.
 \end{proof}
 
 \patmatzero*
@@ -158,8 +158,8 @@ Results for \PatMatNP can be obtained in a similar way. In the rest of the secti
   \begin{equation*}
     \bar{s}
       < \frac{1}{\npos} \sum_{i \in \Ipos} s_i
-      \le \max \Set{s_i}{i \in \Ipos}
-      \le \max \Set{s_i}{i \in \I}
+      \leq \max \Set{s_i}{i \in \Ipos}
+      \leq \max \Set{s_i}{i \in \I}
       = s_{\max}
   \end{equation*}
   where the first inequality follows from~\eqref{eq:patmat_zero_aux0}. The lower bound for~$\bar{s}$ can be computed in a similar way. Altogether, we have~$s_{\min} < \bar{s} < s_{\max}$. Then we can define
@@ -173,19 +173,19 @@ Results for \PatMatNP can be obtained in a similar way. In the rest of the secti
   Then we obtain for any~$i \in \I$
   \begin{equation*}
     1 + \vartheta(s_i - t)
-      \ge 1 + \vartheta(s_{\min} - t)
+      \geq 1 + \vartheta(s_{\min} - t)
       = 1 + \vartheta s_{\min} - 1 + \tau - \vartheta\bar{s}
       = \tau - \vartheta (\bar{s} - s_{\min}),
   \end{equation*}
   where the first equality follows from the definition of~$t.$ From the definition~$\vartheta_0$ we known the following
   \begin{equation*}
-    0 < \vartheta \le \vartheta_0 \le \frac{\tau}{\bar{s} - s_{\min}}.
+    0 < \vartheta \leq \vartheta_0 \leq \frac{\tau}{\bar{s} - s_{\min}}.
   \end{equation*}
   Since~$\bar{s} - s_{\min} > 0,$ we get the following inequality
   \begin{equation}\label{eq:patmat_zero_aux1}
     1 + \vartheta(s_i - t)
       = \tau - \vartheta (\bar{s} - s_{\min})
-      \ge \tau - \frac{\tau}{\bar{s} - s_{\min}} (\bar{s} - s_{\min})
+      \geq \tau - \frac{\tau}{\bar{s} - s_{\min}} (\bar{s} - s_{\min})
       = 0
   \end{equation}
   Moreover, combining the definition of the hinge loss function in Notation~\ref{not: surrogates} and the inequality above, we have
@@ -205,10 +205,10 @@ Results for \PatMatNP can be obtained in a similar way. In the rest of the secti
   where the third equality employs the definition of~$\bar{s}$ and~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$, i.e. it solves~\eqref{eq: aatp quantile surrogate}. Similarly to~\eqref{eq:patmat_zero_aux1} we get
   \begin{equation}\label{eq:patmat_zero_aux2}
     1 + t - s_i
-    \ge 1 + t-s_{\max}
+    \geq 1 + t-s_{\max}
     =   1 + \frac{1-\tau}{\vartheta} + \bar{s} - s_{\max}
-    \ge \frac{1-\tau}{\vartheta} + \bar{s} - s_{\max}
-    \ge 0,
+    \geq \frac{1-\tau}{\vartheta} + \bar{s} - s_{\max}
+    \geq 0,
   \end{equation}
   where the last inequality follows from the definition of~$\vartheta_0$. Then for the objective we have
   \begin{equation*}
@@ -230,7 +230,7 @@ Whenever the objective contains only false-negatives, a lower threshold~$t$ mean
 \begin{lemma}[Thresholds relation~\cite{zhang2018tau}]\label{prop: threholds}
   We always have
   \begin{equation*}
-    t_1(\bm{s}) \le t_2(\bm{s}) \le t_3(\bm{s}).
+    t_1(\bm{s}) \leq t_2(\bm{s}) \leq t_3(\bm{s}).
   \end{equation*}
 \end{lemma}
 
@@ -252,7 +252,7 @@ Whenever the objective contains only false-negatives, a lower threshold~$t$ mean
 \begin{proof}
   Since~$\bm{s}^+$ and~$\bm{s}^-$ are computed on disjunctive indices, we have
   \begin{equation*}
-    s_{[n\tau]} \ge \min\{s_{[\npos\tau]}^+, \; s_{[\nneg\tau]}^-\}.
+    s_{[n\tau]} \geq \min\{s_{[\npos\tau]}^+, \; s_{[\nneg\tau]}^-\}.
   \end{equation*}
   Since~$s_{[n\tau]}$ is the threshold for \Grill and~$s_{[\nneg\tau]}^-$ is the threshold for \GrillNP, the first statement follows. The second part can be shown in a similar way.
 \end{proof}
@@ -284,7 +284,7 @@ Observe first that
       & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau,
   \end{aligned}
 \end{equation*}
-where the last equality holds since~$\vartheta > 0$ and~$s_{[i]} - s_{[j]} \le 0$ for all~$i \geq j$
+where the last equality holds since~$\vartheta > 0$ and~$s_{[i]} - s_{[j]} \leq 0$ for all~$i \geq j$
 From here, we obtain~$h(s_{[1]} + \gamma) = -n\tau$. Moreover, we have
 \begin{equation*}
   \begin{aligned}
@@ -324,7 +324,7 @@ Consider a differentiable objective function~$L$ and the optimization method
 where~$\alpha^k > 0$ is a stepsize and~$g(\bm{w}^k)$ is an approximation of the gradient~$\nabla L(\bm{w}^k)$. Assume the following:
 \begin{enumerate}[label={(A\arabic*)}]
   \item \label{ass_convex}~$L$ is differentiable, convex and attains a global minimum;
-  \item \label{ass_gbound}~$\norm{g(\bm{w}^k)}\le B$ for all~$k$;
+  \item \label{ass_gbound}~$\norm{g(\bm{w}^k)}\leq B$ for all~$k$;
   \item \label{ass_alpha1} the stepsize is non-increasing and satisfies~$\sum_{k=0}^\infty \alpha^k = \infty$;
   \item \label{ass_alpha2} the stepsize satisfies~$\sum_{k=0}^\infty (\alpha^k)^2<\infty$;
   \item \label{ass_alpha3} the stepsize satisfies~$\sum_{k=0}^\infty \norm{\alpha^{k+1}-  \alpha^k}<\infty$.
@@ -334,14 +334,14 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for~$\al
 \begin{theorem}\label{thm:convergence}
   Assume that~\ref{ass_convex}-\ref{ass_alpha2} is satisfied. If there exists some~$C$ such that for some global minimum of~$\bm{w}^*$ of~$L$ we have
   \begin{equation}\label{eq:nec_cond}
-    \sum_{k=0}^\infty \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \le C,
+    \sum_{k=0}^\infty \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \leq C,
   \end{equation}
   then the sequence~$\{\bm{w}^k\}$ generated by~\eqref{eq:update} is bounded and~$L(\bm{w}^k) \to L(\bm{w}^*)$. Thus, all its convergent subsequences converge to some global minimum of~$L$.
 \end{theorem}
 \begin{proof}
   Note first that the convexity of~$L$ from~\ref{ass_convex} implies
   \begin{equation}\label{eq:convex_estimate}
-    \inner{\nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \le L(\bm{w}^*) - L(\bm{w}^k).
+    \inner{\nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \leq L(\bm{w}^*) - L(\bm{w}^k).
   \end{equation}
   Then we have
   \begin{equation*}
@@ -349,25 +349,25 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for~$\al
       \norm{\bm{w}^{k+1} - \bm{w}^*}^2
         = \; & \norm{\bm{w}^k - \alpha^k g(\bm{w}^k) - \bm{w}^*}^2 \\
         = \; &\norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 \norm{g(\bm{w}^k)}^2 \\
-        \le \; &\norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k) \pm \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 B^2\\
-        \le \; & \norm{\bm{w}^k - \bm{w}^*}^2 + 2 \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \\
+        \leq \; &\norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k) \pm \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 B^2\\
+        \leq \; & \norm{\bm{w}^k - \bm{w}^*}^2 + 2 \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \\
         & + 2 \alpha^k \Brac{L(\bm{w}^*) - L(\bm{w}^k)} + (\alpha^k)^2 B^2,
     \end{aligned}
   \end{equation*}
   where the first inequality follows from assumption~\ref{ass_gbound} and the second on from the properties of inner product and~\eqref{eq:convex_estimate}. Summing this expression for all~$k$ and using~\eqref{eq:nec_cond} leads to
   \begin{equation*}
     \limsup_{k \rightarrow \infty} \; \norm{\bm{w}^k - \bm{w}^*}^2
-      \le \norm{\bm{w}^0 - \bm{w}^*}^2 + 2C + 2 \sum_{k=0}^\infty \alpha^k (L(\bm{w}^*) - L(\bm{w}^k)) + \sum_{k=0}^ \infty (\alpha^k)^2 B^2.
+      \leq \norm{\bm{w}^0 - \bm{w}^*}^2 + 2C + 2 \sum_{k=0}^\infty \alpha^k (L(\bm{w}^*) - L(\bm{w}^k)) + \sum_{k=0}^ \infty (\alpha^k)^2 B^2.
 \end{equation*}
   Using assumption~\ref{ass_alpha2} results in the existence of some~$\hat{C}$ such that
   \begin{equation}\label{eq:general_bound}
-  \limsup_{k \rightarrow \infty} \;\norm{\bm{w}^k - \bm{w}^*}^2 + 2\sum_{k=0}^\infty \alpha^k \Brac{L(\bm{w}^k) - L(\bm{w}^*)} \le 2 \hat{C}.
+  \limsup_{k \rightarrow \infty} \;\norm{\bm{w}^k - \bm{w}^*}^2 + 2\sum_{k=0}^\infty \alpha^k \Brac{L(\bm{w}^k) - L(\bm{w}^*)} \leq 2 \hat{C}.
   \end{equation}
-  Since~$\alpha^k > 0$ and~$L(\bm{w}^k) \ge L(\bm{w}^*)$ as~$\bm{w}^*$ is a global minimum of~$L$, we infer that sequence~$\{\bm{w}^k\}$ is bounded and~\eqref{eq:general_bound} implies
+  Since~$\alpha^k > 0$ and~$L(\bm{w}^k) \geq L(\bm{w}^*)$ as~$\bm{w}^*$ is a global minimum of~$L$, we infer that sequence~$\{\bm{w}^k\}$ is bounded and~\eqref{eq:general_bound} implies
   \begin{equation*}
-    \sum_{k=0}^\infty \alpha^k \Brac{L(\bm{w}^k) - L(\bm{w}^*)} \le \hat{C}.
+    \sum_{k=0}^\infty \alpha^k \Brac{L(\bm{w}^k) - L(\bm{w}^*)} \leq \hat{C}.
   \end{equation*}
-  Since~$L(\bm{w}^k) - L(\bm{w}^*) \ge 0$, due to assumption~\ref{ass_alpha1} we obtain
+  Since~$L(\bm{w}^k) - L(\bm{w}^*) \geq 0$, due to assumption~\ref{ass_alpha1} we obtain
   \begin{equation*}
     \lim_{k \to \infty} L(\bm{w}^k) = L(\bm{w}^*),
   \end{equation*}
@@ -378,7 +378,7 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for~$\al
 
 For the proof, we will consider a general surrogate which satisfies:
 \begin{enumerate}[label={(S\arabic*)}]
-  \item \label{surr_basic1} $l(s)\ge 0$ for all~$s\in\R$, $l(0)=1$ and~$l(s)\to 0$ as~$s\to-\infty$;
+  \item \label{surr_basic1} $l(s)\geq 0$ for all~$s\in\R$, $l(0)=1$ and~$l(s)\to 0$ as~$s\to-\infty$;
   \item \label{surr_basic2} $l$ is convex and strictly increasing function on~$(s_0,\infty)$, where~$s_0:=\sup\{s \mid l(s)=0\}$;
   \item \label{surr_ratio} $\nicefrac{l'}{l}$ is a decreasing function on~$(s_0,\infty)$;
   \item \label{surr_der1} $l'$ is a bounded function;
@@ -417,34 +417,34 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Recall that we already verified~\ref{ass_convex}-\ref{ass_alpha3}. Combining~\ref{ass_gbound} with~\eqref{eq:sgd_estimate_z1} and~\eqref{eq:sgd_estimate_z2} yields the existence of some~$C_2$ such that for all~$i \in \I$ we have
   \begin{equation}\label{eq:estimate_diff_z}
     \begin{aligned}
-      \norm{s_i^k - \bm{x}_i^\top \bm{w}^k} &\le C_2\alpha^{k-1}, \\
-      \norm{s_i^{k-1} - \bm{x}_i^\top \bm{w}^k} &\le C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+      \norm{s_i^k - \bm{x}_i^\top \bm{w}^k} &\leq C_2\alpha^{k-1}, \\
+      \norm{s_i^{k-1} - \bm{x}_i^\top \bm{w}^k} &\leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
     \end{aligned}
   \end{equation}
   This also immediately implies
   \begin{equation}\label{eq:estimate_diff_t}
     \begin{aligned}
-      \norm{t^k - t(\bm{w}^k)}     & \le C_2\alpha^{k-1}, \\
-      \norm{t^{k-1} - t(\bm{w}^k)} & \le C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+      \norm{t^k - t(\bm{w}^k)}     & \leq C_2\alpha^{k-1}, \\
+      \norm{t^{k-1} - t(\bm{w}^k)} & \leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
     \end{aligned}
   \end{equation}
   Since~$l'$ is Lipschitz continuous with Lipschitz constant~$D$ according to~\ref{surr_der2}, due to~\eqref{eq:estimate_diff_z} and~\eqref{eq:estimate_diff_t} we get
   \begin{equation}\label{eq:sgd_lipschitz1}
     \begin{aligned}
       \norm{l'(t^k-s_i^k) - l'(t(\bm{w}^k)-\bm{x}_i^\top \bm{w}^k)}
-        & \le D \norm{t^k-s_i^k - t(\bm{w}^k)+ \bm{x}_i^\top \bm{w}^k}
-        \le  2C_2 D \alpha^{k-1}.
+        & \leq D \norm{t^k-s_i^k - t(\bm{w}^k)+ \bm{x}_i^\top \bm{w}^k}
+        \leq  2C_2 D \alpha^{k-1}.
     \end{aligned}
   \end{equation}
   In an identical way we can show
   \begin{equation}\label{eq:sgd_lipschitz2}
     \begin{aligned}
       \norm{l'(t^{k-1}-s_i^{k-1}) - l'(t(\bm{w}^k)-\bm{x}_i^\top \bm{w}^k)}
-        & \le 2C_2D\Brac{\alpha^{k-1}+\alpha^{k-2}}, \\
+        & \leq 2C_2D\Brac{\alpha^{k-1}+\alpha^{k-2}}, \\
       \norm{l'(s_i^k-t^k) - l'(\bm{x}_i^\top \bm{w}^k-t(\bm{w}^k))}
-        & \le 2C_2D\alpha^{k-1}, \\
+        & \leq 2C_2D\alpha^{k-1}, \\
       \norm{l'(s_i^{k-1}-t^{k-1}) - l'(\bm{x}_i^\top \bm{w}^k-t(\bm{w}^k))}
-        & \le 2C_2D\Brac{\alpha^{k-1}+\alpha^{k-2}}.
+        & \leq 2C_2D\Brac{\alpha^{k-1}+\alpha^{k-2}}.
     \end{aligned}
   \end{equation}
   Now we need to estimate the distance between~$\nabla t(\bm{w}^k)$ and~$\nabla t^k$. From~\eqref{eq:update_nablat} and~\eqref{eq:update_a}, we have
@@ -459,7 +459,7 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   \end{equation*}
   From Lemma~\ref{lemma:bound_zero} we deduce that the denominators in the relations above are bounded away from zero uniformly in~$k$. Assumption~\ref{ass_alpha2} implies ~$\alpha^k \to 0$. This allows us to use Lemma~\ref{lemma:ratio} which together with~\eqref{eq:sgd_lipschitz2} implies that there is some~$C_3$ such that for all sufficiently large~$k$ we have
   \begin{equation}\label{eq:sgd_nablat_diff}
-    \norm{\nabla t^k - \nabla t(\bm{w}^k)} \le C_3\Brac{\alpha^{k-1} + \alpha^{k-2}}.
+    \norm{\nabla t^k - \nabla t(\bm{w}^k)} \leq C_3\Brac{\alpha^{k-1} + \alpha^{k-2}}.
   \end{equation}
   Using the assumptions above, we can simplify the terms for~$g(\bm{w}^k)$ and~$\nabla L(\bm{w}^k)$ to
   \begin{equation*}
@@ -492,12 +492,12 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Then relations~\eqref{eq:sgd_nablat_diff} and~\eqref{eq:sgd_lipschitz1} applied to Lemma~\ref{lemma:product} imply
   \begin{multline*}
     \norm{\sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i) - \sum_{i \in \Imbpos^k} l'(t(\bm{w}^k) - \bm{x}_i^\top \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i)}\\
-      \le C_4 \Brac{\alpha^{k-1} + \alpha^{k-2}}
+      \leq C_4 \Brac{\alpha^{k-1} + \alpha^{k-2}}
   \end{multline*}
   for some~$C_4$, which gives a bound for~\eqref{eq:sgd_sum2}. Bound for~\eqref{eq:sgd_sum5} is obtained by increasing~$k$ by one. Bounds for~\eqref{eq:sgd_sum3} and~\eqref{eq:sgd_sum4} can be find similarly using~\eqref{eq:sgd_lipschitz2}. Altogether, we showed
   \begin{equation}\label{eq:nec_cond3}
     \norm{g(\bm{w}^k) + g(\bm{w}^{k+1}) - \nabla L(\bm{w}^k) - \nabla L(\bm{w}^{k+1})}
-      \le C_1(\alpha^{k-2} + \alpha^{k-1} + \alpha^{k} + \alpha^{k+1})
+      \leq C_1(\alpha^{k-2} + \alpha^{k-1} + \alpha^{k} + \alpha^{k+1})
   \end{equation}
   for some~$C_1$. We now estimate
   \begin{equation}\label{eq:proof_est1}
@@ -515,16 +515,16 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
     \begin{aligned}
     & \inner{ g(\bm{w}^{k+1})
     -\nabla L(\bm{w}^{k+1})}{\alpha^{k+1}(\bm{w}^*-\bm{w}^{k+1})-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
-    & \le 2B\norm{\alpha^{k+1}(\bm{w}^*-\bm{w}^{k+1})-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
+    & \leq 2B\norm{\alpha^{k+1}(\bm{w}^*-\bm{w}^{k+1})-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
     & = 2B\norm{\alpha^{k+1}(\bm{w}^*-\bm{w}^k+\alpha^kg(\bm{w}^k))-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
     & = 2B\norm{(\alpha^{k+1}-\alpha^k)\bm{w}^* + (\alpha^k-\alpha^{k+1})\bm{w}^k +\alpha^k\alpha^{k+1} g(\bm{w}^k)} \\
-    & \le C_5 \norm{\alpha^{k+1}-\alpha^k} + C_5(\alpha^k)^2 + C_5(\alpha^{k+1})^2.
+    & \leq C_5 \norm{\alpha^{k+1}-\alpha^k} + C_5(\alpha^k)^2 + C_5(\alpha^{k+1})^2.
     \end{aligned}
   \end{equation}
-  In the last inequality we used the inequality~$2ab\le a^2+b^2$. To estimate the first part of the right hand side of~\eqref{eq:proof_est1}, we can apply~\eqref{eq:nec_cond3} together with the boundedness of~$\{\bm{w}^k\}$ to obtain the existence of some~$C_6$ such that
+  In the last inequality we used the inequality~$2ab\leq a^2+b^2$. To estimate the first part of the right hand side of~\eqref{eq:proof_est1}, we can apply~\eqref{eq:nec_cond3} together with the boundedness of~$\{\bm{w}^k\}$ to obtain the existence of some~$C_6$ such that
   \begin{multline}\label{eq:proof_est3}
     \inner{ g(\bm{w}^{k}) -\nabla L(\bm{w}^{k}) + g(\bm{w}^{k+1})-\nabla L(\bm{w}^{k+1})}{\alpha^k(\bm{w}^* - \bm{w}^{k})} \\
-      \le C_6(\alpha^{k-2})^2 + C_6(\alpha^{k-1})^2 + C_6(\alpha^{k})^2 + C_6(\alpha^{k+1})^2.
+      \leq C_6(\alpha^{k-2})^2 + C_6(\alpha^{k-1})^2 + C_6(\alpha^{k})^2 + C_6(\alpha^{k+1})^2.
   \end{multline}
   Plugging~\eqref{eq:proof_est2} and~\eqref{eq:proof_est3} into~\eqref{eq:proof_est1} and summing the terms yields~\eqref{eq:nec_cond}. Then the assumptions of Theorem~\ref{thm:convergence} are verified and the theorem statement follows.
 \end{proof}
@@ -535,26 +535,26 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_ratio}. Then there exists some~$\hat{C} > 0$ such that for all~$k$ we have
   \begin{equation*}
     \begin{aligned}
-      \hat{C} \le & \sum_{i \in \I} l'(s_i^k - t^k), \\
-      \hat{C} \le & \sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k)).
+      \hat{C} \leq & \sum_{i \in \I} l'(s_i^k - t^k), \\
+      \hat{C} \leq & \sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k)).
     \end{aligned}
   \end{equation*}
 \end{lemma}
 \begin{proof}
   First, we will find an upper bound of~$s_i^k-t^k$. Fix any index~$i_0$. Since~$l$ is nonnegative due to~\ref{surr_basic1}, equation~\eqref{eq:update_t} implies
   \begin{equation*}
-    n\tau = \sum_{i \in \I} l(s_i^k - t^k) \ge l(s_{i_0}^k - t^k).
+    n\tau = \sum_{i \in \I} l(s_i^k - t^k) \geq l(s_{i_0}^k - t^k).
   \end{equation*}
   Moreover, as~$l$ is a strictly increasing function due to~\ref{surr_basic2} and~$n\tau>0$, this means 
   \begin{equation}\label{eq:sigma_bound}
-    l^{-1}(n\tau) \ge s_{i_0}^k-t^k.
+    l^{-1}(n\tau) \geq s_{i_0}^k-t^k.
   \end{equation}
   Since~$i_0$ was an arbitrary index, it holds true for all indices. Then~\ref{surr_ratio} which leads to a further estimate
   \begin{equation*}
     \begin{aligned}
     \sum_{i \in \I} l'(s_i^k - t^k)
       & = \sum_{i\in \I} l(s_i^k-t^k) \frac{l'(s_i^k-t^k)}{l(s_i^k-t^k)} \\
-      & \ge \sum_{i \in \I} l(s_i^k - t^k) \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
+      & \geq \sum_{i \in \I} l(s_i^k - t^k) \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
       & = n\tau \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
       & = l'(l^{-1}(n\tau)),
     \end{aligned}
@@ -568,8 +568,8 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_der1}. Then there exists some~$B$ such that for all~$k$ we have
   \begin{equation*}
     \begin{aligned}
-      \norm{\nabla L(\bm{w}^k)} & \le B, \\
-      \norm{g(\bm{w}^k)} & \le B.
+      \norm{\nabla L(\bm{w}^k)} & \leq B, \\
+      \norm{g(\bm{w}^k)} & \leq B.
     \end{aligned}
   \end{equation*}
 \end{lemma}
@@ -577,25 +577,25 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Due to~\ref{surr_der1} the derivative~$l'$ is bounded by some~$\hat{B}$. Then Theorem~\ref{thm:derivative} and Lemma~\ref{lemma:bound_zero} imply
   \begin{equation*}
     \norm{\nabla t(\bm{w}^k)}
-      \le \frac{\hat{B} \sum_{i \in \I} \norm{\bm{x}_i}}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w} - t(\bm{w}))}
-      \le \frac{\hat{B}}{\hat{C}} \sum_{i\in \I} \norm{\bm{x}_i},
+      \leq \frac{\hat{B} \sum_{i \in \I} \norm{\bm{x}_i}}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w} - t(\bm{w}))}
+      \leq \frac{\hat{B}}{\hat{C}} \sum_{i\in \I} \norm{\bm{x}_i},
   \end{equation*}
-  which is independent of~$k$. Then~\eqref{eq:derivatives} and again the boundedness of~$l'$ imply the existence of some~$B$ such that~$\norm{\nabla L(\bm{w}^k)} \le B$ for all~$k$. The proof for~$g(\bm{w}^k)$ can be performed identically.
+  which is independent of~$k$. Then~\eqref{eq:derivatives} and again the boundedness of~$l'$ imply the existence of some~$B$ such that~$\norm{\nabla L(\bm{w}^k)} \leq B$ for all~$k$. The proof for~$g(\bm{w}^k)$ can be performed identically.
 \end{proof}
 
 \begin{lemma}\label{lemma:ratio}
   Consider uniformly bounded positive sequences~$c_1^k,$~$c_2^k,$~$d_1^k,$~$d_2^k,$~$\alpha^k$ and positive constants~$C_1$,~$C_2$ such that for all~$k$ we have
   \begin{equation*}
     \begin{aligned}
-      \norm{c_1^k-c_2^k} & \le C_1\alpha^k, \quad &
-      \norm{d_1^k-d_2^k} & \le C_1\alpha^k, \quad &
-      d_1^k & \ge C_2, \quad &
-      d_2^k & \ge C_2.
+      \norm{c_1^k-c_2^k} & \leq C_1\alpha^k, \quad &
+      \norm{d_1^k-d_2^k} & \leq C_1\alpha^k, \quad &
+      d_1^k & \geq C_2, \quad &
+      d_2^k & \geq C_2.
     \end{aligned}
   \end{equation*}
   If~$\alpha^k \to 0$, then there exists a constant~$C_3$ such that for all sufficiently large~$k$ we have
   \begin{equation*}
-    \norm{\frac{c_1^k}{d_1^k} - \frac{c_2^k}{d_2^k}} \le C_3\alpha^k.
+    \norm{\frac{c_1^k}{d_1^k} - \frac{c_2^k}{d_2^k}} \leq C_3\alpha^k.
   \end{equation*}
 \end{lemma}
 
@@ -603,30 +603,30 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   Since~$d_1^k$ and~$d_2^k$ are bounded away from zero and since~$\alpha^k \to 0$, we have
   \begin{equation*}
     \norm{\frac{c_1^k}{d_1^k} - \frac{c_2^k}{d_2^k}}
-      \le \max\Brac[c]{\frac{c_1^k}{d_1^k} - \frac{c_1^k+C_1\alpha^k}{d_1^k-C_1\alpha^k}, \; \frac{c_1^k}{d_1^k} - \frac{c_1^k-C_1\alpha^k}{d_1^k+C_1\alpha^k}}.
+      \leq \max\Brac[c]{\frac{c_1^k}{d_1^k} - \frac{c_1^k+C_1\alpha^k}{d_1^k-C_1\alpha^k}, \; \frac{c_1^k}{d_1^k} - \frac{c_1^k-C_1\alpha^k}{d_1^k+C_1\alpha^k}}.
   \end{equation*}
   The first term can be estimated as
   \begin{equation*}
     \norm{\frac{c_1^k}{d_1^k} - \frac{c_1^k+C_1\alpha^k}{d_1^k-C_1\alpha^k}}
     = \norm{\frac{(c_1^k+d_1^k)C_1\alpha^k}{d_1^k(d_1^k-C_1\alpha^k)}}
-    \le \frac{(c_1^k+d_1^k)C_1\alpha^k}{C_2|d_1^k-C_1\alpha^k|}.
+    \leq \frac{(c_1^k+d_1^k)C_1\alpha^k}{C_2|d_1^k-C_1\alpha^k|}.
   \end{equation*}
-  Since~$\alpha^k\to 0$ by assumption, for large~$k$ we have~$\norm{d_1^k-C_1\alpha^k}\ge \frac{1}{2}C_2$. Since the sequences are uniformly bounded, the statement follows.
+  Since~$\alpha^k\to 0$ by assumption, for large~$k$ we have~$\norm{d_1^k-C_1\alpha^k}\geq \frac{1}{2}C_2$. Since the sequences are uniformly bounded, the statement follows.
 \end{proof}
 
 \pagebreak
 
 \begin{lemma}\label{lemma:product}
-  Consider scalars~$a_i,$~$c_i$ and vectors~$b_i,$~$d_i.$ If there is some~$\hat{C}$ such that~$\norm{a_i} \le \hat{C}$ and~$\norm{d_i} \le \hat{C}$, then
+  Consider scalars~$a_i,$~$c_i$ and vectors~$b_i,$~$d_i.$ If there is some~$\hat{C}$ such that~$\norm{a_i} \leq \hat{C}$ and~$\norm{d_i} \leq \hat{C}$, then
   \begin{equation*}
     \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i}
-      \le \hat{C}\sum_{i=1}^n \Brac{\norm{a_i-c_i} + \norm{b_i-d_i}}.
+      \leq \hat{C}\sum_{i=1}^n \Brac{\norm{a_i-c_i} + \norm{b_i-d_i}}.
   \end{equation*}
 \end{lemma}
 \begin{proof}
   It is simple to verify
   \begin{equation*}
-    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i} \le \sum_{i=1}^n \norm{d_i}\norm{a_i-c_i} + \sum_{i=1}^n \norm{a_i}\norm{b_i-d_i},
+    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i} \leq \sum_{i=1}^n \norm{d_i}\norm{a_i-c_i} + \sum_{i=1}^n \norm{a_i}\norm{b_i-d_i},
   \end{equation*}
   from which the statement follows.
 \end{proof}

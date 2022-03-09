@@ -160,7 +160,7 @@ In~\cite{adam2021general}, we called the convex problem~\eqref{eq: PatMatNP prim
     - \delta \ntil \tau
     }{}{}
     \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-    \addConstraint{\delta }{\ge 0,}
+    \addConstraint{\delta }{\geq 0,}
   \end{maxi*}
   where~$l^{\star}$ is conjugate function of~$l,$~$\vartheta > 0$ is a scaling parameter and
   \begin{align*}
@@ -310,20 +310,20 @@ Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the truncated qu
 \end{subequations}
 This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in~\eqref{eq:TopPushK dual quadratic constraint 3} automatically follows from~\eqref{eq:TopPushK dual quadratic constraint 1} and the problem can be simplified. In the following theorem, we show that for each of update rules~\eqref{eq:Update rules}, problem~\eqref{eq:TopPushK dual quadratic} has a simple closed-form solution. For simplicity, we use~$\clip{a}{b}{c}$ to denote clipping (projecting)~$c$ to the interval~$[a,b]$.
 
-\begin{restatable}[Update rule for~$\Delta^*$ for \TopPushK with truncated quadratic loss]{theorem}{toppushkupdatequadratic}\label{thm:Update rule TopPushK with quadratic loss}
+\begin{restatable}[Update rule for~$\Delta^{\star}$ for \TopPushK with truncated quadratic loss]{theorem}{toppushkupdatequadratic}\label{thm:Update rule TopPushK with quadratic loss}
   Consider problem~\eqref{eq:TopPushK dual quadratic}. Then the optimal step~$\Delta^\star$ equals to
   \begin{equation}\label{eq:Optimal delta}
-    \Delta^{*} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
+    \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
   \end{equation}
   where there are the following three cases (each corresponding to one update rule in~\eqref{eq:Update rules}):
   \begin{itemize}
-    \item For any~$1\le k, l \le \npos$ we have
+    \item For any~$1\leq k, l \leq \npos$ we have
     \begin{align*}
       \Delta_{lb} & = -\alphak, \\
       \Delta_{ub} & = \alphal, \\
       \gamma      & = -\frac{s_k - s_l + \frac{1}{2C\vartheta^2}(\alphak - \alphal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta^2}}.
     \end{align*}
-    \item For any~$1 \le k \le \npos$ and~$\npos + 1 \le l \le n$ we define~$\hat{l} = l - \npos$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
+    \item For any~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq n$ we define~$\hat{l} = l - \npos$  and~$\beta_{\max} = \max_{j \in \{1, 2, \ldots, \nneg \} \setminus \{\hat l\}} \beta_j.$ Then we have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}
@@ -337,7 +337,7 @@ This is a quadratic optimization problem. Moreover, for~$K=1$ the upper bound in
         \end{cases*} \\
       \gamma & = -\frac{s_k + s_l - \frac{1}{\vartheta} + \frac{1}{2C\vartheta^2} \alphak}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta^2}}.
     \end{align*}
-    \item For any~$\npos + 1\le k,l \le n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then  have
+    \item For any~$\npos + 1\leq k,l \leq n$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and then  have
     \begin{align*}
       \Delta_{lb} & = 
         \begin{cases*}

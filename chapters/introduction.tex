@@ -38,7 +38,7 @@ The previous definitions of training and test set are general for classification
 
 The goal of any classification problem is to classify given samples with the highest possible accuracy or in other words with the lowest possible error. In the case of binary classification, there are two types of error: positive samples classified as negative and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
 \begin{mini}{\bm{w}, t}{
-    \lambda_1 \sum_{i \in \Ineg} \Iverson{s_i \ge t} + \lambda_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
+    \lambda_1 \sum_{i \in \Ineg} \Iverson{s_i \geq t} + \lambda_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
 \end{mini}
@@ -59,7 +59,7 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
   where~$\bm{w}$ represents trainable parameters (weights) of the model. Predictions are defined ~$i \in \I$ in the following way
   \begin{equation*}
     \hat{y}_i = \begin{cases}
-      1 & \quad \text{if } s_i \ge t, \\
+      1 & \quad \text{if } s_i \geq t, \\
       0 & \quad \text{otherwise.}
     \end{cases}
   \end{equation*}
@@ -82,10 +82,10 @@ Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm
 Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\D$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by model~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for all~$i \in \I,$ we can compute all fields of the confusion matrix as follows
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
-    \tp(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i \ge t}, & \quad
+    \tp(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i \geq t}, & \quad
     \fn(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i < t}, \\
     \tn(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i < t}, & \quad
-    \fp(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i \ge t}.
+    \fp(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i \geq t}.
   \end{aligned}
 \end{equation}
 
@@ -232,7 +232,7 @@ In the previous section, we defined general binary clasification problem as a mi
 
 The aim of classical binary classification is to separate positive and negative samples with the highest possible accuracy. However, in many applications, it is desirable to separate only a certain number of samples. In such a case, the goal is not to maximize the performance on all samples but only the performance on the required samples with the highest relevance. The rest of the samples is irrelevant and therefore the performance on them is not important. Figure~\ref{fig: standard vs. aatp} shows the difference between the standard classifier (classifier 1) that maximizes the accuracy and the classifier that focuses only on the classification at the top (classifier 2). In this particular case, the classifier 2 tries to maximize the number of positive samples that are ranked higher than the worst negative sample, i.e. the negative sample with the highest score. Formally, we can define metric
 \begin{equation*}
-  \postop(\bm{s}) = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \ge \max_{j \in \Ineg}\{s_j\}}.
+  \postop(\bm{s}) = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \geq \max_{j \in \Ineg}\{s_j\}}.
 \end{equation*}
 While classifier 1 has good total~$\accuracy$, its~$\postop$ metric is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total~$\accuracy$, but its~$\postop$ metric is extremely good because more than half of the positive samples are ranked higher than the worst negative sample. While classifier 1 selected different thresholds for the~$\accuracy$ and~$\postop$ metrics, these thresholds coincide for classifier 2. In the rest of the chapter, we will present three main categories of problems that are closely related to the binary classification but do not focus on optimizing overall performance.
 

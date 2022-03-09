@@ -139,9 +139,9 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
     \phantom{\Grill}$\tau=0.05$
       & \nomark &\nomark & \nomark & \nomark \\
     \PatMat$\tau=0.01$
-      & \yesmark & \good{\boldmath$\beta\le 0.1$} & \good{\boldmath$\beta\le 1$} & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \good{\boldmath$\beta\leq 0.1$} & \good{\boldmath$\beta\leq 1$} & \good{\boldmath$\beta\leq 1$} \\
     \phantom{\PatMat}$\tau=0.05$
-      & \yesmark & \good{\boldmath$\beta\le 1$} & \yesmark & \yesmark \\
+      & \yesmark & \good{\boldmath$\beta\leq 1$} & \yesmark & \yesmark \\
     \TopMeanK$\tau=0.01$
       & \nomark & \nomark & \nomark & \nomark \\
     \phantom{\TopMeanK}$\tau=0.05$
@@ -151,13 +151,13 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
     \phantom{\GrillNP}$\tau=0.05$
       & \nomark & \nomark & \nomark & \nomark \\
     \PatMatNP$\tau=0.01$
-      & \yesmark & \good{\boldmath$\beta\le 1$} & \yesmark & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \good{\boldmath$\beta\leq 1$} & \yesmark & \good{\boldmath$\beta\leq 1$} \\
     \phantom{\PatMatNP}$\tau=0.05$
-      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\beta\le 1$} \\
+      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\beta\leq 1$} \\
     \tauFPL$\tau=0.01$
       & \yesmark & \nomark & \yesmark & \nomark \\
     \phantom{\tauFPL}$\tau=0.05$
-      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\lambda\le 0.001$} \\
+      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\lambda\leq 0.001$} \\
     \bottomrule
   \end{tabular}
   \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \yesmark\ means that the solution was better than zero for all hyperparameters while \nomark\ means that it was worse for all hyperparameters.}

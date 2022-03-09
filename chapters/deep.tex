@@ -30,7 +30,7 @@ This section introduces the accuracy at the top. A standard deep network~$f$ wit
 \begin{equation}\label{eq:problem}
   \begin{aligned}
     \minimize{w,z,t}
-    & \lambda_1 \sum_{i\in I^-}\II_{z_i \ge t} + \lambda_2\sum_{i\in I^+}\II_{z_i < t} \\
+    & \lambda_1 \sum_{i\in I^-}\II_{z_i \geq t} + \lambda_2\sum_{i\in I^+}\II_{z_i < t} \\
     \st
     & z_i = f(\bm{w};\bm{x}_i), \\
     & t = G(\{(z_i, y_i)\}_{i\in I}).
@@ -199,7 +199,7 @@ The natural choice to mitigate the bias is to work with large minibatches. Even 
 
 \subsection{Bias reduction: Incorporating delayed values}\label{sec:bias2}
 
-Various reasons may enforce the use of small minibatches. Then Algorithm~\ref{alg1} is not suitable for a small fraction of top samples. For example, a minibatch of size~$32$ with~$16$ negative samples must have thresholds~$\tau\ge \frac{100}{16}=6.25\%$. However, we need to aim for much smaller thresholds.
+Various reasons may enforce the use of small minibatches. Then Algorithm~\ref{alg1} is not suitable for a small fraction of top samples. For example, a minibatch of size~$32$ with~$16$ negative samples must have thresholds~$\tau\geq \frac{100}{16}=6.25\%$. However, we need to aim for much smaller thresholds.
 
 We propose a simple fix based on the reasoning that when the weights~$\bm{w}$ of a neural network are updated, the scores~$\bm{z}$ usually do not change much, especially for a small learning rate. This means that if a sample has the largest score, it will likely have the largest score even after the gradient step. Since the threshold~$t$ for TopPush equals the largest score corresponding to negative samples, we can easily track it. We enhance the current minibatch by the negative sample from the previous minibatch with the highest score. This significantly increases the chance that the sampled threshold is the true threshold and, due to the first term in \eqref{eq:comp_bias}, reduces the bias of the sampled gradient.
 
