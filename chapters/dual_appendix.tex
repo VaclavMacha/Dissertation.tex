@@ -629,7 +629,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \begin{align*}
       \gamma
         & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
-      \delta^{*}
+      \delta^{*}_1
         & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
     and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}.$
@@ -637,7 +637,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \begin{align*}
       \gamma
         & = -\frac{s_k + s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
-      \delta^{*}
+      \delta^{*}_2
         & = \frac{\betal + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
     and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}.$
@@ -657,13 +657,20 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \beta_{\max} & \leq \delta \vartheta \\
     0 \leq \betal + \Delta & \leq \delta \vartheta
   \end{align*}
-  Now there are two possible choices of~$\delta.$
+  Since the optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta}, there are only two possible choices
+  \begin{align}\label{eq: Pat dual hinge a, b proof delta}
+    \delta & = \frac{\beta_{\max}}{\vartheta}, &
+    \delta & = \frac{\betal + \Delta}{\vartheta}.
+  \end{align}
+  If we use any of these choices which is feasible, all upper bounds in constraint~\eqref{eq: Pat dual hinge c3} hold, i.e. we can simplify the constraints to
+  \begin{equation*}
+    0 \leq \betal + \Delta
+    \quad \implies \quad
+    - \betal \leq \Delta,
+  \end{equation*}
+  which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Now let us discuss how to select optimal~$\delta:$
   \begin{enumerate}
-    \item The first choice of~$\delta$ is
-    \begin{equation*}
-      \delta = \frac{\beta_{\max}}{\vartheta},
-    \end{equation*}
-    which yields to feasible solution only if~$\betal + \Delta \leq \beta_{\max}.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betal \leq \Delta,$ which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \item Using~$\delta^{\star}_1$ from~\eqref{eq: Pat dual hinge a, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l - 1 - \frac{1}{\vartheta}} \Delta
@@ -671,11 +678,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \end{equation*}
     The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}$.
 
-    \item The second possible choice of~$\delta$ is
-    \begin{equation*}
-      \delta = \frac{\betal + \Delta}{\vartheta},
-    \end{equation*}
-    which yields to feasible solution only if~$\betal + \Delta \geq \beta_{\max}.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betal \leq \Delta,$ which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \item Using~$\delta^{\star}_2$ from~\eqref{eq: Pat dual hinge a, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}} \Delta
@@ -683,7 +686,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \end{equation*}
     The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}$.
   \end{enumerate}
-  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}. Note that both choices of~$\delta$ lead to the same bounds of~$\Delta.$
+  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]
@@ -702,7 +705,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
-      \delta^{*}
+      \delta^{*}_1
         & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
     and is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1, \betal - \Delta^{\star}_1\}.$
@@ -710,7 +713,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l + \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
-      \delta^{*}
+      \delta^{*}_2
         & = \frac{\betak + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
     and is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\},$
@@ -718,7 +721,7 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l - \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
-      \delta^{*}
+      \delta^{*}_3
         & = \frac{\betak - \Delta^{\star}_3}{\vartheta}.
     \end{align*}
     and is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\betak + \Delta^{\star}_3, \beta_{\max}\}$
@@ -733,45 +736,57 @@ In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
     0 \leq \betak + \Delta & \leq \delta \vartheta, \\
     0 \leq \betal - \Delta & \leq \delta \vartheta.
   \end{align*}
-  Now there are three possible choices of~$\delta.$
+  Since the optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta}, there are only two possible choices
+  \begin{align}\label{eq: Pat dual hinge b, b proof delta}
+    \delta^{\star}_1 & = \frac{\beta_{\max}}{\vartheta}, &
+    \delta^{\star}_2 & = \frac{\betak + \Delta}{\vartheta}, &
+    \delta^{\star}_3 & = \frac{\betal - \Delta}{\vartheta}.
+  \end{align}
+  If we use any of these choices which is feasible, all upper bounds in constraint~\eqref{eq: Pat dual hinge c3} hold, i.e. we can simplify the constraints to
+  \begin{align*}
+    0 \leq \betak + \Delta
+    & \quad \implies \quad
+    - \betak \leq \Delta, \\
+    0 \leq \betal - \Delta
+    & \quad \implies \quad
+    \Delta \leq \betal,
+  \end{align*}
+  which gives the lower and upper bound of~$\Delta.$ Now let us discuss how to select optimal~$\delta:$
   \begin{enumerate}
-    \item The first choice of~$\delta$ is
-    \begin{equation*}
-      \delta = \frac{\beta_{\max}}{\vartheta},
-    \end{equation*}
-    which yields to feasible solution only if~$\beta_{\max} \geq \max\{\betak + \Delta, \betal - \Delta.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \item Using~$\delta^{\star}_1$ from~\eqref{eq: Pat dual hinge b, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l} \Delta
       - c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
-    The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1 \betal - \Delta^{\star}_1.$.
-
-    \item The second possible choice of~$\delta$ is
+    The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if
     \begin{equation*}
-      \delta = \frac{\betak + \Delta}{\vartheta},
+      \beta_{\max} \geq \max\{\betak + \Delta^{\star}_1, \; \betal - \Delta^{\star}_1\}.
     \end{equation*}
-    which yields to feasible solution only if~$\betak + \Delta \geq \max\{\beta_{\max} , \betal - \Delta\}$, Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+
+    \item Using~$\delta^{\star}_2$ from~\eqref{eq: Pat dual hinge b, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l + \frac{\ntil \tau}{\vartheta}} \Delta
       - c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
-    The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\}$.
-
-    \item The third possible choice of~$\delta$ is
+    The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if
     \begin{equation*}
-      \delta = \frac{\betal - \Delta}{\vartheta},
+      \betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\}.
     \end{equation*}
-    which yields to feasible solution only if~$\betal - \Delta \geq \max\{\beta_{\max} , \betak + \Delta\}$, Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+
+    \item Using~$\delta^{\star}_3$ from~\eqref{eq: Pat dual hinge b, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l - \frac{\ntil \tau}{\vartheta}} \Delta
       - c(\bm{\alpha}, \bm{\beta}).
     \end{equation*}
-    The optimal solution~$\Delta^{\star}_3$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\beta_{\max}, \betak + \Delta^{\star}_3\}$.
+    The optimal solution~$\Delta^{\star}_3$ is given by~\eqref{eq: Delta optimal} and is feasible if
+    \begin{equation*}
+      \betal - \Delta^{\star}_3 \geq \max\{\beta_{\max}, \betak + \Delta^{\star}_3\}.
+    \end{equation*}
   \end{enumerate}
-  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}. Note that all choices of~$\delta$ lead to the same bounds of~$\Delta.$
+  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
 \end{proof}
 
 \subsection*{Quadratic hinge loss}
