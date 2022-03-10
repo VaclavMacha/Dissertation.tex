@@ -333,12 +333,13 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
     & \quad \implies \quad
     \alphal - C \leq \Delta \leq \alphal
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2 - \Brac[s]{s_k - s_l} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+    - \Brac[s]{s_k - s_l} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual hinge}]
@@ -378,12 +379,13 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
     & \quad \implies \quad
     -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}
   \end{align*}
-  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}} \Delta^2 - \Brac[s]{s_k + s_l - 1} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}} \Delta^2
+    - \Brac[s]{s_k + s_l - 1} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual hinge}]
@@ -413,12 +415,13 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
     & \quad \implies \quad
     \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2 - \Brac[s]{s_k - s_l} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+    - \Brac[s]{s_k - s_l} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \subsection*{Quadratic hinge loss}
@@ -457,12 +460,13 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is a
     & \quad \implies \quad
     \Delta \leq \alphal
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}} \Delta^2
+    - \Brac[s]{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]
@@ -502,12 +506,13 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is a
     & \quad \implies \quad
     -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}
   \end{align*}
-  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C}} \Delta^2 - \Brac[s]{s_k + s_l - 1 + \frac{1}{2C} \alphak} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C}} \Delta^2
+    - \Brac[s]{s_k + s_l - 1 + \frac{1}{2C} \alphak} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]
@@ -537,28 +542,18 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is a
     & \quad \implies \quad
     \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2 - \Brac[s]{s_k - s_l} \Delta - c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+    - \Brac[s]{s_k - s_l} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
-  \todo{inline}[Add details about objective function]
 \end{proof}
 
 \subsection{Dual formulation from Theorem~\ref{thm: Pat dual}}
 
-In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadratic}. As in the proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss}, we show, that for each of update rules~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta},$~$\delta,$ this problem can be rewritten as a simple one-dimensional quadratic problem with bound constraints. In this case, however, we have to also consider the third primal variable~$\delta.$ For fixed~$\bm{\alpha}$ and~$\bm{\beta},$, maximizing objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$ leads to the
-\begin{align*}
-  \maximize{\delta}
-    & - (n\tau) \delta - \Brac{\frac{1}{4\vartheta_2^2} \sum_{j = 1}^{\nneg} \beta_j^2} \frac{1}{\delta}, \\
-  \st
-    & \delta \geq 0.
-\end{align*}
-The solution of this problem equals to
-\begin{equation}\label{eq:PatMat dual quadratic optimal delta}
-  \delta^* = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \sum_{j = 1}^{n} \beta_j^2}.
-\end{equation}
-In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
+In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadratic}. As in the proof of Theorem~\ref{thm:Update rule TopPushK with quadratic loss}, we show, that for each of update rules~\eqref{eq:Update rules} and for fixed~$\bm{\alpha},$~$\bm{\beta},$~$\delta,$ this problem can be rewritten as a simple one-dimensional quadratic problem with bound constraints. In this case, however, we have to also consider the third primal variable~$\delta.$
 
 \subsection*{Hinge loss}
 
@@ -572,22 +567,50 @@ Similarly to the previous section, Plugging the conjugate~\eqref{eq: conjugate h
   \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j \label{eq: Pat dual hinge c1}}
   \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos \label{eq: Pat dual hinge c2}}
   \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil \label{eq: Pat dual hinge c3}}
-  \addConstraint{\delta }{\geq 0,  \label{eq: Pat dual hinge c4}}
+  \addConstraint{\delta }{\geq 0. \label{eq: Pat dual hinge c4}}
 \end{maxi!}
 This is again a convex quadratic problem. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
+
+For fixed~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ leads to the
+\begin{maxi*}{\delta}{
+  - (\ntil \tau) \delta
+  }{}{}
+  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
+  \addConstraint{\delta \geq 0.}
+\end{maxi*}
+If we want to maximize the objective function with respect to the~$\delta$, we have to find the smallest possible~$\delta$ that satisfies the constrains, which is in the following form
+\begin{equation}\label{eq: Pat dual hinge optimal delta}
+  \delta^* = \frac{1}{\vartheta} \max_{j \in \{1, 2, \ldots, \ntil \}} \beta_j.
+\end{equation}
+In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
-    \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, \\
+    \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, &
     \Delta_{ub} & = \max\{C - \alphak,\; \alphal\}, \\
-    \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
+    \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
     \delta^{\star} & = \delta.
   \end{align*}
 \end{lemma}
 
 \begin{proof}
-  \todo[inline]{Add proof}
+  Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Pat dual hinge c3} is also always satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq: Pat dual hinge c2} reads
+  \begin{align*}
+    0 \leq \alphak + \Delta \leq C
+    & \quad \implies \quad
+    - \alphak \leq \Delta \leq C - \alphak \\
+    0 \leq \alphal - \Delta \leq C
+    & \quad \implies \quad
+    \alphal - C \leq \Delta \leq \alphal
+  \end{align*}
+  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  \begin{equation*}
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+    - \Brac[s]{s_k - s_l} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
+  \end{equation*}
+  The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]
@@ -595,27 +618,72 @@ This is again a convex quadratic problem. The following three lemmas provide for
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
   \end{equation*}
-  Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where the bounds~$\Delta_{lb},$~$\Delta_{ub}$ and~$\delta$ is equal to one of the two following possibilities which maximizes the original objective:
+  Then the bounds from~\eqref{eq: Delta optimal} are defined as follows
+  \begin{align*}
+    \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, &
+    \Delta_{ub} & = C - \alphak,
+  \end{align*}
+  and there are two possible solutions
   \begin{enumerate}
-    \item If~$\betal + \Delta^{\star} \leq \beta_{\max}$, then
+    \item The first solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
-      \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, \\
-      \Delta_{ub} & = \min\{C - \alphak,\; \beta_{\max} - \betal \}, \\
-      \gamma & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
-      \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
+      \gamma
+        & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
+      \delta^{*}
+        & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
-    \item If~$\betal + \Delta^{\star} \geq \beta_{\max}$, then
+    and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}.$
+    \item The second solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
-      \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, \\
-      \Delta_{ub} & = C - \alphak, \\
-      \gamma & = -\frac{s_k + s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, \\
-      \delta^{*} & = \frac{\betal + \Delta^{\star}}{\vartheta}.
+      \gamma
+        & = -\frac{s_k + s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
+      \delta^{*}
+        & = \frac{\betal + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
+    and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}.$
   \end{enumerate}
+  The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
 \end{lemma}
 
 \begin{proof}
-  \todo[inline]{Add proof}
+  Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Pat dual hinge c2} reads
+  \begin{equation}\label{eq: Pat dual hinge c2 update a,a}
+    0 \leq \alphak + \Delta \leq C
+    \quad \implies \quad
+    - \alphak \leq \Delta \leq C - \alphak.
+  \end{equation}
+  Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads
+  \begin{align*}
+    \beta_{\max} & \leq \delta \vartheta \\
+    0 \leq \betal + \Delta & \leq \delta \vartheta
+  \end{align*}
+  Now there are two possible choices of~$\delta.$
+  \begin{enumerate}
+    \item The first choice of~$\delta$ is
+    \begin{equation*}
+      \delta = \frac{\beta_{\max}}{\vartheta},
+    \end{equation*}
+    which yields to feasible solution only if~$\betal + \Delta \leq \beta_{\max}.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betal \leq \Delta,$ which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+      - \Brac[s]{s_k - s_l - 1 - \frac{1}{\vartheta}} \Delta
+      - c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+    The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}$.
+
+    \item The second possible choice of~$\delta$ is
+    \begin{equation*}
+      \delta = \frac{\betal + \Delta}{\vartheta},
+    \end{equation*}
+    which yields to feasible solution only if~$\betal + \Delta \geq \beta_{\max}.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betal \leq \Delta,$ which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+      - \Brac[s]{s_k - s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}} \Delta
+      - c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+    The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}$.
+  \end{enumerate}
+  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}. Note that both choices of~$\delta$ lead to the same bounds of~$\Delta.$
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]
@@ -623,34 +691,87 @@ This is again a convex quadratic problem. The following three lemmas provide for
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{k}, \hat{l}\}} \beta_j.
   \end{equation*}
-  Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where the bounds~$\Delta_{lb},$~$\Delta_{ub}$ and~$\delta$ is equal to one of the three following possibilities which maximizes the original objective:
+  Then the bounds from~\eqref{eq: Delta optimal} are defined as follows
+  \begin{align*}
+    \Delta_{lb} & = - \betak, &
+    \Delta_{ub} & = \betal,
+  \end{align*}
+  and there are three possible solutions
   \begin{enumerate}
-    \item If~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}, \betal - \Delta^{\star}\}$, then
+    \item The first solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
-      \Delta_{lb} & = \max\{- \betak,\; \betal - \beta_{\max} \}, \\
-      \Delta_{ub} & = \min\{\beta_{\max} - \betak, \; \betal \}, \\
-      \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-      \delta^{*} & = \frac{\beta_{\max}}{\vartheta}.
+      \gamma
+        & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
+      \delta^{*}
+        & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
-    \item If~$\betak + \Delta^{\star} \geq \max\{\beta_{\max} , \betal - \Delta^{\star}\}$, then
+    and is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1, \betal - \Delta^{\star}_1\}.$
+    \item The second solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
-      \Delta_{lb} & = \max\{- \betak,\; \frac{1}{2}(\betal - \betak)\}, \\
-      \Delta_{ub} & = \betal, \\
-      \gamma & = -\frac{s_k - s_l + \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-      \delta^{*} & = \frac{\betak + \Delta}{\vartheta}.
+      \gamma
+        & = -\frac{s_k - s_l + \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
+      \delta^{*}
+        & = \frac{\betak + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
-    \item If~$\betal - \Delta^{\star} \geq \max\{\betak + \Delta^{\star}, \beta_{\max}\}$, then
+    and is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\},$
+    \item The third solution~$\Delta^{\star}_3$ is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
-      \Delta_{lb} & = -\betak, \\
-      \Delta_{ub} & = \min\{\frac{1}{2}(\betak - \betal),\; \betal \}, \\
-      \gamma     & = -\frac{s_k - s_l - \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, \\
-      \delta^{*} & = \frac{\betak - \Delta^{\star}}{\vartheta}.
+      \gamma
+        & = -\frac{s_k - s_l - \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
+      \delta^{*}
+        & = \frac{\betak - \Delta^{\star}_3}{\vartheta}.
     \end{align*}
+    and is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\betak + \Delta^{\star}_3, \beta_{\max}\}$
   \end{enumerate}
+  The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
 \end{lemma}
 
 \begin{proof}
-  \todo[inline]{Add proof}
+  Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Pat dual hinge c2} is also always satisfied since no~$\alpha_i$ is updated. Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads
+  \begin{align*}
+    \beta_{\max} & \leq \delta \vartheta, \\
+    0 \leq \betak + \Delta & \leq \delta \vartheta, \\
+    0 \leq \betal - \Delta & \leq \delta \vartheta.
+  \end{align*}
+  Now there are three possible choices of~$\delta.$
+  \begin{enumerate}
+    \item The first choice of~$\delta$ is
+    \begin{equation*}
+      \delta = \frac{\beta_{\max}}{\vartheta},
+    \end{equation*}
+    which yields to feasible solution only if~$\beta_{\max} \geq \max\{\betak + \Delta, \betal - \Delta.$ Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+      - \Brac[s]{s_k - s_l} \Delta
+      - c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+    The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1 \betal - \Delta^{\star}_1.$.
+
+    \item The second possible choice of~$\delta$ is
+    \begin{equation*}
+      \delta = \frac{\betak + \Delta}{\vartheta},
+    \end{equation*}
+    which yields to feasible solution only if~$\betak + \Delta \geq \max\{\beta_{\max} , \betal - \Delta\}$, Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+      - \Brac[s]{s_k - s_l + \frac{\ntil \tau}{\vartheta}} \Delta
+      - c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+    The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\}$.
+
+    \item The third possible choice of~$\delta$ is
+    \begin{equation*}
+      \delta = \frac{\betal - \Delta}{\vartheta},
+    \end{equation*}
+    which yields to feasible solution only if~$\betal - \Delta \geq \max\{\beta_{\max} , \betak + \Delta\}$, Using this condition and the form of~$\delta,$ the constraint~\eqref{eq: Pat dual hinge c3} can be rewritten as~$-\betak \leq \Delta \leq \betal,$ which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \begin{equation*}
+      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
+      - \Brac[s]{s_k - s_l - \frac{\ntil \tau}{\vartheta}} \Delta
+      - c(\bm{\alpha}, \bm{\beta}).
+    \end{equation*}
+    The optimal solution~$\Delta^{\star}_3$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\beta_{\max}, \betak + \Delta^{\star}_3\}$.
+  \end{enumerate}
+  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}. Note that all choices of~$\delta$ lead to the same bounds of~$\Delta.$
 \end{proof}
 
 \subsection*{Quadratic hinge loss}
@@ -677,6 +798,18 @@ Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hi
 \end{maxi!}
 This is again a convex quadratic problem. The following theorem provides a formula for the optimal step~$\Delta^\star$ for the update rule~\eqref{eq:Update rules}. Note that we do not perform a joint minimization in~$(\alphak, \; \beta_l, \; \delta)$ but perform a minimization with respect to~$(\alphak, \; \beta_l)$, update these two values and then optimize the objective with respect to~$\delta$. 
 
+For fixed~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$ leads to the
+\begin{maxi*}{\delta}{
+  - (\ntil \tau) \delta - \Brac{\frac{1}{4\vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2} \frac{1}{\delta}
+  }{}{}
+  \addConstraint{\delta \geq 0.}
+\end{maxi*}
+The solution of this problem equals to
+\begin{equation}\label{eq: Pat dual quadratic optimal delta}
+  \delta^* = \sqrt{\frac{1}{4\vartheta^2 \ntil \tau} \sum_{j = 1}^{\ntil} \beta_j^2}.
+\end{equation}
+In the following list, we discuss each of update rules~\eqref{eq:Update rules}:
+
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -688,11 +821,22 @@ This is again a convex quadratic problem. The following theorem provides a formu
 \end{lemma}
 
 \begin{proof}
-  For update rule~\eqref{eq: update rule a,a} and any~$1\leq k, l \leq \npos$, constraint~\eqref{eq: Pat dual quadratic c3} is satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq: Pat dual quadratic c2} reads~$-\alphak \leq \Delta \leq \alphal$ while objective~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) can be rewritten as
+  Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Pat dual quadratic c3} is also always satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq: Pat dual quadratic c2} reads
+  \begin{align*}
+    0 \leq \alphak + \Delta
+    & \quad \implies \quad
+    - \alphak \leq \Delta \\
+    0 \leq \alphal - \Delta
+    & \quad \implies \quad
+    \Delta \leq \alphal
+  \end{align*}
+  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C\vartheta_1^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{1}{2C\vartheta_1^2}(\alphak - \alphal)} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}} \Delta^2
+    - \Brac[s]{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
-  Since optimal~$\delta$ is given by~\eqref{eq:PatMat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
+  The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]
@@ -700,24 +844,32 @@ This is again a convex quadratic problem. The following theorem provides a formu
   \begin{align*}
     \Delta_{lb} & = \max\{- \alphak, - \betal\}, \\
     \Delta_{ub} & = +\infty, \\
-    \gamma      & = -\frac{s_k + s_l  - 1 + \frac{\alphak}{2C} - \frac{1}{\vartheta_2} + \frac{\betal}{2 \delta \vartheta_2^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C} + \frac{1}{2 \delta \vartheta_2^2}}, \\
-    \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta_2 \ntil \tau}({\Delta^{\star}}^2 + 2 \Delta^{\star} \betal)}.
+    \gamma      & = -\frac{s_k + s_l  - 1 + \frac{\alphak}{2C} - \frac{1}{\vartheta} + \frac{\betal}{2 \delta \vartheta^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C} + \frac{1}{2 \delta \vartheta^2}}, \\
+    \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta \ntil \tau}({\Delta^{\star}}^2 + 2 \Delta^{\star} \betal)}.
   \end{align*}
 \end{lemma}
 
 \begin{proof}
-  For update rule~\eqref{eq: update rule a,b} with~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq n$ we define~$\hat{l} = l - \npos.$ In this case, constraints~(\ref{eq: Pat dual quadratic c2},\ref{eq: Pat dual quadratic c3}) can be written in a simple form~$\Delta \geq \max \{- \alphak, - \betal\}$ and~$\Delta$ has no upper bound. Objective~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2})  can be rewritten as
-  \begin{equation*}
-    \begin{split}
-      - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C\vartheta_1^2} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 \dots \qquad\qquad \\ 
-      - \Brac[s]{s_k + s_l - \frac{1}{\vartheta_1} - \frac{1}{\vartheta_2} + \frac{\alphak}{2C\vartheta_1^2} + \frac{\betal}{2\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
-    \end{split}
-  \end{equation*}
-  We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
+  Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraints~\eqref{eq: Pat dual quadratic c2} and~\eqref{eq: Pat dual quadratic c3} reads
+  \begin{align*}
+    0 \leq \alphak + \Delta
+    & \quad \implies \quad
+    - \alphak \leq \Delta, \\
+    0 \leq \betal + \Delta
+    & \quad \implies \quad
+    - \betal \leq \Delta, \\
+  \end{align*}
+  which gives the lower bound of~$\Delta.$ In this case, $\Delta$ has no upper bound. Using the update rule~\eqref{eq: update rule a,b}, objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) can be rewritten as a quadratic function with respect to~$\Delta$ as
+  \begin{align*}
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C} + \frac{1}{2 \delta \vartheta^2}} & \Delta^2 \\
+    - \Brac[s]{s_k + s_l - 1 + \frac{\alphak}{2C} - \frac{1}{\vartheta} + \frac{\betal}{2\delta\vartheta^2}} & \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
+  \end{align*}
+  The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. We know that the optimal~$\delta^*$ is given by~\eqref{eq: Pat dual quadratic optimal delta}, then
   \begin{equation*}
     \delta^*
-    = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j\neq \hat{l}} \beta_j^2 + (\betal + \Delta^\star)^2}}
-    = \sqrt{\delta^2 + \frac{1}{4\vartheta_2^2 n \tau} (\Delta^{\star2} + 2\Delta^\star \betal)}.
+      = \sqrt{\frac{1}{4\vartheta^2 \ntil \tau} \Brac{\sum_{j\neq \hat{l}} \beta_j^2 + (\betal + \Delta^\star)^2}}
+      = \sqrt{\delta^2 + \frac{1}{4\vartheta^2 \ntil \tau} (\Delta^{\star2} + 2\Delta^\star \betal)}.
   \end{equation*}
 \end{proof}
 
@@ -726,20 +878,31 @@ This is again a convex quadratic problem. The following theorem provides a formu
   \begin{align*}
     \Delta_{lb} & = - \betak, \\
     \Delta_{ub} & = \betal, \\
-    \gamma      & = -\frac{s_k - s_l + \frac{1}{2\delta \vartheta_2^2}(\betak - \betal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{\delta \vartheta_2^2}}, \\
-    \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{2 \vartheta_2 \ntil \tau}({\Delta^{\star}}^2 + \Delta^{\star} (\betak - \betal))}.
+    \gamma      & = -\frac{s_k - s_l + \frac{1}{2\delta \vartheta^2}(\betak - \betal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{\delta \vartheta^2}}, \\
+    \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{2 \vartheta \ntil \tau}({\Delta^{\star}}^2 + \Delta^{\star} (\betak - \betal))}.
   \end{align*}
 \end{lemma}
 
 \begin{proof}
-  For update rule~\eqref{eq: update rule b,b} with~$\npos + 1\leq k,l \leq \npos + \nneg$ we define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos.$ Since no~$\alpha_i$ was updated, constraint~\eqref{eq: Pat dual quadratic c2} is always satisfied. Constraint~\eqref{eq: Pat dual quadratic c3} can be written in a simple form~$-\betak \leq \Delta \leq \betal$ and objective~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2})  can be rewritten as
+  Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Pat dual quadratic c2} is also always satisfied since no~$\alpha_i$ is updated. Constraint~\eqref{eq: Pat dual quadratic c3} reads
+  \begin{align*}
+    0 \leq \betak + \Delta
+    & \quad \implies \quad
+    - \betak \leq \Delta, \\
+    0 \leq \betal + \Delta
+    & \quad \implies \quad
+    - \betal \leq \Delta, \\
+  \end{align*}
+  which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule b,b}, objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
-    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{2\delta\vartheta_2^2}} \Delta^2 - \Brac[s]{s_k - s_l + \frac{\betak - \betal}{\delta\vartheta_2^2}} \Delta + c(\bm{\alpha}, \bm{\beta}).
+    - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{2\delta\vartheta^2}} \Delta^2
+    - \Brac[s]{s_k - s_l + \frac{1}{\delta\vartheta^2}(\betak - \betal)} \Delta
+    - c(\bm{\alpha}, \bm{\beta}).
   \end{equation*}
-  We know that the optimal~$\delta^*$ is given by~\eqref{eq:PatMat dual quadratic optimal delta}, then
+  The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.   We know that the optimal~$\delta^*$ is given by~\eqref{eq: Pat dual quadratic optimal delta}, then
   \begin{equation*}
     \delta^*
-    = \sqrt{\frac{1}{4\vartheta_2^2 n \tau} \Brac{\sum_{j \notin \{\hat{l}, \hat{k}\}} \beta_j^2 + (\betak + \Delta^\star)^2 + (\betal - \Delta^\star)^2}} 
-    = \sqrt{\delta + \frac{1}{2\vartheta_2^2 n \tau} (\Delta^{\star2} + \Delta^\star (\betak - \betal))}.
+      = \sqrt{\frac{1}{4\vartheta^2 \ntil \tau} \Brac{\sum_{j \notin \{\hat{l}, \hat{k}\}} \beta_j^2 + (\betak + \Delta^\star)^2 + (\betal - \Delta^\star)^2}} 
+      = \sqrt{\delta + \frac{1}{2\vartheta^2 \ntil \tau} (\Delta^{\star2} + \Delta^\star (\betak - \betal))}.
   \end{equation*}
 \end{proof}
