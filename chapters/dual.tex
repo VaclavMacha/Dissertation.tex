@@ -296,8 +296,45 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is a
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
 \end{mini}
 
-\subsection{Family of \PatMat Formulations}
+\begin{restatable}{theorem}{topinit}\label{thm:problem3}
+  Consider problem~\eqref{eq: toppushk family initialization} and some initial solution~$\bm{\alpha}^0$ and~$\bm{\beta}^0.$ Denote~$\bm{\beta}_{[\cdot]}^0$ the sorted version of~$\bm{\beta}^0$. Then the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ if
+  \begin{equation}\label{eq:problem3_cond}
+    \sum_{j = 1}^{K} \Brac{\beta_{[\ntil - K + j]}^0 + \max_{i = 1, \ldots, \npos} p_i^0} \le 0.
+  \end{equation}
+  In the opposite case, the following system of two equations
+  \begin{subequations}\label{eq:problem3_system}
+    \begin{align}
+      \sum_{i=1}^{\npos} \clip{0}{C_1}{ \alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \lambda - \mu}} - K \mu
+      & = 0, \label{eq:problem3_system1} \\
+      \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu
+      & = 0, \label{eq:problem3_system2}
+    \end{align}
+  \end{subequations}
+  has a solution $(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family initialization} equals to
+  \begin{align*}
+    \alpha_i
+      & = \clip{0}{C_1}{\alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \lambda - \mu}}, \\
+    \beta_j & = \clip{0}{\mu}{\beta_j^0 + \lambda}.
+  \end{align*}
+\end{restatable}
 
+\noindent For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq:problem3_system2} by 
+\begin{equation*}
+  g(\lambda; \mu) := \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu.
+\end{equation*}
+Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing. We denote by~$\lambda(\mu)$ any such~$\lambda$ solving~\eqref{eq:problem3_system2} for a fixed~$\mu$. Then we reduce system~\eqref{eq:problem3_system} into one equation
+\begin{equation}\label{eq:defin_f3}
+  h(\mu)
+    := \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu
+    = 0
+\end{equation}
+which needs to be solved for $\mu$. As the next results states, there are fast algorithms which provably find the solution.
+
+\begin{restatable}{lemma}{topinith}\label{lemma:problem3}
+  Even though~$\lambda(\mu)$ is not unique, function~$h$ is well-defined in the sense that it gives the same value for every choice of~$\lambda(\mu)$. Moreover,~$h$ is decreasing in~$\mu$ on~$(0, \infty)$.
+\end{restatable}
+
+\subsection{Family of \PatMat Formulations}
 
 In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadratic}. Similarly to the dual formulation from Theorem~\ref{thm: toppushk family dual}, this dual formulation can be rewritten rewritten as a quadratic one-dimensional problem with respect to~$\Delta$ for any of the update rules~\eqref{eq: update rules}. In this case, however, we have to also consider the third primal variable~$\delta$
 \begin{maxi*}{\Delta}{
@@ -386,10 +423,47 @@ In the following list, we discuss each of update rules~\eqref{eq: update rules}:
   + \frac{1}{2} (\delta - \delta^0)^2
   }{\label{eq: patmat family initialization}}{}
   \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C, \quad i = 1, 2, \ldots, \npos}
-  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad j = 1, 2, \ldots, \ntil,}
+  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq C_2 \delta, \quad j = 1, 2, \ldots, \ntil,}
   \addConstraint{\delta }{\geq 0,}
 \end{mini}
+
+\begin{restatable}{theorem}{patinit}\label{thm:problem2}
+  Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0$ if
+  \begin{equation}\label{eq:problem2_cond}
+    \delta^0 \le - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
+  \end{equation}
+  In the opposite case, the following system of two equations
+  \begin{subequations}\label{eq:problem2_system}
+    \begin{align}
+    0
+      & = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda} - \sum_{j=1}^{\ntil} \clip{0}{\lambda + \mu}{\beta_j^0 + \lambda},
+    \label{eq:problem2_system1} \\
+    \lambda
+      & = C_2 \delta^0 + C_2^2 \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 - \mu} - \mu.
+    \label{eq:problem2_system2}
+    \end{align}
+  \end{subequations}
+  has a solution $(\lambda,\mu)$ with $\lambda+\mu>0$ and the optimal solution of~\eqref{eq: patmat family initialization} equals to
+  \begin{align*}
+    \alpha_i & = \clip{0}{C_1}{\alpha_i^0 - \lambda}, \\
+    \beta_j & = \clip{0}{\lambda + \mu}{\beta_j^0 + \lambda}, \\
+    C_2 \delta &= \lambda + \mu.
+  \end{align*}
+\end{restatable}
+
+System~\eqref{eq:problem2_system} is relatively simple to solve. Equation~\eqref{eq:problem2_system2} provides an explicit formula for~$\lambda$, let us denote it as $\lambda(\mu)$. As in the previous section, denote
+\begin{equation}\label{eq:defin_f2}
+  h(\mu) :=
+    \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu)} - \sum_{j=1}^{\ntil} \clip{0}{\lambda(\mu) + \mu}{\beta_j^0 + \mu}.
+\end{equation}
+System~\eqref{eq:problem2_system} is equivalent to solving~$h(\mu) = 0$. The next results states that~$h$ is a non-decreasing function and thus the equation~$h(\mu) = 0$ is simple to solve.
+
+\begin{restatable}{lemma}{patinith}\label{lemma:problem2}
+  Function $h$ is non-decreasing in~$\mu$ on~$(0,\infty)$.
+\end{restatable}
+  
+\noindent The equation~$h(\mu) = 0$ needs to be solved numerically. Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
 
 \subsection{Complexity analysis}
 
@@ -400,7 +474,7 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. We w
     \centering
     \begin{algorithmic}[1]
       \State set~$(\bm{\alpha}, \bm{\beta})$ feasible
-      \State set~$\bm{s}$ based on \eqref{eq:defin_s} \label{alg: line 1}
+      \State set~$\bm{s}$ based on~\eqref{eq:defin_s} \label{alg: line 1}
       \Repeat \label{alg: line 2}
         \State pick random~$k$ from~$\{1, 2, \ldots, \nall + \ntil \}$ \label{alg: line 3}
         \For{$l \in \{1, 2, \ldots, \nall + \ntil  \}$} \label{alg: line 4}
@@ -417,7 +491,7 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. We w
     \centering
     \begin{algorithmic}[1]
       \State set~$(\bm{\alpha}, \bm{\beta}, \delta)$ feasible
-      \State set~$\bm{s}$ based on \eqref{eq:defin_s}
+      \State set~$\bm{s}$ based on~\eqref{eq:defin_s}
       \Repeat
         \State pick random~$k$ from~$\{1, 2, \ldots, \nall + \ntil \}$ 
         \For{$l \in \{1, 2, \ldots, \nall + \ntil \}$}

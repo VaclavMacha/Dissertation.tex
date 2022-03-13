@@ -135,6 +135,14 @@
   \fi\fi\fi\fi\fi\fi\fi\fi
 }
 
+\newcommand{\clip}[4][s]{
+  \ifx s#1 \mathrm{clip}_{\Brac[s]{#2,\; #3}}\Brac{#4} \else
+  \ifx u#1 \mathrm{clip}_{\left[#2,\; #3\right)}\Brac{#4} \else
+  \ifx l#1 \mathrm{clip}_{\left(#2,\; #3\right]}\Brac{#4} \else
+  \mathrm{Illegal~option}%
+  \fi\fi\fi
+}
+
 \newcommand{\yesmark}{\textcolor{mygreen}{\ding{51}}}%
 \newcommand{\nomark}{\textcolor{myred}{\ding{55}}}
 \newcommand{\good}[1]{\textcolor{mygreen}{#1}}
@@ -178,6 +186,7 @@
 \newcommand{\betal}{\beta_{\hat{l}}}
 
 \newcommand{\norm}[1]{\Brac[n]{#1}}
+\newcommand{\abs}[1]{|#1|}
 \newcommand{\inner}[2]{\Brac[a]{#1, \; #2}}
 \newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
 \newcommand{\minimize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{minimize}\quad}{\operatorname*{minimize}_{#1}\quad}}
@@ -196,7 +205,6 @@
 \newcommand{\PP}{\mathbb{P}}
 \newcommand{\bias}{\operatorname{bias}}
 
-\newcommand{\clip}[3]{\mathrm{clip}_{\Brac[s]{#1,\; #2}}\Brac{#3}}
 \newcommand{\Matrix}[1]{\begin{pmatrix} #1 \end{pmatrix}}
 \newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
 \newcommand{\domain}{\operatorname*{dom}}
