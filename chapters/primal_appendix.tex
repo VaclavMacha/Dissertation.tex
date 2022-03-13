@@ -16,7 +16,7 @@ and also recall, that we assume linear classifier, i.e. scores are defined for a
 \begin{proof}[Proof Proposition~\ref{prop:convex} on page~\pageref{prop:convex}]
   It is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$K$ highest values of a vector is a convex function and therefore,~$t_2$ is a convex function. It remains to analyze~$t_3$. Let us dfefine function~$g$ as follows
   \begin{equation*}
-    g(\bm{w},t) := \frac{1}{n} \sum_{i \in \I} l(\bm{w}^\top \bm{x}_i - t) - \tau.
+    g(\bm{w},t) := \frac{1}{n} \sum_{i \in \I} l(\bm{w}^{\top} \bm{x}_i - t) - \tau.
   \end{equation*}
   where we for simplicity set~$\vartheta = 1.$ Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \hat{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\hat{t} = t_3(\hat{\bm{w}})$. Then for any~$\lambda\in[0,1]$ we have 
   \begin{equation}\label{eq:proof_conv1}
@@ -44,9 +44,9 @@ and also recall, that we assume linear classifier, i.e. scores are defined for a
 \begin{proof}[Proof of Theorem~\ref{thm:convex} on page~\pageref{thm:convex}]
   Due to the definition of the surrogate counts~\eqref{eq: confusion counts surrogate}, the function~$L$ equals to
   \begin{equation*}
-    L(\bm{w}) = \fns(\bm{s}, t(\bm{w})) = \sum_{i \in \Ipos} l \Brac{t(\bm{w}) - \bm{w}^\top \bm{x}_i}.
+    L(\bm{w}) = \fns(\bm{s}, t(\bm{w})) = \sum_{i \in \Ipos} l \Brac{t(\bm{w}) - \bm{w}^{\top} \bm{x}_i}.
   \end{equation*}
-  Here we write~$t(\bm{w})$ to stress the dependence of~$t$ on~$\bm{w}$. Since~$\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that~$\bm{w} \mapsto t(\bm{w}) - \bm{w}^\top \bm{x}$ is a convex function. From its definition, the surrogate function~$l$ is convex and non-decreasing. Since a composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
+  Here we write~$t(\bm{w})$ to stress the dependence of~$t$ on~$\bm{w}$. Since~$\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that~$\bm{w} \mapsto t(\bm{w}) - \bm{w}^{\top} \bm{x}$ is a convex function. From its definition, the surrogate function~$l$ is convex and non-decreasing. Since a composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
 \end{proof}
 
 \section{Differentiability}
@@ -116,13 +116,13 @@ Results for \PatMatNP can be obtained in a similar way. In the rest of the secti
   All mentioned formulations use surogate approximation of the false-negative rate as the objective function~$L.$ For the linear classifier, the objective function has the following form
   \begin{equation*}
     L(\bm{w})
-      = \frac{1}{\npos}\sum_{i \in \Ipos}l(t - \bm{w}^\top \bm{x}_i)
+      = \frac{1}{\npos}\sum_{i \in \Ipos}l(t - \bm{w}^{\top} \bm{x}_i)
   \end{equation*}
   Due to~$l(0) = 1$ and the convexity of~$l$ we have~$l(s) \geq 1 + cs$, where~$c$ equals to the derivative of~$l$ at~$0$. Then we have
   \begin{equation*}
     L(\bm{w}) 
-      \geq \frac{1}{\npos} \sum_{i \in \Ipos}(1 + c(t-\bm{w}^\top \bm{x}_i))
-      = 1 + c\Brac{t - \frac{1}{\npos}\sum_{i \in \Ipos}\bm{w}^\top \bm{x}}
+      \geq \frac{1}{\npos} \sum_{i \in \Ipos}(1 + c(t-\bm{w}^{\top} \bm{x}_i))
+      = 1 + c\Brac{t - \frac{1}{\npos}\sum_{i \in \Ipos}\bm{w}^{\top} \bm{x}}
       \geq 1,
   \end{equation*}
   where the last inequality follows from assumption~\eqref{eq:w_zero_nn}. Now we realize that for any formulation from the statement, the corresponding threshold for~$\bm{w}=0$ equals to~$t=0$, and thus~$L(\bm{0})=1$. But then~$L(\bm{0}) \leq L(\bm{w})$. The second part of the result follows from the form of thresholds~$t(\bm{w})$.
