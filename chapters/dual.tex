@@ -155,7 +155,7 @@ Similarly, we can get the formula for classification scores fo formulations that
 
 In the previous sections, we showed that that dual formulations of \TopPush, \TopPushK, \TopMeanK and \tauFPL are very similary and can be written in general form summarized in Theorem~\ref{thm: toppushk family dual}. Similarly, dual formulations of \PatMat and \PatMatNP are very similary and can be written in general form summarized in Theorem~\ref{thm: patmat family dual}. We also showed, that these dual formulations  allow us to incorporate nonlinearity using kernels~\cite{scholkopf2001learning} in the same way as in SVM. However, their dimension is at least equal to the number of all samples~$n$ and therefore it is computationally expensive to use standard techniques such as the gradient descent. To handle this issue, the coordinate descent algorithm~\cite{chang2008coordinate,hsieh2008dual} has been proposed in the context of SVMs. Our goal in thsi section is to derived coordinate descent algorithm suitable for dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). Since these problems differ from original SVMs by additional constraints (\ref{eq: toppushk family dual c1},~\ref{eq: patmat family dual c1}), the key idea of our algorithm is to update two coordinates (instead of one) of dual bariables~$\bm{\alpha},$~$\bm{\beta}$ at every iteration. It will allow us to derive iterative procedure where in every iteration we need to find a solution of a one-dimensional quadratic optimization problem. As we will show later, these one-dimensional problems have a closed form solution, which means that every iteration is cheap.
 
-\subsection{Family of \TopPushK Formulations}
+\subsection{Family of \TopPushK Formulations}\label{sec: Top coordinate descent}
 
 Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm: toppushk family dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Let us define vector of scores~$\bm{s}$ by
 \begin{equation}\label{eq: dual scores}
@@ -334,7 +334,7 @@ which needs to be solved for $\mu$. As the next results states, there are fast a
   Even though~$\lambda(\mu)$ is not unique, function~$h$ is well-defined in the sense that it gives the same value for every choice of~$\lambda(\mu)$. Moreover,~$h$ is decreasing in~$\mu$ on~$(0, \infty)$.
 \end{restatable}
 
-\subsection{Family of \PatMat Formulations}
+\subsection{Family of \PatMat Formulations}\label{sec: Pat coordinate descent}
 
 In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadratic}. Similarly to the dual formulation from Theorem~\ref{thm: toppushk family dual}, this dual formulation can be rewritten rewritten as a quadratic one-dimensional problem with respect to~$\Delta$ for any of the update rules~\eqref{eq: update rules}. In this case, however, we have to also consider the third primal variable~$\delta$
 \begin{maxi*}{\Delta}{
@@ -467,17 +467,17 @@ System~\eqref{eq:problem2_system} is equivalent to solving~$h(\mu) = 0$. The nex
 
 \subsection{Complexity analysis}
 
-We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. We will describe it only for \PatMat (right column) as for \TopPushK (left column) it is almost identical. In step~\ref{alg: line 1} we initialize~$\bm{\alpha}$,~$\bm{\beta}$ and~$\delta$ to some feasible value and based on~\eqref{eq:defin_s} compute~$\bm s$. Each \repeatloop loop in step~\ref{alg: line 2} updates two coordinates as shown in~\eqref{eq: update rules}. In step~\ref{alg: line 3} we select a random index~$k$ and in the \forloop loop in step~\ref{alg: line 4} we compute the optimal~$(\Delta_l,\delta_l)$ for all possible combinations~$(k,l)$ as in~\eqref{eq: update rules}. In step~\ref{alg: line 7} we select the pair~$(\Delta_l,\delta_l)$ which maximizes the objective. Finally, based on~\eqref{eq: update rules} we update~$\bm{\alpha}$,~$\bm{\beta}$,~$\bm s$ and~$\delta$ in steps~\ref{alg: line 8} and~\ref{alg: line 9}.
+We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. The left column describe the algorithm for \TopPushK family of formulations and the right for \PatMat family of formulations. In step~\ref{alg: line 1} we initialize~$\bm{\alpha}$,~$\bm{\beta}$ and~$\delta$ to some feasible value and based on~\eqref{eq: dual scores} compute~$\bm{s}$. Each \repeatloop loop in step~\ref{alg: line 2} updates two coordinates as shown in~\eqref{eq: update rules}. In step~\ref{alg: line 3} we select a random index~$k$ and in the \forloop loop in step~\ref{alg: line 4} we compute the optimal~$(\Delta_l,\delta_l)$ for all possible combinations~$(k,l)$ as in~\eqref{eq: update rules}. In step~\ref{alg: line 7} we select the best pair~$(\Delta_l,\delta_l)$ which maximizes the objective. Finally, based on~\eqref{eq: update rules} we update~$\bm{\alpha}$,~$\bm{\beta}$,~$\bm{s}$ and~$\delta$ in steps~\ref{alg: line 8} and~\ref{alg: line 9}.
 
-\begin{algorithm*}[!ht]
-  \begin{minipage}{0.48\textwidth}
+\begin{algorithm*}
+  \begin{minipage}{0.50\textwidth}
     \centering
     \begin{algorithmic}[1]
       \State set~$(\bm{\alpha}, \bm{\beta})$ feasible
-      \State set~$\bm{s}$ based on~\eqref{eq:defin_s} \label{alg: line 1}
+      \State set~$\bm{s}$ based on~\eqref{eq: dual scores} \label{alg: line 1}
       \Repeat \label{alg: line 2}
-        \State pick random~$k$ from~$\{1, 2, \ldots, \nall + \ntil \}$ \label{alg: line 3}
-        \For{$l \in \{1, 2, \ldots, \nall + \ntil  \}$} \label{alg: line 4}
+        \State pick random~$k$ from~$\{1, 2, \ldots, \npos+ \ntil \}$ \label{alg: line 3}
+        \For{$l \in \{1, 2, \ldots, \npos + \ntil  \}$} \label{alg: line 4}
             \State compute~$\Delta_{l}$  \label{alg: line 5}
         \EndFor
         \State select best~$\Delta_{l}$ \label{alg: line 7}
@@ -487,14 +487,14 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. We w
     \end{algorithmic}
   \end{minipage}
   \hfill
-  \begin{minipage}{0.51\textwidth}
+  \begin{minipage}{0.50\textwidth}
     \centering
     \begin{algorithmic}[1]
       \State set~$(\bm{\alpha}, \bm{\beta}, \delta)$ feasible
-      \State set~$\bm{s}$ based on~\eqref{eq:defin_s}
+      \State set~$\bm{s}$ based on~\eqref{eq: dual scores}
       \Repeat
-        \State pick random~$k$ from~$\{1, 2, \ldots, \nall + \ntil \}$ 
-        \For{$l \in \{1, 2, \ldots, \nall + \ntil \}$}
+        \State pick random~$k$ from~$\{1, 2, \ldots, \npos + \ntil \}$ 
+        \For{$l \in \{1, 2, \ldots, \npos + \ntil \}$}
             \State compute~$(\Delta_{l}, \; \delta_{l})$
         \EndFor
         \State select best~$(\Delta_{l}, \; \delta_{l})$
@@ -503,21 +503,36 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. We w
       \Until{stopping criterion is satisfied}
     \end{algorithmic}
   \end{minipage}
-  \caption{Coordinate descent algorithm for \TopPushK (left) and \PatMat (right).}
+  \caption{Coordinate descent algorithm for \TopPushK family of formulations (left) and \PatMat  family of formulations (right).}
   \label{alg:Coordinate descent}
 \end{algorithm*}
 
-Now we derive the computational complexity of each \repeatloop loop from step~\ref{alg: line 2}. Since the computation of~$(\Delta_l,\delta_l)$ amounts to solving a quadratic optimization problem in one variable, there is a closed-form solution (see Section~\ref{sec:Computing Delta for TopPushK with truncated quadratic loss}) and step~\ref{alg: line 5} can be performed in~$O(1)$. Since this is embedded in a \forloop loop in step~\ref{alg: line 4}, the whole complexity of this loop is~$O(n)$. Step~\ref{alg: line 8} requires~$O(1)$ for the update of~$\bm{\alpha}$ and~$\bm{\beta}$ while~$O(n)$ for the update of~$\bm s$. Since the other steps are~$O(1)$, the total complexity of the \repeatloop loop is~$O(n)$. This holds true only if the kernel matrix~$\K$ is precomputed. In the opposite case, all complexities must by multiplied by the cost of computation of components of~$\K$ which is~$O(d)$. This complexity analysis is summarized in Table~\ref{tab:Computational complexity}. 
+Now we derive the computational complexity of each \repeatloop loop from step~\ref{alg: line 2}. The computation of~$(\Delta_l,\delta_l)$ amounts to solving a quadratic optimization problem in one variable. As we showed in Sections~\ref{sec: Top coordinate descent} and~\ref{sec: Pat coordinate descent}, there is a closed-form solution and step~\ref{alg: line 5} can be performed in~$O(1)$. Since this is embedded in a \forloop loop in step~\ref{alg: line 4}, the whole complexity of this loop is~$O(\npos + \ntil)$. Step~\ref{alg: line 8} requires~$O(1)$ for the update of~$\bm{\alpha}$ and~$\bm{\beta}$ while~$O(\npos + \ntil)$ for the update of~$\bm{s}$. Since the other steps are~$O(1)$, the total complexity of the \repeatloop loop is~$O(\npos + \ntil)$. This holds true only if the kernel matrix~$\K$ is precomputed. In the opposite case, all complexities must by multiplied by the cost of computation of components of~$\K$ which is~$O(d)$. This complexity analysis is summarized in Table~\ref{tab:Computational complexity}. 
 
-
-\begin{table}[!ht]
+\begin{table}
   \centering
-  \begin{tabular}{@{}clll@{}l} 
+  \begin{tabular}{lcc} 
     \toprule
-    Precomputed~$\K$ & Evaluation of~$\Delta_l$ & Update of~$\bm{s}$ & Total per iteration \\
+    Operation
+      & $\K$ precomputed
+      & $\K$ not precomputed \\
     \midrule
-    \yesmark & $O(1)$ & $O(n)$  & $O(n)$ \\
-    \nomark  & $O(d)$ & $O(nd)$ & $O(nd)$ \\
+    Initialization
+      & $O()$
+      & $O()$ \\
+    Evaluation of~$\Delta_l$
+      & $O(1)$
+      & $O(d)$ \\
+    Update of~$\bm{\alpha}$ and~$\bm{\beta}$
+      & $O(1)$
+      & $O(1)$ \\
+    Update of~$\bm{s}$
+      & $O(\npos + \ntil)$
+      & $O((\npos + \ntil)d)$ \\
+    \midrule
+    Total per iteration
+      & $O(\npos + \ntil)$
+      & $O((\npos + \ntil)d)$ \\
     \bottomrule
   \end{tabular}
   \caption{Computational complexity of one \repeatloop loop (which updates two coordinates of~$\bm{\alpha}$ or~$\bm{\beta}$) from Algorithm~\ref{alg:Coordinate descent}.}
