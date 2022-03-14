@@ -322,7 +322,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \subsubsection{Quadratic Hinge Loss}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,a}
-  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,a}, indeices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = -\alphak, &
     \Delta_{ub} & = \alphal, &
@@ -350,7 +350,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,b}
-  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b} and~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{l} = l - \npos$ and
+  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
   \end{equation*}
@@ -396,7 +396,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update b,b}
-  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule b,b} and~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{k} = k - \npos$ and~$\hat{l} = l - \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = 
       \begin{cases*}
@@ -594,7 +594,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \subsubsection{Hinge Loss}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]
-  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, &
     \Delta_{ub} & = \max\{C - \alphak,\; \alphal\}, \\
@@ -623,7 +623,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]
-  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b} and~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{l} = l - \npos$ and
+  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
   \end{equation*}
@@ -699,7 +699,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]
-  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b} and~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{k} = k - \npos,$~$\hat{l} = l - \npos$ and
+  Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{k}, \hat{l}\}} \beta_j.
   \end{equation*}
@@ -801,7 +801,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \subsubsection{Quadratic Hinge Loss}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,a}
-  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = -\alphak, \\
     \Delta_{ub} & = \alphal, \\
@@ -830,7 +830,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,b}
-  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,b} and~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{l} = l - \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \max\{- \alphak, - \betal\}, \\
     \Delta_{ub} & = +\infty, \\
@@ -864,7 +864,7 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update b,b}
-  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule b,b} and~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{k} = k - \npos$ and~$\hat{l} = l - \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule b,b} indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = - \betak, \\
     \Delta_{ub} & = \betal, \\

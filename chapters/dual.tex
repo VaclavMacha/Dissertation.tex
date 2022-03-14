@@ -193,17 +193,18 @@ where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~
 \begin{equation}\label{eq: Delta optimal}
   \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
 \end{equation}
-where~$-\nicefrac{b}{a}.$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Evethough all three update update rules hold true for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the used surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as surrogate.
+where~$-\nicefrac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ ti interval~$[a, b].$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Evethough all three update update rules hold true for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the used surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as surrogate.
 
 \begin{notation}\label{not: dual update rules}
-  To avoid confusion, we use two different notation for indices. The length of the vector of scores~$\bm{s}$ is always~$\npos + \nall$ or~$\npos + \nneg.$ Then we use indices~$k,$~$l$ to denote
-  \todo[inline]{DEfine new notation for indices}
-  the~$\clip{}{}{}$ is defined as follows
+  Consider any index~$l$ that satisfies~$1 \leq l \leq \npos + \ntil.$ Since the length of~$\bm{\alpha}$ is always~$\npos,$ we define auxiliary index~$\hat{l}$ as 
   \begin{equation*}
-    \clip{x_{\min}}{x_{\max}}{x} = \min\Brac[c]{x_{\max}, \; \max\Brac[c]{x_{\min}, \; x}}
+    \hat{l} = \begin{cases}
+      l & \text{if } l \leq \npos, \\
+      l - \npos & \text{otherwise}.
+    \end{cases}
   \end{equation*}
+  Then the index~$l$ without hat can be safely used for kernel matrix~$\K$ or vector of scores~$\bm{s}$ while its corresponding version with hat~$\hat{l}$ for~$\bm{\alpha}$ or~$\bm{\beta}.$
 \end{notation}
-
 
 \subsubsection{Hinge loss}
 
@@ -222,7 +223,7 @@ Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the du
 Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the problem can be simplified. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
 
 \begin{restatable}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual hinge}]{lemma}{topruleaa}\label{thm: toppushk family hinge update a,a}
-  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,a} and~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \max\{- \alphak,\; \alphal - C\}, \\
     \Delta_{ub} & = \min\{C - \alphak,\; \alphal \}, \\
@@ -231,7 +232,7 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
 \end{restatable}
 
 \begin{restatable}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual hinge}]{lemma}{topruleab}\label{thm: toppushk family hinge update a,b}
-  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,b} and~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{l} = l - \npos$ and
+  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
   \end{equation*}
@@ -252,7 +253,7 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
 \end{restatable}
 
 \begin{restatable}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual hinge}]{lemma}{toprulebb}\label{thm: toppushk family hinge update b,b}
-  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule b,b} and~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil.$ Let us define~$\hat{k} = k - \npos$ and~$\hat{l} = l - \npos.$ Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
+  Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = 
       \begin{cases*}
@@ -517,9 +518,9 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
       & $\K$ precomputed
       & $\K$ not precomputed \\
     \midrule
-    Initialization
-      & $O()$
-      & $O()$ \\
+    % Initialization
+    %   & $O()$
+    %   & $O()$ \\
     Evaluation of~$\Delta_l$
       & $O(1)$
       & $O(d)$ \\
