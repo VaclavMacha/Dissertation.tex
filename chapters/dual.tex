@@ -135,13 +135,13 @@ As we mentioned in the beggining of the chapter, our goal is to to extend our fr
     = \bm{w}^{\top} \bm{x}_j
     = \sum_{i = 1}^{\npos} \alpha_i \bm{x}_j^{\top} \bm{x}_i^+ - \sum_{j = 1}^{\nneg} \beta_j \bm{x}_j^{\top} \bm{x}_j^-,
 \end{equation}
-where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation yields from the proofs of Theorems~\ref{thm: toppushk family dual} and~\ref{thm: patmat family dual} and holds for any considered formulation. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function of~\eqref{eq: toppushk family dual} and~\eqref{eq: patmat family dual} amounts to
-\begin{equation*}
-  \vecab^\top \K \vecab
-  = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab
-  = \Matrix{\bm{\alpha} \\ -\bm{\beta}}^\top \Matrix{\X^+ \X^{+\top} & \X^+ \X^{-\top} \\ \X^- \X^{+\top} & \X^- \X^{-\top} }\Matrix{\bm{\alpha} \\ -\bm{\beta}}.
-\end{equation*}
-Using the standard trick, we can replace the kernel matrix~$\Kneg$
+where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation yields from the proof of Theorems~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
+\begin{align*}
+  \vecab^\top \Kneg \vecab
+  & = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab \\
+  & = \Matrix{\bm{\alpha} \\ -\bm{\beta}}^\top \Matrix{\X^+ \X^{+\top} & \X^+ \X^{-\top} \\ \X^- \X^{+\top} & \X^- \X^{-\top} }\Matrix{\bm{\alpha} \\ -\bm{\beta}}.
+\end{align*}
+Using the standard trick, we can replace the kernel matrix~$\Kneg$ with
 \begin{equation}\label{eq:kernel_nonlinear}
   \Kneg = \Matrix{k(\X^+, \X^{+}) & -k(\X^+, \X^{-}) \\ -k(\X^-, \X^{+}) & k(\X^-, \X^{-}) },
 \end{equation}
@@ -149,7 +149,7 @@ where~$k(\cdot,\; \cdot)$ is applied to all rows of both arguments. Then for any
 \begin{equation*}
   s_j = \sum_{i = 1}^{\npos} \alpha_i k\Brac{\bm{x}_j, \bm{x}^+_i} - \sum_{j = 1}^{\nneg} \beta_j k\Brac{\bm{x}_j, \bm{x}^-_j}.
 \end{equation*}
-Similarly, we can get the formula for classification scores fo formulations that use the decision threshold computed from all samples. 
+Similarly, we can use non-linear kernel matrix for any formulation that uses~$\Kall$ and also for all formulations from Theorem~\ref{thm: patmat family dual}.
 
 \section{New Coordinate Descent Algorithm}\label{sec: coordinate descent}
 
@@ -161,14 +161,14 @@ Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm
 \begin{equation}\label{eq: dual scores}
   \bm{s} = \K \vecab.
 \end{equation}
-As we said before, dual formulation~\eqref{eq: toppushk family dual} differs from original SVMs by additional constraintst~\eqref{eq: toppushk family dual c1}. Due to this constraint, we always have to update (at least) two coordinates of dual variables~$\bm{\alpha},$~$\bm{\beta}$ to not violate the constraintst~\eqref{eq: toppushk family dual c1}. Moreover, there are only three update rules which modify two coordinates of~$\bm{\alpha},$~$\bm{\beta}$ and which satisfy constraints~\eqref{eq: toppushk family dual c1} and keep~\eqref{eq: dual scores} satisfied. The first one updates two components of~$\bm{\alpha}$
+As we said before, dual formulation~\eqref{eq: toppushk family dual} differs from original SVMs by additional constraintst~\eqref{eq: toppushk family dual c1}. Due to this constraint, we always have to update (at least) two coordinates of dual variables~$\bm{\alpha},$~$\bm{\beta}$ to not violate the constraintst~\eqref{eq: toppushk family dual c1}. Moreover, there are only three update rules which modify two coordinates of~$\bm{\alpha},$~$\bm{\beta}$ and which satisfy constraints~\eqref{eq: toppushk family dual c1} and also keep~\eqref{eq: dual scores} satisfied. The first one updates two components of~$\bm{\alpha}$
 \begin{subequations}\label{eq: update rules}
 \begin{align}\label{eq: update rule a,a}
   \alphak & \to \alphak + \Delta, & \quad
   \alphal & \to \alphal - \Delta, & \quad
   \bm{s} & \to \bm{s} + \Brac{\K_{\bullet, k} - \K_{\bullet, l}}\Delta,
 \end{align}
-where~$K_{\bullet, i}$ denotes~$i$-th column of~$\K.$ Note that the update rule for~$\bm{s}$ does not use matrix multiplication but only vector addition. The second rule updates one component of~$\bm{\alpha}$ and one component of~$\bm{\beta}$ 
+where~$\K_{\bullet, i}$ denotes~$i$-th column of~$\K$ and indices~$\hat{k},$~$\hat{l}$ are defined in Notation~\ref{not: dual update rules}. Note that the update rule for~$\bm{s}$ does not use matrix multiplication but only vector addition. The second rule updates one component of~$\bm{\alpha}$ and one component of~$\bm{\beta}$ 
 \begin{align}\label{eq: update rule a,b}
   \alphak & \to \alphak + \Delta, & \quad
   \betal  & \to \betal  + \Delta, & \quad
@@ -181,7 +181,7 @@ and the last one updates two components of~$\bm{\beta}$
   \bm{s}  & \to \bm{s} + \Brac{\K_{\bullet, k} - \K_{\bullet, l}}\Delta.
 \end{align}
 \end{subequations}
-Using any of the update rules defined above, the problem~\eqref{eq: toppushk family dual} can be written as a one-dimensional quadratic problem with respect to~$\Delta$
+Using any of the update rules defined above, the problem~\eqref{eq: toppushk family dual} can be written as a one-dimensional quadratic problem
 \begin{maxi*}{\Delta}{
   -\frac{1}{2} a(\bm{\alpha}, \bm{\beta}) \Delta^2
   - b(\bm{\alpha}, \bm{\beta}) \Delta
@@ -193,7 +193,7 @@ where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~
 \begin{equation}\label{eq: Delta optimal}
   \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
 \end{equation}
-where~$-\nicefrac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ ti interval~$[a, b].$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Evethough all three update update rules hold true for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the used surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as surrogate.
+where~$-\nicefrac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ to interval~$[a, b].$ Since we assume one of the update rules~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Evethough all three update rules hold true for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the concrete form of surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as surrogate.
 
 \begin{notation}\label{not: dual update rules}
   Consider any index~$l$ that satisfies~$1 \leq l \leq \npos + \ntil.$ Since the length of~$\bm{\alpha}$ is always~$\npos,$ we define auxiliary index~$\hat{l}$ as 
@@ -208,7 +208,7 @@ where~$-\nicefrac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$
 
 \subsubsection{Hinge loss}
 
-Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: toppushk family dual} yields
+We start with the hinge loss function from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: toppushk family dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -217,10 +217,10 @@ Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the du
   \label{eq: Top dual hinge c1}}
   \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos
   \label{eq: Top dual hinge c2}}
-  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil,
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.
   \label{eq: Top dual hinge c3}}
 \end{maxi!}
-Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the problem can be simplified. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
+The form of~$\K$ and~$\ntil$ depends on the used formulations as discussed in Theorem~\ref{thm: toppushk family dual}. Moreover, the upper limit in~\eqref{eq: Top dual hinge c3} can be ommited for~$K = 1.$ Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show the concrete form of~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules} when the hinge loss is used. The following three lemmas provide closed-form formulas all considered update rules. To keep the presentation as simple as possible, we postpone all proofs to Appendix~\ref{sec: toppush family coordinate proofs}.
 
 \begin{restatable}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual hinge}]{lemma}{topruleaa}\label{thm: toppushk family hinge update a,a}
   Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -271,7 +271,7 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual hinge c3} is alway
 
 \subsubsection{Quadratic hinge loss}
 
-Plugging the conjugate~\eqref{eq: conjugate hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: toppushk family dual} yields
+The second considered suroagte function is the quadratic hinge loss from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: toppushk family dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -284,25 +284,34 @@ Plugging the conjugate~\eqref{eq: conjugate hinge} of the quadratic hinge loss i
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil,
   \label{eq: Top dual quadratic c3}}
 \end{maxi!}
-Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the problem can be simplified. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
+Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used formulations and the upper limit in~\eqref{eq: Top dual quadratic c3} can be ommited for~$K = 1.$ For simplicity, we postpone formulas for update rules~\eqref{eq: update rules} and their proofs to Appendix~\ref{sec: toppush family coordinate proofs}. More specificaly, all update rules can be found in Lemma~\ref{thm: toppushk family quadratic update a,a}-\ref{thm: toppushk family quadratic update b,b}.
 
 \subsubsection{Initialization}
 
+For all update rules~\eqref{eq: update rules} we assumed that the current solution~$\bm{\alpha},$~$\bm{\beta}$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Top dual hinge} or~\eqref{eq: Top dual quadratic}, we need to have a way how to initialize the algorithm. Such a task can be formally written as a projection of initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ to the feasible set of solutions 
 \begin{mini}{\bm{\alpha}, \bm{\beta}}{
   \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
   + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
   }{\label{eq: toppushk family initialization}}{}
   \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C, \quad i = 1, 2, \ldots, \npos,}
+  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos,}
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
 \end{mini}
+where the upper bound in the second constraint depends on the used surrogate function and is defined as follows
+\begin{equation*}
+  C_1 = \begin{cases}
+    C & \text{for hinge loss}, \\
+    +\infty & \text{for quadratic hinge loss}.
+  \end{cases}
+\end{equation*}
+To solve problem~\eqref{eq: toppushk family initialization}, we will follow the same approach as in~\cite{adam2020projections}. In the following theorem, we show that problem~\eqref{eq: toppushk family initialization} can be written as a system of two equations of two variables~$(\lambda, \mu).$ Moreover, the theorem shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta}$ that depends only on~$(\lambda, \mu).$
 
 \begin{restatable}{theorem}{topinit}\label{thm:problem3}
-  Consider problem~\eqref{eq: toppushk family initialization} and some initial solution~$\bm{\alpha}^0$ and~$\bm{\beta}^0.$ Denote~$\bm{\beta}_{[\cdot]}^0$ the sorted version of~$\bm{\beta}^0$. Then the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ if
+  Consider problem~\eqref{eq: toppushk family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and denote the sorted version (in non-decreasing order) of~$\bm{\beta}^0$ as~$\bm{\beta}_{[\cdot]}^0.$ Then if the following condition holds
   \begin{equation}\label{eq:problem3_cond}
-    \sum_{j = 1}^{K} \Brac{\beta_{[\ntil - K + j]}^0 + \max_{i = 1, \ldots, \npos} p_i^0} \le 0.
+    \sum_{j = 1}^{K} \Brac{\beta_{[\ntil - K + j]}^0 + \max_{i = 1, \ldots, \npos} \alpha_i^0} \le 0,
   \end{equation}
-  In the opposite case, the following system of two equations
+  the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}.$ In the opposite case, the following system of two equations
   \begin{subequations}\label{eq:problem3_system}
     \begin{align}
       \sum_{i=1}^{\npos} \clip{0}{C_1}{ \alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \lambda - \mu}} - K \mu
@@ -319,25 +328,56 @@ Moreover, for~$K = 1,$ the upper limit in~\eqref{eq: Top dual quadratic c3} is a
   \end{align*}
 \end{restatable}
 
-\noindent For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq:problem3_system2} by 
+In the following text, we show that the number of variables in the system of equations~\eqref{eq:problem3_system} can be reduced to one. For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq:problem3_system2} by 
 \begin{equation*}
   g(\lambda; \mu) := \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu.
 \end{equation*}
-Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing. We denote by~$\lambda(\mu)$ any such~$\lambda$ solving~\eqref{eq:problem3_system2} for a fixed~$\mu$. Then we reduce system~\eqref{eq:problem3_system} into one equation
+Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing. We denote by~$\lambda(\mu)$ any such~$\lambda$ solving~\eqref{eq:problem3_system2} for a fixed~$\mu$. Denote~$\bm{z}$ the sorted version of~$-\bm{\beta}^0s$. Then we have
+\begin{equation*}
+  g(\lambda; \mu)
+    = \sum_{\Set{j}{\lambda - z_j \in [0, \mu)}}(\lambda - z_j)
+    + \sum_{\Set{j}{\lambda - z_j \ge \mu}}\mu - K\mu.
+\end{equation*}
+Now we can easily compute~$\lambda(\mu)$ by solving~$g(\lambda(\mu); \mu) = 0$ for fixed~$\mu$ using Algorithm~\ref{alg:g3}. The algorithm can  be described as follows: Index~$i$ will run over~$\bm{z}$ while index~$j$ will run over~$\bm{z} + \mu$. At every iteration, we know the values of~$g(z_{i-1}; \mu)$ and~$g(z_{j-1}+\mu; \mu)$ and we want to evaluate~$g$ at the next point. We denote number of indices~$j$ such that $\lambda - z_j \in[0, \mu)$ by~$d$. If~$z_i \le z_j + \mu$, then we consider~$\lambda = z_i$ and since one index enters the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we increase~$d$ by one. On the other hand, if~$z_i > z_j + \mu$, then we consider $\lambda = z_j + \mu$ and since one index leaves the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we decrease~$d$ by one. In both cases,~$g$ is increased by~$d$ times the difference between the new~$\lambda$ and old~$\lambda$. Once~$g$ exceeds~$0$, we stop the algorithm and linearly interpolate between the last two values. To prevent an overflow, we set~$z_{m+1}=\infty$. Concerning the initial values, since~$z_1 \le z_1 + s\mu$, we set $i=2$, $j=1$ and $d=1$. 
+
+\begin{algorithm}
+  \centering
+  \begin{algorithmic}[1]
+    \Require vector $-\bm{\beta}^0$ sorted into $\bm{z}$
+    \State $i \gets 2$, $j \gets 1$, $d \gets 1$
+    \State $\lambda \gets z_1$, $g \gets - K\mu$
+    \While{$g < 0$}
+      \If {$z_i \le z_j + \mu$}
+        \State $g \gets g + d(z_i - \lambda)$
+        \State $\lambda\gets z_i$, $d \gets d+1$, $i \gets i+1$
+      \Else
+        \State $g \gets g + d(z_j + \mu - \lambda)$
+        \State $\lambda \gets z_j + \mu$, $d \gets d - 1$, $j \gets j + 1$
+      \EndIf
+    \EndWhile
+    \State \textbf{return} linear interpolation of the last two values of $\lambda$
+  \end{algorithmic}
+  \caption{For computing~$\lambda(\mu)$ from~\eqref{eq:problem3_system}}
+  \label{alg:g3}
+\end{algorithm}
+
+Since~$\lambda(\mu)$ can be computed for fixed~$\mu$ using Algorithm~\ref{alg:g3}, we can reduce system~\eqref{eq:problem3_system} into one equation
 \begin{equation}\label{eq:defin_f3}
   h(\mu)
     := \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu
     = 0
 \end{equation}
-which needs to be solved for $\mu$. As the next results states, there are fast algorithms which provably find the solution.
+which needs to be solved for $\mu$. The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, we can use root finding algorithms such as Bisection or Newton method to find the solution.
 
 \begin{restatable}{lemma}{topinith}\label{lemma:problem3}
   Even though~$\lambda(\mu)$ is not unique, function~$h$ is well-defined in the sense that it gives the same value for every choice of~$\lambda(\mu)$. Moreover,~$h$ is decreasing in~$\mu$ on~$(0, \infty)$.
 \end{restatable}
 
+\todo[inline]{Add figures of h and g}
+
 \subsection{Family of \PatMat Formulations}\label{sec: Pat coordinate descent}
 
-In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadratic}. Similarly to the dual formulation from Theorem~\ref{thm: toppushk family dual}, this dual formulation can be rewritten rewritten as a quadratic one-dimensional problem with respect to~$\Delta$ for any of the update rules~\eqref{eq: update rules}. In this case, however, we have to also consider the third primal variable~$\delta$
+In the beginning of this chapter we derived general dual formulation~\eqref{eq: patmat family dual} for the family of \PatMat formulations. Similarly to the dual formulation~\eqref{eq: toppushk family dual}, we can use update rules~\eqref{eq: update rules} to solve this dual formulation. In this case, however, we have to also consider the third primal variable~$\delta.$ Then the dual formulation~\eqref{eq: patmat family dual}  can be rewritten as a quadratic one-dimensional problem
 \begin{maxi*}{\Delta}{
   -\frac{1}{2} a(\bm{\alpha}, \bm{\beta}, \delta) \Delta^2
   - b(\bm{\alpha}, \bm{\beta}, \delta) \Delta
@@ -345,15 +385,15 @@ In the beginning of this subsection we derived problem~\eqref{eq: Pat dual quadr
   }{}{}
   \addConstraint{\Delta_{lb}(\bm{\alpha}, \bm{\beta}, \delta)}{\leq \Delta \leq \Delta_{ub}(\bm{\alpha}, \bm{\beta}, \delta)}
 \end{maxi*}
-where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~$\Delta.$ The optimal solution to this problem is
+where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~$\Delta.$ The form of the optimal solution is the same as for problem~\eqref{eq: toppushk family dual} and reads
 \begin{equation*}
   \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
 \end{equation*}
-where~$-\nicefrac{b}{a}.$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update.
+where~$-\nicefrac{b}{a}.$ Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: patmat family dual c1} is always satisfied after the update. The exact form of the update rules depend on the surrogate function. More, the form of optimal~$\delta$ also depends on the surrogate function. In the following text, we derive update rules for hinge loss and quadratic hinge loss function.
 
 \subsubsection{Hinge Loss}
 
-Similarly to the previous sections, Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: patmat family dual} yields
+We again start with the hinge loss function from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation from Theorem~\ref{thm: patmat family dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -365,24 +405,22 @@ Similarly to the previous sections, Plugging the conjugate~\eqref{eq: conjugate 
   \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil \label{eq: Pat dual hinge c3}}
   \addConstraint{\delta }{\geq 0. \label{eq: Pat dual hinge c4}}
 \end{maxi!}
-This is again a convex quadratic problem. The following three lemmas provide formulas for optimal~$\Delta$ for each of update rules~\eqref{eq: update rules}.
-
-For fixed~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ leads to the
+This is a convex quadratic problem and can be solved optimized using update rules~\eqref{eq: update rules}. In such a case, we do not perform a joint maximization in~$(\alphak, \; \beta_l, \; \delta)$ but perform a maximization with respect to~$(\alphak, \; \beta_l)$, update these two values and then optimize the objective with respect to~$\delta$. Then for fixed feasible solution~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ yields
 \begin{maxi*}{\delta}{
-  - (\ntil \tau) \delta
+  - \ntil \tau \delta
   }{}{}
   \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
   \addConstraint{\delta \geq 0.}
 \end{maxi*}
-If we want to maximize the objective function with respect to the~$\delta$, we have to find the smallest possible~$\delta$ that satisfies the constrains, which is in the following form
+Since~$\ntil \tau \geq 0,$ to maximize the objective function with respect to the~$\delta$, we have to find the smallest possible~$\delta$ that satisfies the constrains. Such~$\delta$ is in the following form
 \begin{equation}\label{eq: Pat dual hinge optimal delta}
   \delta^* = \frac{1}{\vartheta} \max_{j \in \{1, 2, \ldots, \ntil \}} \beta_j.
 \end{equation}
-In the following list, we discuss each of update rules~\eqref{eq: update rules}:
+Since the formulas for optimal update rules are rather long, we postpone them to Appendix~\ref{sec: patmat family coordinate proofs}. More specificaly, all update rules can be found in Lemma~\ref{thm: patmat family hinge update a,a}-\ref{thm: patmat family hinge update b,b}.
 
 \subsubsection{Quadratic Hinge Loss}
 
-Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: patmat family dual} yields
+The second choice of the surrogate function is the quadratic hinge loss function from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hinge loss into the dual formulation from Theorem~\ref{thm: patmat family dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -402,22 +440,21 @@ Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hi
   \addConstraint{\delta }{\geq 0,
   \label{eq: Pat dual quadratic c4}}
 \end{maxi!}
-This is again a convex quadratic problem. The following theorem provides a formula for the optimal step~$\Delta^\star$ for the update rule~\eqref{eq: update rules}. Note that we do not perform a joint minimization in~$(\alphak, \; \beta_l, \; \delta)$ but perform a minimization with respect to~$(\alphak, \; \beta_l)$, update these two values and then optimize the objective with respect to~$\delta$. 
-
-For fixed~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$ leads to the
+Again we get a convex quadratic problem that can be solved optimized using update rules~\eqref{eq: update rules}. In such a case, we again perform maximization only with respect to~$(\alphak, \; \beta_l)$ and we need to maximazie the objective with respect to~$\delta$ separately. For fixed feasible solution~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$ leads to the following problem
 \begin{maxi*}{\delta}{
   - (\ntil \tau) \delta - \Brac{\frac{1}{4\vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2} \frac{1}{\delta}
   }{}{}
-  \addConstraint{\delta \geq 0.}
+  \addConstraint{\delta \geq 0,}
 \end{maxi*}
-The solution of this problem equals to
+with the optimal solution that equals to
 \begin{equation}\label{eq: Pat dual quadratic optimal delta}
   \delta^* = \sqrt{\frac{1}{4\vartheta^2 \ntil \tau} \sum_{j = 1}^{\ntil} \beta_j^2}.
 \end{equation}
-In the following list, we discuss each of update rules~\eqref{eq: update rules}:
+As in the previous section, we postpone the formulas for optimal update rules to Appendix~\ref{sec: patmat family coordinate proofs}. More specificaly, all update rules can be found in Lemma~\ref{thm: patmat family quadratic update a,a}-\ref{thm: patmat family quadratic update b,b}.
 
 \subsubsection{Initialization}
 
+As in the case of problem~\eqref{eq: toppushk family dual}, for all update rules~\eqref{eq: update rules} we assumed that the current solution~$\bm{\alpha},$~$\bm{\beta}$~$\delta$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Pat dual hinge} or~\eqref{eq: Pat dual quadratic}, we need to have a way how to initialize the algorithm. Such a task can be formally written as a projection of initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$~$\delta^0$ to the feasible set of solutions 
 \begin{mini}{\bm{\alpha}, \bm{\beta}, \delta}{
   \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
   + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
@@ -428,13 +465,25 @@ In the following list, we discuss each of update rules~\eqref{eq: update rules}:
   \addConstraint{0 \leq \beta_j}{\leq C_2 \delta, \quad j = 1, 2, \ldots, \ntil,}
   \addConstraint{\delta }{\geq 0,}
 \end{mini}
+where the upper bounds in the second and third constraints depend on the used surrogate function and are defined as follows
+\begin{align*}
+  C_1 & = \begin{cases}
+    C & \text{for hinge loss}, \\
+    +\infty & \text{for quadratic hinge loss},
+  \end{cases} &
+  C_2 & = \begin{cases}
+    \delta \vartheta & \text{for hinge loss}, \\
+    +\infty & \text{for quadratic hinge loss}.
+  \end{cases}
+\end{align*}
+Again, we will follow the same approach as in~\cite{adam2020projections} to solve problem~\eqref{eq: patmat family initialization}. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$(\lambda, \mu).$ Moreover, the theorem shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta}$~$\delta$ sthat depends only on~$(\lambda, \mu).$
 
 \begin{restatable}{theorem}{patinit}\label{thm:problem2}
-  Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0$ if
+  Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then if the following condition holds
   \begin{equation}\label{eq:problem2_cond}
     \delta^0 \le - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
   \end{equation}
-  In the opposite case, the following system of two equations
+  the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0.$ In the opposite case, the following system of two equations
   \begin{subequations}\label{eq:problem2_system}
     \begin{align}
     0
@@ -453,31 +502,35 @@ In the following list, we discuss each of update rules~\eqref{eq: update rules}:
   \end{align*}
 \end{restatable}
 
-System~\eqref{eq:problem2_system} is relatively simple to solve. Equation~\eqref{eq:problem2_system2} provides an explicit formula for~$\lambda$, let us denote it as $\lambda(\mu)$. As in the previous section, denote
+System~\eqref{eq:problem2_system} is relatively simple to solve, since equation~\eqref{eq:problem2_system2} provides an explicit formula for~$\lambda$. Let us denote it as $\lambda(\mu)$, then we denote the right-hand side of~\eqref{eq:problem2_system1} as
 \begin{equation}\label{eq:defin_f2}
   h(\mu) :=
     \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu)} - \sum_{j=1}^{\ntil} \clip{0}{\lambda(\mu) + \mu}{\beta_j^0 + \mu}.
 \end{equation}
-System~\eqref{eq:problem2_system} is equivalent to solving~$h(\mu) = 0$. The next results states that~$h$ is a non-decreasing function and thus the equation~$h(\mu) = 0$ is simple to solve.
+finally, system~\eqref{eq:problem2_system} is equivalent to solving~$h(\mu) = 0$.
 
 \begin{restatable}{lemma}{patinith}\label{lemma:problem2}
   Function $h$ is non-decreasing in~$\mu$ on~$(0,\infty)$.
 \end{restatable}
-  
-\noindent The equation~$h(\mu) = 0$ needs to be solved numerically. Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
+
+The previous lemma states that~$h$ is a non-decreasing functionin~$\mu$ on~$(0,\infty)$ and thus the equation~$h(\mu) = 0$ is simple to solve numerically using any root finding method such as Bisection or Newton method.  Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
+
+\todo[inline]{Add figures of h and g}
 
 \subsection{Complexity analysis}
 
-We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. The left column describe the algorithm for \TopPushK family of formulations and the right for \PatMat family of formulations. In step~\ref{alg: line 1} we initialize~$\bm{\alpha}$,~$\bm{\beta}$ and~$\delta$ to some feasible value and based on~\eqref{eq: dual scores} compute~$\bm{s}$. Each \repeatloop loop in step~\ref{alg: line 2} updates two coordinates as shown in~\eqref{eq: update rules}. In step~\ref{alg: line 3} we select a random index~$k$ and in the \forloop loop in step~\ref{alg: line 4} we compute the optimal~$(\Delta_l,\delta_l)$ for all possible combinations~$(k,l)$ as in~\eqref{eq: update rules}. In step~\ref{alg: line 7} we select the best pair~$(\Delta_l,\delta_l)$ which maximizes the objective. Finally, based on~\eqref{eq: update rules} we update~$\bm{\alpha}$,~$\bm{\beta}$,~$\bm{s}$ and~$\delta$ in steps~\ref{alg: line 8} and~\ref{alg: line 9}.
+In the previous sections, we derived dual formulations for two families of problems. Moreover, we showed, that these dual formulations can be solved iteratively using simple update rules~\eqref{eq: update rules}. Since these update rules assume initial feasible solution, we also showed how to find such initial solution. Then the final algorithm can be summarized as in Algorithm~\ref{alg:Coordinate descent}.
 
-\begin{algorithm*}
+The left column in Algorithm~\ref{alg:Coordinate descent} describe the algorithm for \TopPushK family of formulations and the right for \PatMat family of formulations. In step~\ref{alg: line 1} we initialize~$\bm{\alpha}$,~$\bm{\beta}$ and~$\delta$ to some feasible value using Theorem~\ref{thm:problem3} for \TopPushK family and  Theorem~\ref{thm:problem2} for \PatMat family. Then, based on~\eqref{eq: dual scores} we compute~$\bm{s}$. Each \repeatloop loop in step~\ref{alg: line 2} updates two coordinates as shown in~\eqref{eq: update rules}. In step~\ref{alg: line 3} we select a random index~$k$ and in the \forloop loop in step~\ref{alg: line 4} we compute the optimal~$(\Delta_l,\delta_l)$ for all possible combinations~$(k,l)$ as in~\eqref{eq: update rules}. In step~\ref{alg: line 7} we select the best pair~$(\Delta_l,\delta_l)$ which maximizes the coresponding objective function. Finally, based on the selected update rule we update~$\bm{\alpha}$,~$\bm{\beta}$,~$\bm{s}$ and~$\delta$ in steps~\ref{alg: line 8} and~\ref{alg: line 9}.
+
+\begin{algorithm*}[t]
   \begin{minipage}{0.50\textwidth}
     \centering
     \begin{algorithmic}[1]
-      \State set~$(\bm{\alpha}, \bm{\beta})$ feasible
+      \State set~$(\bm{\alpha}, \bm{\beta})$ using Theorem~\ref{thm:problem3}
       \State set~$\bm{s}$ based on~\eqref{eq: dual scores} \label{alg: line 1}
       \Repeat \label{alg: line 2}
-        \State pick random~$k$ from~$\{1, 2, \ldots, \npos+ \ntil \}$ \label{alg: line 3}
+        \State random~$k$ from~$\{1, 2, \ldots, \npos+ \ntil \}$ \label{alg: line 3}
         \For{$l \in \{1, 2, \ldots, \npos + \ntil  \}$} \label{alg: line 4}
             \State compute~$\Delta_{l}$  \label{alg: line 5}
         \EndFor
@@ -491,10 +544,10 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. The 
   \begin{minipage}{0.50\textwidth}
     \centering
     \begin{algorithmic}[1]
-      \State set~$(\bm{\alpha}, \bm{\beta}, \delta)$ feasible
+      \State set~$(\bm{\alpha}, \bm{\beta}, \delta)$ using Theorem~\ref{thm:problem2}
       \State set~$\bm{s}$ based on~\eqref{eq: dual scores}
       \Repeat
-        \State pick random~$k$ from~$\{1, 2, \ldots, \npos + \ntil \}$ 
+        \State random~$k$ from~$\{1, 2, \ldots, \npos + \ntil \}$ 
         \For{$l \in \{1, 2, \ldots, \npos + \ntil \}$}
             \State compute~$(\Delta_{l}, \; \delta_{l})$
         \EndFor
@@ -510,7 +563,7 @@ We summarize the whole procedure in Algorithm~\ref{alg:Coordinate descent}. The 
 
 Now we derive the computational complexity of each \repeatloop loop from step~\ref{alg: line 2}. The computation of~$(\Delta_l,\delta_l)$ amounts to solving a quadratic optimization problem in one variable. As we showed in Sections~\ref{sec: Top coordinate descent} and~\ref{sec: Pat coordinate descent}, there is a closed-form solution and step~\ref{alg: line 5} can be performed in~$O(1)$. Since this is embedded in a \forloop loop in step~\ref{alg: line 4}, the whole complexity of this loop is~$O(\npos + \ntil)$. Step~\ref{alg: line 8} requires~$O(1)$ for the update of~$\bm{\alpha}$ and~$\bm{\beta}$ while~$O(\npos + \ntil)$ for the update of~$\bm{s}$. Since the other steps are~$O(1)$, the total complexity of the \repeatloop loop is~$O(\npos + \ntil)$. This holds true only if the kernel matrix~$\K$ is precomputed. In the opposite case, all complexities must by multiplied by the cost of computation of components of~$\K$ which is~$O(d)$. This complexity analysis is summarized in Table~\ref{tab:Computational complexity}. 
 
-\begin{table}
+\begin{table}[h]
   \centering
   \begin{tabular}{lcc} 
     \toprule
@@ -518,9 +571,6 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
       & $\K$ precomputed
       & $\K$ not precomputed \\
     \midrule
-    % Initialization
-    %   & $O()$
-    %   & $O()$ \\
     Evaluation of~$\Delta_l$
       & $O(1)$
       & $O(d)$ \\

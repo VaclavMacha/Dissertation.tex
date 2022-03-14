@@ -249,9 +249,22 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 
 \section{New Coordinate descent Algorithm}
 
-\subsection{Family of \TopPushK Formulations}
+\subsection{Family of \TopPushK Formulations}\label{sec: toppush family coordinate proofs}
 
 \subsubsection{Hinge Loss}
+
+For better readability we recall the form of the dual formulation~\eqref{eq: Top dual hinge}
+\begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  }{}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.}
+\end{maxi*}
+In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
+
+\pagebreak
 
 \topruleaa*
 \begin{proof}[Proof of Lemma~\ref{thm: toppushk family hinge update a,a} on page~\pageref{thm: toppushk family hinge update a,a}]
@@ -319,7 +332,21 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
+\pagebreak
+
 \subsubsection{Quadratic Hinge Loss}
+
+For better readability we recall the form of the dual formulation~\eqref{eq: Top dual quadratic}
+\begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
+  }{}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{,}{i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.}
+\end{maxi*}
+In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,a}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,a}, indeices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -348,6 +375,8 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
+
+\pagebreak
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
@@ -395,6 +424,8 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
+\pagebreak
+
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update b,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -432,6 +463,16 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \subsubsection{Initialization}
+
+For better readability we recall the form of problem~\eqref{eq: toppushk family initialization}
+\begin{mini*}{\bm{\alpha}, \bm{\beta}}{
+  \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
+  + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
+  }{}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos,}
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
+\end{mini*}
 
 \topinit*
 \begin{proof}[Proof of Theorem~\ref{thm:problem3} on page~\pageref{thm:problem3}]
@@ -589,11 +630,25 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   where the first equality follows from the definition of~$J$ and the second equality is a shift by a~$\mu_2- \mu_1.$ The third equality follows from~\eqref{eq:system2_proof4} and finally, the last inequality follows from~$\abs{J} \ge K$. Chain~\eqref{eq:system2_proof5} together with~\eqref{eq:system2_proof2} implies~$\lambda(\mu_2) - \mu_2 \le \lambda(\mu_1)- \mu_1$. Combining this with~$\mu_2 > \mu_1$ and~$\lambda(\mu_2) \ge \lambda(\mu_1)$, this implies that~$h$ from~\eqref{eq:defin_f3} is non-increasing which is precisely the lemma statement.
 \end{proof}
 
-\subsection{Family of \PatMat Formulations}
+\subsection{Family of \PatMat Formulations}\label{sec: patmat family coordinate proofs}
 
 \subsubsection{Hinge Loss}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]
+For better readability we recall the form of the dual formulation~\eqref{eq: Pat dual hinge}
+\begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
+  - \delta \ntil \tau
+  }{}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
+  \addConstraint{\delta }{\geq 0.}
+\end{maxi*}
+In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
+
+\begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,a}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, &
@@ -622,34 +677,27 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]
+\begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
   \end{equation*}
-  Then the bounds from~\eqref{eq: Delta optimal} are defined as follows
-  \begin{align*}
-    \Delta_{lb} & = \max\{- \alphak,\; -\betal \}, &
-    \Delta_{ub} & = C - \alphak,
-  \end{align*}
-  and there are two possible solutions
+  Then the bounds from~\eqref{eq: Delta optimal} are defined as~$\Delta_{lb} = \max\{- \alphak,\; -\betal \}$ and~$\Delta_{ub} = C - \alphak$ and there are two possible solutions
   \begin{enumerate}
-    \item The first solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} where
+    \item $\Delta^{\star}_1$ is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}$ and is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
       \gamma
         & = -\frac{s_k + s_l - 1 - \frac{1}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
       \delta^{*}_1
         & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
-    and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}.$
-    \item The second solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} where
+    \item $\Delta^{\star}_2$ is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}$ and is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
       \gamma
         & = -\frac{s_k + s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}}, &
       \delta^{*}_2
         & = \frac{\betal + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
-    and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}.$
   \end{enumerate}
   The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
 \end{lemma}
@@ -698,42 +746,36 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
   The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]
+\pagebreak
+
+\begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{k}, \hat{l}\}} \beta_j.
   \end{equation*}
-  Then the bounds from~\eqref{eq: Delta optimal} are defined as follows
-  \begin{align*}
-    \Delta_{lb} & = - \betak, &
-    \Delta_{ub} & = \betal,
-  \end{align*}
-  and there are three possible solutions
+  Then the bounds from~\eqref{eq: Delta optimal} are defined as~$\Delta_{lb} = - \betak$ and~$\Delta_{ub} = \betal$ and there are three possible solutions
   \begin{enumerate}
-    \item The first solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} where
+    \item $\Delta^{\star}_1$ is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1, \betal - \Delta^{\star}_1\}$ and is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
       \delta^{*}_1
         & = \frac{\beta_{\max}}{\vartheta}.
     \end{align*}
-    and is feasible if~$\beta_{\max} \geq \max\{\betak + \Delta^{\star}_1, \betal - \Delta^{\star}_1\}.$
-    \item The second solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} where
+    \item $\Delta^{\star}_2$ is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\}$ and is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l + \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
       \delta^{*}_2
         & = \frac{\betak + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
-    and is feasible if~$\betak + \Delta^{\star}_2 \geq \max\{\beta_{\max} , \betal - \Delta^{\star}_2\},$
-    \item The third solution~$\Delta^{\star}_3$ is given by~\eqref{eq: Delta optimal} where
+    \item $\Delta^{\star}_3$ is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\betak + \Delta^{\star}_3, \beta_{\max}\}$ and is given by~\eqref{eq: Delta optimal} where
     \begin{align*}
       \gamma
         & = -\frac{s_k - s_l - \frac{\ntil \tau}{\vartheta}}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
       \delta^{*}_3
         & = \frac{\betak - \Delta^{\star}_3}{\vartheta}.
     \end{align*}
-    and is feasible if~$\betal - \Delta^{\star}_3 \geq \max\{\betak + \Delta^{\star}_3, \beta_{\max}\}$
   \end{enumerate}
   The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
 \end{lemma}
@@ -799,6 +841,24 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \subsubsection{Quadratic Hinge Loss}
+
+For better readability we recall the form of the dual formulation~\eqref{eq: Pat dual quadratic}
+\begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
+  }{}{}
+  \breakObjective{
+    + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
+    - \frac{1}{4 \delta \vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2
+    - \delta \ntil \tau
+  }
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{\alpha_i}{\geq 0,}{i = 1, 2, \ldots, \npos}
+  \addConstraint{\beta_j}{\geq 0,}{j = 1, 2, \ldots, \ntil}
+  \addConstraint{\delta }{\geq 0,}
+\end{maxi*}
+In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,a}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -898,6 +958,18 @@ In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that 
 \end{proof}
 
 \subsubsection{Initialization}
+
+For better readability we recall the form of problem~\eqref{eq: patmat family}
+\begin{mini*}{\bm{\alpha}, \bm{\beta}, \delta}{
+  \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
+  + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
+  + \frac{1}{2} (\delta - \delta^0)^2
+  }{}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq C_2 \delta, \quad j = 1, 2, \ldots, \ntil,}
+  \addConstraint{\delta }{\geq 0,}
+\end{mini*}
 
 \patinit*
 \begin{proof}[Proof of Theorem~\ref{thm:problem2} on page~\pageref{thm:problem2}]
