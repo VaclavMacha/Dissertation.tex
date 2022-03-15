@@ -40,23 +40,7 @@ Similarly to the standard network, the classifier~$f$ computes the score~$z_i$ f
 
 Figure~\ref{fig:difference} shows the difference between the standard approach with cross-entropy and accuracy at the top. While classifier 1 has good total accuracy, its top accuracy is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total accuracy, but its top accuracy is extremely good because more than half of the positive samples are on the top. While classifier 1 selected different thresholds for the accuracy and top metrics, these thresholds coincide for classifier 2.
 
-Table~\ref{table:summary} shows other special cases of \eqref{eq:problem} including maximizing precision at a given level of recall~\cite{mackey2018constrained} or recall at~$K$. The threshold~$t$ always equals to the sample with the~$j^*$-th highest score on all, positive, or negative samples. The problems differ only in~$j^*$ and from which samples the threshold is computed. For example, Pat\&Mat-NP~\cite{adam2021general} minimizes the false negative rate (equivalently maximizes the true positive rate) under the constraint that the false positive rate is at most~$\tau$.
-
-\begin{table}[!ht]
-  \centering
-  \begin{tabular}{@{}llllll@{}}
-    \toprule
-    Name &~$\lambda_1$ &~$\lambda_2$ & $t$ computed from & $j^*$ \\
-    \midrule
-    Prec@Rec    & $1$ & $0$ & positive samples & $\npos\tau$ \\
-    Rec@K       & $0$ & $1$ & all samples      & $K$ \\
-    TopPush     & $0$ & $1$ & negative samples & $1$ \\
-    Pat\&Mat-NP & $0$ & $1$ & negative samples & $\nneg\tau$ \\
-    \bottomrule
-  \end{tabular}
-  \caption{Selected problems of setting \eqref{eq:problem}. False-positives and false-negatives have weights~$\lambda_1$ and~$\lambda_2$, the threshold~$t$ equals to the sample with the~$j^*$-th highest score on all, positive, or negative samples.}
-  \label{table:summary}
-\end{table}
+Table~\ref{tab: summary formulations} shows other special cases of \eqref{eq:problem} including maximizing precision at a given level of recall~\cite{mackey2018constrained} or recall at~$K$. The threshold~$t$ always equals to the sample with the~$j^*$-th highest score on all, positive, or negative samples. The problems differ only in~$j^*$ and from which samples the threshold is computed. For example, Pat\&Mat-NP~\cite{adam2021general} minimizes the false negative rate (equivalently maximizes the true positive rate) under the constraint that the false positive rate is at most~$\tau$.
 
 \subsection{Related works}
 

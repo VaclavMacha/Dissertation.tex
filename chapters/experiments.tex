@@ -29,42 +29,103 @@ Each of the visual recognition datasets was converted into ten binary datasets b
 
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{@{}lllllllll@{}}
+  \begin{NiceTabular}{lcrrrrrr}
     \toprule
-    &  & \multicolumn{2}{c}{Training} & \multicolumn{2}{c}{Validation} & \multicolumn{2}{c}{Testing} \\ \cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(l){7-8} 
-    & $m$ & $n$ & $\frac{\npos}{n}$ & $n$ & $\frac{\npos}{n}$ & $n$ & $\frac{\npos}{n}$ \\ \midrule
+    \Block[c]{2-1}{\textbf{Dataset}}
+      & \Block[c]{2-1}{$m$}
+      & \Block[c]{1-2}{\textbf{Train}}
+      && \Block[c]{1-2}{\textbf{Validation}}
+      && \Block[c]{1-2}{\textbf{Test}} \\
+    \cline{3-8}
+      && \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$}
+      & \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$}
+      & \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
+    \midrule
     Ionosphere
-      & $34$
-      & $175$ & $36.0\%$ & $88$ & $36.4\%$ & $88$ & $35.2\%$ \\
+      & 34
+      & 175
+      & 36.0\%
+      & 88
+      & 36.4\%
+      & 88
+      & 35.2\% \\
     Spambase
-      & $57$
-      & $2300$ & $39.4\%$ & $1150$ & $39.4\%$ & $1151$ & $39.4\%$ \\
+      & 57
+      & 2 300
+      & 39.4\%
+      & 1 150
+      & 39.4\%
+      & 1 151
+      & 39.4\% \\
     Gisette
-      & $5000$
-      & $1000$ & $50.0\%$ & $1500$ & $50.0\%$ & $500$ & $50.0\%$ \\
+      & 5 000
+      & 1 000
+      & 50.0\%
+      & 1 500
+      & 50.0\%
+      & 500
+      & 50.0\% \\
     Hepmass
-      & $28$
-      & $5250000$ & $50.0\%$ & $1750000$ & $50.0\%$ & $3500000$ & $50.0\%$ \\
+      & 28
+      & 5 250 000
+      & 50.0\%
+      & 1 750 000
+      & 50.0\%
+      & 3 500 000
+      & 50.0\% \\
     MNIST
       & $28 \times 28 \times 1$
-      & $44999$ & $11.2\%$ & $15001$ & $11.2\%$ & $10000$ & $11.4\%$ \\
+      & 44 999
+      & 11.2\%
+      & 15 001
+      & 11.2\%
+      & 10 000
+      & 11.4\% \\
     FashionMNIST
       & $28 \times 28\times 1$
-      & $45000$ & $10.0\%$ & $15000$ & $10.0\%$ & $10000$ & $10.0\%$ \\
+      & 45 000
+      & 10.0\%
+      & 15 000
+      & 10.0\%
+      & 10 000
+      & 10.0\% \\
     CIFAR10
-      & $32\times 32\times 3$
-      & $37500$ & $10.0\%$ & $12500$ & $10.0\%$ & $10000$ & $10.0\%$ \\
+      & $32 \times 32 \times 3$
+      & 37 500
+      & 10.0\%
+      & 12 500
+      & 10.0\%
+      & 10 000
+      & 10.0\% \\
     CIFAR20
-      & $32 \times 32\times 3$
-      & $37500$ & $5.0\%$ & $12500$ & $5.0\%$ & $10000$ & $5.0\%$ \\
+      & $32 \times 32 \times 3$
+      & 37 500
+      & 5.0\%
+      & 12 500
+      & 5.0\%
+      & 10 000
+      & 5.0\% \\
     CIFAR100
-      & $32 \times 32\times 3$
-      & $37500$ & $1.0\%$ & $12500$ & $1.0\%$ & $10000$ & $1.0\%$ \\
+      & $32 \times 32 \times 3$
+      & 37 500
+      & 1.0\%
+      & 12 500
+      & 1.0\%
+      & 10 000
+      & 1.0\% \\
     SVHN2
       & $32 \times 32\times 3$
-      & $54944$ & $18.9\%$ & $18313$ & $18.9\%$ & $26032$ & $19.6\%$ \\
+      & 54 944
+      & 18.9\%
+      & 18 313
+      & 18.9\%
+      & 26 032
+      & 19.6\% \\
     \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{Structure of the used datasets. The training, validation and testing sets show the number of features~$m$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$.}
   \label{tab:counts}
 \end{table}
@@ -126,40 +187,92 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
 
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{@{}lllll@{}}
+  \begin{NiceTabular}{llcccc}
     \toprule
-    & Ionosphere & Hepmass & FashionMNIST & CIFAR100 \\
+    \Block[c]{1-2}{\textbf{Method}}
+     && \textbf{Ionosphere}
+      & \textbf{Hepmass}
+      & \textbf{FashionMNIST}
+      & \textbf{CIFAR100} \\
     \midrule
     \TopPush
-      & \yesmark & \nomark & \yesmark & \nomark \\
+     && \yesmark
+      & \nomark
+      & \yesmark
+      & \nomark \\
     \TopPushK
-      & \yesmark & \nomark & \yesmark & \nomark \\
-    \Grill$\tau=0.01$
-      & \nomark & \nomark & \nomark & \nomark \\
-    \phantom{\Grill}$\tau=0.05$
-      & \nomark &\nomark & \nomark & \nomark \\
-    \PatMat$\tau=0.01$
-      & \yesmark & \good{\boldmath$\beta\leq 0.1$} & \good{\boldmath$\beta\leq 1$} & \good{\boldmath$\beta\leq 1$} \\
-    \phantom{\PatMat}$\tau=0.05$
-      & \yesmark & \good{\boldmath$\beta\leq 1$} & \yesmark & \yesmark \\
-    \TopMeanK$\tau=0.01$
-      & \nomark & \nomark & \nomark & \nomark \\
-    \phantom{\TopMeanK}$\tau=0.05$
-      & \nomark & \nomark & \nomark & \nomark \\
-    \GrillNP$\tau=0.01$
-      & \nomark & \nomark & \nomark & \nomark \\
-    \phantom{\GrillNP}$\tau=0.05$
-      & \nomark & \nomark & \nomark & \nomark \\
-    \PatMatNP$\tau=0.01$
-      & \yesmark & \good{\boldmath$\beta\leq 1$} & \yesmark & \good{\boldmath$\beta\leq 1$} \\
-    \phantom{\PatMatNP}$\tau=0.05$
-      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\beta\leq 1$} \\
-    \tauFPL$\tau=0.01$
-      & \yesmark & \nomark & \yesmark & \nomark \\
-    \phantom{\tauFPL}$\tau=0.05$
-      & \yesmark & \yesmark & \yesmark & \good{\boldmath$\lambda\leq 0.001$} \\
+     && \yesmark
+      & \nomark
+      & \yesmark
+      & \nomark \\
+    \Block{2-1}{\Grill}
+      & $\tau=0.01$
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+      & $\tau=0.05$
+      & \nomark
+      &\nomark
+      & \nomark
+      & \nomark \\
+    \Block{2-1}{\PatMat}
+      & $\tau=0.01$
+      & \yesmark
+      & \good{\boldmath$\beta\leq 0.1$}
+      & \good{\boldmath$\beta\leq 1$}
+      & \good{\boldmath$\beta\leq 1$} \\
+      & $\tau=0.05$
+      & \yesmark
+      & \good{\boldmath$\beta\leq 1$}
+      & \yesmark
+      & \yesmark \\
+    \Block{2-1}{\TopMeanK}
+      & $\tau=0.01$
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+      & $\tau=0.05$
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+    \Block{2-1}{\GrillNP}
+      & $\tau=0.01$
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+      & $\tau=0.05$
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+    \Block{2-1}{\PatMatNP}
+      & $\tau=0.01$
+      & \yesmark
+      & \good{\boldmath$\beta\leq 1$}
+      & \yesmark
+      & \good{\boldmath$\beta\leq 1$} \\
+      & $\tau=0.05$
+      & \yesmark
+      & \yesmark
+      & \yesmark &
+      \good{\boldmath$\beta\leq 1$} \\
+    \Block{2-1}{\tauFPL}
+      & $\tau=0.01$
+      & \yesmark
+      & \nomark
+      & \yesmark
+      & \nomark \\
+      & $\tau=0.05$
+      & \yesmark
+      & \yesmark
+      & \yesmark
+      & \good{\boldmath$\lambda\leq 0.001$} \\
     \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \yesmark\ means that the solution was better than zero for all hyperparameters while \nomark\ means that it was worse for all hyperparameters.}
   \label{tab:fails}
 \end{table}
@@ -204,33 +317,69 @@ which gave the best performance on the validation set. All presented result are 
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{@{}lllllllll@{}}
-      \toprule
-      &&& \multicolumn{2}{c}{Training}
-        & \multicolumn{2}{c}{Validation}
-        & \multicolumn{2}{c}{Testing} \\
-      \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
-        & $y^+$
-        & $d$
-        & $n$
-        & $\frac{\npos}{n}$
-        & $n$
-        & $\frac{\npos}{n}$
-        & $n$
-        & $\frac{\npos}{n}$ \\
-      \midrule
-      sigillito1989classification
-        & -- & 34 & 176 & 64.2\% & 87 & 64.4\% & 88 & 63.6\% \\
-      Spambase
-        & -- & 57 & 2301 & 39.4\% & 1150 & 39.4\% & 1150 & 39.4\% \\
-      WhiteWineQuality
-        & 7, 8, 9 & 11 & 2449 & 21.6\% & 1224 & 21.7\% & 1225 & 21.6\% \\
-      RedWineQuality
-        & 7, 8 & 11 & 800 & 13.5\% & 400 & 13.8\% & 399 & 13.5\% \\
-      Fashion-MNIST
-        & 0 & 784 & 50000 & 10.0\% & 10000 & 10.0\% & 10000 & 10.0\% \\
-      \bottomrule
-  \end{tabular}
+  \begin{NiceTabular}{lcrrrrrrr}
+    \toprule
+    \Block[c]{2-1}{\textbf{Dataset}}
+      & \Block[c]{2-1}{$y^+$}  
+      & \Block[c]{2-1}{$d$}
+      & \Block[c]{1-2}{\textbf{Train}}
+      && \Block[c]{1-2}{\textbf{Validation}}
+      && \Block[c]{1-2}{\textbf{Test}} \\
+    \cline{4-9}
+      &&& \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$}
+      & \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$}
+      & \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
+    \midrule
+    Ionosphere
+      & --
+      & 34
+      & 176
+      & 64.2\%
+      & 87
+      & 64.4\%
+      & 88
+      & 63.6\% \\
+    Spambase
+      & --
+      & 57
+      & 2 301
+      & 39.4\%
+      & 1 150
+      & 39.4\%
+      & 1 150
+      & 39.4\% \\
+    WhiteWineQuality
+      & 7, 8, 9
+      & 11
+      & 2 449
+      & 21.6\%
+      & 1 224
+      & 21.7\%
+      & 1 225
+      & 21.6\% \\
+    RedWineQuality
+      & 7, 8
+      & 11
+      & 800
+      & 13.5\%
+      & 400
+      & 13.8\%
+      & 399
+      & 13.5\% \\
+    Fashion-MNIST
+      & 0
+      & 784
+      & 50 000
+      & 10.0\%
+      & 10 000
+      & 10.0\%
+      & 10 000
+      & 10.0\% \\
+    \bottomrule
+  \end{NiceTabular}
   \caption{Summary of the used datasets. It shows which original labels~$y^+$ were selected as the positive class, the number of features~$d,$ samples~$n,$ and the fraction of positive samples~$\frac{\npos}{n}$.}
   \label{tab:Datasets}
 \end{table}
@@ -268,42 +417,111 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{@{}c|llllllll@{}}
+  \begin{NiceTabular}{cllllllll}
     \toprule
-    \multicolumn{3}{c}{} & \multicolumn{6}{c}{$\pratrec$}  \\
-    \cmidrule(lr){4-9}
-    \multicolumn{3}{c}{}
-      & 0.05 & 0.1 & 0.2 & 0.4 & 0.6 & 0.8 \\
+    & \Block[c]{2-2}{\textbf{Method}}
+      && \Block[c]{1-6}{$\pratrec$} \\
+    \cline{4-9}
+    &&& 0.05
+      & 0.1
+      & 0.2
+      & 0.4
+      & 0.6
+      & 0.8 \\
     \midrule
-    \multirow{6}{*}{\rotatecell{Linear kernel}}
+    \Block[borders=right]{6-1}{\rotate Linear kernel}
     & \TopPush
-      & & \best 79.83 & 64.27 & \best 65.55 & 61.85 & 57.89 & 51.83 \\
-    & \TopPushK & $K = 5$
-      & 73.96 & \best 65.41 & 64.82 & 60.28 & 56.94 & 50.52 \\
-    & & $K = 10$
-      & 60.63 & 61.97 & 59.69 & 56.89 & 54.40 & 49.83 \\
-    & \PatMat & $\tau = 0.01$
-      & 63.67 & 60.30 & 58.74 & 57.75 & 53.32 & 48.42 \\
-    & & $\tau = 0.05$
-      & 54.05 & 60.91 & 63.32 & 55.24 & 52.55 & 48.30 \\
-    & & $\tau = 0.1$
-      & 57.02 & 61.24 & 62.49 & \best 63.11 & \best 59.91 & \best 52.14 \\
+     && \Block[fill=mygreen!25]{1-1}{79.83}
+      & 64.27
+      & \Block[fill=mygreen!25]{1-1}{65.55}
+      & 61.85
+      & 57.89
+      & 51.83 \\
+    & \TopPushK
+      & $K = 5$
+      & 73.96
+      & \Block[fill=mygreen!25]{1-1}{65.41}
+      & 64.82
+      & 60.28
+      & 56.94
+      & 50.52 \\
+     && $K = 10$
+      & 60.63
+      & 61.97
+      & 59.69
+      & 56.89
+      & 54.40
+      & 49.83 \\
+    & \PatMat
+      & $\tau = 0.01$
+      & 63.67
+      & 60.30
+      & 58.74
+      & 57.75
+      & 53.32
+      & 48.42 \\
+     && $\tau = 0.05$
+      & 54.05
+      & 60.91
+      & 63.32
+      & 55.24
+      & 52.55
+      & 48.30 \\
+     && $\tau = 0.1$
+      & 57.02
+      & 61.24
+      & 62.49
+      & \Block[fill=mygreen!25]{1-1}{63.11}
+      & \Block[fill=mygreen!25]{1-1}{59.91}
+      & \Block[fill=mygreen!25]{1-1}{52.14} \\
     \midrule
-    \multirow{6}{*}{\rotatecell{Gaussian kernel}}
+    \Block[borders=right]{6-1}{\rotate Gaussian kernel}
     & \TopPush
-      & & \besttotal 97.50 & 86.06 & 81.28 & 76.15 & 71.13 & 60.17 \\
-    & \TopPushK & $K = 5$
-      & 92.50 & 87.56 & 85.31 & 78.47 & 70.77 & 57.10 \\
-    & & $K = 10$
-      & 89.50 & 87.56 & 83.15 & 79.09 & 71.88 & 59.27 \\
-    & \PatMat & $\tau = 0.01$
-      & 89.65 & \besttotal 89.11 & \besttotal 86.75 & 80.77 & 75.44 & 65.95 \\
-    & & $\tau = 0.05$
-      & 80.77 & 81.28 & 85.74 & 82.92 & 74.91 & 65.04 \\
-    & & $\tau = 0.1$
-      & 81.30 & 84.14 & 82.58 & \besttotal 83.12 & \besttotal 77.82 & \besttotal 66.50 \\
+     && \Block[fill=mygreen!50]{1-1}{97.50}
+     & 86.06
+     & 81.28
+     & 76.15
+     & 71.13
+     & 60.17 \\
+    & \TopPushK
+      & $K = 5$
+      & 92.50
+      & 87.56
+      & 85.31
+      & 78.47
+      & 70.77
+      & 57.10 \\
+     && $K = 10$
+      & 89.50
+      & 87.56
+      & 83.15
+      & 79.09
+      & 71.88
+      & 59.27 \\
+    & \PatMat
+      & $\tau = 0.01$
+      & 89.65
+      & \Block[fill=mygreen!50]{1-1}{89.11}
+      & \Block[fill=mygreen!50]{1-1}{86.75}
+      & 80.77
+      & 75.44
+      & 65.95 \\
+     && $\tau = 0.05$
+      & 80.77
+      & 81.28
+      & 85.74
+      & 82.92
+      & 74.91
+      & 65.04 \\
+     && $\tau = 0.1$
+      & 81.30
+      & 84.14
+      & 82.58
+      & \Block[fill=mygreen!50]{1-1}{83.12}
+      & \Block[fill=mygreen!50]{1-1}{77.82}
+      & \Block[fill=mygreen!50]{1-1}{66.50} \\
     \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{The precision of all methods averaged across all datasets from Table~\ref{tab:Datasets}. Each column represents precision at a certain level of recall. Light green depicts the best method for the given kernel and dark green depicts the best overall method.}
   \label{tab:Metrics comparison}
 \end{table}
@@ -321,24 +539,36 @@ Finally, Table~\ref{tab:Time comparison} depicts the time comparison for all met
 
 \begin{table}[ht]
   \centering
-  \begin{tabular}{@{}c|llll@{}}
+  \begin{NiceTabular}{clccc}
       \toprule
-      \multicolumn{2}{c}{}
-        & \TopPush & \TopPushK & \PatMat \\
+        & \Block[c]{1-1}{\textbf{Dataset}}
+        & \textbf{\TopPush}
+        & \textbf{\TopPushK}
+        & \textbf{\PatMat} \\
       \midrule
-      \multirow{5}{*}{\rotatecell{One \repeatloop \\ loop [ms]}}
-      & sigillito1989classification
-        & $ 0.04 \pm 0.00 $ & $ 0.03 \pm 0.00 $ & $ 0.03 \pm 0.00 $ \\
+      \Block[borders=right]{5-1}{\rotate One \repeatloop \\ loop [ms]}
+      & Ionosphere
+        & $0.04 \pm 0.00$
+        & $0.03 \pm 0.00$
+        & $0.03 \pm 0.00$ \\
       & Spambase
-        & $ 0.56 \pm 0.02 $ & $ 0.49 \pm 0.01 $ & $ 0.50 \pm 0.01 $ \\
+        & $0.56 \pm 0.02$
+        & $0.49 \pm 0.01$
+        & $0.50 \pm 0.01$ \\
       & WhiteWineQuality
-        & $ 0.62 \pm 0.03 $ & $ 0.53 \pm 0.01 $ & $ 0.54 \pm 0.01 $ \\
+        & $0.62 \pm 0.03$
+        & $0.53 \pm 0.01$
+        & $0.54 \pm 0.01$ \\
       & RedWineQuality
-        & $ 0.17 \pm 0.01 $ & $ 0.14 \pm 0.01 $ & $ 0.15 \pm 0.01 $ \\
+        & $0.17 \pm 0.01$
+        & $0.14 \pm 0.01$
+        & $0.15 \pm 0.01$ \\
       & Fashion-MNIST
-        & $ 17.16 \pm 0.74 $ & $ 15.95 \pm 0.14 $ & $ 15.54 \pm 0.80 $ \\
+        & $17.16 \pm 0.74$
+        & $15.95 \pm 0.14$
+        & $15.54 \pm 0.80$ \\
       \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods.}
   \label{tab:Time comparison}
 \end{table}
@@ -352,9 +582,81 @@ Section~\ref{sec:bias1} showed that we can use large minibatches to obtain good 
 
 \subsection{Dataset description and Computational setting}\label{sec:set}
 
-We consider the following image recognition datasets: FashionMNIST~\cite{xiao2017fashionmnist}, CIFAR100~\cite{krizhevsky2009learning}, SVHN2~\cite{netzer2011reading} and ImageNet~\cite{russakovsky2015imagenet}. These datasets were converted to binary classification tasks by selecting one class as the positive class and the rest as the negative class. ImageNet merged turtles and non-turtles. We also consider the 3A4 dataset~\cite{ma2015deep} with molecules and their activity levels. Finally, malware analysis reports of executable files were provided by a cybersecurity company. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Moreover, they contain different features, and their features may have variable lengths. All datasets are summarized in the appendix.
+We consider the following image recognition datasets: FashionMNIST~\cite{xiao2017fashionmnist}, CIFAR100~\cite{krizhevsky2009learning}, SVHN2~\cite{netzer2011reading} and ImageNet~\cite{russakovsky2015imagenet}. These datasets were converted to binary classification tasks by selecting one class as the positive class and the rest as the negative class. ImageNet merged turtles and non-turtles. We also consider the 3A4 dataset~\cite{ma2015deep} with molecules and their activity levels. Finally, malware analysis reports of executable files were provided by a cybersecurity company. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Moreover, they contain different features, and their features may have variable lengths. Table~\ref{tab:DatasetsDeep} summarizes the used datasets. The Malware Detection dataset was represented by JSONs, which contain varying number of features. Moreover, many features are not scalar but have some hierarchical structure as well.
+
+\begin{table}
+  \centering
+  \begin{NiceTabular}{lcrrrrc}
+    \toprule
+    \Block[c]{2-1}{\textbf{Dataset}}
+      & \Block[c]{2-1}{$d$}
+      & \Block[c]{1-2}{\textbf{Train}}
+      && \Block[c]{1-2}{\textbf{Test}}
+      && \Block[c]{2-1}{\textbf{Licence}} \\
+    \cline{3-6}
+      && \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$}
+      & \Block[c]{1-1}{$n$}
+      & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
+    \midrule
+    FashionMNIST
+      & $28 \times 28 \times 1$
+      & 60 000
+      & 10.00\%
+      & 10 000
+      & 10.00\%
+      & MIT \\
+    CIFAR100
+      & $32 \times 32 \times 3$
+      & 50 000
+      & 1.00\%
+      & 10 000
+      & 1.00\%
+      & not specified \\
+    SVHN2 extra
+      & $32 \times 32 \times 3$
+      & 604 388
+      & 17.28\%
+      & 26 032
+      & 19.59\%
+      & not specified \\
+    ImageNet
+      & $62 720 \times 1$
+      & 1 281 167
+      & 0.51\%
+      & 50000
+      & 0.50\%
+      & registration \\
+    3A4
+      & $9491 \times 1$
+      & 37 241
+      & 0.98\%
+      & 37 241
+      & 1.07\%
+      & CC BY 4.0 \\
+    Malware Detection
+      & variable
+      & 6 580 166
+      & 87.22\%
+      & 800 346
+      & 91.80\%
+      & proprietary\\
+    \bottomrule
+  \end{NiceTabular}
+  \caption{Summary of the used datasets with the number of features~$d$, number of samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$ in the training set.}
+  \label{tab:DatasetsDeep}
+\end{table}
 
 We use truncated quadratic loss~$l(z) = (\max\{0, 1 + z\})^2$ as the surrogate function and~$\tau=\frac{1}{\nneg}$ and~$\tau=0.01$. This first one computes the true positive rate above the second highest-ranked negative, while the latter allows for the false positive rate of~$1\%$. All algorithms were run for~$200$ epochs on an NVIDIA P100 GPU card with balanced minibatches of 32 samples. The only exception was Malware Detection, which was run on a cluster in a distributed manner, and where the minibatch size was~$20000$. For the evaluation of numerical experiments, we use the standard receiver operating characteristic (ROC) curve. All results are computed from the test set. All codes were implemented in the Julia language~\cite{bezanson2017julia}. The network structure was the same for all methods; we describe them in the online appendix.
+
+
+\subsection{Used network architecture}\label{app:network}
+
+For 3A4, we preprocessed the input with~$9491$ into a~$100$-dimensional input by PCA. Then we used two dense layers of size~$100\times 50$ and~$50\times 25$ with batch-normalization after these layers. The last layer was dense.
+
+For FashionMNIST, we used a network alternating two hidden convolutional layers with two max-pooling layers finished with a dense layer. The convolutional layers used kernels~$5\times 5$ and had~$20$ and~$50$ channels, respectively. For CIFAR100 and SVHN2, we increased the number of hidden and max-pooling layers from two to three. The convolutional layers used kernels~$3\times 3$ and had~$64$,~$128$, and~$128$ channels, respectively. A more detailed description can be found in our codes online. We are fully aware that these architectures are suboptimal. Since the accuracy at the top needs to select only a few relevant samples and the rest of the dataset's performance is irrelevant, such a network can be used. Moreover, using a simpler network has the advantage of faster experiments.
+
+For ImageNet, we merged all turtles into the positive class and all non-turtles into the negative class. Then we used the pre-trained EfficientNet B0, where we replaced the last dense layer with~$1000$ outputs by a dense layer into a scalar output.
 
 \subsection{Comparison with prior art}\label{sec:comparison}
 
@@ -362,89 +664,103 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
 
 \begin{table}[!ht]
   \centering
-  \begin{tabular}{@{}llll@{}}
-      \toprule      
-       & FashionMNIST & CIFAR100 & SVHN \\
+  \begin{NiceTabular}{lccc}
+      \toprule
+      \Block[c]{1-1}{\textbf{Method}}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN} \\
       \midrule
       BaseLine
-        & 4.4s & 5.1s & 62.8s \\
+        & 4.4s
+        & 5.1s
+        & 62.8s \\
       DeepTopPush
-        & 4.8s & 5.6s & 66.6s \\
-      Pat\&Mat-NP
-        & 4.8s & 5.6s & 66.6s \\
+        & 4.8s
+        & 5.6s
+        & 66.6s \\
+      \PatMatNP
+        & 4.8s
+        & 5.6s
+        & 66.6s \\
       TFCO
-        & 7.2s & 6.5s & - \\
+        & 7.2s
+        & 6.5s
+        & - \\
       AP-Perf
-        & 95.3s & 81.2s & - \\
+        & 95.3s
+        & 81.2s
+        & - \\
       \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{Time requirements per epoch for investigated methods for minibatches of size~$\nmin=32$.}
   \label{table:time}
 \end{table}
 
 \begin{table}[ht]
   \centering
-  \footnotesize
-  \begin{tabular}{@{}c|llllll@{}}
+  \begin{NiceTabular}{clccccc}
     \toprule
-    & \thead{Dataset}
-    & \thead{BaseLine}
-    & \thead{DeepTopPush}
-    & \thead{Pat\&Mat-NP}
-    & \thead{TFCO}
-    & \thead{AP-Perf} \\
+      & \Block[c]{1-1}{\textbf{Dataset}}
+      & \textbf{BaseLine}
+      & \textbf{DeepTopPush}
+      & \textbf{Pat\&Mat-NP}
+      & \textbf{TFCO}
+      & \textbf{AP-Perf} \\
     \midrule
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{\parbox[c]{1.5cm}{\centering tpr@fpr $\tau=\nicefrac{1}{\nneg}$}}}
+    \Block[borders=right]{4-1}{\rotate tpr@fpr \\ $\tau=\nicefrac{1}{\nneg}$}
     & FashionMNIST
       & $5.06 \pm 1.41$
-      & \best $27.30 \pm 5.91$
+      & \Block[fill=mygreen!25]{1-1}{$27.30 \pm 5.91$}
       & $22.21 \pm 5.62$
       & $11.30 \pm 3.44$
       & $9.90$ \\
     & CIFAR100
       & $1.70 \pm 0.46$
-      & \best $14.40 \pm 5.44$
+      & \Block[fill=mygreen!25]{1-1}{$14.40 \pm 5.44$}
       & $8.10 \pm 3.45$
       & $7.70 \pm 2.28$
       & $5.00$ \\
     & 3A4
       & $2.58 \pm 0.61$ 
-      & \best $5.61 \pm 1.70$
+      & \Block[fill=mygreen!25]{1-1}{$5.61 \pm 1.70$}
       & $3.79 \pm 0.90$
       & $3.03 \pm 1.52$
       & $3.03$ \\
     & SVHN
       & $6.51 \pm 1.37$
-      & \best $12.21 \pm 5.39$
+      & \Block[fill=mygreen!25]{1-1}{$12.21 \pm 5.39$}
       & $12.07 \pm 4.41$ 
-      & - & -\\
+      & ---
+      & --- \\
     \midrule
-    \multirow{4}{*}{\rotatebox[origin=c]{90}{\parbox[c]{1.5cm}{\centering tpr@fpr $\tau=0.01$}}}
+    \Block[borders=right]{4-1}{\rotate tpr@fpr \\ $\tau=0.01$}
     & FashionMNIST
       & $63.14 \pm 1.39$
-      & \best $75.37 \pm 1.18$
+      & \Block[fill=mygreen!25]{1-1}{$75.37 \pm 1.18$}
       & $74.11 \pm 1.00$
       & $73.27 \pm 2.92$
       & $64.60$ \\
     & CIFAR100
       & $49.40 \pm 4.90$
-      & \best $70.20 \pm 2.14$
+      & \Block[fill=mygreen!25]{1-1}{$70.20 \pm 2.14$}
       & $66.30 \pm 2.33$
       & $67.30 \pm 1.79$
       & $65.00$ \\
     & 3A4
       & $57.80 \pm 0.35$ 
       & $60.08 \pm 3.35$
-      & \best $65.91 \pm 0.59$
+      & \Block[fill=mygreen!25]{1-1}{$65.91 \pm 0.59$}
       & $54.55 \pm 10.22$
       & $63.64$ \\
     & SVHN
       & $84.72 \pm 0.84$
       & $91.05 \pm 1.45$
-      & \best $91.07 \pm 0.30$
-      & - & - \\
+      & \Block[fill=mygreen!25]{1-1}{$91.07 \pm 0.30$}
+      & ---
+      & --- \\
     \bottomrule
-  \end{tabular}
+  \end{NiceTabular}
   \caption{The true positive rates (in \%) at two levels of false positive rates averaged across ten indepenedent runs with standard deviation. The best methods are highlighted.}
   \label{tab:Overall comparison}
 \end{table}
