@@ -27,16 +27,14 @@ The paper is organized as follows: Section~\ref{sec:deeptheory} introduces a gen
 \section{Accuracy at the top}\label{sec:deeptheory}
 
 This section introduces the accuracy at the top. A standard deep network~$f$ with weights~$\bm{w}$ takes inputs~$\bm{x}_i$, transforms them into scores~$z_i$, and computes the total loss based on these scores and labels~$y_i$. On the other hand, accuracy at the top solves
-\begin{equation}\label{eq:problem}
-  \begin{aligned}
-    \minimize{w,z,t}
-    & \lambda_1 \sum_{i\in I^-}\II_{z_i \geq t} + \lambda_2\sum_{i\in I^+}\II_{z_i < t} \\
-    \st
-    & z_i = f(\bm{w};\bm{x}_i), \\
-    & t = G(\{(z_i, y_i)\}_{i\in I}).
-  \end{aligned}
-\end{equation}
-Similarly to the standard network, the classifier~$f$ computes the score~$z_i$ for each sample~$\bm{x}_i$. Then a general function~$G$ takes the scores and labels of \textbf{all} samples and computes the threshold~$t$. This makes the problem non-decomposable. The objective function equals the weighted sum of false-positives (negative samples above the threshold) and false-negatives (positive samples below the threshold). Here,~$I$,~$I^+$ and~$I^-$ are the sets of all, positive and negative labels, respectively, and~$\II$ is the characteristic ($0/1$) function counting how many times the argument is satisfied. Setting \eqref{eq:problem} includes TopPush~\cite{li2014top} which minimizes the number of positive samples below the highest-ranked negative sample. This fits into \eqref{eq:problem} with~$\lambda_1=0$,~$\lambda_2=1$ and~$t=\max_{i\in I^-} z_i$.
+\begin{mini}{\bm{w}, \bm{s}, t}{
+  \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+  }{\label{eq:problem}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
+\end{mini}
+
+Similarly to the standard network, the classifier~$f$ computes the score~$z_i$ for each sample~$\bm{x}_i$. Then a general function~$G$ takes the scores and labels of \textbf{all} samples and computes the threshold~$t$. This makes the problem non-decomposable. The objective function equals the weighted sum of false-positives (negative samples above the threshold) and false-negatives (positive samples below the threshold). Here,~$I$,~$I^+$ and~$I^-$ are the sets of all, positive and negative labels, respectively, and~$\Iverson{\cdot}$ is the characteristic ($0/1$) function counting how many times the argument is satisfied. Setting \eqref{eq:problem} includes TopPush~\cite{li2014top} which minimizes the number of positive samples below the highest-ranked negative sample. This fits into \eqref{eq:problem} with~$\lambda_1=0$,~$\lambda_2=1$ and~$t=\max_{i\in I^-} z_i$.
 
 Figure~\ref{fig:difference} shows the difference between the standard approach with cross-entropy and accuracy at the top. While classifier 1 has good total accuracy, its top accuracy is subpar because of the few negative outliers. On the other hand, classifier 2 has worse total accuracy, but its top accuracy is extremely good because more than half of the positive samples are on the top. While classifier 1 selected different thresholds for the accuracy and top metrics, these thresholds coincide for classifier 2.
 
@@ -46,7 +44,7 @@ Table~\ref{tab: summary formulations} shows other special cases of \eqref{eq:pro
 
 There is a close connection between accuracy at the top and ranking problems~\cite{batmaz2019review,werner2019review}. This was, together with similarities to the Neyman-Pearson problem, showed in~\cite{adam2021general}. A special case of the ranking problems attempts to rank positive samples above negative samples. Several approaches, such as RankBoost~\cite{freund2003efficient}, Infinite Push~\cite{agarwal2011infinite} or~$p$-norm push~\cite{rudin2009pnorm} employ a positive-negative pairwise comparison of scores, which can handle only small datasets. TopPush~\cite{li2014top} converts the pairwise sum into a single sum and minimizes the false-negatives below a threshold given by the maximum score corresponding to negative samples. Thus, it converts ranking into accuracy at the top problems.
 
-Two approaches for solving \eqref{eq:problem} exist. The first approach considers the threshold constraint as it is, while the second approach uses heuristics to approximate it. In the first approach, Acc@Top~\cite{boyd2012accuracy} argues that the threshold equals one of the scores. They fix the index of a sample and solve as many optimization problems as there are samples.~\cite{eban2017scalable,adam2021general,kumar2021implicit} write the threshold as a constraint and replace both the objective and the constraint via surrogates.~\cite{eban2017scalable} uses Lagrange multipliers to obtain a minimax problem,~\cite{mackey2018constrained} implicitly removes the threshold as an optimization variable and uses the chain rule to compute the gradient while~\cite{macha2020nonlinear} solves an SVM-like dual formulation with kernels.~\cite{grill2016learning} uses the same formulation but applies surrogates only to the objective and recomputes the threshold after each gradient step. TFCO~\cite{cotter2019optimization} solves a general class of constrained problems via a minimax reformulation. In the second approach, SoDeep~\cite{engilberge2019sodeep} or SmoothI~\cite{thonet2021smoothi} use the fact that the threshold may be easily computed from sorted scores. They approximate the sorting operator by a network trained on artificial data. AP-Perf~\cite{fathony2019ap} considers a general metric and hedges against the worst-case perturbation of scores. The authors argue that the problem is bilinear in scores and use duality arguments. However, the bilinearity is lost when optimizing with respect to the weights of the original network. 
+Two approaches for solving \eqref{eq:problem} exist. The first approach considers the threshold constraint as it is, while the second approach uses heuristics to approximate it. In the first approach, Acc@Top~\cite{boyd2012accuracy} argues that the threshold equals one of the scores. They fix the index of a sample and solve as many optimization problems as there are samples.~\cite{eban2017scalable,adam2021general,kumar2021implicit} write the threshold as a constraint and replace both the objective and the constraint via surrogates.~\cite{eban2017scalable} uses Lagrange multipliers to obtain a minimax problem,~\cite{mackey2018constrained} implicitly removes the threshold as an optimization variable and uses the chain rule to compute the gradient while~\cite{macha2020nonlinear} solves an SVM-like dual formulation with kernels.~\cite{grill2016learning} uses the same formulation but applies surrogates only to the objective and recomputes the threshold after each gradient step. \TFCO~\cite{cotter2019optimization} solves a general class of constrained problems via a minimax reformulation. In the second approach, SoDeep~\cite{engilberge2019sodeep} or SmoothI~\cite{thonet2021smoothi} use the fact that the threshold may be easily computed from sorted scores. They approximate the sorting operator by a network trained on artificial data. \APPerf~\cite{fathony2019ap} considers a general metric and hedges against the worst-case perturbation of scores. The authors argue that the problem is bilinear in scores and use duality arguments. However, the bilinearity is lost when optimizing with respect to the weights of the original network. 
 
 \section{DeepTopPush as a method for maximizing accuracy at the top}\label{sec:solving}
 
@@ -54,30 +52,27 @@ This section first shows a basic algorithm to solve \eqref{eq:problem}. We then 
 
 \subsection{Basic algorithm for solving accuracy at the top}
 
-Even though the presented technique can be applied to any formulation from Table~\ref{table:summary}, for simplicity, we derive it only for the TopPush formulation, where~$\lambda_1=0$ and~$\lambda_2=1$. This amounts to minimizing the false-negatives in \eqref{eq:problem}. Since the function~$\II$ in the formulation \eqref{eq:problem} is discontinuous, it is usually replaced by a general surrogate function~$l$ which is continuous and non-decreasing. This leads to
-\begin{equation}\label{eq:problem_surr1}
-  \begin{aligned}
-    \minimize{w,z,t}
-    & \frac{1}{\npos}\sum_{i\in I^+}l(t-z_i) \\
-    \st
-    & z_i = f(\bm{w};\bm{x}_i), \\
-    & t   = G(\{(z_i, y_i)\}_{i\in I}).
-\end{aligned}
-\end{equation}
+Even though the presented technique can be applied to any formulation from Table~\ref{table:summary}, for simplicity, we derive it only for the TopPush formulation, where~$\lambda_1=0$ and~$\lambda_2=1$. This amounts to minimizing the false-negatives in \eqref{eq:problem}. Since the function~$\Iverson{\cdot}$ in the formulation \eqref{eq:problem} is discontinuous, it is usually replaced by a general surrogate function~$l$ which is continuous and non-decreasing. This leads to
+\begin{mini}{\bm{w}, \bm{s}, t}{
+  \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+  }{\label{eq:problem_surr1}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
+  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
+\end{mini}
 To apply the stochastic gradient descent, we need to compute the gradient. The core idea follows~\cite{mackey2018constrained} which was proposed in a more general context in~\cite{adam2019machine}. It rewrites problem \eqref{eq:problem_surr1} into its equivalent form
-\begin{equation}\label{eq:problem_surr2}
-  \minimize{w}
-  \frac{1}{\npos}\sum_{i\in I^+}l\Brac{G\Brac{\{(f(\bm{w};\bm{x}_j), y_j)\}_{j\in I}} - f(\bm{w};\bm{x}_i)}.
-\end{equation}
+\begin{mini}{\bm{w}}{
+  \frac{1}{\npos} \sum_{i \in \Ipos} l\Brac{G\Brac{\Brac[c]{(f(\bm{x}_j; \bm{w}), y_j)}_{j \in \I}}} - f(\bm{x}_i; \bm{w}).}{\label{eq:problem_surr2}}{}
+\end{mini}
+
 This form removed the constraints and it has the advantage that the only optimization variable is~$\bm{w}$ instead of~$(\bm{w}, \bm{z}, t)$ in \eqref{eq:problem_surr1}. In all cases from Table~\ref{table:summary}, the threshold~$t$ always equals to one of the scores, let it have index~$j^*$ and then~$t=z_{j^*}$. Denoting the objective of \eqref{eq:problem_surr2} by~$L(\bm{w})$, the chain rule implies that the gradient of the objective from \eqref{eq:problem_surr2} equals to
 \begin{equation}\label{eq:grad1}
   \nabla L(\bm{w}) = \frac{1}{\npos} \sum_{i\in I^+}l'(t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{j^*}) - \nabla_w f(\bm{w};\bm{x}_i)\big).
 \end{equation}
-The stochastic gradient descent replaces the sum over all positive samples~$I^+$ with a sum over all positive samples in a minibatch~$\Imin^+$. However, as both the threshold~$t$ and the index~$j^*$ depend on all scores~$z_i$, they need to be approximated on the minibatch as well. We denote these approximations by~$\hat t$ and~$\hat j$, respectively. Denoting the number of positive samples in the minibatch by~$\nmin^+$, we replace the true gradient \eqref{eq:grad1} by the \textit{sampled gradient}
+The stochastic gradient descent replaces the sum over all positive samples~$I^+$ with a sum over all positive samples in a minibatch~$\Imbpos$. However, as both the threshold~$t$ and the index~$j^*$ depend on all scores~$z_i$, they need to be approximated on the minibatch as well. We denote these approximations by~$\hat t$ and~$\hat j$, respectively. Denoting the number of positive samples in the minibatch by~$\nmbpos$, we replace the true gradient \eqref{eq:grad1} by the \textit{sampled gradient}
 \begin{equation}\label{eq:grad2}
-  \nabla \hat L = \frac{1}{\nmin^+}\sum_{i\in \Imin^+}l'(\hat t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{\hat j}) - \nabla_w f(\bm{w};\bm{x}_i) \big),
+  \nabla \hat L = \frac{1}{\nmbpos}\sum_{i\in \Imbpos}l'(\hat t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{\hat j}) - \nabla_w f(\bm{w};\bm{x}_i) \big),
 \end{equation}
-The most straightforward way is to choose the sampled threshold~$\hat t$ by the same rule as the true threshold~$t$. As an example, if~$t$ is the~$100^{\rm th}$ largest score on the whole dataset and~$\frac{n}{\nmin}=20$ is the ratio of sizes of the whole dataset and of the minibatch, we select the sampled threshold~$\hat t$ as the~$5^{\rm th}$ largest score on the minibatch. We summarize this procedure in Algorithm~\ref{alg1}.
+The most straightforward way is to choose the sampled threshold~$\hat t$ by the same rule as the true threshold~$t$. As an example, if~$t$ is the~$100^{\rm th}$ largest score on the whole dataset and~$\frac{n}{\nmb}=20$ is the ratio of sizes of the whole dataset and of the minibatch, we select the sampled threshold~$\hat t$ as the~$5^{\rm th}$ largest score on the minibatch. We summarize this procedure in Algorithm~\ref{alg1}.
 
 \begin{figure*}
   \begin{minipage}{0.48\textwidth}
@@ -86,12 +81,12 @@ The most straightforward way is to choose the sampled threshold~$\hat t$ by the 
       \begin{algorithmic}[1]
         \State Initialize weights~$\bm{w}$
         \Repeat
-        \State Select minibatch~$\Imin$
-        \State \phantom{$\Iminh$}
-        \State Compute~$z_i\gets f(\bm{w};\bm{x}_i)$ for~$i\in\Imin$
-        \State Set~$\hat t \gets G(\{(z_i,y_i)\}_{i\in\Imin})$
+        \State Select minibatch~$\Imb$
+        \State \phantom{$\Imbenh$}
+        \State Compute~$z_i\gets f(\bm{w};\bm{x}_i)$ for~$i\in\Imb$
+        \State Set~$\hat t \gets G(\{(z_i,y_i)\}_{i\in\Imb})$
         \State 
-        \State Compute~$\nabla \hat L$ based on~$\Imin$\phantom{$\Iminh$}
+        \State Compute~$\nabla \hat L$ based on~$\Imb$\phantom{$\Imbenh$}
         \State Make a gradient step
         \Until{stopping criterion is satisfied}
       \end{algorithmic}
@@ -106,12 +101,12 @@ The most straightforward way is to choose the sampled threshold~$\hat t$ by the 
       \begin{algorithmic}[1]
         \State Initialize weights~$\bm{w}$, random index~$j^*$
         \Repeat
-        \State Select minibatch~$\Imin$
-        \State Enhance minibatch~$\Iminh = \Imin \cup \{j^*\}$
-        \State Compute~$z_i\gets f(\bm{w};\bm{x}_i)$ for~$i\in\Iminh$
-        \State Set~$\hat t \gets \{\max z_i \mid i\in \Iminh \cap I^-\}$
+        \State Select minibatch~$\Imb$
+        \State Enhance minibatch~$\Imbenh = \Imb \cup \{j^*\}$
+        \State Compute~$z_i\gets f(\bm{w};\bm{x}_i)$ for~$i\in\Imbenh$
+        \State Set~$\hat t \gets \{\max z_i \mid i\in \Imbenh \cap I^-\}$
         \State Find index~$j^*$ such that~$t = z_{j^*}$
-        \State Compute~$\nabla \hat L$ based on~$\Iminh\cap I^+$
+        \State Compute~$\nabla \hat L$ based on~$\Imbenh\cap I^+$
         \State Make a gradient step
         \Until{stopping criterion is satisfied}
       \end{algorithmic}
@@ -148,7 +143,7 @@ This proposition states that when the minibatch size increases to infinity, the 
 \begin{proof}
   If~$j^*$ is unique, then the true threshold~$t$ is a differentiable function. The differentiability of~$L$ and~$\hat L$ follows from the chain rule. If~$\hat j=j^*$ holds, then the sampled gradient equals to
   \begin{equation}\label{eq:grad_min_aux}
-    \nabla \hat L(\bm{w})= \frac{1}{\nmin^+}\sum_{i\in \Imin^+}l'(t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{j^*}) - \nabla_w f(\bm{w};\bm{x}_i) \big).
+    \nabla \hat L(\bm{w})= \frac{1}{\nmbpos}\sum_{i\in \Imbpos}l'(t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{j^*}) - \nabla_w f(\bm{w};\bm{x}_i) \big).
   \end{equation}
   The summands are identical to the ones in \eqref{eq:grad1}. Since the sum is performed with respect to positive samples, the threshold is computed from negative samples, the lemma statement follows.
 \end{proof}

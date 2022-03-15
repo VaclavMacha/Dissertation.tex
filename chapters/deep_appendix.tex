@@ -13,17 +13,17 @@ The proof of Theorem~\ref{theorem:convergence} is based on Lemma~\ref{lemma:conv
   \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a negative sample}}
   =  \nabla L(\bm w).
 \end{equation*}
-On the other hand, when~$j^*$ corresponds to a positive sample, it needs to be always present in the minibatch selection and there are effectively only~$\nmin^+-1$ positive samples in the minibatch. Then
+On the other hand, when~$j^*$ corresponds to a positive sample, it needs to be always present in the minibatch selection and there are effectively only~$\nmbpos-1$ positive samples in the minibatch. Then
 \begin{equation*}
   \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a positive sample}}
-  = \frac{\nmin^+-1}{\nmin^+}\nabla L(\bm w).
+  = \frac{\nmbpos-1}{\nmbpos}\nabla L(\bm w).
 \end{equation*}
 Denote now~$p$ the probability that the threshold corresponds to a positive sample. Then we have
 \begin{equation*}
   \begin{aligned}
     \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*}
-    & = (1-p)\nabla L(\bm w) + p\frac{\nmin^+-1}{\nmin^+}\nabla L(\bm w) \\
-    & = \nabla L(\bm w) - \frac{p}{\nmin^+}\nabla L(\bm w).
+    & = (1-p)\nabla L(\bm w) + p\frac{\nmbpos-1}{\nmbpos}\nabla L(\bm w) \\
+    & = \nabla L(\bm w) - \frac{p}{\nmbpos}\nabla L(\bm w).
 \end{aligned}
 \end{equation*}
 
@@ -32,7 +32,7 @@ Theorem~\ref{theorem:convergence} will then be modified into
   \begin{aligned}
     \bias(\bm w)
     & = \PP(\hat j\neq j^*) \Brac{\nabla L(\bm w) - \EE\Brac{\nabla \hat L(\bm w) \mid \hat j\neq j^*}} \\
-    & \qquad - \PP(\hat j= j^*)\frac{p}{\nmin^+}\nabla L(\bm w).
+    & \qquad - \PP(\hat j= j^*)\frac{p}{\nmbpos}\nabla L(\bm w).
   \end{aligned}
 \end{equation*}
 We changed the result by adding the last term. Usually the training set contains much less positive than negative samples. This implies that~$p$ is assumed to be small and the extra term is small as well. Thefore, this change should have a negligible impact on the theorem implications.

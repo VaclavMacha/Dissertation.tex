@@ -675,7 +675,7 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
         & 4.4s
         & 5.1s
         & 62.8s \\
-      DeepTopPush
+      \DeepTopPush
         & 4.8s
         & 5.6s
         & 66.6s \\
@@ -683,17 +683,17 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
         & 4.8s
         & 5.6s
         & 66.6s \\
-      TFCO
+      \TFCO
         & 7.2s
         & 6.5s
         & - \\
-      AP-Perf
+      \APPerf
         & 95.3s
         & 81.2s
         & - \\
       \bottomrule
   \end{NiceTabular}
-  \caption{Time requirements per epoch for investigated methods for minibatches of size~$\nmin=32$.}
+  \caption{Time requirements per epoch for investigated methods for minibatches of size~$\nmb=32$.}
   \label{table:time}
 \end{table}
 
@@ -703,10 +703,10 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
     \toprule
       & \Block[c]{1-1}{\textbf{Dataset}}
       & \textbf{BaseLine}
-      & \textbf{DeepTopPush}
-      & \textbf{Pat\&Mat-NP}
-      & \textbf{TFCO}
-      & \textbf{AP-Perf} \\
+      & \textbf{\DeepTopPush}
+      & \textbf{\PatMatNP}
+      & \textbf{\TFCO}
+      & \textbf{\APPerf} \\
     \midrule
     \Block[borders=right]{4-1}{\rotate tpr@fpr \\ $\tau=\nicefrac{1}{\nneg}$}
     & FashionMNIST
@@ -765,7 +765,7 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
   \label{tab:Overall comparison}
 \end{table}
 
-Table~\ref{tab:Overall comparison} shows the true positive rate (tpr) above the second-largest negative and at the prescribed false positive rate (fpr)~$\tau=0.01$. Using the second-largest negative, which corresponds to~$\tau=\frac{1}{\nneg}$, allows for one outlier. The results are averaged over ten independent runs except for AP-Perf, which is too slow. The best result for each metric (in columns) is highlighted. All methods are better than \BaseLine. This is not surprising as all these methods are designed to work well for low false positive rates. \DeepTopPush outperforms all other methods at the top, while it performs well at the low fpr of~$\tau=0.01$. There \PatMatNP, which also falls into our framework, performs well. Both these methods outperform the state of the art methods. 
+Table~\ref{tab:Overall comparison} shows the true positive rate (tpr) above the second-largest negative and at the prescribed false positive rate (fpr)~$\tau=0.01$. Using the second-largest negative, which corresponds to~$\tau=\frac{1}{\nneg}$, allows for one outlier. The results are averaged over ten independent runs except for \APPerf, which is too slow. The best result for each metric (in columns) is highlighted. All methods are better than \BaseLine. This is not surprising as all these methods are designed to work well for low false positive rates. \DeepTopPush outperforms all other methods at the top, while it performs well at the low fpr of~$\tau=0.01$. There \PatMatNP, which also falls into our framework, performs well. Both these methods outperform the state of the art methods. 
 
 Figure~\ref{fig: roc curves} \textbf{A)} shows the ROC curves on CIFAR100 averaged over ten independent runs. We use the logarithmic~$x$ axis to highlight low fpr modes. \DeepTopPush performs significantly the best again whenever the false positive rate is smaller than~$0.01$.
 

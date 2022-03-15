@@ -9,22 +9,19 @@
 \usepackage{fancyhdr}
 
 % Text options
-\usepackage{lmodern}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{xspace}
 
+\usepackage{lmodern}
 \usepackage{amsfonts}
 \usepackage{dsfont}
 \usepackage{pifont}
 
-\usepackage[color=myred!50]{todonotes}
-
 % Graphics and colors
 \usepackage{graphicx}
-\usepackage{import}
-\usepackage{graphics}
 \usepackage{xcolor}
+\usepackage{import}
 
 \definecolor{myred}{RGB}{150,0,0}  
 \definecolor{mygreen}{RGB}{0,150,0}
@@ -37,8 +34,7 @@
 \newcommand{\doccol}{\color{myblue}}
 
 % Hyperrefs
-\usepackage{hyperref}
-\hypersetup{
+\usepackage[
   pdfusetitle,
   unicode = true,
   bookmarks = true,
@@ -51,7 +47,7 @@
   linkcolor = myblue,
   urlcolor = myred,
   citecolor = mygreen,
-}
+]{hyperref}
 
 % enumerate and itemize
 \usepackage{enumitem}
@@ -65,8 +61,6 @@
 
 \captionsetup[figure]{position = bottom}
 \captionsetup[table]{position = bottom}
-
-% Figures
 
 % Tables
 \usepackage{booktabs}
@@ -110,6 +104,9 @@
 \usepgfplotslibrary{groupplots}
 \usepgfplotslibrary{fillbetween}
 
+% Tmp
+\usepackage[color=myred!50]{todonotes}
+
 % ------------------------------------------------------------------------------
 % Math declarations
 % ------------------------------------------------------------------------------
@@ -142,7 +139,6 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\X}{\mathbb{X}}
-\newcommand{\Xc}{\mathcal{X}}
 \newcommand{\D}{\mathcal{D}}
 
 \newcommand{\I}{\mathcal{I}}
@@ -151,6 +147,7 @@
 \newcommand{\Ipos}{\I_{+}}
 
 \newcommand{\Imb}{\I_{\text{mb}}}
+\newcommand{\Imbenh}{\I_{\text{mb}}^{\text{enh}}}
 \newcommand{\Imbneg}{\I_{\text{mb},-}}
 \newcommand{\Imbpos}{\I_{\text{mb},+}}
 
@@ -167,10 +164,6 @@
 \newcommand{\Kall}{\K^{\pm}}
 \newcommand{\Kneg}{\K^{-}}
 
-\newcommand{\updateaa}{\Delta_{\alpha,\alpha}}
-\newcommand{\updateab}{\Delta_{\alpha,\beta}}
-\newcommand{\updatebb}{\Delta_{\beta,\beta}}
-
 \newcommand{\alphak}{\alpha_{\hat{k}}}
 \newcommand{\alphal}{\alpha_{\hat{l}}}
 \newcommand{\betak}{\beta_{\hat{k}}}
@@ -180,16 +173,7 @@
 \newcommand{\abs}[1]{|#1|}
 \newcommand{\inner}[2]{\Brac[a]{#1, \; #2}}
 \newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
-\newcommand{\minimize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{minimize}\quad}{\operatorname*{minimize}_{#1}\quad}}
-\newcommand{\maximize}[1]{\ifthenelse{\isempty{#1}}{\operatorname*{maximize}\quad}{\operatorname*{maximize}_{#1}\quad}}
-\newcommand{\st}{\operatorname{subject\ to}}
-\newcommand{\argmin}{\operatorname*{argmin}}
-\newcommand{\eps}{{\varepsilon}}
 
-\newcommand{\Imin}{I_{\rm mb}}
-\newcommand{\Iminh}{I_{\rm mb}^{\rm enh}}
-\newcommand{\nmin}{n_{\rm mb}}
-\newcommand{\II}{\mathds{1}}
 \newcommand{\Iverson}[1]{\mathds{1}_{\Brac[s]{#1}}}
 
 \newcommand{\EE}{\mathbb{E}}

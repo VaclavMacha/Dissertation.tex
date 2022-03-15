@@ -9,7 +9,7 @@ where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In su
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
-  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
+  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
 \end{mini*}
 
 In this chapter, we provide a theoretical analysis of the unified framework from Chapter~\ref{chap: framework} with linear classifier. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. The overview of all formulations that falls into the framework~\eqref{eq: aatp surrogate} is in Table~\ref{tab: summary formulations}. We focus mainly on the following desirable properties:

@@ -5,7 +5,7 @@ In the previous chapter, we introduced the general formulation of the binary cla
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
-  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}),}
+  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}},}
 \end{mini}
 where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. In other words, all mentioned problems can be formulated as a binary classification problem with special condition on the decision threshold. Then the problems only differ in the way they define the function~$G$. The important distinction from standard binary classification is that the decision threshold is no longer fixed (as in case of neural networks) or trained independently (as in case of SVM), but is a function of scores of all samples. Therefore, the minimization in the problem~\eqref{eq: aatp counts} is performed only with respect to the one variable~$\bm{w}$.
 
@@ -45,7 +45,7 @@ Since the surrogate function provides upper approximation of the Iverson functio
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= G(\Brac[c]{\bm{s}_i; y_i}_{i \in \I}).}
+  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
 \end{mini}
 The regularization is not necessary, but it is usually added for better numerical stability. The resulting optimization problem is easier to solve than problem~\eqref{eq: aatp counts} since the objective function is continuous. To derive other theoretical properties, we need to know the concrete form of the decision threshold function~$G$ as well as the form of the used model~$f.$ Different forms of the function~$G$ are discussed in the rest of this chapter and different forms of model~$f$ in Chapters~\ref{chap: linear} - \ref{chap: deep}.
 
