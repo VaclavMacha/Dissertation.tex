@@ -72,7 +72,7 @@ In this section, we derive the dual formulation of \TopPushK. Table~\ref{tab: su
   Altogether, we get the formulation~\eqref{eq: TopPushK primal alternative}, where we use the fact, that we have linear model and therefore~$s^-_j = \bm{w}^{\top} \bm{x}^-_j$ for all~$j = 1, \; 2, \ldots, \; \nneg$ and ~$s^+_i = \bm{w}^{\top} \bm{x}^+_i$ for all~$i = 1, \; 2, \ldots, \; \npos$.
 \end{proof}
 
-\pagebreak
+
 
 \begin{theorem}[Dual formulation of \TopPush and \TopPushK ]\label{thm: TopPushK dual}
   Consider \TopPushK formulation~\eqref{eq: toppush surrogate} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
@@ -264,7 +264,7 @@ For better readability we recall the form of the dual formulation~\eqref{eq: Top
 \end{maxi*}
 In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
 
-\pagebreak
+
 
 \topruleaa*
 \begin{proof}[Proof of Lemma~\ref{thm: toppushk family hinge update a,a} on page~\pageref{thm: toppushk family hinge update a,a}]
@@ -332,7 +332,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-\pagebreak
+
 
 \subsubsection{Quadratic Hinge Loss}
 
@@ -376,7 +376,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-\pagebreak
+
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
@@ -424,7 +424,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-\pagebreak
+
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update b,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -746,7 +746,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
 \end{proof}
 
-\pagebreak
+
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define

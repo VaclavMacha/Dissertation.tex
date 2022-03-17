@@ -30,6 +30,10 @@ Each of the visual recognition datasets was converted into ten binary datasets b
 \begin{table}[!ht]
   \centering
   \begin{NiceTabular}{lcrrrrrr}
+    \CodeBefore
+      \rowcolor{\headercol}{1-2}
+      \rowcolors{4}{\rowcol}{}[restart]
+    \Body
     \toprule
     \Block[c]{2-1}{\textbf{Dataset}}
       & \Block[c]{2-1}{$m$}
@@ -188,6 +192,10 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
 \begin{table}[!ht]
   \centering
   \begin{NiceTabular}{llcccc}
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
+    \Body
     \toprule
     \Block[c]{1-2}{\textbf{Method}}
      && \textbf{Ionosphere}
@@ -205,7 +213,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       & \nomark
       & \yesmark
       & \nomark \\
-    \Block{2-1}{\Grill}
+    \Block{1-1}{\Grill}
       & $\tau=0.01$
       & \nomark
       & \nomark
@@ -216,7 +224,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       &\nomark
       & \nomark
       & \nomark \\
-    \Block{2-1}{\PatMat}
+    \Block{1-1}{\PatMat}
       & $\tau=0.01$
       & \yesmark
       & \good{\boldmath$\beta\leq 0.1$}
@@ -227,7 +235,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       & \good{\boldmath$\beta\leq 1$}
       & \yesmark
       & \yesmark \\
-    \Block{2-1}{\TopMeanK}
+    \Block{1-1}{\TopMeanK}
       & $\tau=0.01$
       & \nomark
       & \nomark
@@ -238,7 +246,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       & \nomark
       & \nomark
       & \nomark \\
-    \Block{2-1}{\GrillNP}
+    \Block{1-1}{\GrillNP}
       & $\tau=0.01$
       & \nomark
       & \nomark
@@ -249,7 +257,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       & \nomark
       & \nomark
       & \nomark \\
-    \Block{2-1}{\PatMatNP}
+    \Block{1-1}{\PatMatNP}
       & $\tau=0.01$
       & \yesmark
       & \good{\boldmath$\beta\leq 1$}
@@ -260,7 +268,7 @@ Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential globa
       & \yesmark
       & \yesmark &
       \good{\boldmath$\beta\leq 1$} \\
-    \Block{2-1}{\tauFPL}
+    \Block{1-1}{\tauFPL}
       & $\tau=0.01$
       & \yesmark
       & \nomark
@@ -318,6 +326,10 @@ which gave the best performance on the validation set. All presented result are 
 \begin{table}[ht]
   \centering
   \begin{NiceTabular}{lcrrrrrrr}
+    \CodeBefore
+      \rowcolor{\headercol}{1-2}
+      \rowcolors{4}{\rowcol}{}[restart]
+    \Body
     \toprule
     \Block[c]{2-1}{\textbf{Dataset}}
       & \Block[c]{2-1}{$y^+$}  
@@ -418,6 +430,10 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
 \begin{table}[ht]
   \centering
   \begin{NiceTabular}{cllllllll}
+    \CodeBefore
+      \rowcolor{\headercol}{1-2}
+      \rowcolors{4}{\rowcol}{}[restart, cols=2-]
+    \Body
     \toprule
     & \Block[c]{2-2}{\textbf{Method}}
       && \Block[c]{1-6}{$\pratrec$} \\
@@ -437,7 +453,7 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
       & 61.85
       & 57.89
       & 51.83 \\
-    & \TopPushK
+    & \Block{1-1}{\TopPushK}
       & $K = 5$
       & 73.96
       & \Block[fill=mygreen!25]{1-1}{65.41}
@@ -452,7 +468,7 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
       & 56.89
       & 54.40
       & 49.83 \\
-    & \PatMat
+    & \Block{1-1}{\PatMat}
       & $\tau = 0.01$
       & 63.67
       & 60.30
@@ -483,7 +499,7 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
      & 76.15
      & 71.13
      & 60.17 \\
-    & \TopPushK
+    & \Block{1-1}{\TopPushK}
       & $K = 5$
       & 92.50
       & 87.56
@@ -498,7 +514,7 @@ In Table~\ref{tab:Metrics comparison} we present the precision of all methods ac
       & 79.09
       & 71.88
       & 59.27 \\
-    & \PatMat
+    & \Block{1-1}{\PatMat}
       & $\tau = 0.01$
       & 89.65
       & \Block[fill=mygreen!50]{1-1}{89.11}
@@ -540,34 +556,38 @@ Finally, Table~\ref{tab:Time comparison} depicts the time comparison for all met
 \begin{table}[ht]
   \centering
   \begin{NiceTabular}{clccc}
-      \toprule
-        & \Block[c]{1-1}{\textbf{Dataset}}
-        & \textbf{\TopPush}
-        & \textbf{\TopPushK}
-        & \textbf{\PatMat} \\
-      \midrule
-      \Block[borders=right]{5-1}{\rotate One \repeatloop \\ loop [ms]}
-      & Ionosphere
-        & $0.04 \pm 0.00$
-        & $0.03 \pm 0.00$
-        & $0.03 \pm 0.00$ \\
-      & Spambase
-        & $0.56 \pm 0.02$
-        & $0.49 \pm 0.01$
-        & $0.50 \pm 0.01$ \\
-      & WhiteWineQuality
-        & $0.62 \pm 0.03$
-        & $0.53 \pm 0.01$
-        & $0.54 \pm 0.01$ \\
-      & RedWineQuality
-        & $0.17 \pm 0.01$
-        & $0.14 \pm 0.01$
-        & $0.15 \pm 0.01$ \\
-      & Fashion-MNIST
-        & $17.16 \pm 0.74$
-        & $15.95 \pm 0.14$
-        & $15.54 \pm 0.80$ \\
-      \bottomrule
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart, cols=2-]
+    \Body
+    \toprule
+      & \Block[c]{1-1}{\textbf{Dataset}}
+      & \textbf{\TopPush}
+      & \textbf{\TopPushK}
+      & \textbf{\PatMat} \\
+    \midrule
+    \Block[borders=right]{5-1}{\rotate One \repeatloop \\ loop [ms]}
+    & Ionosphere
+      & $0.04 \pm 0.00$
+      & $0.03 \pm 0.00$
+      & $0.03 \pm 0.00$ \\
+    & Spambase
+      & $0.56 \pm 0.02$
+      & $0.49 \pm 0.01$
+      & $0.50 \pm 0.01$ \\
+    & WhiteWineQuality
+      & $0.62 \pm 0.03$
+      & $0.53 \pm 0.01$
+      & $0.54 \pm 0.01$ \\
+    & RedWineQuality
+      & $0.17 \pm 0.01$
+      & $0.14 \pm 0.01$
+      & $0.15 \pm 0.01$ \\
+    & Fashion-MNIST
+      & $17.16 \pm 0.74$
+      & $15.95 \pm 0.14$
+      & $15.54 \pm 0.80$ \\
+    \bottomrule
   \end{NiceTabular}
   \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods.}
   \label{tab:Time comparison}
@@ -587,6 +607,10 @@ We consider the following image recognition datasets: FashionMNIST~\cite{xiao201
 \begin{table}
   \centering
   \begin{NiceTabular}{lcrrrrc}
+    \CodeBefore
+      \rowcolor{\headercol}{1-2}
+      \rowcolors{4}{\rowcol}{}[restart]
+    \Body
     \toprule
     \Block[c]{2-1}{\textbf{Dataset}}
       & \Block[c]{2-1}{$d$}
@@ -665,33 +689,37 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
 \begin{table}[!ht]
   \centering
   \begin{NiceTabular}{lccc}
-      \toprule
-      \Block[c]{1-1}{\textbf{Method}}
-        & \textbf{FashionMNIST}
-        & \textbf{CIFAR100}
-        & \textbf{SVHN} \\
-      \midrule
-      BaseLine
-        & 4.4s
-        & 5.1s
-        & 62.8s \\
-      \DeepTopPush
-        & 4.8s
-        & 5.6s
-        & 66.6s \\
-      \PatMatNP
-        & 4.8s
-        & 5.6s
-        & 66.6s \\
-      \TFCO
-        & 7.2s
-        & 6.5s
-        & - \\
-      \APPerf
-        & 95.3s
-        & 81.2s
-        & - \\
-      \bottomrule
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
+    \Body
+    \toprule
+    \Block[c]{1-1}{\textbf{Method}}
+      & \textbf{FashionMNIST}
+      & \textbf{CIFAR100}
+      & \textbf{SVHN} \\
+    \midrule
+    BaseLine
+      & 4.4s
+      & 5.1s
+      & 62.8s \\
+    \DeepTopPush
+      & 4.8s
+      & 5.6s
+      & 66.6s \\
+    \PatMatNP
+      & 4.8s
+      & 5.6s
+      & 66.6s \\
+    \TFCO
+      & 7.2s
+      & 6.5s
+      & - \\
+    \APPerf
+      & 95.3s
+      & 81.2s
+      & - \\
+    \bottomrule
   \end{NiceTabular}
   \caption{Time requirements per epoch for investigated methods for minibatches of size~$\nmb=32$.}
   \label{table:time}
@@ -700,6 +728,10 @@ We compare our methods with \BaseLine, which uses the weighted cross-entropy. Mo
 \begin{table}[ht]
   \centering
   \begin{NiceTabular}{clccccc}
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart, cols=2-]
+    \Body
     \toprule
       & \Block[c]{1-1}{\textbf{Dataset}}
       & \textbf{BaseLine}

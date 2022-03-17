@@ -6,7 +6,7 @@ In the Chapter~\ref{chap: framework}, we introduced general framework for binary
 
 In this section, we derive dual forms of formulations from Table~\ref{tab: summary formulations}. Since many of these formulations are very similar, we divide them into two families. The first one is a family of \TopPushK formulations that consists \TopPush, \TopPushK, \TopMeanK and \tauFPL formulations. All these formulations use false-negative rate as an objective function and the decision threshold is a mean of~$K$ largest scores of all or negative samples. The second family is a family of \PatMat formulations that consists \PatMat and \PatMat formulations. Also these two formulations use false-negative rate as an objective function, but the decision threshold is a surrogate approximation of top $\tau$-quantile of scores of all or negative samples. In other words, we have two families that share the same objective function and the form of the decision threshold, even thogh the decision threshold may be computed from different samples.  
 
-\pagebreak
+
 
 \begin{notation}[Kernel Matrix]\label{not: kernel matrix}
   To simplify the future notation, we use matrix~$\X$ of all samples with rows defined for all~$i \in \I$ as 
@@ -565,9 +565,13 @@ Now we derive the computational complexity of each \repeatloop loop from step~\r
 
 \begin{table}[h]
   \centering
-  \begin{NiceTabular}{lcc} 
+  \begin{NiceTabular}{lcc}
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
+    \Body
     \toprule
-    Operation
+    \Block[c]{1-1}{Operation}
       & $\K$ precomputed
       & $\K$ not precomputed \\
     \midrule

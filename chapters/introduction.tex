@@ -12,12 +12,12 @@ Many other classification problems can be found in almost all fields. Also, ther
 \begin{itemize}
   \item \textbf{Training Phase:} In the training phase, the algorithm uses training data to build a model. The classification algorithms fall into the category of supervised learning algorithms. It means, that these algorithms must have labeled training data to build the model, i.e. the algorithm must have the knowledge of the target classes. The training data typically consists of pairs (sample, label) and can be described as follows
   \begin{equation*}\label{eq: training set}
-    \D_{\mathrm{train}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
+    \mathcal{D}_{\mathrm{train}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
   \end{equation*}
   where the sample~$\bm{x}_i \in \R^d$ is a~$d$-dimensional vector of features that describes the object of interes and the label~$y_i \in \{1, 2, \ldots, k\}$ represents target class. Moreover~$n \in \N$ is a number of training samples and~$k \in \N$ is a number of target classes.
   \item \textbf{Testing Phase:} In the testing phase, the model is used to assign labels~$\hat{y}_i \in \{1, 2, \ldots, k\}$ to the data from testing set which was not known during the training phase
   \begin{equation*}\label{eq: test set}
-    \D_{\mathrm{test}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{m},
+    \mathcal{D}_{\mathrm{test}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{m},
   \end{equation*}
   where~$\bm{x}_i \in \R^d,$~$y_i \in \{1, 2, \ldots, k\}$ and~$m \in \N$ is a number of testing samples. The ultimate goal of all classification algorithms is to classify testing samples with the highest accuracy possible.
 \end{itemize}
@@ -26,16 +26,16 @@ The previous definitions of training and test set are general for classification
 \begin{notation}[Dataset]\label{not: dataset}
   In the rest of the work,, we follow the notation used for neural networks, i.e. we use~$1$ as positive label and~$0$ as negative label. Moreover, by dataset of size~$n \in \N$ we mean set in the form
   \begin{equation*}
-    \D = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
+    \mathcal{D} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
   \end{equation*}
-  where~$\bm{x}_i \in \R^d$ represents samples,~$d \in \N$ its dimension and~$y_i \in \{0, 1\}$ represents corresponding labels. To simplify future notation, we denote set of all indices of dataset~$\D$ as~$\I = \Ineg \cup \Ipos,$ where
+  where~$\bm{x}_i \in \R^d$ represents samples,~$d \in \N$ its dimension and~$y_i \in \{0, 1\}$ represents corresponding labels. To simplify future notation, we denote set of all indices of dataset~$\mathcal{D}$ as~$\I = \Ineg \cup \Ipos,$ where
   \begin{equation*}
     \begin{aligned}
       \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
       \Ipos & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}.
     \end{aligned}
   \end{equation*}
-  We also denote the number of negative samples in~$\D$ as~$\nneg = \Brac[v]{\Ineg}$ and the number of positive samples in~$\D$ as~$\npos = \Brac[v]{\Ipos},$ i.e. total number of samples is~$n = \nneg + \npos.$ 
+  We also denote the number of negative samples in~$\mathcal{D}$ as~$\nneg = \Brac[v]{\Ineg}$ and the number of positive samples in~$\mathcal{D}$ as~$\npos = \Brac[v]{\Ipos},$ i.e. total number of samples is~$n = \nneg + \npos.$ 
 \end{notation}
 
 The goal of any classification problem is to classify given samples with the highest possible accuracy or in other words with the lowest possible error. In the case of binary classification, there are two types of error: positive samples classified as negative and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
@@ -81,7 +81,7 @@ Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm
   \item \textbf{False negative:}~$\bm{x}_i$ is positive and is classified as negative, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 0.$
   \item \textbf{True positive:}~$\bm{x}_i$ is positive and is classified as positive, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 1.$
 \end{itemize}
-Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\D$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by model~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for all~$i \in \I,$ we can compute all fields of the confusion matrix as follows
+Using these four categories, we can construct a so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that represents the results of predictionS for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote vector classification scores given by model~$f$ as~$\bm{s} \in \R^n,$ where~$s_i = f(\bm{x}_i; \bm{w})$ for all~$i \in \I,$ we can compute all fields of the confusion matrix as follows
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
     \tp(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i \geq t}, & \quad
@@ -176,6 +176,10 @@ In this case the balanced accuracy is only 50\% which is very poor, but is more 
 \begin{table}
   \centering
   \begin{NiceTabular}{ccc}
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
+    \Body
     \toprule
     \textbf{Name} & \textbf{Aliases} & \textbf{Formula} \\
     \midrule
