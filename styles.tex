@@ -30,7 +30,7 @@
   roundcorner = 1pt,
   frametitlerule = true,
   skipabove = 5pt,
-  skipbelow = 5pt,
+  skipbelow = 0pt,
 }
 
 \newmdtheoremenv[style = theoremstyle]{thm}{Theorem}[chapter]
@@ -39,7 +39,7 @@
 \mdtheorem[style = theoremstyle]{corollary}[thm]{Corollary}
 \mdtheorem[style = theoremstyle]{proposition}[thm]{Proposition}
 
-%% definition style
+% Definition style
 \mdfdefinestyle{definitionstyle}{
   linecolor = mygreen!50,
   backgroundcolor = mygreen!10,
@@ -48,11 +48,11 @@
   roundcorner = 1pt,
   frametitlerule = true,
   skipabove = 5pt,
-  skipbelow = 5pt,
+  skipbelow = 0pt,
 }
 \mdtheorem[style = definitionstyle]{definition}[thm]{Definition}
 
-%% example style
+% Example style
 \mdfdefinestyle{examplestyle}{
   linecolor = myyellow!50,
   backgroundcolor = myyellow!10,
@@ -61,16 +61,36 @@
   roundcorner = 1pt,
   frametitlerule = true,
   skipabove = 5pt,
-  skipbelow = 5pt,
+  skipbelow = 0pt,
 }
 \mdtheorem[style = examplestyle]{example}[thm]{Example}
 \mdtheorem[style = examplestyle]{notation}[thm]{Notation}
 
-%% Proof style
-\renewcommand{\qedsymbol}{{\doccol $\blacksquare$}}
-\renewenvironment{proof}[1][\proofname]{%
-  \noindent{\doccol\textit{\textbf{#1:}}}\par\nobreak\noindent\ignorespaces%
-}{\qed}
+% Proof style
+\mdfdefinestyle{proofstyle}{
+  linecolor = myred,
+  linewidth = 1pt,
+  topline = false,
+  bottomline = false,
+  rightline = false,
+  innertopmargin = 0pt,
+  innerbottommargin = 0pt,
+  rightmargin = 2pt,
+  skipabove = 0pt,
+  skipbelow = 0pt,
+}
+
+\renewcommand{\qedsymbol}{{\color{myred} $\blacksquare$}}
+
+\renewenvironment{proof}[1][\proofname]
+{ 
+  \begin{mdframed}[style=proofstyle]%
+  \noindent{\color{myred}\textit{\textbf{#1:}}}\par\nobreak\noindent\ignorespaces%
+}
+{%
+  \nobreak\noindent\ignorespaces\qed
+  \end{mdframed}
+}
 
 % ------------------------------------------------------------------------------
 % Page formating
