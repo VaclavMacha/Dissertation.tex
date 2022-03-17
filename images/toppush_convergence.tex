@@ -37,7 +37,6 @@
     ytick={-1, 0, 1},
     axis x line=bottom,
     axis y line=left,
-    % ticks = none,
     enlargelimits = false,
   ]
     \nextgroupplot[
@@ -61,12 +60,12 @@
       xtick={-1, 0, 1},
       yticklabels={,,},
       view={0}{90},
-      % axis equal,
       colormap name=viridis,
     ]
       \addplot3[
         mesh/rows=70,
         mesh/cols=70,
+        opacity=0.75,
         contour filled={
           number = 15,
           labels=false,

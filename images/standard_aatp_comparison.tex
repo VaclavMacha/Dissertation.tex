@@ -23,6 +23,8 @@
 % 
 \begin{tikzpicture}
   \begin{axis}[
+    height=6cm,
+    width=14cm,
     xmin = -0.6,
     xmax = 2.15,
     ymin = -1.75,
@@ -37,8 +39,6 @@
       anchor=north,
     },
     enlargelimits = false,
-    height=6cm,
-    width=14cm,
   ]
     \addplot [scatterneg] table[x index=1, y index=0] {\StandardAATPComparison};
     \addlegendentry{Negative scores}
