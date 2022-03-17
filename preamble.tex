@@ -1,20 +1,20 @@
-\usepackage[ddmmyyyy]{datetime}
-
 % ------------------------------------------------------------------------------
 % Packages
 % ------------------------------------------------------------------------------
+\usepackage[ddmmyyyy]{datetime}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
 % Page setting
 \usepackage[explicit]{titlesec}
 \usepackage{sectsty}
 \usepackage{fancyhdr}
+\usepackage[title, titletoc]{appendix}
 
-% Text options
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{xspace}
-
-\usepackage{lmodern}
-\usepackage{amsfonts}
+% Fonts
+\usepackage{kpfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{dsfont}
 \usepackage{pifont}
 
@@ -23,7 +23,7 @@
 \usepackage{xcolor}
 \usepackage{import}
 
-\definecolor{myred}{RGB}{150,0,0}  
+\definecolor{myred}{RGB}{150,0,0}
 \definecolor{mygreen}{RGB}{0,150,0}
 \definecolor{myblue}{RGB}{0, 101, 189}
 \definecolor{myyellow}{RGB}{220, 206, 0}
@@ -49,43 +49,36 @@
   citecolor = mygreen,
 ]{hyperref}
 
-% enumerate and itemize
-\usepackage{enumitem}
-
-% Appendix
-\usepackage[title, titletoc]{appendix}
 
 % Captions
 \usepackage{caption}
-\usepackage{subcaption}
 
 \captionsetup[figure]{position = bottom}
 \captionsetup[table]{position = bottom}
 
-% Tables
+% Tables, Algs ...
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 \usepackage{booktabs}
 \usepackage{nicematrix}
 
 \renewcommand{\arraystretch}{1.5}
 
-% Algorithms
-\usepackage{algorithm}
-\usepackage{algorithmicx}
-\usepackage{algpseudocode}
+\newcommand{\headercol}{myblue!20}
+\newcommand{\rowcol}{myblue!10}
 
 % Math
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{mathtools}
 \usepackage{nicefrac}
 \usepackage{bm}
-\usepackage{thmtools}
 \usepackage{thm-restate}
 \usepackage{optidef}
+\usepackage{xspace}
 
 % Theorems
 \usepackage[framemethod=TikZ]{mdframed}
+\usepackage{amsthm}
 \usepackage{xifthen}
 
 % Tikz and pfgplots
@@ -139,7 +132,6 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\X}{\mathbb{X}}
-\newcommand{\D}{\mathcal{D}}
 
 \newcommand{\I}{\mathcal{I}}
 \newcommand{\Itil}{\tilde{\mathcal{I}}}
