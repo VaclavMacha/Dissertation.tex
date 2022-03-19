@@ -196,7 +196,16 @@ We call this formulation \PatMatNP to stress the similarity with \PatMat. The on
 
 \section{Summary}
 
-\todo[inline]{Add summary of the framework and formulations that fall into the framework}
+In this chapter, we presented the general framework~\eqref{eq: aatp counts} and its surrogate approximation~\eqref{eq: aatp surrogate} to handle the problem of binary classification at the top. Moreover, we showed that many important problems might be formulated in a way that falls into the framework. In Table~\ref{tab: summary formulations}, we summarize all formulations introduced in this chapter a show their relation to the general framework~\eqref{eq: aatp surrogate}. All these formulations were derived with general model~$f$ even though many of them have been initially derived only for the linear model. The reason for that is simple. This chapter aims only to emphasize the similarities between these formulations. The theoretical properties that follow from the concrete form of the model are discussed in the upcoming chapters. More precisely, the rest of the text is organized as follows.
+\begin{itemize}
+  \item Chapter~\ref{chap: linear} is dedicated to the linear model and formulations in their primal form, i.e., in the form presented in this chapter. This chapter shows that some formulations have nice properties such as convexity, differentiability, or stability. We derive some theoretical guaranties for the optimal solution based on these properties.
+  \item Since many problems are not linearly separable, Chapter~\ref{chap: dual} is dedicated to the dual forms of formulations from Table~\ref{tab: summary formulations}.
+  In this chapter, we again assume a linear model only. In the first part of the chapter, we show that all formulations can be split into two families based on their similarities. Then we derive dual formulations for these two families and show that these formulations are very similar to standard SVM. Using this observation, we use kernel trick to employ non-linearity into the formulations. Finally, we derive an efficient algorithm for solving the formulations.
+  \item In Chapter~\ref{chap: deep}, we assume a nonlinear model. A prototypical example of such a model can be a neural network. The resulting formulations are not decomposable since the decision threshold is always a function of all classification scores. Therefore, it is impossible to use the stochastic descent algorithm to solve them directly. In Chapter~\ref{chap: deep}, we present two approaches to deal with this problem.
+  \item Chapter~\ref{chap: experiments} dedicated to all numerical experiments.
+  \item Chapter~\ref{chap: conclusion}  summarizes all results presented in this work. 
+\end{itemize}
+Moreover, we postpone all proofs and additional results into the appendices for better readability.
 
 \begin{table}
   \centering
