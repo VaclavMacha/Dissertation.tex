@@ -1,76 +1,81 @@
 \chapter{Linear Classification at the Top}\label{chap: linear}
 
-In this chapter, we focus on the special case when the model~$f$ is linear
+In the previous chapter, we introduced the general framework for binary classification at the top. Table~\ref{tab: summary formulations} summarizes all formulations that fall into this framework. In this chapter, we focus on the particular case when the model~$f$ is linear, i.e., the model is in the following form
 \begin{equation*}
   f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x},
 \end{equation*}
-where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In such a case, the framework~\eqref{eq: aatp surrogate} simplifies into the following form
+where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In such a case, framework~\eqref{eq: aatp surrogate} simplifies into the form below
 \begin{mini*}{\bm{w}}{
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini*}
-
-In this chapter, we provide a theoretical analysis of the unified framework from Chapter~\ref{chap: framework} with linear classifier. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. The overview of all formulations that falls into the framework~\eqref{eq: aatp surrogate} is in Table~\ref{tab: summary formulations}. We focus mainly on the following desirable properties:
+In the upcoming sections, we provide a theoretical analysis of this unified framework with linear model. Moreover, we consider the problem formulations as derived in Chapter~\ref{chap: framework} and not individual algorithms which specify how to solve these formulations. The theoretical properties we mainly focus on are as follows:
 \begin{itemize}
   \item \textit{Convexity} implies a guaranteed convergence for many optimization algorithms or their better convergence rates~\cite{boyd2004convex}.
   \item \textit{Differentiability} increases the speed of convergence.
-  \item \textit{Stability} is a general term, by which we mean that the global minimum is not at~$\bm{w} = \bm{0}$. This actually happens for many formulations from Chapter~\ref{chap: framework} and results in the situation where the separating hyperplane is degenerate and does not actually exist.
+  \item \textit{Stability} is a general term, by which we mean that the global minimum is not at~$\bm{w} = \bm{0}$. This actually happens for many formulations from Table~\ref{tab: summary formulations} and results in the situation where the separating hyperplane is degenerate and does not actually exist.
 \end{itemize}
-For a nicer flow of text, we postpone the proofs to Appendix~\ref{chap: linear}. Moreover, we show the results only for formulations from Section~\ref{sec: ranking} and~\ref{sec: aatp}. The results for methods from Section~\ref{sec: Neyman-Pearson} are identical to the one for methods in Section~\ref{sec: aatp}. 
+We show the results only for formulations from Section~\ref{sec: ranking} and~\ref{sec: aatp} for better readability. Formulations in Section~\ref{sec: aatp} are almost identical to the ones from Section~\ref{sec: Neyman-Pearson}. The only difference is that all formulations in Section~\ref{sec: aatp} compute the decision threshold from all samples, while formulations in Section~\ref{sec: Neyman-Pearson} use only negative samples. Therefore, the results for both sections are identical, and we show only the ones for Section~\ref{sec: aatp}. 
 
 \section{Convexity}\label{sec: convexity}
 
-Convexity is one of the most important properties in numerical optimization. It ensures that the optimization problem has neither stationary points nor local minima. All points of interest are global minima. Moreover, it allows for faster convergence rates. Before we present any results, we recall the form of the decision threshold from Section~\ref{sec: aatp}
-\begin{equation*}
-  \begin{aligned}
-    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau} \\
-    t_2(\bm{w}) & = \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \\
-    t_3(\bm{w}) & \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, \\
-  \end{aligned}
-\end{equation*}
-where we use Notation~\ref{not: scores}. Note that we denote the thresholds as functions of weights. This is true, since the scores~$\bm{s}$ depends on the weights~$\bm{w}.$ The first result is summarized in the following proposition.
+Convexity is one of the most important properties in numerical optimization. It ensures that the optimization problem has neither stationary points nor local minima. All points of interest are global minima. Moreover, it allows for faster convergence rates. This section shows that some of the formulations from Table~\ref{tab: summary formulations} are convex and, therefore, easier to solve. The first result is summarized in the following proposition. Note that we denote the thresholds as functions of weights~$\bm{w}.$ This dependence holds since the thresholds are defined in Section~\ref{sec: aatp} as functions of scores~$\bm{s}.$
 
-\begin{restatable}{proposition}{propconvex}\label{prop:convex}
-  Thresholds~$t_2$ from~\eqref{eq: aatp quantile mean} and~$t_3$ from~\eqref{eq: aatp quantile surrogate} are convex functions of the weights~$\bm{w}$. The threshold function~$t_1$ from~\eqref{eq: aatp quantile} is non-convex.
+\begin{restatable}{proposition}{propconvex}\label{prop: convexity}
+  Consider vector of scores~$\bm{s}$ with elements defined as~$s_i = \bm{w}^{\top} \bm{x}_i$ for all~$i \in \I$ and Notation~\ref{not: scores}. Recall the decision thresholds from Section~\ref{sec: ranking} and~\ref{sec: aatp} 
+  \begin{align*}
+    t_0(\bm{w}) &
+      = s_{[1]}^-, &
+    t_1(\bm{w}) &
+      = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}, \\
+    t_2(\bm{w}) &
+      = \frac{1}{K} \sum_{i=1}^{K} s_{[i]}, &
+    t_3(\bm{w}) &
+      \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau,
+  \end{align*}
+  Then thresholds~$t_0$, ~$t_2$ and~$t_3$ are convex functions of weights~$\bm{w},$ while the threshold~$t_1$ is non-convex.
 \end{restatable}
 
-\noindent The proposition says, that \Grill uses non-convex threshold with respect to weights~$\bm{w}$ while \TopMeanK, \PatMat use the convex ones. Moreover, since \tauFPL and \TopPushK formulations use almost the same threshold as \TopMeanK, but computed only from negative scores, the resulting threshold is also convex function of weights. The same holds for formulations \PatMat and \PatMatNP. Finally, the threshold for \TopPush formulation is convex since maximum is convex function. The next theorem shows which formulations are convex.
+The proposition says that \Grill formulation uses non-convex threshold while \TopPush, \TopMeanK, and \PatMat use the convex ones. Moreover, the thresholds for \tauFPL and \TopPushK are convex since both formulations use almost the same threshold as \TopMeanK. The same holds for the thresholds of \PatMat and \PatMatNP formulations. Notice that all formulations that have a convex threshold use the same objective function.
 
-\begin{restatable}{theorem}{thmconvex}\label{thm:convex}
-  If the threshold~$t = t(\bm{w})$ is a convex function of the weights~$\bm{w}$, then function
+\begin{restatable}{theorem}{thmconvex}\label{thm: convexity}
+  If the threshold~$t = t(\bm{w})$ is a convex function of weights~$\bm{w}$, then function
   \begin{equation*}
     L(\bm{w}) = \fns(\bm{s}, t)
   \end{equation*}
   is convex.
 \end{restatable}
 
-\noindent While the proof of Theorem~\ref{thm:convex} is simple, it points to the necessity of considering only false-negatives in the objective of the formulations in Chapter~\ref{chap: framework}. In such a case, \TopPush, \TopPushK, \TopMeanK, \tauFPL, \PatMat and \PatMatNP are convex problems. At the same time, \Grill and \GrillNP are not convex problems.
+While the proof of Theorem~\ref{thm: convexity} is simple, it points to the necessity of considering only false-negatives in the objective function. Due to this theorem, almost all formulations from Table~\ref{tab: summary formulations} are convex optimization problems. There are only two exceptions: \Grill and \GrillNP are not convex problems.
 
 \section{Differentiability}
 
-Similarly to convexity, differentiability allows for faster convergence rate and in some algorithms, better termination criteria. The next theorem shows which formulations are differentiable.
+Similar to convexity, differentiability is crucial for improving the convergence rate. Moreover, differentiability can often be used to derive better termination criteria for numerical algorithms. The next theorem shows which formulations from Table~\ref{tab: summary formulations} are differentiable.
 
-\begin{restatable}{theorem}{derivative}\label{thm:derivative}
-  If the surrogate function~$l$ is differentiable, then threshold~$t_3$ is a differentiable function of the weights~$\bm{w}$ and its derivative equals to
+\begin{restatable}{theorem}{derivative}\label{thm: differentiability}
+  Consider thresholds from Proposition~\ref{prop: convexity}.  Threshold~$t_0,$~$t_1$ and~$t_2$ are non-differentiable functions of weights~$\bm{w}.$ Moreover, if the surrogate function~$l$ is differentiable, threshold~$t_3$ is a differentiable function of weights~$\bm{w},$ and its derivative equals
   \begin{equation*}
-    \nabla t_3(\bm{w}) = \frac{\sum_{i \in \I} l'\Brac{\vartheta(\bm{w}^{\top} \bm{x}_i - t_3(\bm{w}))}\bm{x}_i}{\sum_{i \in \I}l'\Brac{\vartheta(\bm{w}^{\top} \bm{x}_i - t_3(\bm{w}))}}.
+    \nabla t_3(\bm{w}) = \frac{
+      \sum_{i \in \I} l'\Brac{\vartheta (\bm{w}^{\top} \bm{x}_i - t_3(\bm{w}))}\bm{x}_i
+      }{
+        \sum_{j \in \I} l'\Brac{\vartheta (\bm{w}^{\top} \bm{x}_j - t_3(\bm{w}))}
+      }.
   \end{equation*}
-  The threshold functions~$t_1$ and~$t_2$ are non-differentiable.
 \end{restatable}
 
-\noindent This theorem shows that the objective functions of \PatMat and \PatMatNP are differentiable. This allows us to prove the convergence of the stochastic gradient descent for these two formulations in Section~\ref{sec:convergence}.
+Due to the previous theorem and Theorem~\ref{thm: convexity}, only \PatMat, and \PatMatNP are convex and differentiable optimization problems. These properties allow us to prove the convergence of the stochastic gradient descent for these two formulations, as shown in Section~\ref{sec:convergence}.
 
 \section{Stability}\label{sec: stability}
 
-We first provide a simple example and show that many formulations from Table~\ref{tab: summary formulations} are degenerate for it. Then we analyze general conditions under which this degenerate behaviour happens.
+We first provide a simple example and show that many formulations from Table~\ref{tab: summary formulations} are degenerate for it. Then we analyze general conditions under which this degenerate behavior happens.
 
 \begin{restatable}[Degenerate Behaviour]{example}{degeneratebehavior}\label{ex: degenerate behaviour}
-  We consider~$n$ negative samples uniformly distributed in~$[-1,0]\times[-1,1]$,~$n$ positive samples uniformly distributed in~$[0,1]\times[-1,1]$ and one negative sample at~$(2,0)$, see Figure~\ref{fig: degenerate behaviour} (left). We consider the hinge loss and no regularization. If~$n$ is large, the point at~$(2,0)$ is an outlier and the dataset is separable and the separating hyperplane has the normal vector~$\bm{w}=(1,0)$. 
+  Consider~$n$ negative samples uniformly distributed in~$[-1,0]\times[-1,1]$,~$n$ positive samples uniformly distributed in~$[0,1]\times[-1,1]$ and one negative sample at~$(2,0).$ An illustration of such settings is provided in Figure~\ref{fig: degenerate behaviour} (left). If~$n$ is large enough, the point at~$(2,0),$ is an outlier and the problem is (almost) perfectly separable using the separating hyperplane with normal vector~$\bm{w}_1 = (1, 0)$. 
 \end{restatable}
 
-\noindent Table~\ref{tab:example} shows the threshold~$t$ and the objective value~$L$ for two points~$\bm{w}_0=(0,0)$ and~$\bm{w}_0=(1,0)$. These two points are both important:~$\bm{w}_0$ does not generate any separating hyperplane, while~$\bm{w}_1$ generates the optimal separating hyperplane. We show the precise computation in Appendix~\ref{app: stability}. Since the dataset is perfectly separable by~$\bm{w}_0$, we expect that~$\bm{w}_0$ provides a lower objective than~$\bm{w}_0$. By highlithing the better objective in Table~\ref{tab:example} by green, we see that this did not happen for \TopPush and \TopMeanK. It can be shown that~$\bm{w}_0$ is even the global minimum for \TopPush and \TopMeanK. This raises the question of whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative as shown in Figure~\ref{fig: degenerate behaviour} (right). Here, we run \TopPush from several starting points, and it always converges to zero from one of the three possible directions; all of them far from the normal vector to the separating hyperplane.
+Table~\ref{tab:example} shows the threshold~$t$ and the objective value~$L$ for two points~$\bm{w}_0=(0,0)$ and~$\bm{w}_1=(1,0)$. These two points are both important:~$\bm{w}_0$ does not generate any separating hyperplane, while~$\bm{w}_1$ generates the optimal separating hyperplane. We show the precise computation in Appendix~\ref{app: stability}. Since the dataset is perfectly separable by~$\bm{w}_1$, we expect that~$\bm{w}_1$ provides a lower objective than~$\bm{w}_0$. By highlithing the better objective in Table~\ref{tab:example} by green, we see that this did not happen for \TopPush and \TopMeanK. It can be shown that~$\bm{w}_0$ is even the global minimum for \TopPush and \TopMeanK. This raises the question of whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative as shown in Figure~\ref{fig: degenerate behaviour} (right). Here, we run \TopPush from several starting points, and it always converges to zero from one of the three possible directions; all of them far from the normal vector to the separating hyperplane.
 
 \begin{figure}
   \centering
@@ -90,7 +95,7 @@ We first provide a simple example and show that many formulations from Table~\re
     \Block{2-1}{\textbf{Name}}
       & \Block{2-1}{\textbf{Label}}
       & \Block{1-2}{$\bm{w}_0=(0,0)$}
-      && \Block{1-2}{$\bm{w}_0=(1,0)$} \\
+      && \Block{1-2}{$\bm{w}_1=(1,0)$} \\
     \cline{3-6}
     & & $t$
       & $L$
@@ -207,11 +212,11 @@ The decision variables in \eqref{eq: aatp surrogate} are the normal vector of th
     & = \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i) + \lambda \bm{w}.
   \end{aligned}
 \end{equation}
-The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for~$\nabla t_1(\bm{w})$ and~$\nabla t_2(\bm{w})$ and Theorem~\ref{thm:derivative} shows the computation for~$\nabla t_3(\bm{w})$. Moreover, Appendix~\ref{app:threshold} provides an efficient computation method for~$t_3(\bm{w})$. Having derivative \eqref{eq:derivatives}, deriving the stochastic gradient is simple. It partitions the dataset into minibatches and provides an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in \eqref{eq:derivatives} by a mean over the minibatch.
+The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for~$\nabla t_1(\bm{w})$ and~$\nabla t_2(\bm{w})$ and Theorem~\ref{thm: differentiability} shows the computation for~$\nabla t_3(\bm{w})$. Moreover, Appendix~\ref{app:threshold} provides an efficient computation method for~$t_3(\bm{w})$. Having derivative \eqref{eq:derivatives}, deriving the stochastic gradient is simple. It partitions the dataset into minibatches and provides an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in \eqref{eq:derivatives} by a mean over the minibatch.
 
 \subsection{SGD: Convergent for \PatMat and \PatMatNP}
 
-For the convergence proof, we need differentiability which is due to Theorem~\ref{thm:derivative} possessed only by \PatMat and \PatMatNP. Therefore, we consider only these two formulations and for simplicity, show it only for \PatMat. We apply a variance reduction technique based on delayed values similar to SAG~\cite{schmidt2017minimizing}. 
+For the convergence proof, we need differentiability which is due to Theorem~\ref{thm: differentiability} possessed only by \PatMat and \PatMatNP. Therefore, we consider only these two formulations and for simplicity, show it only for \PatMat. We apply a variance reduction technique based on delayed values similar to SAG~\cite{schmidt2017minimizing}. 
 
 At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the score vector~$\bm{s}^k$ only on the active minibatch by setting
 \begin{equation}\label{eq:defin_z}
@@ -232,7 +237,7 @@ Finally, we approximate the derivative~$\nabla f(\bm{w}^k)$ from \eqref{eq:deriv
 \begin{equation}\label{eq:update_g}
   g(\bm{w}^k) = \frac{1}{\nmbpos^k} \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
 \end{equation}
-where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm:derivative} defined by
+where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability} defined by
 \begin{equation}\label{eq:update_nablat}
   \nabla t^k
     = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta(s_i^k - t^k)}}.

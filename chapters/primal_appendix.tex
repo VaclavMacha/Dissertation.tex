@@ -1,107 +1,84 @@
 \chapter{Appendix for Chapter~\ref{chap: linear}}
-
-Firstly we recall definitions of the thresholds defined in Section~\ref{sec: aatp}
-\begin{equation*}
-  \begin{aligned}
-    t_1(\bm{w}) & = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau} \\
-    t_2(\bm{w}) & = \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \\
-    t_3(\bm{w}) & \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, \\
-  \end{aligned}
-\end{equation*}
-and also recall, that we assume linear classifier, i.e. scores are defined for all~$i \in \I$ as~$s_i = \bm{w}^{\top} \bm{x}_i.$
-
 \section{Convexity}
 
 \propconvex*
-\begin{proof}[Proof Proposition~\ref{prop:convex} on page~\pageref{prop:convex}]
-  It is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$K$ highest values of a vector is a convex function and therefore,~$t_2$ is a convex function. It remains to analyze~$t_3$. Let us dfefine function~$g$ as follows
+\begin{proof}[Proof of Proposition~\ref{prop: convexity} on page~\pageref{prop: convexity}]
+  From Notation~\ref{not: scores}, threshold~$t_0$ is just a maximum from vector~$\bm{s}^-$ of scores of all negative samples.  Since maximum is a convex function, threshold T is a convex function of weights~$\bm{w}.$ Moreover, it is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$K$ highest values of a vector is a convex function. Therefore, threshold~$t_2$ is a convex function  of weights~$\bm{w}.$ It remains to analyze threshold~$t_3.$ Let us define function~$g$ as follows
   \begin{equation*}
     g(\bm{w},t) := \frac{1}{n} \sum_{i \in \I} l(\bm{w}^{\top} \bm{x}_i - t) - \tau.
   \end{equation*}
-  where we for simplicity set~$\vartheta = 1.$ Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \hat{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\hat{t} = t_3(\hat{\bm{w}})$. Then for any~$\lambda\in[0,1]$ we have 
+  where we for simplicity set~$\vartheta = 1.$ Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \tilde{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\tilde{t} = t_3(\tilde{\bm{w}})$. Then for any~$\lambda\in[0,1],$ we have 
   \begin{equation}\label{eq:proof_conv1}
-    g\Brac{\lambda \bm{w} + (1 - \lambda)\hat{\bm{w}}, \;\lambda t + (1 - \lambda)\hat{t}}
-    \leq \lambda g(\bm{w}, t) + (1 - \lambda) g(\hat{\bm{w}}, \hat{t}) = 0,
+    g\Brac{\lambda \bm{w} + (1 - \lambda)\tilde{\bm{w}}, \;\lambda t + (1 - \lambda)\tilde{t}}
+    \leq \lambda g(\bm{w}, t) + (1 - \lambda) g(\tilde{\bm{w}}, \tilde{t}) = 0.
   \end{equation}
-  where the inequality follows from the convexity of~$g$ and the equality from
-  \begin{equation*}
-    g(\bm{w}, t) = g(\hat{\bm{w}}, \hat{t}) = 0,
-  \end{equation*}
-  which holds true since both~$t$ and $\hat{t}$ solves~\eqref{eq: aatp quantile surrogate}. From the definition of the surrogate quantile function~$t_3$ we have
+  The inequality follows from the convexity of~$g$  and the equality from~$g(\bm{w}, t) = g(\tilde{\bm{w}}, \tilde{t}) = 0,$ which holds due to the definition of~$t_3.$ From the definition of~$t_3,$ we also have
   \begin{equation}\label{eq:proof_conv2}
-    g(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}}, t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})) = 0.
+    g(\lambda\bm{w} + (1-\lambda)\tilde{\bm{w}}, \; t_3(\lambda\bm{w} + (1-\lambda)\tilde{\bm{w}})) = 0.
   \end{equation}
   Since~$g$ is non-increasing in the second variable, from~\eqref{eq:proof_conv1} and~\eqref{eq:proof_conv2} we deduce
   \begin{equation*}
-    t_3(\lambda\bm{w} + (1-\lambda)\hat{\bm{w}})
-    \leq \lambda t + (1-\lambda)\hat{t}
-    =   \lambda t_3(\bm{w})+(1-\lambda) t_3(\hat{\bm{w}}),
+    t_3(\lambda\bm{w} + (1-\lambda)\tilde{\bm{w}})
+    \leq \lambda t + (1-\lambda)\tilde{t}
+    =   \lambda t_3(\bm{w})+(1-\lambda) t_3(\tilde{\bm{w}}),
   \end{equation*}
   which implies that function~$\bm{w}\mapsto t_3(\bm{w})$ is convex.
 \end{proof}
 
 \thmconvex*
-\begin{proof}[Proof of Theorem~\ref{thm:convex} on page~\pageref{thm:convex}]
-  Due to the definition of the surrogate counts~\eqref{eq: confusion counts surrogate}, the function~$L$ equals to
+\begin{proof}[Proof of Theorem~\ref{thm: convexity} on page~\pageref{thm: convexity}]
+  Due to the definition~\eqref{eq: confusion counts surrogate}, the objective function~$L$ equals to
   \begin{equation*}
     L(\bm{w}) = \fns(\bm{s}, t(\bm{w})) = \sum_{i \in \Ipos} l \Brac{t(\bm{w}) - \bm{w}^{\top} \bm{x}_i}.
   \end{equation*}
-  Here we write~$t(\bm{w})$ to stress the dependence of~$t$ on~$\bm{w}$. Since~$\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that~$\bm{w} \mapsto t(\bm{w}) - \bm{w}^{\top} \bm{x}$ is a convex function. From its definition, the surrogate function~$l$ is convex and non-decreasing. Since a composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
+  Here we write~$t(\bm{w})$ to stress the dependence of~$t$ on~$\bm{w}$. Since~$\bm{w}\mapsto t(\bm{w})$ is a convex function, we also have that~$\bm{w} \mapsto t(\bm{w}) - \bm{w}^{\top} \bm{x}$ is a convex function. From its definition, the surrogate function~$l$ is convex and non-decreasing.  Since the composition of a convex function with a non-decreasing convex function is a convex function, this finishes the proof.
 \end{proof}
 
 \section{Differentiability}
 
 \derivative* 
-\begin{proof}[Proof of Theorem~\ref{thm:derivative} on page~\pageref{thm:derivative}]
-  The result for~$t_3$ follows directly from the implicit function theorem. The non-differentiability of~$t_1$ and~$t_2$ happens whenever the threshold value is achieved at two different scores.
+\begin{proof}[Proof of Theorem~\ref{thm: differentiability} on page~\pageref{thm: differentiability}]
+  The non-differentiability of~$t_0,$~$t_1$ and~$t_2$ happens whenever the threshold value is achieved at two different scores. The result for~$t_3$ follows directly from the implicit function theorem. 
 \end{proof}
 
-
+\newpage
 
 \section{Stability}\label{app: stability}
 
-In this section, we derive the results presented from Section~\ref{sec: stability} more properly. 
 \degeneratebehavior*
-\noindent Moreover, we assume that~$n$ is large and the outlier may be ignored for the computation of thresholds which require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat. For~$\bm{w}_0 = (0,0)$, we get
+
+Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we consider the hinge loss function and no regularization for all formulations from Table~\ref{tab: summary formulations}. We also assume that~$n$ is large, and the outlier may be ignored for the computation of thresholds that require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat. For~$\bm{w}_0 = (0,0),$ we have
 \begin{equation*}
   \tau
   = \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(\bm{w}_0^\top \bm{x}_i - t)}
   = l(0 - \vartheta t) = 1 - \vartheta t,
 \end{equation*}
-which implies
-\begin{equation*}\label{eq: PatMat threshold 0}
-  t = \nicefrac{1-\tau}{\vartheta}
-\end{equation*}
-and consequently the value of the objective function is
+which implies that threshold~$t$ equals~$t = \nicefrac{1-\tau}{\vartheta}.$ Consequently, the value of the objective function is
 \begin{equation}\label{eq: PatMat objective 0}
   L(\bm{w}_0)
     = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_0^\top \bm{x}_i)
     = l(t - 0)
     = 1 + t,
 \end{equation}
-where the last equality follows from definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$. For~$\bm{w}_1 = (1,0)$ the computation goes similar. Since~$\bm{w}_1^\top \bm{x}$  for~$i \in \I$ has the uniform distribution on~$[-1,1],$ we have
-\begin{equation*}
+where the last equality follows from the definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$. For~$\bm{w}_1 = (1,0),$ the computation goes similar. Since all samples are uniformly distributed in~$[-1,1]\times[-1,1],$ scores~$\bm{w}_1^\top \bm{x}_i$ for~$i \in \I$ are uniformly distributed in~$[-1,1].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq \tau$, we have
+\begin{align*}
   \tau
-    = \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
+    & = \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
     \approx \frac{1}{2}\int_{-1}^{1} l\Brac{\vartheta(s-t)} \dd{s}
-    = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s}
-\end{equation*}
-If~$\vartheta \leq \tau$, then
+      = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s} \\
+    & =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
+      = 1 - \vartheta t + \frac{\vartheta}{2}\int_{-1}^{1}s\dd{s}
+      = 1 - \vartheta t.
+\end{align*}
+which again implies that threshold~$t$ equals~$t = \nicefrac{1-\tau}{\vartheta}$. Note that we could ignore the~$\max$ operator in the relation above, since 
 \begin{equation*}
   1 + \vartheta(s - t)
     \geq 1 + \vartheta(-1 - t)
-    = 1 - \vartheta - 1 + \tau
-    = \tau - \beta
+    = 1 + \vartheta(-1 - \frac{1 - \tau}{\vartheta})
+    = \tau - \vartheta
     \geq 0.
 \end{equation*}
-Using this inequality, we can ignore the max operator in the relation for the~$\tau$ above and get
-\begin{equation}\label{eq:example1}
-  \tau
-    =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
-    = 1 - \vartheta t + \frac{\vartheta}{2}\int_{-1}^{1}s\dd{s}
-    = 1 - \vartheta t,
-\end{equation}
-and thus again~$t = \nicefrac{1-\tau}{\vartheta}$. Finally, since~$\bm{w}_1^\top \bm{x}$  for~$i \in \Ipos$ has the uniform distribution on~$[0,1],$ we have
+Finally, since positive samples are uniformly distributed in~$[0,1]\times[-1,1],$ corresponding scores $\bm{w}_1^\top \bm{x}_i$  for~$i \in \Ipos$ are uniformly distributed in~$[0,1].$ Therefore, for the objective function, we have
 \begin{equation*}
   L(\bm{w}_1)
     = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_1^\top \bm{x}_i)
@@ -109,7 +86,9 @@ and thus again~$t = \nicefrac{1-\tau}{\vartheta}$. Finally, since~$\bm{w}_1^\top
     = \int_{0}^{1} (1 + t - s)\dd{s}
     = 0.5 + t.
 \end{equation*}
-Results for \PatMatNP can be obtained in a similar way. In the rest of the section we provide proofs for all the theorems from Section~\ref{sec: stability}.
+Results for \PatMatNP can be obtained in a similar way.
+
+\pagebreak
 
 \larget*
 \begin{proof}[Proof of Theorem~\ref{thm:large_t} on page~\pageref{thm:large_t}]
@@ -388,7 +367,7 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
 
 \sgd*
 \begin{proof}[Proof of Theorem~\ref{thm:sgd} on page~\pageref{thm:sgd}]
-  We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$L$ is convex due to Theorem~\ref{thm:convex}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}. Assumptions~\ref{ass_alpha1},\ref{ass_alpha2} and~\ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify~\eqref{eq:nec_cond}.
+  We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$L$ is convex due to Theorem~\ref{thm: convexity}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}. Assumptions~\ref{ass_alpha1},\ref{ass_alpha2} and~\ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify~\eqref{eq:nec_cond}.
 
   For simplicity, we will do so only for~$\vartheta = 1$ and for~$2$ minibatches of the same size. However, the proof would be identical for other values. This implies that there are some~$\Imb^k$ and~$\Imb^{k+1}$ which are pairwise disjoint, they cover all samples and that~$\Imb^k = \Imb^{k+2}$ for all~$k$. The assumptions imply that the number of positive samples in each minibatch equal to~$\nmbpos^k = \nicefrac{\npos}{2}$, where~$\npos$ is the total number of positive samples.
 
@@ -452,7 +431,7 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
     \nabla t^k
       = \frac{\sum_{i \in \Imb^k} l'(s_i^k - t^k)\bm{x}_i + \sum_{i \in \Imb^{k-1}} l'(s_i^{k-1} - t^{k-1}) \bm{x}_i}{\sum_{i \in \I} l'(s_i^k - t^k)}.
   \end{equation*}
-  Moreover, using Theorem~\ref{thm:derivative} and the fact that we have only two minibatches and therefore for any~$k$ we have~$\I = \Imb^k \cup \Imb^{k-1}$, we get
+  Moreover, using Theorem~\ref{thm: differentiability} and the fact that we have only two minibatches and therefore for any~$k$ we have~$\I = \Imb^k \cup \Imb^{k-1}$, we get
   \begin{equation*}
     \nabla t(\bm{w}^k)
       = \frac{\sum_{i \in \Imb^k} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k))\bm{x}_i + \sum_{i \in \Imb^{k-1}} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k))\bm{x}_i}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k))}.
@@ -574,7 +553,7 @@ All these reguirements are satisfied for the surrogate logistic or by the Huber 
   \end{equation*}
 \end{lemma}
 \begin{proof}
-  Due to~\ref{surr_der1} the derivative~$l'$ is bounded by some~$\hat{B}$. Then Theorem~\ref{thm:derivative} and Lemma~\ref{lemma:bound_zero} imply
+  Due to~\ref{surr_der1} the derivative~$l'$ is bounded by some~$\hat{B}$. Then Theorem~\ref{thm: differentiability} and Lemma~\ref{lemma:bound_zero} imply
   \begin{equation*}
     \norm{\nabla t(\bm{w}^k)}
       \leq \frac{\hat{B} \sum_{i \in \I} \norm{\bm{x}_i}}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w} - t(\bm{w}))}
