@@ -9,7 +9,7 @@ where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In su
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
-  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
+  \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini*}
 
 In this chapter, we provide a theoretical analysis of the unified framework from Chapter~\ref{chap: framework} with linear classifier. We consider purely the problem \textit{formulations} and not individual \textit{algorithms} which specify how to solve these formulations. The overview of all formulations that falls into the framework~\eqref{eq: aatp surrogate} is in Table~\ref{tab: summary formulations}. We focus mainly on the following desirable properties:
@@ -36,7 +36,7 @@ where we use Notation~\ref{not: scores}. Note that we denote the thresholds as f
   Thresholds~$t_2$ from~\eqref{eq: aatp quantile mean} and~$t_3$ from~\eqref{eq: aatp quantile surrogate} are convex functions of the weights~$\bm{w}$. The threshold function~$t_1$ from~\eqref{eq: aatp quantile} is non-convex.
 \end{restatable}
 
-\noindent The proposition says, that formulation \Grill uses non-convex threshold with respect to weights~$\bm{w}$ while formulations \TopMeanK, \PatMat use the convex ones. Moreover, since \tauFPL and \TopPushK formulations use almost the same threshold as \TopMeanK, but computed only from negative scores, the resulting threshold is also convex function of weights. The same holds for formulations \PatMat and \PatMatNP. Finally, the threshold for \TopPush formulation is convex since maximum is convex function. The next theorem shows which formulations are convex.
+\noindent The proposition says, that \Grill uses non-convex threshold with respect to weights~$\bm{w}$ while \TopMeanK, \PatMat use the convex ones. Moreover, since \tauFPL and \TopPushK formulations use almost the same threshold as \TopMeanK, but computed only from negative scores, the resulting threshold is also convex function of weights. The same holds for formulations \PatMat and \PatMatNP. Finally, the threshold for \TopPush formulation is convex since maximum is convex function. The next theorem shows which formulations are convex.
 
 \begin{restatable}{theorem}{thmconvex}\label{thm:convex}
   If the threshold~$t = t(\bm{w})$ is a convex function of the weights~$\bm{w}$, then function
@@ -51,8 +51,6 @@ where we use Notation~\ref{not: scores}. Note that we denote the thresholds as f
 \section{Differentiability}
 
 Similarly to convexity, differentiability allows for faster convergence rate and in some algorithms, better termination criteria. The next theorem shows which formulations are differentiable.
-
-
 
 \begin{restatable}{theorem}{derivative}\label{thm:derivative}
   If the surrogate function~$l$ is differentiable, then threshold~$t_3$ is a differentiable function of the weights~$\bm{w}$ and its derivative equals to

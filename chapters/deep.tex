@@ -31,7 +31,7 @@ This section introduces the accuracy at the top. A standard deep network~$f$ wit
   \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
   }{\label{eq:problem}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
+  \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini}
 
 Similarly to the standard network, the classifier~$f$ computes the score~$z_i$ for each sample~$\bm{x}_i$. Then a general function~$G$ takes the scores and labels of \textbf{all} samples and computes the threshold~$t$. This makes the problem non-decomposable. The objective function equals the weighted sum of false-positives (negative samples above the threshold) and false-negatives (positive samples below the threshold). Here,~$I$,~$I^+$ and~$I^-$ are the sets of all, positive and negative labels, respectively, and~$\Iverson{\cdot}$ is the characteristic ($0/1$) function counting how many times the argument is satisfied. Setting \eqref{eq:problem} includes TopPush~\cite{li2014top} which minimizes the number of positive samples below the highest-ranked negative sample. This fits into \eqref{eq:problem} with~$\lambda_1=0$,~$\lambda_2=1$ and~$t=\max_{i\in I^-} z_i$.
@@ -57,7 +57,7 @@ Even though the presented technique can be applied to any formulation from Table
   \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
   }{\label{eq:problem_surr1}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
-  \addConstraint{t}{= G\Brac{\Brac[c]{(s_i, y_i)}_{i \in \I}}.}
+  \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini}
 To apply the stochastic gradient descent, we need to compute the gradient. The core idea follows~\cite{mackey2018constrained} which was proposed in a more general context in~\cite{adam2019machine}. It rewrites problem \eqref{eq:problem_surr1} into its equivalent form
 \begin{mini}{\bm{w}}{
