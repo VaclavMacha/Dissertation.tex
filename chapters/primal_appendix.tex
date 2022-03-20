@@ -378,7 +378,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
         & = \bm{x}_i^\top \bm{w}^k + \alpha^{k-2}\bm{x}_i^\top g(\bm{w}^{k-2}) + \alpha^{k-1}\bm{x}_i^\top g(\bm{w}^{k-1}).
     \end{aligned}
   \end{equation}
-  Similarly, due to the construction~\eqref{eq:defin_z}, for~$i \notin \Imb^k$ we have
+  Similarly, due to the construction of~$s_i^k$ from~\eqref{eq:defin_z}, we have for~$i \notin \Imb^k$
   \begin{equation}\label{eq:sgd_estimate_z2}
     s_i^k
     = s_i^{k-1}
@@ -389,26 +389,24 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   Recall that we already verified~\ref{ass_convex}-\ref{ass_alpha3}. Combining~\ref{ass_gbound} with~\eqref{eq:sgd_estimate_z1} and~\eqref{eq:sgd_estimate_z2} yields the existence of some~$C_2$ such that for all~$i \in \I$ we have
   \begin{equation}\label{eq:estimate_diff_z}
     \begin{aligned}
-      \norm{s_i^k - \bm{x}_i^\top \bm{w}^k} &\leq C_2\alpha^{k-1}, \\
-      \norm{s_i^{k-1} - \bm{x}_i^\top \bm{w}^k} &\leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+      \norm{s_i^k - \bm{x}_i^\top \bm{w}^k} &\leq C_2\alpha^{k-1}, \quad & \quad 
+      \norm{s_i^{k-1} - \bm{x}_i^\top \bm{w}^k} &\leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}.
     \end{aligned}
   \end{equation}
   This also immediately implies
   \begin{equation}\label{eq:estimate_diff_t}
     \begin{aligned}
-      \norm{t^k - t(\bm{w}^k)}     & \leq C_2\alpha^{k-1}, \\
-      \norm{t^{k-1} - t(\bm{w}^k)} & \leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}. \\
+      \norm{t^k - t(\bm{w}^k)}     & \leq C_2\alpha^{k-1}, \quad & \quad
+      \norm{t^{k-1} - t(\bm{w}^k)} & \leq C_2\Brac{\alpha^{k-1}+\alpha^{k-2}}.
     \end{aligned}
   \end{equation}
-  Since~$l'$ is Lipschitz continuous with Lipschitz constant~$D$ according to~\ref{surr_der2}, due to~\eqref{eq:estimate_diff_z} and~\eqref{eq:estimate_diff_t} we get
+  Moreover, we know that~$l'$ is Lipschitz continuous with Lipschitz constant~$D$ according to~\ref{surr_der2}. Then due to~\eqref{eq:estimate_diff_z} and~\eqref{eq:estimate_diff_t} we get
   \begin{equation}\label{eq:sgd_lipschitz1}
-    \begin{aligned}
-      \norm{l'(t^k-s_i^k) - l'(t(\bm{w}^k)-\bm{x}_i^\top \bm{w}^k)}
-        & \leq D \norm{t^k-s_i^k - t(\bm{w}^k)+ \bm{x}_i^\top \bm{w}^k}
-        \leq  2C_2 D \alpha^{k-1}.
-    \end{aligned}
+    \norm{l'(t^k-s_i^k) - l'(t(\bm{w}^k)-\bm{x}_i^\top \bm{w}^k)}
+      \leq D \norm{t^k-s_i^k - t(\bm{w}^k)+ \bm{x}_i^\top \bm{w}^k}
+      \leq  2C_2 D \alpha^{k-1}.
   \end{equation}
-  In an identical way we can show
+  In an identical way, we can derive the following relations
   \begin{equation}\label{eq:sgd_lipschitz2}
     \begin{aligned}
       \norm{l'(t^{k-1}-s_i^{k-1}) - l'(t(\bm{w}^k)-\bm{x}_i^\top \bm{w}^k)}
@@ -419,7 +417,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
         & \leq 2C_2D\Brac{\alpha^{k-1}+\alpha^{k-2}}.
     \end{aligned}
   \end{equation}
-  Now we need to estimate the distance between~$\nabla t(\bm{w}^k)$ and~$\nabla t^k$. From~\eqref{eq:update_nablat} and~\eqref{eq:update_a}, we have
+  Now we need to estimate the distance between~$\nabla t(\bm{w}^k)$ and~$\nabla t^k$. By plugging~\eqref{eq:update_a} into~\eqref{eq:update_nablat}, we get
   \begin{equation*}
     \nabla t^k
       = \frac{\sum_{i \in \Imb^k} l'(s_i^k - t^k)\bm{x}_i + \sum_{i \in \Imb^{k-1}} l'(s_i^{k-1} - t^{k-1}) \bm{x}_i}{\sum_{i \in \I} l'(s_i^k - t^k)}.
@@ -462,10 +460,9 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
     \end{align}
   \end{subequations}
   Then relations~\eqref{eq:sgd_nablat_diff} and~\eqref{eq:sgd_lipschitz1} applied to Lemma~\ref{lemma:product} imply
-  \begin{multline*}
-    \norm{\sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i) - \sum_{i \in \Imbpos^k} l'(t(\bm{w}^k) - \bm{x}_i^\top \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i)}\\
-      \leq C_4 \Brac{\alpha^{k-1} + \alpha^{k-2}}
-  \end{multline*}
+  \begin{equation*}
+    \norm{\sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i) - \sum_{i \in \Imbpos^k} l'(t(\bm{w}^k) - \bm{x}_i^\top \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i)} \leq C_4 \Brac{\alpha^{k-1} + \alpha^{k-2}}
+  \end{equation*}
   for some~$C_4$, which gives a bound for~\eqref{eq:sgd_sum2}. Bound for~\eqref{eq:sgd_sum5} is obtained by increasing~$k$ by one. Bounds for~\eqref{eq:sgd_sum3} and~\eqref{eq:sgd_sum4} can be find similarly using~\eqref{eq:sgd_lipschitz2}. Altogether, we showed
   \begin{equation}\label{eq:nec_cond3}
     \norm{g(\bm{w}^k) + g(\bm{w}^{k+1}) - \nabla L(\bm{w}^k) - \nabla L(\bm{w}^{k+1})}
@@ -494,10 +491,12 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
     \end{aligned}
   \end{equation}
   In the last inequality we used the inequality~$2ab\leq a^2+b^2$. To estimate the first part of the right hand side of~\eqref{eq:proof_est1}, we can apply~\eqref{eq:nec_cond3} together with the boundedness of~$\{\bm{w}^k\}$ to obtain the existence of some~$C_6$ such that
-  \begin{multline}\label{eq:proof_est3}
+  \begin{equation}\label{eq:proof_est3}
+    \begin{aligned}
     \inner{ g(\bm{w}^{k}) -\nabla L(\bm{w}^{k}) + g(\bm{w}^{k+1})-\nabla L(\bm{w}^{k+1})}{\alpha^k(\bm{w}^* - \bm{w}^{k})} \\
       \leq C_6(\alpha^{k-2})^2 + C_6(\alpha^{k-1})^2 + C_6(\alpha^{k})^2 + C_6(\alpha^{k+1})^2.
-  \end{multline}
+      \end{aligned}
+  \end{equation}
   Plugging~\eqref{eq:proof_est2} and~\eqref{eq:proof_est3} into~\eqref{eq:proof_est1} and summing the terms yields~\eqref{eq:nec_cond}. Then the assumptions of Theorem~\ref{thm:convergence} are verified and the theorem statement follows.
 \end{proof}
 
@@ -505,12 +504,10 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
 
 \begin{lemma}\label{lemma:bound_zero}
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_ratio}. Then there exists some~$\hat{C} > 0$ such that for all~$k$ we have
-  \begin{equation*}
-    \begin{aligned}
-      \hat{C} \leq & \sum_{i \in \I} l'(s_i^k - t^k), \\
-      \hat{C} \leq & \sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k)).
-    \end{aligned}
-  \end{equation*}
+  \begin{align*}
+    \hat{C} \leq & \sum_{i \in \I} l'(s_i^k - t^k), \quad & \quad
+    \hat{C} \leq & \sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k)).
+  \end{align*}
 \end{lemma}
 \begin{proof}
   First, we will find an upper bound of~$s_i^k-t^k$. Fix any index~$i_0$. Since~$l$ is nonnegative due to~\ref{surr_basic1}, equation~\eqref{eq:update_t} implies
@@ -523,24 +520,22 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   \end{equation}
   Since~$i_0$ was an arbitrary index, it holds true for all indices. Then~\ref{surr_ratio} which leads to a further estimate
   \begin{equation*}
-    \begin{aligned}
     \sum_{i \in \I} l'(s_i^k - t^k)
-      & = \sum_{i\in \I} l(s_i^k-t^k) \frac{l'(s_i^k-t^k)}{l(s_i^k-t^k)} \\
-      & \geq \sum_{i \in \I} l(s_i^k - t^k) \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
-      & = n\tau \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))} \\
-      & = l'(l^{-1}(n\tau)),
-    \end{aligned}
+      = \sum_{i\in \I} l(s_i^k-t^k) \frac{l'(s_i^k-t^k)}{l(s_i^k-t^k)}
+      \geq \sum_{i \in \I} l(s_i^k - t^k) \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))}
+      = n\tau \frac{l'(l^{-1}(n\tau))}{l(l^{-1}(n\tau))}
+      = l'(l^{-1}(n\tau)),
   \end{equation*}
   where the inequality follows from~\eqref{eq:sigma_bound} and the following equality from~\eqref{eq:update_t}. Due to~\ref{surr_basic2} we obtain that~$l'(l^{-1}(n\tau))$ is a positive number, which finishes the proof of the first part. The second part can be obtained in an identical way.
 \end{proof}
 
-
+\newpage
 
 \begin{lemma}\label{lemma:bound_g}
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_der1}. Then there exists some~$B$ such that for all~$k$ we have
   \begin{equation*}
     \begin{aligned}
-      \norm{\nabla L(\bm{w}^k)} & \leq B, \\
+      \norm{\nabla L(\bm{w}^k)} & \leq B, \quad & \quad
       \norm{g(\bm{w}^k)} & \leq B.
     \end{aligned}
   \end{equation*}
@@ -556,7 +551,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
 \end{proof}
 
 \begin{lemma}\label{lemma:ratio}
-  Consider uniformly bounded positive sequences~$c_1^k,$~$c_2^k,$~$d_1^k,$~$d_2^k,$~$\alpha^k$ and positive constants~$C_1$,~$C_2$ such that for all~$k$ we have
+  Consider uniformly bounded positive sequences~$c_1^k,$~$c_2^k,$~$d_1^k,$~$d_2^k,$~$\alpha^k$ and positive constants $C_1$, $C_2$ such that for all~$k$ we have
   \begin{equation*}
     \begin{aligned}
       \norm{c_1^k-c_2^k} & \leq C_1\alpha^k, \quad &
@@ -586,8 +581,6 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   Since~$\alpha^k\to 0$ by assumption, for large~$k$ we have~$\norm{d_1^k-C_1\alpha^k}\geq \frac{1}{2}C_2$. Since the sequences are uniformly bounded, the statement follows.
 \end{proof}
 
-
-
 \begin{lemma}\label{lemma:product}
   Consider scalars~$a_i,$~$c_i$ and vectors~$b_i,$~$d_i.$ If there is some~$\hat{C}$ such that~$\norm{a_i} \leq \hat{C}$ and~$\norm{d_i} \leq \hat{C}$, then
   \begin{equation*}
@@ -595,6 +588,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
       \leq \hat{C}\sum_{i=1}^n \Brac{\norm{a_i-c_i} + \norm{b_i-d_i}}.
   \end{equation*}
 \end{lemma}
+
 \begin{proof}
   It is simple to verify
   \begin{equation*}
