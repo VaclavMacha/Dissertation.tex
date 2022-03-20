@@ -1,4 +1,4 @@
-\chapter{Deep}\label{chap: deep}
+\chapter{Primal Formulation with Non-Linear Model}\label{chap: deep}
 
 Since this task considers only scores above the threshold,~\cite{boyd2012accuracy} named it \AccatTop. The important distinction from standard classifiers is that this threshold is no longer fixed, as in the case of~$0.5$, but depends on all samples. Therefore, the objective is non-additive and non-decomposable. This brings both theoretical and numerical issues. Standard machine learning algorithms use minibatch sampling. However, when the threshold is computed on a minibatch, it provides a lower estimate of the true threshold. Therefore, the sampled threshold is a biased estimate of the true threshold. Figure~\ref{fig:thresholds1} illustrates this phenomenon. The bias between the true and sampled thresholds is large even for medium-sized minibatches. Backpropagation then propagates this sampling error through the whole gradient, and consequently, the minibatch gradient is a biased estimate of the true gradient. This brings numerical issues~\cite{bottou2018optimization}.
 

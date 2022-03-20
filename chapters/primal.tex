@@ -1,4 +1,4 @@
-\chapter{Linear Classification at the Top}\label{chap: linear}
+\chapter{Primal Formulation with Linear Model}\label{chap: linear}
 
 In the previous chapter, we introduced the general framework for binary classification at the top. Table~\ref{tab: summary formulations} summarizes all formulations that fall into this framework. In this chapter, we focus on the particular case when the model~$f$ is linear, i.e., the model is in the following form
 \begin{equation*}
@@ -72,15 +72,15 @@ Due to the previous theorem and Theorem~\ref{thm: convexity}, only \PatMat, and 
 We first provide a simple example and show that many formulations from Table~\ref{tab: summary formulations} are degenerate for it. Then we analyze general conditions under which this degenerate behavior happens.
 
 \begin{restatable}[Degenerate Behaviour]{example}{degeneratebehavior}\label{ex: degenerate behaviour}
-  Consider~$n$ negative samples uniformly distributed in~$[-1,0]\times[-1,1]$,~$n$ positive samples uniformly distributed in~$[0,1]\times[-1,1]$ and one negative sample at~$(2,0).$ An illustration of such settings is provided in Figure~\ref{fig: degenerate behaviour} (left). If~$n$ is large enough, the point at~$(2,0),$ is an outlier and the problem is (almost) perfectly separable using the separating hyperplane with normal vector~$\bm{w}_1 = (1, 0)$. 
+  Consider~$n$ negative samples uniformly distributed in~$[-1,0]\times[-1,1]$,~$n$ positive samples uniformly distributed in~$[0,1]\times[-1,1]$ and one negative sample at~$(2,0).$ An illustration of such settings is provided in Figure~\ref{fig: degenerate behaviour} (\textbf{left}). If~$n$ is large enough, the point at~$(2,0),$ is an outlier and the problem is (almost) perfectly separable using the separating hyperplane with normal vector~$\bm{w}_1 = (1, 0)$. 
 \end{restatable}
 
-Table~\ref{tab:example} shows the threshold~$t$ and the objective value~$L$ for two points~$\bm{w}_0=(0,0)$ and~$\bm{w}_1=(1,0)$. These two points are both important:~$\bm{w}_0$ does not generate any separating hyperplane, while~$\bm{w}_1$ generates the optimal separating hyperplane. We show the precise computation in Appendix~\ref{app: stability}. Since the dataset is perfectly separable by~$\bm{w}_1$, we expect that~$\bm{w}_1$ provides a lower objective than~$\bm{w}_0$. By highlithing the better objective in Table~\ref{tab:example} by green, we see that this did not happen for \TopPush and \TopMeanK. It can be shown that~$\bm{w}_0$ is even the global minimum for \TopPush and \TopMeanK. This raises the question of whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative as shown in Figure~\ref{fig: degenerate behaviour} (right). Here, we run \TopPush from several starting points, and it always converges to zero from one of the three possible directions; all of them far from the normal vector to the separating hyperplane.
+There are two important solutions for Example~\ref{ex: degenerate behaviour}. The first is the optimal solution~$\bm{w}_1=(1,0),$ which generates the optimal separating hyperplane. The second is~$\bm{w}_0=(0,0),$ a degenerate solution that does not generate any separating hyperplane. Since the dataset is perfectly separable by $\bm{w}_1$, we expect that~$\bm{w}_1$ provides a lower value of the objective function than~$\bm{w}_0$ for all formulations from Table~\ref{tab: summary formulations}. However, it is not happening. Table~\ref{tab: example} shows the threshold~$t$ and the value of the objective function~$L$ for~$\bm{w}_0$ and~$\bm{w}_1.$ For the precise computation of the results, see Appendix~\ref{app: stability}. By highlighting the better objective in Table~\ref{tab: example} by green, we see that \TopPush and \TopMeanK has a better objective in~$\bm{w}_0.$ It can be shown that~$\bm{w}_0$ is even the global minimum for these two formulations. This situation raises whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative, as shown in Figure~\ref{fig: degenerate behaviour} (\textbf{right}). Here, we run \TopPush with hinge loss as a surrogate and no regularization from several starting points. In all cases, \TopPush converges to zero from one of the three possible directions, and all these directions are far from the normal vector to the separating hyperplane.
 
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{images/toppush_convergence.pdf}
-  \caption{Left: distribution of positive (red circles) and negative samples (blue circles) for the example from Example~\ref{ex: degenerate behaviour} Right: contour plot of the objective function value for \TopPush and its convergence (orange lines) to the zero vector from~$12$ initial points.}
+  \caption{Distribution of positive (red circles) and negative samples (blue circles) for the example from Example~\ref{ex: degenerate behaviour}. (\textbf{left}) Contour plot of the objective function value for \TopPush with hinge loss as a surrogate and no regularization and its convergence (orange lines) to the zero vector from~$12$ different initial points. (\textbf{right})}
   \label{fig: degenerate behaviour}
 \end{figure}
 
@@ -92,7 +92,7 @@ Table~\ref{tab:example} shows the threshold~$t$ and the objective value~$L$ for 
       \rowcolors{4}{\rowcol}{}[restart]
     \Body
     \toprule
-    \Block{2-1}{\textbf{Name}}
+    \Block[c]{2-1}{\textbf{Formulation}}
       & \Block{2-1}{\textbf{Label}}
       & \Block{1-2}{$\bm{w}_0=(0,0)$}
       && \Block{1-2}{$\bm{w}_1=(1,0)$} \\
@@ -133,59 +133,77 @@ Table~\ref{tab:example} shows the threshold~$t$ and the objective value~$L$ for 
       & $1+\frac{1}{\vartheta}(1-\tau)$
       & $\frac{1}{\vartheta}(1-\tau)$
       & \Block[fill=mygreen!50]{1-1}{$0.5 + \frac{1}{\vartheta}(1-\tau)$} \\
+      \midrule
+      \GrillNP
+        & \eqref{eq: grill np}
+        & $0$
+        & $2$
+        & $1-2\tau$
+        & \Block[fill=mygreen!50]{1-1}{$1.5+2\tau(1-\tau)$} \\
+      \tauFPL
+        & \eqref{eq: tau-fpl}
+        & $0$
+        & \Block[fill=mygreen!50]{1-1}{$1$}
+        & $1-\tau$
+        & $1.5-\tau$ \\
+      \PatMatNP
+        & \eqref{eq: patmat np}
+        & $\frac{1}{\vartheta}(1-\tau)$
+        & $1+\frac{1}{\vartheta}(1-\tau)$
+        & $\frac{1}{\vartheta}(1-\tau)$
+        & \Block[fill=mygreen!50]{1-1}{$0.5 + \frac{1}{\vartheta}(1-\tau)$} \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Comparison of formulations on the very simple problem from Section~\ref{sec: stability}. Two formulations have the global minimum (denoted by green color) at~$\bm{w}_0=(0,0)$ which does not generate any separating hyperplane. The optimal separating hyperplane is generated by~$\bm{w}_1=(1,0)$.}
-  \label{tab:example}
+  \caption{Comparison of formulations from Table~\ref{tab: summary formulations} on the problem from Example~\ref{ex: degenerate behaviour}. The table shows the threshold and the objective function value for two solutions: the optimal solution~$\bm{w}_1=(1,0)$ and degenerate solution~$\bm{w}_0=(0,0).$ Three formulations have the global minimum (denoted by green color) at~$\bm{w}_0,$ which does not generate any separating hyperplane.}
+  \label{tab: example}
 \end{table}
 
-The convexity derived in the previous section guarantees that there are no local minima. However, as we showed in the example above, the global minimum may be at~$\bm{w} = \bm{0}$. This is highly undesirable since~$\bm{w}$ is the normal vector to the separating hyperplane and the zero vector provides no information. In the rest of the section, we analyze when this situation happens. The first result states that if the decision threshold~$t = t(\bm{w})$ is above a certain value, then zero has a better objective that~$\bm{w}$. If this happens for all~$\bm{w}$, then zero is the global minimum.
+The convexity derived in the previous section guarantees that there are no local minima. However, as we showed in the example above, the global minimum may be at~$\bm{w} = \bm{0}$. Such a situation is highly undesirable since~$\bm{w}$ is the normal vector to the separating hyperplane, and the zero vector provides no information. In the rest of the section, we analyze when this situation happens. The first result states that if the decision threshold~$t = t(\bm{w})$ is above a certain value, then zero has a better objective that~$\bm{w}$. If this happens for all~$\bm{w}$, then zero is the global minimum.
+
 \begin{restatable}{theorem}{larget}\label{thm:large_t}
   Consider any of these formulations: \TopPush, \TopPushK, \TopMeanK or \tauFPL. Fix any~$\bm{w}$ and denote the corresponding objective function~$L(\bm{w})$ and threshold~$t(\bm{w})$. If we have
   \begin{equation}\label{eq:w_zero_nn}
     t(\bm{w})\geq \frac{1}{\npos} \sum_{i \in \Ipos} \bm{w}^{\top} \bm{x}_i,
   \end{equation}
   then~$L(\bm{0}) \leq L(\bm{w})$. Specifically, using notation~\ref{not: scores} we get the following implications
-  \begin{equation}\label{eq:w_zero}
-    \begin{aligned}
-    s_{[1]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPush, \\
-    \frac{1}{K}\sum_{i=1}^K s_{[i]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPushK, \\
-    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \leq \sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopMeanK, \\
-    \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s_{[i]}^- \geq \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+
-      & \implies L(\bm{0}) \leq L(\bm{w}) \text{ for } \tauFPL. \\
-    \end{aligned}
-  \end{equation}
+  \begin{align*}\label{eq:w_zero}
+    s_{[1]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+ \quad
+      & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPush, \\
+    \frac{1}{K}\sum_{i=1}^K s_{[i]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+  \quad
+      & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPushK, \\
+    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \leq \sum_{i=1}^{\npos} s_{i}^+ \quad
+      & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopMeanK, \\
+    \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s_{[i]}^- \geq \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+ \quad
+      & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \tauFPL. \\
+  \end{align*}
 \end{restatable}
 
-\noindent We can use this result immediately to deduce that some formulations have the global minimum at~$\bm{w} = \bm{0}$. More specifically, \TopPush fails if there are outliers, and \TopMeanK fails whenever there are many positive samples.
+The proof of Theorem~\ref{thm:large_t} employs the fact that all formulations in the theorem statement have only false-negatives in the objective. If we use the zero solution~$\bm{w}_0=\bm{0},$ all classification scores~$s_i$ are equal to zero, the threshold~$t$ equals zero, and the objective function~$L$ equals one. On the other hand, if the threshold~$t$ is large, many positive samples have scores below the threshold, and the false-negatives samples have the average surrogate value larger than one. In such a case,~$\bm{w}_0 = \bm{0}$ becomes the global minimum for some formulations. More specifically, \TopPush fails if there are outliers, and \TopMeanK fails whenever there are many positive samples.
 
 \begin{corollary}\label{cor:toppush}
-  Consider the \TopPush formulation. If the positive samples lie in the convex hull of negative samples, then~$\bm{w}=\bm{0}$ is the global minimum.
+  Consider the \TopPush formulation. If positive samples lie in the convex hull of negative samples, then~$\bm{w}=\bm{0}$ is the global minimum.
 \end{corollary}
 
 \begin{corollary}\label{cor:topmean}
   Consider the \TopMeanK formulation. If~$\npos\geq n\tau$, then~$\bm{w}=\bm{0}$ is the global minimum.
 \end{corollary}
 
-\noindent The proof of Theorem~\ref{thm:large_t} employs the fact that all formulations in the theorem statement have only false-negatives in the objective. If~$\bm{w}_0=\bm{0}$, then~$\bm{w}_0^\top \bm{x}_i = 0$ for all~$i \in \I,$ the threshold equals to~$t = 0$ and the objective equals to one. If the threshold is large for~$\bm{w}$, many positives are below the threshold, and the false-negatives have the average surrogate value larger than one. In such a case,~$\bm{w}_0 = \bm{0}$ becomes the global minimum. There are two fixes to this situation:
+There are two fixes to the situation described above:
 \begin{itemize}
   \item Include false-positives to the objective. This approach is taken by \Grill and \GrillNP and necessarily results in the loss of convexity as shown in Section~\ref{sec: convexity}.
   \item Move the threshold away from zero even when all scores~$\bm{s}$ are zero. This approach is taken by our formulations \PatMat and \PatMatNP and keeps convexity.
 \end{itemize}
-The next theorem shows the advantage of the second approach.
+The following theorem shows the advantage of the second approach.
 
 \begin{restatable}{theorem}{patmatzero}\label{thm:patmat_zero}
-  Consider the \PatMat or \PatMatNP formulation with the hinge surrogate and no regularization. Assume that for some~$\bm{w}$ we have
+  Consider the \PatMat or \PatMatNP formulation with the hinge loss as a surrogate and no regularization. Assume that for some~$\bm{w}$ we have
   \begin{equation}\label{eq:patmat_zero}
     \frac{1}{\npos}\sum_{i \in \Ipos}\bm{w}^{\top} \bm{x}_i > \frac{1}{\nneg}\sum_{j \in \Ineg}\bm{w}^{\top} \bm{x}_j.
   \end{equation}
-  Then there is a scaling parameter~$\vartheta_0$ for the surrogate top $\tau$-quantile~\eqref{eq: aatp quantile surrogate} such that~$L(\bm{w}) < L(\bm{0})$ for all~$\vartheta \in (0, \vartheta_0)$.
+  Then there exists a scaling parameter~$\vartheta_0$ for the surrogate top $\tau$-quantile~\eqref{eq: aatp quantile surrogate} or~\eqref{eq: np quantile surrogate} such that~$L(\bm{w}) < L(\bm{0})$ for all~$\vartheta \in (0, \vartheta_0)$.
 \end{restatable}
 
-\noindent This theorem shed some light on the behaviour of the formulations. Theorem~\ref{thm:large_t} states that the stability of \tauFPL requires
+This theorem shed some light on the behavior of the formulations. Theorem~\ref{thm:large_t} states that the stability of \tauFPL requires
 \begin{equation}\label{eq:stability1}
   \frac{1}{\nneg\tau}\sum_{i=1}^{\nneg\tau}s_{[i]}^- < \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+,
 \end{equation}
@@ -193,9 +211,9 @@ while Theorem~\ref{thm:patmat_zero} states that the stability of \PatMatNP is en
 \begin{equation}\label{eq:stability2}
   \frac{1}{\nneg}\sum_{i=1}^{\nneg}s_{[i]}^- < \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+.
 \end{equation}
-The right-hand sides of \eqref{eq:stability1} and \eqref{eq:stability2} are the same, while the left-hand side of \eqref{eq:stability2} is always smaller than the left-hand side of \eqref{eq:stability1}. This implies that if \tauFPL is stable, then \PatMatNP is stable as well.
+The right-hand sides of~\eqref{eq:stability1} and~\eqref{eq:stability2} are the same, while the left-hand side of~\eqref{eq:stability2} is always smaller than the left-hand side of~\eqref{eq:stability1}. This implies that if \tauFPL is stable, then \PatMatNP is stable as well.
 
-At the same time, there may be a huge difference in the stability of both formulations. Since the scores of positive samples should be above the scores of negative samples, the scores~$\bm{s}$ may be interpreted as performance. Then formula \eqref{eq:stability1} states that if the mean performance of a \emph{small number of the best} negative samples is larger than the average performance of \emph{all} positive samples, then \tauFPL fails. On the other hand, formula \eqref{eq:stability2} states that if the average performance of \emph{all} positive samples is better than the average performance of \emph{all} negative samples, then \PatMatNP is stable. The former may well happen as accuracy at the top is interested in a good performance of only a small number of positive samples.
+At the same time, there may be a considerable difference in the stability of both formulations. Since the scores of positive samples should be above the scores of negative samples, the scores~$\bm{s}$ may be interpreted as performance. Then formula~\eqref{eq:stability1} states that if the mean performance of a \emph{small number of the best} negative samples is larger than the average performance of \emph{all} positive samples, then \tauFPL fails. On the other hand, formula~\eqref{eq:stability2} states that if the average performance of \emph{all} positive samples is better than the average performance of \emph{all} negative samples, then \PatMatNP is stable. The former may well happen as accuracy at the top is interested in a good performance of only a few positive samples.
 
 \section{Convergence of stochastic gradient descent}\label{sec:convergence}
 
@@ -270,9 +288,11 @@ The whole procedure does not perform any vector operations outside of the curren
 
 \section{Summary}
 
-We provide a summary of the obtained results in Table~\ref{tab:methods}. There we give basic characterizations of the formulations such as their definition label, their source, the hyperparameters, whether the formulation is differentiable and convex, and whether it has stability problems with~$\bm{w}=\bm{0}$ being the global minimum. 
+In this chapter, we derived theoretical properties for formulations from Table~\ref{tab: summary formulations} with the linear model. We focused on the convexity, differentiability, and stability of formulations since these three properties are crucial for fast and proper convergence. All results are summarized in Table~\ref{tab: summary formulations properties linear}. We showed that \TopPush, \TopPushK, \TopMeanK, and \tauFPL are convex, but all these formulations are vulnerable to having the global minimum at~$\bm{w}=0$. On the other hand, Grill and \GrillNP are stable, but they are not convex or differentiable. Finally, our formulations \PatMat and \PatMatNP satisfy all three theoretical properties. 
 
-\begin{table}[!ht]
+A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in green and yellow are convex, while formulations in red are non-convex. Based on Theorem~\ref{thm:large_t}, four formulations in yellow are vulnerable to having the global minimum at~$\bm{w}=0$. This theorem states that the higher the threshold, the more vulnerable the formulation is. The full arrows depict this dependence. If it points from one formulation to another, the latter one has a smaller threshold and thus is less vulnerable to this undesired global minima. The dotted arrows indicate that this usually holds but not always. The precise formulation is provided in Appendix~\ref{app:relations}. This complies with Corollaries~\ref{cor:toppush} and~\ref{cor:topmean} which state that \TopPush and \TopMeanK are most vulnerable. At the same time, it says that \tauFPL is the best one from the yellow formulations. Finally, even though \PatMatNP has a worse approximation of the true threshold than \tauFPL due to Theorem~\ref{thm:large_t}, it is more stable due to the discussion after Theorem~\ref{thm:patmat_zero}.
+
+\begin{table}
   \centering
   \begin{NiceTabular}{lccccc}
     \CodeBefore
@@ -280,9 +300,9 @@ We provide a summary of the obtained results in Table~\ref{tab:methods}. There w
       \rowcolors{3}{\rowcol}{}[restart]
     \Body
     \toprule
-    \Block[c]{1-1}{\textbf{Name}}
-      & \textbf{Definition}
-      & \textbf{Hyperpars}
+    \Block[c]{1-1}{\textbf{Formulation}}
+      & \textbf{Label}
+      & \textbf{Hyperparameters}
       & \textbf{Convex}
       & \textbf{Differentiable}
       & \textbf{Stable} \\
@@ -306,18 +326,18 @@ We provide a summary of the obtained results in Table~\ref{tab:methods}. There w
       & \nomark
       & \nomark
       & \yesmark \\
-    \PatMat
-      & \eqref{eq: patmat}
-      & $\tau$, $\vartheta$
-      & \yesmark
-      & \yesmark
-      & \yesmark \\ 
     \TopMeanK
       & \eqref{eq: topmeank}
       & $\tau$
       & \yesmark
       & \nomark
       & \nomark \\
+    \PatMat
+      & \eqref{eq: patmat}
+      & $\tau$, $\vartheta$
+      & \yesmark
+      & \yesmark
+      & \yesmark \\ 
     \midrule
     \GrillNP
       & \eqref{eq: grill np}
@@ -325,29 +345,27 @@ We provide a summary of the obtained results in Table~\ref{tab:methods}. There w
       & \nomark
       & \nomark
       & \yesmark \\
+    \tauFPL
+      & \eqref{eq: tau-fpl}
+      & $\tau$
+      & \yesmark
+      & \nomark
+      & \nomark \\
     \PatMatNP
       & \eqref{eq: patmat np}
       & $\tau$, $\vartheta$
       & \yesmark
       & \yesmark
       & \yesmark \\
-    \tauFPL
-      & \eqref{eq: tau-fpl}
-      & $\tau$
-      & \yesmark
-      & \nomark
-      & \nomark\\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of the formulations from Chapter~\ref{chap: framework}. The table shows their definition label, the hyperparameters, whether the formulation is differentiable, convex and stable (in the sense of having problems with~$\bm{w}=\bm{0}$).}
-  \label{tab:methods}
+  \caption{Summary of the formulations from Table~\ref{tab: summary formulations}. The second column shows the hyperparameters available for each formulation. The last three columns show whether the formulation is differentiable, convex, and stable (in the sense of having global minimum in~$\bm{w}=\bm{0}$).}
+  \label{tab: summary formulations properties linear}
 \end{table}
 
-A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in green and grey are convex, while formulations in white are non-convex. Based on Theorem~\ref{thm:large_t}, four formulations in grey are vulnerable to have the global minimum at~$\bm{w}=0$. This theorem states that the higher the threshold, the more vulnerable the formulation is. The full arrows depict this dependence. If it points from one formulation to another, the latter one has a smaller threshold and thus is less vulnerable to this undesired global minima. The dotted arrows indicate that this holds usually but not always, the precise formulation is provided in Appendix~\ref{app:relations}. This complies with Corollaries~\ref{cor:toppush} and~\ref{cor:topmean} which state that \TopPush and \TopMeanK are most vulnerable. At the same time, it says that \tauFPL is the best one from the grey-coloured formulations. Finally, even though \PatMatNP has a worse approximation of the true threshold than \tauFPL due to Theorem~\ref{thm:large_t}, it is more stable due to the discussion after Theorem~\ref{thm:patmat_zero}.
-
-\begin{figure}[!ht]
+\begin{figure}
   \centering
   \includegraphics[width = \linewidth]{images/methods_relation.pdf}
-  \caption{Summary of the formulations from Chapter~\ref{chap: framework}. Methods in green are convex, while formulations in red are non-convex. Methods in light green are vulnerable to have the global minimum at~$\bm{w}=0$. Full (dotted) arrow pointing from one formulation to another show that the latter formulation has always (usually) smaller threshold.}
+  \caption{Summary of the formulations from Table~\ref{tab: summary formulations}. Methods in green and yellow are convex, while formulations in red are non-convex. Moreover, methods in yellow are vulnerable to having the global minimum at~$\bm{w}=0$. A full (dotted) arrow pointing from one formulation to another shows that the latter formulation has (usually) a smaller threshold.}
   \label{fig:thresholds}
 \end{figure}
