@@ -831,13 +831,13 @@ Figure~\ref{fig: roc curves} \textbf{B)} shows the performance on the test set. 
 
 \subsection{Impact of enhancing the minibatch}\label{sec:delay}
 
-The crucial aspect of \DeepTopPush is enhancing the minibatch by one sample. In all presented results with the exception of the Malware Detection, the minibatch contained only 32 samples. Then the discussion in Section~\ref{sec:bias2} implies that \PatMatNP equals to \DeepTopPush without enhancing the minibatch. In other words, \PatMatNP uses Algorithm~\ref{alg1} while \DeepTopPush uses Algorithm~\ref{alg2}. As Table~\ref{tab:Overall comparison} clearly shows that \DeepTopPush ourperforms \PatMatNP, this implies that using the delayed values is beneficial.
+The crucial aspect of \DeepTopPush is enhancing the minibatch by one sample. In all presented results with the exception of the Malware Detection, the minibatch contained only 32 samples. Then the discussion in Section~\ref{sec:bias2} implies that \PatMatNP equals to \DeepTopPush without enhancing the minibatch. In other words, \PatMatNP uses Algorithm~\ref{alg: deep basic} while \DeepTopPush uses Algorithm~\ref{alg2}. As Table~\ref{tab:Overall comparison} clearly shows that \DeepTopPush ourperforms \PatMatNP, this implies that using the delayed values is beneficial.
 
 Figure~\ref{fig:thresholds2} shows explanation for this behaviour. The full blue line shows the behaviour of \DeepTopPush while the dotted grey line shows \PatMatNP. As explained in the previous paragraph, their difference demonstrates the effect of enhancing the minibatch by one delayed value. The top subfigure compares thresholds with the true threshold (dashed black). While the threshold for \PatMatNP jumps wildly, it is smooth for \DeepTopPush, and it often equals the true threshold. Theorem~\ref{theorem:convergence} then implies that our sampled gradient is an unbiased estimate of the true gradient. This is even more pronounced in the bottom subfigure, which shows the angle between the true gradient and the computed gradient. This angle is important because~\cite{nocedal2006numerical} showed that if this angle is uniformly in the interval~$[0,90)$, then gradient descent schemes converge. This is precisely what happened for \DeepTopPush. When the threshold is correct, the true and estimated gradients are parallel to each other, and the gradient descent moves in the correct direction.
 
 \begin{figure}[!ht]
   \centering
   \includegraphics[width = \linewidth]{images/deep_thresholds.pdf}
-  \caption{The thresholds (top) and angle between true and sampled gradients (bottom) for Algorithm~\ref{alg1} (full blue) and Algorithm~\ref{alg2} (dotted gray).}
+  \caption{The thresholds (top) and angle between true and sampled gradients (bottom) for Algorithm~\ref{alg: deep basic} (full blue) and Algorithm~\ref{alg2} (dotted gray).}
   \label{fig:thresholds2}
 \end{figure}

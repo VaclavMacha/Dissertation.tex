@@ -31,17 +31,21 @@ In this section, we derive dual forms of formulations from Table~\ref{tab: summa
 \subsection{Family of \TopPushK formulations}
 
 As we mentioned before, the first family is a family of \TopPushK formulations that consists \TopPush, \TopPushK, \TopMeanK and \tauFPL formulations. All these formulations can be written as follows
-\begin{mini}{\bm{w}}{
+\begin{mini}{\bm{w}, \, t}{
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \Ipos} l(t - \bm{w}^{\top} \bm{x}_i)
   }{\label{eq: toppushK family}}{}
-  \addConstraint{\tilde{s}_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \Itil}
+  \addConstraint{s_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \I}
   \addConstraint{t}{= \sum_{j = 1}^{K} \tilde{s}_{[j]},}
 \end{mini}
 where~$C \in \R$ is a constant and~$\Itil$ and~$K$ is defined as follows
 \begin{align*}
   \Itil & = \begin{cases}
     \I & \quad \text{for \TopMeanK}, \\
-    \Ineg & \quad \text{otherwise}. \\
+    \Ineg & \quad \text{otherwise}, \\
+  \end{cases} &
+  \tilde{s}_{[\cdot]} & = \begin{cases}
+    s_{[\cdot]} & \quad \text{for \TopMeanK}, \\
+    s^-_{[\cdot]}& \quad \text{otherwise}, \\
   \end{cases} &
   K & = \begin{cases}
     1 & \quad \text{for \TopPush}, \\
@@ -85,10 +89,10 @@ It means, that for \TopMeanK, the threshold is computed from all samples and oth
 \subsection{Family of \PatMat formulations}
 
 Similarly to the previous section, we introduce the family of \PatMat formulations that consists of \PatMat and \PatMatNP formulations and can be written as follows
-\begin{mini}{\bm{w}}{
+\begin{mini}{\bm{w}, \, t}{
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \Ipos} l(t - \bm{w}^{\top} \bm{x}_i)
   }{\label{eq: patmat family}}{}
-  \addConstraint{t}{\quad \text{solves} \quad \frac{1}{\ntil}\sum_{i \in \Itil} l\Brac{\vartheta(\bm{w}^{\top} \bm{x}_j - t)} = \tau.}
+  \addConstraint{t}{\quad \text{solves} \quad \frac{1}{\ntil}\sum_{i \in \Itil} l\Brac{\vartheta(\bm{w}^{\top} \bm{x}_j - t)} = \tau,}
 \end{mini}
 where~$C \in \R$ is a constant and~$\Itil$ and~$\ntil$ is defined as follows
 \begin{align*}
@@ -221,6 +225,8 @@ We start with the hinge loss function from Notation~\ref{not: surrogates}. Plugg
   \label{eq: Top dual hinge c3}}
 \end{maxi!}
 The form of~$\K$ and~$\ntil$ depends on the used formulations as discussed in Theorem~\ref{thm: toppushk family dual}. Moreover, the upper limit in~\eqref{eq: Top dual hinge c3} can be ommited for~$K = 1.$ Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show the concrete form of~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules} when the hinge loss is used. The following three lemmas provide closed-form formulas all considered update rules. To keep the presentation as simple as possible, we postpone all proofs to Appendix~\ref{sec: toppush family coordinate proofs}.
+
+\todo[inline](Changed lemma to proposition)
 
 \begin{restatable}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual hinge}]{lemma}{topruleaa}\label{thm: toppushk family hinge update a,a}
   Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where

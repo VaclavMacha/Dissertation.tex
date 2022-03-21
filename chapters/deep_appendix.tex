@@ -4,6 +4,31 @@
 
 To promote reproducibility, we share all our code online. We follow the NeurIPS instructions which allow sharing only anonymized repositories. We provide one respository with the code\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop-7562}} and one repository with numerical experiments.\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop\_DeepTopPush-834E}}
 
+\section{Proofs}
+
+\lemmacovergencedeep*
+\begin{proof}[Proof of Lemma~\ref{lemma:convergence} on page~\pageref{lemma:convergence}]
+  If~$j^*$ is unique, then the true threshold~$t$ is a differentiable function. The differentiability of~$L$ and~$\hat L$ follows from the chain rule. If~$\hat j=j^*$ holds, then the sampled gradient equals to
+  \begin{equation}\label{eq:grad_min_aux}
+    \nabla \hat L(\bm{w})= \frac{1}{\nmbpos}\sum_{i\in \Imbpos}l'(t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{j^*}) - \nabla_w f(\bm{w};\bm{x}_i) \big).
+  \end{equation}
+  The summands are identical to the ones in \eqref{eq:grad1}. Since the sum is performed with respect to positive samples, the threshold is computed from negative samples, the lemma statement follows.
+\end{proof}
+
+\thmcovergencedeep*
+\begin{proof}[Proof of Theorem~\ref{theorem:convergence} on page~\pageref{theorem:convergence}]
+  The law of total expectation implies
+  \begin{equation*}
+    \begin{aligned}
+      \EE \nabla \hat L(\bm{w})
+      & = \PP(\hat j=j^*)\EE(\nabla \hat L(\bm{w}) \mid \hat j=j^*) \\
+      & \qquad + \PP(\hat j\neq j^*)\EE(\nabla \hat L(\bm{w}) \mid \hat j\neq j^*),
+    \end{aligned}
+  \end{equation*}
+  from where the statement follows due to definiton \eqref{eq:defin_bias} and Lemma~\ref{lemma:convergence}.
+\end{proof}
+
+
 \section{Theorem~\ref{theorem:convergence} for Rec@K}
 
 The assumption of Theorem~\ref{theorem:convergence} requires that the threshold is computing from negative samples and the objective for positive samples. This does not hold for Rec@K. We will show that we can obtain a similar result even for this case.
