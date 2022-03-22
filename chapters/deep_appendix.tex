@@ -1,63 +1,22 @@
 \chapter{Appendix for Chapter~\ref{chap: deep}}
 
-\section{Code online}
-
-To promote reproducibility, we share all our code online. We follow the NeurIPS instructions which allow sharing only anonymized repositories. We provide one respository with the code\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop-7562}} and one repository with numerical experiments.\footnote{\texttt{https://anonymous.4open.science/r/AccuracyAtTop\_DeepTopPush-834E}}
-
-\section{Proofs}
-
 \lemmacovergencedeep*
 \begin{proof}[Proof of Lemma~\ref{lemma:convergence} on page~\pageref{lemma:convergence}]
-  If~$j^*$ is unique, then the true threshold~$t$ is a differentiable function. The differentiability of~$L$ and~$\hat L$ follows from the chain rule. If~$\hat j=j^*$ holds, then the sampled gradient equals to
+  If~$\indmax$ is unique, then the true threshold~$t$ is a differentiable function of weights~$\bm{w}$. The differentiability of~$L$ and~$\hat L$ follows from the chain rule. If~$\indmaxmb = \indmax$ holds, then the sampled gradient equals to
   \begin{equation}\label{eq:grad_min_aux}
-    \nabla \hat L(\bm{w})= \frac{1}{\nmbpos}\sum_{i\in \Imbpos}l'(t-z_i)\big(\nabla_w f(\bm{w};\bm{x}_{j^*}) - \nabla_w f(\bm{w};\bm{x}_i) \big).
+    \nabla \hat L(\bm{w})
+      = \frac{1}{\nmbpos} \sum_{i\in \Imbpos} l'(t - s_i) \Brac{\nabla f(\bm{x}_{\indmax}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
   \end{equation}
-  The summands are identical to the ones in \eqref{eq:grad1}. Since the sum is performed with respect to positive samples, the threshold is computed from negative samples, the lemma statement follows.
+  The summands are identical to the ones in~\eqref{eq: deep L gradient true}. Since the sum is performed with respect to positive samples, the threshold is computed from negative samples, the lemma statement follows.
 \end{proof}
 
 \thmcovergencedeep*
 \begin{proof}[Proof of Theorem~\ref{theorem:convergence} on page~\pageref{theorem:convergence}]
   The law of total expectation implies
   \begin{equation*}
-    \begin{aligned}
-      \EE \nabla \hat L(\bm{w})
-      & = \PP(\hat j=j^*)\EE(\nabla \hat L(\bm{w}) \mid \hat j=j^*) \\
-      & \qquad + \PP(\hat j\neq j^*)\EE(\nabla \hat L(\bm{w}) \mid \hat j\neq j^*),
-    \end{aligned}
+    \EE \nabla \hat L(\bm{w})
+      = \PP \Brac[s]{\indmaxmb = \indmax} \EE \Brac[s]{\nabla \hat L(\bm{w}) \middle\vert \indmaxmb =\indmax}
+      + \PP \Brac[s]{\indmaxmb \neq \indmax} \EE \Brac[s]{\nabla \hat L(\bm{w}) \middle\vert\indmaxmb\neq \indmax},
   \end{equation*}
-  from where the statement follows due to definiton \eqref{eq:defin_bias} and Lemma~\ref{lemma:convergence}.
+  from where the statement follows due to definiton~\eqref{eq:defin_bias} and Lemma~\ref{lemma:convergence}.
 \end{proof}
-
-
-\section{Theorem~\ref{theorem:convergence} for Rec@K}
-
-The assumption of Theorem~\ref{theorem:convergence} requires that the threshold is computing from negative samples and the objective for positive samples. This does not hold for Rec@K. We will show that we can obtain a similar result even for this case.
-
-The proof of Theorem~\ref{theorem:convergence} is based on Lemma~\ref{lemma:convergence}. We will now obtain the variant of Lemma~\ref{lemma:convergence} for Rec@K. First, we realize that if the threshold index~$j^*$ corresponds to a negative sample, the computation will not change and therefore
-\begin{equation*}
-  \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a negative sample}}
-  =  \nabla L(\bm w).
-\end{equation*}
-On the other hand, when~$j^*$ corresponds to a positive sample, it needs to be always present in the minibatch selection and there are effectively only~$\nmbpos-1$ positive samples in the minibatch. Then
-\begin{equation*}
-  \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*\text{ is an index of a positive sample}}
-  = \frac{\nmbpos-1}{\nmbpos}\nabla L(\bm w).
-\end{equation*}
-Denote now~$p$ the probability that the threshold corresponds to a positive sample. Then we have
-\begin{equation*}
-  \begin{aligned}
-    \EE\Brac{\nabla \hat L(\bm w) \mid \hat j=j^*}
-    & = (1-p)\nabla L(\bm w) + p\frac{\nmbpos-1}{\nmbpos}\nabla L(\bm w) \\
-    & = \nabla L(\bm w) - \frac{p}{\nmbpos}\nabla L(\bm w).
-\end{aligned}
-\end{equation*}
-
-Theorem~\ref{theorem:convergence} will then be modified into
-\begin{equation*}
-  \begin{aligned}
-    \bias(\bm w)
-    & = \PP(\hat j\neq j^*) \Brac{\nabla L(\bm w) - \EE\Brac{\nabla \hat L(\bm w) \mid \hat j\neq j^*}} \\
-    & \qquad - \PP(\hat j= j^*)\frac{p}{\nmbpos}\nabla L(\bm w).
-  \end{aligned}
-\end{equation*}
-We changed the result by adding the last term. Usually the training set contains much less positive than negative samples. This implies that~$p$ is assumed to be small and the extra term is small as well. Thefore, this change should have a negligible impact on the theorem implications.
