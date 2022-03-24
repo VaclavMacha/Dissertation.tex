@@ -1,91 +1,34 @@
 \chapter{Appendix for Chapter~\ref{chap: dual}}\label{app: dual}
 
-In this chapter we provide proofs and additional results for the Chapter~\ref{chap: dual}. In the first part, we introduce concept of conjugate functions. In the second part, we derive dual formulation to the formulations from Table~\ref{tab: summary formulations}. Finally, the last part focuses on how to efficiently solve these dual formulations.
+\section{Derivation of dual problems}
 
-\section{Convex Conjugate}
-\begin{definition}[Convex conjugate~\cite{boyd2004convex}]\label{def: conjugate}
-  Let~$l \colon \R^n \to \R.$ The function~$l^{\star} \colon \R^n \to \R,$ defined as
-  \begin{equation*}
-    l^{\star} (\bm{y})
-      =  \sup_{\bm{x} \in \domain l} \{\bm{y}^{\top}\bm{x} - l(\bm{x})\}
-      = -\inf_{\bm{x} \in \domain l} \{l(\bm{x}) - \bm{y}^{\top}\bm{x}\}.
-  \end{equation*}
-  is called conjugate function of~$l.$
-\end{definition}
-Recall the hinge loss and quadratic hinge loss function defined in Notation~\ref{not: surrogates} as follows
-\begin{equation*}
-  \begin{aligned}
-    l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + s}, \\
-    l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.\\
-  \end{aligned}
-\end{equation*}
-The conjugate for the hinge loss can be found in~\cite{shnlev2014accelerated} and has the following form
-\begin{equation}\label{eq: conjugate hinge}
-  l_{\text{hinge}}^{\star}(y) =
-  \begin{cases}
-    -y & \text{if } y \in [0, 1], \\
-    \infty & \text{otherwise.}
-  \end{cases}  
-\end{equation}
-Similarly, the conjugate for the quadratic hinge is defuined in~\cite{kanamori2013conjugate} as
-\begin{equation}\label{eq: conjugate quadratic hinge}
-  l_{\text{quadratic}}^{\star}(y) =
-  \begin{cases}
-    \frac{y^2}{4} - y & \text{if } y \geq 0, \\
-    \infty & \text{otherwise.}
-  \end{cases}
-\end{equation}
+\subsection{Family of \TopPushK formulations}
 
-\section{Dual formulations}
-
-In Section~\ref{sec:Derivation of dual problems} we divided all formulations from Table~\ref{tab: summary formulations} into two families. All formulations in these families use the same objective function and also use the same form of the decision threshold. In Theorems~\ref{thm: toppushk family dual} and~\ref{thm: patmat family dual} we derived the dual formulation for these two families. In this section, we derive dual formulations for formulations from Table~\ref{tab: summary formulations}. Then the Theorems~\ref{thm: toppushk family dual} and~\ref{thm: patmat family dual} are direct consequence of the theorems presented in the following sections. 
-
-\subsection{Ranking Problems}
-
-In this section, we derive the dual formulation of \TopPushK. Table~\ref{tab: summary formulations} shows, that \TopPush is a special is a special case of the \TopPushK for~$K = 1.$ Therefore, it is sufficient to show the dual form only for \TopPushK.
-
-\begin{lemma}[\TopPushK alternative formulation.]\label{lem: TopPushK primal alternative}
-  The problem~\eqref{eq: toppushK surrogate} with linear classifier can be equivalently written as follows
-  \begin{maxi}{\bm{w}, t, \bm{y}, \bm{z}}{
-    \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i)
-    }{\label{eq: TopPushK primal alternative}}{}
-    \addConstraint{y_i}{= t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^{\top} \bm{x}^+_i, \quad}{i = 1, \; 2, \ldots, \; \npos.}
-    \addConstraint{z_j}{\geq \bm{w}^{\top} \bm{x}^-_j - t,}{j = 1, \; 2, \ldots, \; \nneg}
-    \addConstraint{z_j}{\geq 0,}{j = 1, \; 2, \ldots, \; \nneg}
-  \end{maxi}
-\end{lemma}
+\topdual*
 \begin{proof}
-  Firstly, we rewrite the formula for the decision threshold from~\eqref{eq: toppushK surrogate} using the Lemma~1 from~\cite{ogryczak2003minimizing}
+  We show the proof only for \TopPushK formulation, i.e., the decision threshold is computed only from negative samples. The proof for the remaining formulations is identical. Firstly, we derive an alternative formulation to formulation~\eqref{eq: toppushk family}. Using Lemma~1 from~\cite{ogryczak2003minimizing}, we can rewrite the formula for the decision threshold to the following form
   \begin{equation*}
-    \sum_{j = 1}^{K} s^{-}_{[j]} = \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\{0, \; s^-_j - t\}}.
+    \sum_{j = 1}^{K} s^-_{[j]} = \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\{0, \; s^-_j - t\}}.
   \end{equation*}
-  Substituing this formula into the objective function from~\eqref{eq: toppushK surrogate} we get
+  By substituting this formula into the objective function of~\eqref{eq: toppushk family}, we get
   \begin{align*}
-    \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^{-}_{[j]} - s^+_{i}}
+    \sum_{i = 1}^{\npos} l\Brac{\frac{1}{K}\sum_{j = 1}^{K} s^-_{[j]} - s^+_{i}}
       & = \sum_{i = 1}^{\npos} l\Brac{ \frac{1}{K} \min_{t} \Brac[c]{Kt + \sum_{j = 1}^{\nneg} \max\Brac[c]{0, \; s^-_j - t}} - s^+_{i}} \\
       & = \min_{t} \; \sum_{i = 1}^{\npos} l\Brac{t + \frac{1}{K} \sum_{j = 1}^{\nneg} \max\Brac[c]{0, \; s^-_j - t} - s^+_{i}}.
   \end{align*}
-  where the last equality follows from the fact, that the surrogate function is~$l$ is non-decreasing. The max operator can be replaced using auxiliary variable~$\bm{z} \in \R^{\nneg}$ which for all~$j = 1, \; 2, \ldots, \; \nneg$ fullfills~$z _j \geq s^-_j - t$ and at the same time~$z _j \geq 0.$ Moreover, we introduce new variable~$\bm{y} \in \R^{\nneg}$ defined for all~$i = 1, \; 2, \ldots, \; \npos$ as
+  where the last equality follows from the fact that the surrogate function~$l$ is non-decreasing. The max operator can be replaced using an auxiliary variable~$\bm{z} \in \R^{\nneg}$ that fulfills~$z _j \geq s^-_j - t$ and~$z _j \geq 0$ for all~$j = 1, \ldots, \; \nneg.$ Furthermore, we use auxilliary variable~$\bm{y} \in \R^{\nneg}$ defined for all~$i = 1, \ldots, \; \npos$ as
   \begin{equation*}
     y_i = t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - s^+_i.
   \end{equation*}
-  Altogether, we get the formulation~\eqref{eq: TopPushK primal alternative}, where we use the fact, that we have linear model and therefore~$s^-_j = \bm{w}^{\top} \bm{x}^-_j$ for all~$j = 1, \; 2, \ldots, \; \nneg$ and ~$s^+_i = \bm{w}^{\top} \bm{x}^+_i$ for all~$i = 1, \; 2, \ldots, \; \npos$.
-\end{proof}
-
-
-
-\begin{theorem}[Dual formulation of \TopPush and \TopPushK ]\label{thm: TopPushK dual}
-  Consider \TopPushK formulation~\eqref{eq: toppush surrogate} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
-  \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
-    - \frac{1}{2} \vecab^\top \Kneg \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
-    }{\label{eq: TopPushK dual}}{\label{eq: TopPushK dual L}}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nneg} \beta_j \label{eq: TopPushK dual c1}}
-    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \nneg, \label{eq: TopPushK dual c2}}
-  \end{maxi!}
-  where~$l^{\star}$ is conjugate function of~$l.$ If~$K = 1,$ the upper bound in the second constrainet vanishes due to the first constraint and we get the dual form of \TopPush.
-\end{theorem}
-\begin{proof}
-  In Lemma~\ref{lem: TopPushK primal alternative} we derived alternative fomrulation of \TopPushK with Lagrangian in the following form
+  Since we use a linear model, the combination of all relations above leads to the following formulation
+  \begin{maxi*}{\bm{w}, t, \bm{y}, \bm{z}}{
+    \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i)
+    }{}{}
+    \addConstraint{y_i}{= t + \frac{1}{K} \sum_{j = 1}^{\nneg} z_j - \bm{w}^{\top} \bm{x}^+_i, \quad}{i = 1, \; 2, \ldots, \; \npos}
+    \addConstraint{z_j}{\geq \bm{w}^{\top} \bm{x}^-_j - t,}{j = 1, \; 2, \ldots, \; \nneg}
+    \addConstraint{z_j}{\geq 0,}{j = 1, \; 2, \ldots, \; \nneg,}
+  \end{maxi*}
+  The Lagrangian of this formulation is defined as 
   \begin{align*}
     \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma})
      & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
@@ -94,188 +37,98 @@ In this section, we derive the dual formulation of \TopPushK. Table~\ref{tab: su
      & + \sum_{j = 1}^{\nneg} \beta_j \Brac{\bm{w}^{\top} \bm{x}^-_j - t - z_j}
        + \sum_{j = 1}^{\nneg} \gamma_j z_j,
   \end{align*}
-  with feasibility conditions~$\beta_j \geq 0$ and~$\gamma_j \geq 0$ for all~$j = 1, \; 2, \ldots, \; \nneg.$ Then the corresponding dual objective function reads
-  \begin{equation*}
-    g(\bm{\alpha}, \bm{\beta}, \bm{\gamma})
-      = \min_{\bm{w}, t, \bm{y}, \bm{z}} \; \mathcal{L}(\bm{w}, t, \bm{z}; \bm{\alpha}, \bm{\beta}, \bm{\gamma}),
-  \end{equation*}
-  Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately, i.e., the dual function can be rewritten as follows
-  \begin{equation}\label{eq: TopPushK dual function}
-    \begin{aligned}
+  with feasibility conditions~$\beta_j \geq 0$ and~$\gamma_j \geq 0$ for all~$j = 1, \ldots, \; \nneg.$ Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately. Then the dual function reads
+  \begin{subequations}\label{eq: TopPushK dual function}
+    \begin{align}
       g(\bm{\alpha}, \bm{\beta}, \bm{\gamma})
         & = \min_{\bm{w}} \; \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-          - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j} \\
-        & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j} \\
-        & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \\
-        & + \min_{\bm{z}} \; \sum_{j = 1}^{\nneg} \Brac{\sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j}z_j
-    \end{aligned}
-  \end{equation}
-  From optimality conditions with respect to~$\bm{w}$ we deduce 
+          - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j} \label{eq: TopPushK dual function w}\\
+        & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j} \label{eq: TopPushK dual function t}\\
+        & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \label{eq: TopPushK dual function y}\\
+        & + \min_{\bm{z}} \; \sum_{j = 1}^{\nneg} \Brac{\sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j}z_j \label{eq: TopPushK dual function z}
+    \end{align}
+  \end{subequations}
+  From optimality conditions with respect to~$\bm{w},$ we deduce 
   \begin{equation*}
     \bm{w}
-        = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j
-        = \Matrix{\X^+ \\ - \X^-}^\top \vecab,
-  \end{equation*}
-  where we use Notation~\ref{not: kernel matrix}. Using this relation, we get the first part of the objective function~\eqref{eq: TopPushK dual L} 
-  \begin{equation*}
+      = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j
+      = \Matrix{\X^+ \\ - \X^-}^\top \vecab
+    \; \implies \;
     \frac{1}{2} \norm{\bm{w}}_{2}^{2} - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j}
-      = - \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-      = - \frac{1}{2} \bm{w}^{\top} \bm{w}
       = - \frac{1}{2} \vecab^{\top} \Kneg \vecab,
   \end{equation*}
-  where~$\Kneg$ is defined in Notation~\ref{not: kernel matrix}. Optimality condition with respect to~$t$ reads 
+  where we use Notation~\ref{not: kernel matrix}. It mean, that we get the first part of the objective function~\eqref{eq: toppushk family L}. Optimality condition with respect to~$t$ reads 
   \begin{equation*}
     \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j = 0,
   \end{equation*}
-  and implies constrain in~\eqref{eq: TopPushK dual c1}. Similarly, Optimality condition with respect to~$\bm{z}$ reads for all $j = 1, \; 2, \ldots, \; \nneg$ as 
+  and implies constrain~\eqref{eq: toppushk family c1}. Similarly, optimality condition of~\eqref{eq: TopPushK dual function z} with respect to~$\bm{z}$ reads for all $j = 1, \ldots, \; \nneg$ as 
   \begin{equation*}
     \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \beta_j - \gamma_j = 0.
   \end{equation*}
-  Plugging the feasibility condition~$\gamma_j \geq 0$ into this equality and combining it with the feasibility conditions~$\beta_j \geq 0$ yields constraint~\eqref{eq: TopPushK dual c2}. Finally, minimization of the Lagrangian with respect to~$\bm{y}$ yields for all $i = 1, \; 2, \ldots, \; \npos$ 
+  Plugging the feasibility condition~$\gamma_j \geq 0$ into this equality and combining it with the feasibility conditions~$\beta_j \geq 0,$ yields constraint~\eqref{eq: toppushk family c2}. Finally, minimization of~\eqref{eq: TopPushK dual function y} with respect to~$\bm{y}$ yields for all $i = 1, \ldots, \; \npos$ 
   \begin{equation*}
     C \min_{y_i} \Brac{l(y_i) - \frac{\alpha_i}{C} y_i} = - C l^{\star} \Brac{\frac{\alpha_i}{C}}.
   \end{equation*}
-  where the equality follows from Definition~\ref{def: conjugate}. Plugging this back into the Lagrange function yields the second part of the objective function~\eqref{eq: TopPushK dual L}. For \TopPush, we have~$K = 1.$ From~\eqref{eq: TopPushK dual c1} and non-negativity of~$\beta_j$ we deduce, that the upper bound in~\eqref{eq: TopPushK dual c2} is always fulfilled and therefore can be ommited, which finishes the proof. 
+  where the equality follows from Definition~\ref{def: conjugate} of the conjugate function. Plugging this back into~\eqref{eq: TopPushK dual function y} yields the second part of the objective function~\eqref{eq: toppushk family L}. For \TopPush, we have~$K = 1.$ From~\eqref{eq: toppushk family c1} and non-negativity of~$\beta_j$ we deduce that the upper bound in~\eqref{eq: toppushk family c2} is always fulfilled and can be omitted.
 \end{proof}
 
-\subsection{Accuracy at the Top}
+\subsection{Family of \PatMat formulations}
 
-In Section~\ref{sec: aatp} we derived three formulations that fall into our framework~\eqref{eq: aatp surrogate}. In this section, we focus only on two of them that are convex for linear classifer as showed in Chapter~\ref{chap: linear}. Namely, we focus on \TopMeanK and \PatMat.
+\patdual*
 
-\begin{theorem}[Dual formulation of \TopMeanK]\label{thm: TopMeanK dual}
-  Consider \TopMeanK formulation~\eqref{eq: topmeank} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
-  \begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
-    - \frac{1}{2} \vecab^\top \Kall \vecab - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
-    }{}{}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nall} \beta_j}
-    \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \nall,}
-  \end{maxi*}
-  where~$l^{\star}$ is conjugate function of~$l$ and~$K = \nall \tau.$
-\end{theorem}
+\pagebreak
+
 \begin{proof}
-  \TopMeanK formulation is similar to the \TopPushK and therefore also dual formulations are similar. The main difference is, that the decision threshold for \TopMeanK is computed from all socres and not only from the negative ones as for \TopPushK. Due to that, the dual variable~$\bm{\beta}$ has different size and the kernel matrix has slightly different form as can be seen in Notation~\ref{not: kernel matrix}. Besides that dual formulations of \TopMeanK and \TopMeanK are identical and the proof of Theorem~\ref{thm: TopMeanK dual} is almost identical to the proof of Theorem~\ref{thm: TopPushK dual}.
-\end{proof}
-
-\begin{theorem}[Dual formulation of \PatMat]\label{thm: PatMat dual}
-  Consider \PatMat formulation~\eqref{eq: patmat} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
-  \begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
-    - \frac{1}{2} \vecab^\top \Kall \vecab
-    - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
-    - \delta \sum_{j = 1}^{\nall} l^{\star} \Brac{\frac{\beta_j}{\delta\vartheta}}
-    - \delta \nall \tau
-    }{\label{eq: PatMat dual}}{\label{eq: PatMat dual L}}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nall} \beta_j \label{eq: PatMat dual c1}}
-    \addConstraint{\delta }{\geq 0, \label{eq: PatMat dual c2}}
-  \end{maxi!}
-  where~$l^{\star}$ is conjugate function of~$l$ and~$\vartheta > 0$ is a scaling parameter.
-\end{theorem}
-\begin{proof}
-  Let us first realize tha \PatMat formulation~\eqref{eq: patmat} with linear model is equivalent to
+  For simplicity, we again show the proof only for \PatMatNP, i.e. the threshold is computed only from negative samples. Let us first realize that formulation~\eqref{eq: patmat family} is equivalent to the following formulation
   \begin{mini*}{\bm{w}, t, \bm{y}, \bm{z}}{
     \frac{1}{2} \norm{\bm{w}}_{2}^{2}+ C \sum_{i = 1}^{\npos} l(y_i)
     }{}{}
-    \addConstraint{\sum_{j = 1}^{\nall} l(\vartheta z_i)}{\leq \nall \tau}{}
+    \addConstraint{\sum_{j = 1}^{\nneg} l(\vartheta z_i)}{\leq \nneg \tau}{}
     \addConstraint{y_i}{= t - \bm{w}^{\top} \bm{x}^+_i,}{i = 1, \; 2, \ldots, \; \npos.}
-    \addConstraint{z_j}{= \bm{w}^{\top} \bm{x}_j - t, \quad}{j = 1, \; 2, \ldots, \; \nall}
+    \addConstraint{z_j}{= \bm{w}^{\top} \bm{x}^-_j - t, \quad}{j = 1, \; 2, \ldots, \; \nneg}
   \end{mini*}
-  Corresponding Lagrangian is in the following form
+  The corresponding Lagrangian then reads
   \begin{align*}
     \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta)
     & = \frac{1}{2} \norm{\bm{w}}_{2}^{2}
       + C \sum_{i = 1}^{\npos} l(y_i)
       + \sum_{i = 1}^{\npos} \alpha_i (t - \bm{w}^{\top}\bm{x}^+_{i} - y_i) \\
-    & + \sum_{j = 1}^{\nall} \beta_j(\bm{w}^{\top}\bm{x}_j - t - z_j)
-      + \delta \Brac{\sum_{j = 1}^{\nall} l(\vartheta z_j) - \nall \tau}.
+    & + \sum_{j = 1}^{\nneg} \beta_j(\bm{w}^{\top}\bm{x}^-_j - t - z_j)
+      + \delta \Brac{\sum_{j = 1}^{\nneg} l(\vartheta z_j) - \nneg \tau}.
   \end{align*}
-  with feasibility condition~$\delta \geq 0.$ Then the corresponding dual objective function reads
-  \begin{equation*}
-    g(\bm{\alpha}, \bm{\beta}, \delta)
-      = \min_{\bm{w}, t, \bm{y}, \bm{z}} \; \mathcal{L}(\bm{w}, t, \bm{y}, \bm{z}; \bm{\alpha}, \bm{\beta}, \delta),
-  \end{equation*}
-  Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately, i.e., the dual function can be rewritten as follows
-  \begin{align*}
-    g(\bm{\alpha}, \bm{\beta}, \delta)
-      & = \min_{\bm{w}} \; \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-        - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j} \\
-      & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nall} \beta_j} \\
-      & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \\
-      & + \min_{\bm{z}} \; \delta \sum_{j = 1}^{\nall} \Brac{l(\vartheta z_j) - \frac{\beta_j}{\delta}z_j} \\
-      & - \delta \nall \tau.
-  \end{align*}
-  Note that resulting dual function is very similar to the dual function~\eqref{eq: TopPushK dual function} for \TopPushK, i.e. minimization of the Lagrangian with respect to~$\bm{w}$,~$t$ and~$\bm{y}$ yields similar results. From optimality conditions with respect to~$\bm{w}$ we deduce 
-  \begin{equation*}
-    \bm{w}
-        = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j
-        = \Matrix{\X^+ \\ - \X}^\top \vecab,
-  \end{equation*}
-  where we use Notation~\ref{not: kernel matrix}. Using this relation, we get the first part of the objective function~\eqref{eq: PatMat dual L} 
-  \begin{equation*}
-    \frac{1}{2} \norm{\bm{w}}_{2}^{2} - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nall} \beta_j \bm{x}_j}
-      = - \frac{1}{2} \norm{\bm{w}}_{2}^{2}
-      = - \frac{1}{2} \bm{w}^{\top} \bm{w}
-      = - \frac{1}{2} \vecab^{\top} \Kall \vecab,
-  \end{equation*}
-  where~$\Kall$ is defined in Notation~\ref{not: kernel matrix}. Optimality condition with respect to~$t$ reads 
-  \begin{equation*}
-    \sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nall} \beta_j = 0,
-  \end{equation*}
-  and implies constrain in~\eqref{eq: PatMat dual c1}. The optimality condition with respect to~$\bm{y}$ is identical to the one in the proof of Theorem~\ref{thm: TopPushK dual}. Finally, inimization of the Lagrangian with respect to~$\bm{z}$ yields for all $j = 1, \; 2, \ldots, \; \nall$ 
+  with feasibility condition~$\delta \geq 0.$ Since the Lagrangian~$\mathcal{L}$ is separable in primal variables, it can be minimized with respect to each variable separately. Then the dual function can be rewritten as follows
+  \begin{subequations}\label{eq: PatMat dual function}
+    \begin{align}
+      g(\bm{\alpha}, \bm{\beta}, \delta)
+        & = \min_{\bm{w}} \; \frac{1}{2} \norm{\bm{w}}_{2}^{2}
+          - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j} \label{eq: PatMat dual function w}\\
+        & + \min_{t} \; t \Brac{\sum_{i = 1}^{\npos} \alpha_i - \sum_{j = 1}^{\nneg} \beta_j} \label{eq: PatMat dual function t} \\
+        & + \min_{\bm{y}} \; C \sum_{i = 1}^{\npos} \Brac{l(y_i) - \frac{\alpha_i}{C}y_i} \label{eq: PatMat dual function y} \\
+        & + \min_{\bm{z}} \; \delta \sum_{j = 1}^{\nneg} \Brac{l(\vartheta z_j) - \frac{\beta_j}{\delta}z_j} \label{eq: PatMat dual function z} \\
+        & - \delta \nneg \tau. \label{eq: PatMat dual function delta}
+    \end{align}
+  \end{subequations}
+  Note that the resulting dual function is very similar to one~\eqref{eq: TopPushK dual function} for \TopPushK. In fact, the first three parts of~\eqref{eq: TopPushK dual function} and~\eqref{eq: PatMat dual function} are identical. Therefore, we only have to show how to minimize~\eqref{eq: PatMat dual function} with respect to~$\bm{z}.$ For that, we can use the conjugate function as in the case of minimization with respect to~$\bm{y}.$ Then, for all $j = 1, \ldots, \; \nneg,$ we get 
   \begin{equation*}
     \delta \min_{\bm{z}} \; \Brac{l(\vartheta z_j) - \frac{\beta_j}{\delta\vartheta } \vartheta z_j} = - \delta l^{\star} \Brac{\frac{\beta_i}{\delta\vartheta }},
   \end{equation*}
-  where the equality follows from Definition~\ref{def: conjugate}. Plugging this back into the Lagrange function yields the second part of the objective function~\eqref{eq: PatMat dual L}, which finishes the proof.
-\end{proof}
-
-\subsection{Hypothesis Testing}
-
-In Section~\ref{sec: Neyman-Pearson} we derived three problem formulations that fall into our framework~\eqref{eq: aatp surrogate}. Namely: \GrillNP, \tauFPL and \PatMatNP. Similarly to the previous section, we focus only on \tauFPL and \PatMatNP. Since \tauFPL is a special case of \TopPushK for~$K = \nneg \tau,$ the dual formulation is identical to the one in~\ref{thm: TopPushK dual}.
-
-\begin{theorem}[Dual formulation of \PatMatNP]\label{thm: PatMatNP dual}
-  Consider \PatMatNP formulation~\eqref{eq: patmat np} with linear model, surrogate function~$l$ and Notation~\ref{not: kernel matrix}. Then the corresponding dual problem has the following form
-  \begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
-    - \frac{1}{2} \vecab^\top \Kneg \vecab
-    - C \sum_{i = 1}^{\npos} l^{\star}\Brac{\frac{\alpha_i}{C}}
-    - \delta \sum_{j = 1}^{\nneg} l^{\star} \Brac{\frac{\beta_j}{\delta\vartheta}}
-    - \delta \nneg \tau
-    }{}{}
-    \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\nneg} \beta_j}
-    \addConstraint{\delta }{\geq 0,}
-  \end{maxi*}
-  where~$l^{\star}$ is conjugate function of~$l$ and~$\vartheta > 0$ is a scaling parameter.
-\end{theorem}
-\begin{proof}
-  \PatMatNP formulation is similar to the \PatMat and therefore also dual formulations are similar. The main difference is, that the decision threshold for \PatMatNP is computed from all socres and not only from the negative ones as for \PatMat. Due to that, the dual variable~$\bm{\beta}$ has different size and the kernel matrix has slightly different form as can be seen in Notation~\ref{not: kernel matrix}. Besides that dual formulations of \PatMatNP and \PatMat are identical and the proof of Theorem~\ref{thm: PatMatNP dual} is almost identical to the proof of Theorem~\ref{thm: PatMat dual}.
+  where the equality follows from Definition~\ref{def: conjugate} of a conjugate function. Plugging this back into~\eqref{eq: PatMat dual function z} yields the third part of the objective function~\eqref{eq: patmat family dual L}, which finishes the proof.
 \end{proof}
 
 \section{New Coordinate descent Algorithm}
-
-\subsection{Family of \TopPushK Formulations}\label{sec: toppush family coordinate proofs}
-
+\subsection{Family of \TopPushK Formulations}\label{sec: toppushk family coordinate proofs}
 \subsubsection{Hinge Loss}
 
-For better readability we recall the form of the dual formulation~\eqref{eq: Top dual hinge}
-\begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
-  - \frac{1}{2} \vecab^\top \K \vecab
-  + \sum_{i = 1}^{\npos} \alpha_i
-  }{}{}
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos}
-  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.}
-\end{maxi*}
-In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
-
-
-
 \topruleaa*
-\begin{proof}[Proof of Lemma~\ref{thm: toppushk family hinge update a,a} on page~\pageref{thm: toppushk family hinge update a,a}]
+\begin{proof}[Proof of Proposition~\ref{prop: toppushk family hinge update a,a} on page~\pageref{prop: toppushk family hinge update a,a}]
   Constraint~\eqref{eq: Top dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Top dual hinge c3} is always satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq: Top dual hinge c2} reads
   \begin{align*}
     0 \leq \alphak + \Delta \leq C
     & \quad \implies \quad
-    - \alphak \leq \Delta \leq C - \alphak \\
+    - \alphak \leq \Delta \leq C - \alphak, \\
     0 \leq \alphal - \Delta \leq C
     & \quad \implies \quad
-    \alphal - C \leq \Delta \leq \alphal
+    \alphal - C \leq \Delta \leq \alphal,
   \end{align*}
   which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
@@ -287,7 +140,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
 \end{proof}
 
 \topruleab*
-\begin{proof}[Proof of Lemma~\ref{thm: toppushk family hinge update a,b} on page~\pageref{thm: toppushk family hinge update a,b}]
+\begin{proof}[Proof of Proposition~\ref{prop: toppushk family hinge update a,b} on page~\pageref{prop: toppushk family hinge update a,b}]
   Constraint~\eqref{eq: Top dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual hinge c2} reads
   \begin{equation*}
     0 \leq \alphak + \Delta \leq C
@@ -298,12 +151,12 @@ In the rest of the section, we provide closed-form formulas for all update rules
   \begin{align*}
     0 \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K} 
     & \quad \implies \quad
-    K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \\
+    K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i \leq \Delta, \\
     0 \leq \betal + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K}
     & \quad \implies \quad
-    -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}
+    -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}.
   \end{align*}
-  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  The combination of these bounds yields the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bound in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
     - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk}} \Delta^2
     - \Brac[s]{s_k + s_l - 1} \Delta
@@ -313,17 +166,17 @@ In the rest of the section, we provide closed-form formulas for all update rules
 \end{proof}
 
 \toprulebb*
-\begin{proof}[Proof of Lemma~\ref{thm: toppushk family hinge update b,b} on page~\pageref{thm: toppushk family hinge update b,b}]
+\begin{proof}[Proof of Proposition~\ref{prop: toppushk family hinge update b,b} on page~\pageref{prop: toppushk family hinge update b,b}]
   Constraint~\eqref{eq: Top dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Top dual hinge c2} is also always satisfied since no~$\alpha_i$ is updated. Constraint~\eqref{eq: Top dual hinge c3} for any~$K \geq 2$ reads
   \begin{align*}
     0 \leq \betak + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i 
     & \quad \implies \quad
-    -\betak \leq \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak \\
+    -\betak \leq \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak, \\
     0 \leq \betal - \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i
     & \quad \implies \quad
-    \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal
+    \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal,
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bound in~\eqref{eq: Top dual hinge c3} is always satisfied due to~\eqref{eq: Top dual hinge c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
     - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
     - \Brac[s]{s_k - s_l} \Delta
@@ -332,40 +185,28 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-
+\pagebreak
 
 \subsubsection{Quadratic Hinge Loss}
 
-For better readability we recall the form of the dual formulation~\eqref{eq: Top dual quadratic}
-\begin{maxi*}{\bm{\alpha}, \bm{\beta}}{
-  - \frac{1}{2} \vecab^\top \K \vecab
-  + \sum_{i = 1}^{\npos} \alpha_i
-  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
-  }{}{}
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{,}{i = 1, 2, \ldots, \npos}
-  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.}
-\end{maxi*}
-In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
-
-\begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,a}
+\begin{proposition}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update a,a}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,a}, indeices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = -\alphak, &
     \Delta_{ub} & = \alphal, &
     \gamma & = -\frac{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}}.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Top dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Top dual quadratic c3} is also always satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq: Top dual quadratic c2} reads
   \begin{align*}
     0 \leq \alphak + \Delta
     & \quad \implies \quad
-    - \alphak \leq \Delta \\
+    - \alphak \leq \Delta, \\
     0 \leq \alphal - \Delta
     & \quad \implies \quad
-    \Delta \leq \alphal
+    \Delta \leq \alphal,
   \end{align*}
   which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
@@ -376,9 +217,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-
-
-\begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update a,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update a,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
@@ -397,7 +236,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
       \end{cases*} \\
     \gamma & = -\frac{s_k + s_l - 1 + \frac{1}{2C} \alphak}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C}}.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Top dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual quadratic c2} reads
@@ -410,12 +249,12 @@ In the rest of the section, we provide closed-form formulas for all update rules
   \begin{align*}
     0 \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K} 
     & \quad \implies \quad
-    K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \\
+    K\beta_{\max} - \sum_{i = 1}^{\npos} \alpha_i \leq \Delta, \\
     0 \leq \betal + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K}
     & \quad \implies \quad
-    -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}
+    -\betal \leq \Delta \quad \land \quad \Delta \leq \frac{1}{K-1}\Brac{\sum_{i = 1}^{\npos} \alpha_i - K \betal}.
   \end{align*}
-  Combination of these bounds yealds the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  The combination of these bounds yields the lower bound~$\Delta_{lb}$ and upper bound~$\Delta_{ub}.$ If~$K = 1,$ the upper bound in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule a,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
     - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C}} \Delta^2
     - \Brac[s]{s_k + s_l - 1 + \frac{1}{2C} \alphak} \Delta
@@ -424,9 +263,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
-
-
-\begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]\label{thm: toppushk family quadratic update b,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update b,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = 
@@ -441,19 +278,19 @@ In the rest of the section, we provide closed-form formulas for all update rules
       \end{cases*} \\
     \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Top dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Top dual quadratic c2} is also always satisfied since no~$\alpha_i$ is updated. Constraint~\eqref{eq: Top dual quadratic c3} for any~$K \geq 2$ reads
   \begin{align*}
     0 \leq \betak + \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i 
     & \quad \implies \quad
-    -\betak \leq \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak \\
+    -\betak \leq \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i - \betak, \\
     0 \leq \betal - \Delta \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i
     & \quad \implies \quad
-    \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal
+    \betal - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i \leq \Delta \leq \betal,
   \end{align*}
-  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bounds in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+  which gives the lower and upper bound of~$\Delta.$ If~$K = 1,$ the upper bound in~\eqref{eq: Top dual quadratic c3} is always satisfied due to~\eqref{eq: Top dual quadratic c1} and the lower and upper bound of~$\Delta$ can be simplified. Using the update rule~\eqref{eq: update rule b,b}, objective function~\eqref{eq: Top dual quadratic L} can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
     - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
     - \Brac[s]{s_k - s_l} \Delta
@@ -462,21 +299,13 @@ In the rest of the section, we provide closed-form formulas for all update rules
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
+\pagebreak
+
 \subsubsection{Initialization}
 
-For better readability we recall the form of problem~\eqref{eq: toppushk family initialization}
-\begin{mini*}{\bm{\alpha}, \bm{\beta}}{
-  \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
-  + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
-  }{}{}
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos,}
-  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
-\end{mini*}
-
 \topinit*
-\begin{proof}[Proof of Theorem~\ref{thm:problem3} on page~\pageref{thm:problem3}]
-  The Lagrangian for~\eqref{eq: toppushk family initialization} reads
+\begin{proof}[Proof of Theorem~\ref{thm: toppushk family initialization} on page~\pageref{thm: toppushk family initialization}]
+  The Lagrangian of~\eqref{eq: toppushk family initialization} reads
   \begin{align*}
     \mathcal{L}(\bm{\alpha}, \bm{\beta}; \lambda, \bm{p}, \bm{q}, \bm{u}, \bm{v})
      = \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
@@ -485,28 +314,28 @@ For better readability we recall the form of problem~\eqref{eq: toppushk family 
      - \sum_{i = 1}^{\npos} p_i \alpha_i
      + \sum_{i = 1}^{\npos} q_j (\alpha_i - C_1)
      - \sum_{j = 1}^{\ntil} u_j \beta_j
-     + \sum_{j = 1}^{\ntil} v_j (\beta_j - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i)
+     + \sum_{j = 1}^{\ntil} v_j (\beta_j - \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i).
   \end{align*}
   The KKT conditions then amount to the optimality conditions
   \begin{subequations}\label{eq:problem3_KKT}
   \begin{align}
     \frac{\partial \mathcal{L}}{\partial \alpha_i}
       & = \alpha_i - \alpha_i^0 + \lambda - p_i + q_i - \frac{1}{K} \sum_{j=1}^{\ntil} v_j = 0,
-      && \quad i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_opt1}\\
+      && i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_opt1}\\
     \frac{\partial \mathcal{L}(\cdot)}{\partial \beta_j}
       & = \beta_j- \beta_j^0 - \lambda - u_j + v_j = 0,
-      && \quad j = 1, 2, \ldots, \ntil \label{eq:problem3_KKT_opt2}
+      && j = 1, 2, \ldots, \ntil, \label{eq:problem3_KKT_opt2}
   \end{align}
   the primal feasibility conditions~\eqref{eq: toppushk family initialization}, the dual feasibility conditions $\lambda \in \R$, $p_i \ge 0$, $q_i \ge 0$, $u_j \ge 0$, $v_j \ge 0$ and finally the complementarity conditions
   \begin{align}
     p_i \alpha_i & = 0,
-      && \quad i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_comp1} \\
+      && i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_comp1} \\
     q_i \Brac{\alpha_i - C_1} & = 0,
-      && \quad i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_comp2} \\
+      && i = 1, 2, \ldots, \npos, \label{eq:problem3_KKT_comp2} \\
     u_j \beta_j & = 0,
-      && \quad j = 1, 2, \ldots, \ntil, \label{eq:problem3_KKT_comp3} \\
+      && j = 1, 2, \ldots, \ntil, \label{eq:problem3_KKT_comp3} \\
     v_j \Brac{\beta_j -\frac{1}{K} \sum_{i=1}^{\npos} \alpha_i} & =0,
-      && \quad j = 1, 2, \ldots, \ntil. \label{eq:problem3_KKT_comp4}
+      && j = 1, 2, \ldots, \ntil. \label{eq:problem3_KKT_comp4}
   \end{align}
   \end{subequations}
   
@@ -528,13 +357,13 @@ For better readability we recall the form of problem~\eqref{eq: toppushk family 
   Since we need to fulfill $v_j \ge 0$, this amounts to
   \begin{equation*}
     v_j 
-      \ge \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 + \frac{1}{K} \sum_{i = 1}^{\ntil} v_i}.
+      \ge \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 + \frac{1}{K} \sum_{i = 1}^{\ntil} v_i}.
   \end{equation*}
   Summing this with respect to $j$ and using the substitution $\bar{v} = \frac{1}{K}\sum_i v_i$ results in
   \begin{equation}\label{eq:problem3_proof0}
-    K\bar{v} - \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 + \bar{v}} = 0.
+    K\bar{v} - \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 + \bar{v}} = 0.
   \end{equation}
-  Denote by~$\beta_{[j]}^0$ the sorted version of~$\beta_j^0$. Then the function on the left-hand side of~\eqref{eq:problem3_proof0} as a function of~$\bar{v}$ is increasing on~$(-\infty, \; -\beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0]$ and non-decreasing on~$[- \beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0, \infty)$. Thus,~\eqref{eq:problem3_proof0} can be satisfied if and only if its function value at~$- \beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0$ is non-negative. But this is precisely the violation of~\eqref{eq:problem3_cond}.
+  Denote by~$\beta_{[j]}^0$ the sorted version of~$\beta_j^0$. Then the function on the left-hand side of~\eqref{eq:problem3_proof0} as a function of~$\bar{v}$ is increasing on~$\left(-\infty, \; -\beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0 \right]$ and non-decreasing otherwise. Thus,~\eqref{eq:problem3_proof0} can be satisfied if and only if its function value at~$- \beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0$ is non-negative. But this is precisely the violation of~\eqref{eq:problem3_cond}.
   
   \paragraph*{Case 2:} If~\eqref{eq:problem3_cond} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\sum_i \alpha_i > 0$. For simplicity, we define
   \begin{align*}
@@ -551,7 +380,7 @@ For better readability we recall the form of problem~\eqref{eq: toppushk family 
     \beta_j
       & = \clip{0}{\bar{\alpha}}{\beta_j^0 + \lambda}, \label{eq:problem3_beta} \\
     v_j
-      & = \clip[u]{0}{\infty}{\beta_j^0 + \lambda - \bar{\alpha}}. \label{eq:problem3_rho}
+      & = \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \bar{\alpha}}. \label{eq:problem3_rho}
   \end{align}
   Summing equations~\eqref{eq:problem3_alpha},~\eqref{eq:problem3_beta} and~\eqref{eq:problem3_rho} respectively with respect to~$i$ and~$j$ results in
   \begin{subequations}
@@ -563,36 +392,34 @@ For better readability we recall the form of problem~\eqref{eq: toppushk family 
         &= \sum_{j=1}^{\ntil} \clip{0}{\bar{\alpha}}{\beta_j^0 + \lambda},
         \label{eq:problem3_proof2} \\
       K \bar{v}
-        & = \sum_{j=1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \lambda - \bar{\alpha}}.
+        & = \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \bar{\alpha}}.
         \label{eq:problem3_proof3}
     \end{align}
   \end{subequations}
-  We denote $\mu = \bar{\alpha}$. Then~\eqref{eq:problem3_system1} results by plugging~\eqref{eq:problem3_proof3} into~\eqref{eq:problem3_proof1} while~\eqref{eq:problem3_system2} follows from~\eqref{eq:problem3_proof2} and $\sum_i \alpha_i = \sum_j \beta_j$. 
+  We denote $\mu = \bar{\alpha}$. Then~\eqref{eq: toppushk family initialization 1} results by plugging~\eqref{eq:problem3_proof3} into~\eqref{eq:problem3_proof1} while~\eqref{eq: toppushk family initialization 2} follows from~\eqref{eq:problem3_proof2} and $\sum_i \alpha_i = \sum_j \beta_j$. 
 \end{proof}
 
 \topinith*
-\begin{proof}[Proof of Lemma~\ref{lemma:problem3} on page~\pageref{lemma:problem3}]
-  Recall that based on~\eqref{eq:problem3_system2} we defined
+\begin{proof}[Proof of Lemma~\ref{lemma: toppushk family h} on page~\pageref{lemma: toppushk family h}]
+  Recall that based on~\eqref{eq: toppushk family initialization 2} we defined
   \begin{equation*}
     g(\lambda; \mu) := \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K \mu,
   \end{equation*}
   and solutions of~$g(\lambda; \mu) = 0$ for a fixed~$\mu$ are denoted by~$\lambda(\mu)$. Function~$g(\cdot; \, \mu)$ is non-decreasing and since~$K$ is an integer, the only case when the solution to~$g(\lambda) = 0$ is not unique happens when the optimal solution~$\lambda(\mu)$ satisfies
-  \begin{equation}\label{eq:system2_bl}
+  \begin{equation*}
     \beta_{[j]}^0 + \lambda(\mu) \;
     \begin{cases}
       \ge \mu & \text{for } j = \ntil - K + 1, \dots , \ntil, \\
       \le 0 & \text{otherwise.}
     \end{cases}
-  \end{equation}
-  Here, we again denote~$\bm{\beta}_{[\cdot]}^0$ to be the sorted version of~$\bm{\beta}_j^0$. Then~$h$ defined in~\eqref{eq:defin_f3} equals to
+  \end{equation*}
+  Here, we again denote~$\bm{\beta}_{[\cdot]}^0$ to be the sorted version of~$\bm{\beta}_j^0$. Then~$h$ defined in~\eqref{eq: toppushk family h} equals to
   \begin{align*}
     h(\mu)
       & = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=\ntil - K + 1}^{\ntil} \Brac{\beta_j^0+\lambda(\mu) - \mu}} - K \mu \\
       & = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \mu + \frac{1}{K} \sum_{j=\ntil - K + 1}^{\ntil} \beta_j^0} - K \mu.
   \end{align*}
-  This implies the first statement of the lemma stating that~$h$ is independent of the choice of~$\lambda(\mu)$.
-
-  Now we need to show that~$h$ is a decreasing function. Fix any~$\mu_2 > \mu_1 > 0$. From~\eqref{eq:problem3_system2} we have
+  This implies the first statement of the lemma stating that~$h$ is independent of the choice of~$\lambda(\mu)$. Now we need to show that~$h$ is a decreasing function. Fix any~$\mu_2 > \mu_1 > 0$. From~\eqref{eq: toppushk family initialization 2} we have
   \begin{align}
    \sum_{j=1}^{\ntil} \clip{0}{\mu_1}{\beta_j^0 + \lambda(\mu_1)} - K \mu_1 & = 0,
     \label{eq:system2_proof1} \\
@@ -609,44 +436,29 @@ For better readability we recall the form of problem~\eqref{eq: toppushk family 
   \begin{equation*}
     J = \Set{j}{\beta_j^0 + \lambda(\mu_1) \ge 0}
   \end{equation*}
-  and observe that due to~\eqref{eq:system2_proof1} we have~$\abs{J} \ge K$. Moreover, the definition of $J$ and equation~\eqref{eq:system2_proof1} yield
+  and observe that due to~\eqref{eq:system2_proof1} we have~$\abs{J} \ge K$. Moreover, the definition of $J$ and equation~\eqref{eq:system2_proof1} yields
   \begin{equation}\label{eq:system2_proof4}
     \sum_{j \in J} \clip{0}{\mu_1}{\beta_j^0 + \lambda(\mu_1)} - K\mu_1
       = \sum_{j=1}^{\ntil} \clip{0}{\mu_1}{\beta_j^0 + \lambda(\mu_1)} - K\mu_1
       = 0.
   \end{equation}
   Then we have
-  \begin{equation}\label{eq:system2_proof5}
-    \begin{aligned}
-      \sum_{j=1}^{\ntil} \clip{0}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1}
-        & \ge \sum_{j \in J} \clip{0}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1} \\
-        & = \sum_{j \in J} \clip{\mu_2 - \mu_1}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1} \\
-        & = \sum_{j \in J} \clip{0}{\mu_1}{\beta_j^0 + \lambda(\mu_1)} + \abs{J}(\mu_2 - \mu_1) \\
-        & = K\mu_1 + \abs{J}(\mu_2 - \mu_1) \\
-        & \ge K\mu_1 + K(\mu_2 - \mu_1) \\
-        & = K\mu_2,
-    \end{aligned}
-  \end{equation}
-  where the first equality follows from the definition of~$J$ and the second equality is a shift by a~$\mu_2- \mu_1.$ The third equality follows from~\eqref{eq:system2_proof4} and finally, the last inequality follows from~$\abs{J} \ge K$. Chain~\eqref{eq:system2_proof5} together with~\eqref{eq:system2_proof2} implies~$\lambda(\mu_2) - \mu_2 \le \lambda(\mu_1)- \mu_1$. Combining this with~$\mu_2 > \mu_1$ and~$\lambda(\mu_2) \ge \lambda(\mu_1)$, this implies that~$h$ from~\eqref{eq:defin_f3} is non-increasing which is precisely the lemma statement.
+  \begin{multline*}
+    \sum_{j=1}^{\ntil} \clip{0}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1}
+      \ge \sum_{j \in J} \clip{0}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1} \\
+      = \sum_{j \in J} \clip{\mu_2 - \mu_1}{\mu_2}{\beta_j^0 + \lambda(\mu_1) + \mu_2 - \mu_1} 
+      = \sum_{j \in J} \clip{0}{\mu_1}{\beta_j^0 + \lambda(\mu_1)} + \abs{J}(\mu_2 - \mu_1) \\
+      = K\mu_1 + \abs{J}(\mu_2 - \mu_1)
+      \ge K\mu_1 + K(\mu_2 - \mu_1)
+      = K\mu_2,
+  \end{multline*}
+  where the first equality follows from the definition of~$J$ and the second equality is a shift by a~$\mu_2- \mu_1.$ The third equality follows from~\eqref{eq:system2_proof4} and finally, the last inequality follows from~$\abs{J} \ge K$. The chain above together with~\eqref{eq:system2_proof2} implies~$\lambda(\mu_2) - \mu_2 \le \lambda(\mu_1)- \mu_1$. Combining this with~$\mu_2 > \mu_1$ and~$\lambda(\mu_2) \ge \lambda(\mu_1)$, this implies that~$h$ from~\eqref{eq: toppushk family h} is non-increasing which is precisely the lemma statement.
 \end{proof}
 
+\pagebreak
+
 \subsection{Family of \PatMat Formulations}\label{sec: patmat family coordinate proofs}
-
 \subsubsection{Hinge Loss}
-
-For better readability we recall the form of the dual formulation~\eqref{eq: Pat dual hinge}
-\begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
-  - \frac{1}{2} \vecab^\top \K \vecab
-  + \sum_{i = 1}^{\npos} \alpha_i
-  + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
-  - \delta \ntil \tau
-  }{}{}
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos}
-  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
-  \addConstraint{\delta }{\geq 0.}
-\end{maxi*}
-In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,a}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -699,35 +511,13 @@ In the rest of the section, we provide closed-form formulas for all update rules
         & = \frac{\betal + \Delta^{\star}_2}{\vartheta}.
     \end{align*}
   \end{enumerate}
-  The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
+  The optimal solution~$\Delta^{\star}$ is equal to one of them, which maximizes the original objective and is feasible.
 \end{lemma}
 
 \begin{proof}
-  Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Pat dual hinge c2} reads
-  \begin{equation}\label{eq: Pat dual hinge c2 update a,a}
-    0 \leq \alphak + \Delta \leq C
-    \quad \implies \quad
-    - \alphak \leq \Delta \leq C - \alphak.
-  \end{equation}
-  Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads
-  \begin{align*}
-    \beta_{\max} & \leq \delta \vartheta \\
-    0 \leq \betal + \Delta & \leq \delta \vartheta
-  \end{align*}
-  Since the optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta}, there are only two possible choices
-  \begin{align}\label{eq: Pat dual hinge a, b proof delta}
-    \delta & = \frac{\beta_{\max}}{\vartheta}, &
-    \delta & = \frac{\betal + \Delta}{\vartheta}.
-  \end{align}
-  If we use any of these choices which is feasible, all upper bounds in constraint~\eqref{eq: Pat dual hinge c3} hold, i.e. we can simplify the constraints to
-  \begin{equation*}
-    0 \leq \betal + \Delta
-    \quad \implies \quad
-    - \betal \leq \Delta,
-  \end{equation*}
-  which in combination with~\eqref{eq: Pat dual hinge c2 update a,a} gives the lower and upper bound of~$\Delta.$ Now let us discuss how to select optimal~$\delta:$
+  Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Pat dual hinge c2} reads~$- \alphak \leq \Delta \leq C - \alphak.$ Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads~$\beta_{\max} \leq \delta \vartheta$ and~$0 \leq \betal + \Delta \leq \delta \vartheta.$ Since the optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta}, there are only two possible choices: $\delta^{\star}_1 = \nicefrac{\beta_{\max}}{\vartheta}$ and~$\delta^{\star}_2 = \nicefrac{\betal + \Delta}{\vartheta}.$ If~$\delta$ is feasible, all upper bounds in constraint~\eqref{eq: Pat dual hinge c3} hold. Therefore, we can simplify the constraints to~$- \betal \leq \Delta,$ which in combination with bounds for~$\alphak$ gives the lower and upper bound of~$\Delta.$ Now let us discuss how to select optimal~$\delta:$
   \begin{enumerate}
-    \item Using~$\delta^{\star}_1$ from~\eqref{eq: Pat dual hinge a, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \item Using~$\delta^{\star}_1$ and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l - 1 - \frac{1}{\vartheta}} \Delta
@@ -735,7 +525,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
     \end{equation*}
     The optimal solution~$\Delta^{\star}_1$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_1 \leq \beta_{\max}$.
 
-    \item Using~$\delta^{\star}_2$ from~\eqref{eq: Pat dual hinge a, b proof delta} and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
+    \item Using~$\delta^{\star}_2$ and the update rule~\eqref{eq: update rule a,a}, objective function~\eqref{eq: Pat dual hinge L} can be rewritten as a quadratic function with respect to~$\Delta$ as
     \begin{equation*}
       - \frac{1}{2} \Brac[s]{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}} \Delta^2
       - \Brac[s]{s_k - s_l - 1 - \frac{1 - \ntil \tau}{\vartheta}} \Delta
@@ -743,10 +533,8 @@ In the rest of the section, we provide closed-form formulas for all update rules
     \end{equation*}
     The optimal solution~$\Delta^{\star}_2$ is given by~\eqref{eq: Delta optimal} and is feasible if~$\betal + \Delta^{\star}_2 \geq \beta_{\max}$.
   \end{enumerate}
-  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
+  The optimal solution is the one, which maximizes the objective~\eqref{eq: Pat dual hinge L} and is feasible.
 \end{proof}
-
-
 
 \begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
@@ -777,7 +565,7 @@ In the rest of the section, we provide closed-form formulas for all update rules
         & = \frac{\betak - \Delta^{\star}_3}{\vartheta}.
     \end{align*}
   \end{enumerate}
-  The optimal solution~$\Delta^{\star}$ is equal to the one of them which maximizes the original objective and is feasible.
+  The optimal solution~$\Delta^{\star}$ is equal to one of them, which maximizes the original objective and is feasible.
 \end{lemma}
 
 \begin{proof}
@@ -837,28 +625,10 @@ In the rest of the section, we provide closed-form formulas for all update rules
       \betal - \Delta^{\star}_3 \geq \max\{\beta_{\max}, \betak + \Delta^{\star}_3\}.
     \end{equation*}
   \end{enumerate}
-  The final optimal solution is the one that is feasible and that maximizes the original objective function~\eqref{eq: Pat dual hinge L}.
+  The optimal solution is the one, which maximizes the objective~\eqref{eq: Pat dual hinge L} and is feasible.
 \end{proof}
 
 \subsubsection{Quadratic Hinge Loss}
-
-For better readability we recall the form of the dual formulation~\eqref{eq: Pat dual quadratic}
-\begin{maxi*}{\bm{\alpha}, \bm{\beta}, \delta}{
-  - \frac{1}{2} \vecab^\top \K \vecab
-  + \sum_{i = 1}^{\npos} \alpha_i
-  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
-  }{}{}
-  \breakObjective{
-    + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
-    - \frac{1}{4 \delta \vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2
-    - \delta \ntil \tau
-  }
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{\alpha_i}{\geq 0,}{i = 1, 2, \ldots, \npos}
-  \addConstraint{\beta_j}{\geq 0,}{j = 1, 2, \ldots, \ntil}
-  \addConstraint{\delta }{\geq 0,}
-\end{maxi*}
-In the rest of the section, we provide closed-form formulas for all update rules from~\eqref{eq: update rules}.
 
 \begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,a}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -875,10 +645,10 @@ In the rest of the section, we provide closed-form formulas for all update rules
   \begin{align*}
     0 \leq \alphak + \Delta
     & \quad \implies \quad
-    - \alphak \leq \Delta \\
+    - \alphak \leq \Delta, \\
     0 \leq \alphal - \Delta
     & \quad \implies \quad
-    \Delta \leq \alphal
+    \Delta \leq \alphal,
   \end{align*}
   which gives the lower and upper bound of~$\Delta.$ Using the update rule~\eqref{eq: update rule a,a}, objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) can be rewritten as a quadratic function with respect to~$\Delta$ as
   \begin{equation*}
@@ -959,21 +729,9 @@ In the rest of the section, we provide closed-form formulas for all update rules
 
 \subsubsection{Initialization}
 
-For better readability we recall the form of problem~\eqref{eq: patmat family}
-\begin{mini*}{\bm{\alpha}, \bm{\beta}, \delta}{
-  \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
-  + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
-  + \frac{1}{2} (\delta - \delta^0)^2
-  }{}{}
-  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos}
-  \addConstraint{0 \leq \beta_j}{\leq C_2 \delta, \quad j = 1, 2, \ldots, \ntil,}
-  \addConstraint{\delta }{\geq 0,}
-\end{mini*}
-
 \patinit*
-\begin{proof}[Proof of Theorem~\ref{thm:problem2} on page~\pageref{thm:problem2}]
-  The Lagrangian for~\eqref{eq: patmat family initialization} reads
+\begin{proof}[Proof of Theorem~\ref{thm: patmat family initialization} on page~\pageref{thm: patmat family initialization}]
+  The Lagrangian of~\eqref{eq: patmat family initialization} reads
   \begin{align*}
     \mathcal{L}(\bm{\alpha}, \bm{\beta}; \lambda, \bm{p}, \bm{q}, \bm{u}, \bm{v})
       = \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
@@ -993,7 +751,7 @@ For better readability we recall the form of problem~\eqref{eq: patmat family}
         && \quad i = 1, 2, \ldots, \npos, \label{eq:problem2_KKT_opt1} \\
       \frac{\partial \mathcal{L}(\cdot)}{\partial \beta_j}
         & = \beta_j - \beta_j^0 - \lambda - u_j + v_j = 0,
-        && \quad j = 1, 2, \ldots, \ntil \label{eq:problem2_KKT_opt2} \\
+        && \quad j = 1, 2, \ldots, \ntil, \label{eq:problem2_KKT_opt2} \\
       \frac{\partial \mathcal{L}(\cdot)}{\partial \delta}
         & = \delta - \delta^0 - C_2 \sum_{j = 1}^{\ntil} v_j = 0,
         \label{eq:problem2_KKT_opt3}
@@ -1024,36 +782,36 @@ For better readability we recall the form of problem~\eqref{eq: patmat family}
   \end{equation*}
   Since we also have the non-negativity constraint on $u_j$, this implies
   \begin{equation*}
-    v_j \ge \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
+    v_j \ge \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
   \end{equation*}
   Condition~\eqref{eq:problem2_KKT_opt3} implies
   \begin{equation*}
     \delta^0
       = -C_2 \sum_{j = 1}^{\ntil} v_j
-      \le -C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
+      \le -C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
   \end{equation*}
-  This corresponds to the first case in the theorem statement and the violation of condition~\eqref{eq:problem2_cond}.
+  This corresponds to the first case in the theorem statement and the violation of condition~\eqref{eq: patmat family initialization condition}.
 
-  \paragraph*{Case 2:} If~\eqref{eq:problem2_cond} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\delta > 0$. For any fixed~$i$, the standard trick is to combine the optimality condition~\eqref{eq:problem2_KKT_opt1} with the primal feasibility condition~$0 \le \alpha_i \le C_1$, the dual feasibility conditions~$p_i \ge 0$, $q_i \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp1}, \ref{eq:problem2_KKT_comp2}) to obtain
+  \paragraph*{Case 2:} If~\eqref{eq: patmat family initialization condition} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\delta > 0$. For any fixed~$i$, the standard trick is to combine the optimality condition~\eqref{eq:problem2_KKT_opt1} with the primal feasibility condition~$0 \le \alpha_i \le C_1$, the dual feasibility conditions~$p_i \ge 0$, $q_i \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp1}, \ref{eq:problem2_KKT_comp2}) to obtain
   \begin{equation}\label{eq:problem2_alpha}
     \alpha_i = \clip{0}{C_1}{\alpha_i^0 - \lambda}.
   \end{equation}
   Similarly for any fixed~$j$, we combine the optimality condition~\eqref{eq:problem2_KKT_opt2} with the primal feasibility condition~$0 \le \beta_j \le C_2 \delta$, the dual feasibility conditions~$u_j \ge 0,$ $v_j \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp3}, \ref{eq:problem2_KKT_comp4}) to obtain
   \begin{align}
     \beta_j & = \clip{0}{C_2 \delta}{\beta_j^0 + \lambda}, \label{eq:problem2_beta} \\
-    v_j & = \clip[u]{0}{\infty}{\beta_j^0 + \lambda - C_2 \delta}. \label{eq:problem2_rho}
+    v_j & = \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - C_2 \delta}. \label{eq:problem2_rho}
   \end{align}
   Note that we now obtain the following system
   \begin{align*}
     \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda} - \sum_{j = 1}^{\ntil} \clip{0}{C_2 \delta}{\beta_j^0 + \lambda}
       & = 0, \\
-    \delta - \delta^0 - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{\infty}{\beta_j^0 + \lambda - C_2 \delta}
+    \delta - \delta^0 - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - C_2 \delta}
       & = 0.
   \end{align*}
-  Here, the first equation follows from plugging~\eqref{eq:problem2_alpha} and~\eqref{eq:problem2_beta} into the feasibility condition~$\sum_i \alpha_i =\sum_j \beta_j$ while the second equation follows from plugging~\eqref{eq:problem2_rho} into~\eqref{eq:problem2_KKT_opt3}. Finally, system~\eqref{eq:problem2_system} follows after making the substitution $C_2 \delta = \lambda + \mu$.
+  Here, the first equation follows from plugging~\eqref{eq:problem2_alpha} and~\eqref{eq:problem2_beta} into the feasibility condition~$\sum_i \alpha_i =\sum_j \beta_j$ while the second equation follows from plugging~\eqref{eq:problem2_rho} into~\eqref{eq:problem2_KKT_opt3}. Finally, system~\eqref{eq: patmat family initialization} follows after making the substitution $C_2 \delta = \lambda + \mu$.
 \end{proof}
 
 \patinith*
-\begin{proof}[Proof of Lemma~\ref{lemma:problem2} on page~\pageref{lemma:problem2}]
-  Consider any~$\mu_1 < \mu_2$. Then from~\eqref{eq:problem2_system2} we obtain both~$\lambda(\mu_1) \ge \lambda(\mu_2)$ and~$\mu_1+\lambda(\mu_1) \ge \mu_2 + \lambda(\mu_2)$. The statement then follows from the definition of~$h$ in~\eqref{eq:defin_f2}.
+\begin{proof}[Proof of Lemma~\ref{lemma: patmat family initialization h} on page~\pageref{lemma: patmat family initialization h}]
+  Consider any~$\mu_1 < \mu_2$. Then from~\eqref{eq: patmat family initialization 2} we obtain both~$\lambda(\mu_1) \ge \lambda(\mu_2)$ and~$\mu_1+\lambda(\mu_1) \ge \mu_2 + \lambda(\mu_2)$. The statement then follows from the definition of~$h$ in~\eqref{eq: patmat family initialization h}.
 \end{proof}
