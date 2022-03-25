@@ -2,7 +2,7 @@
 
 \lemmacovergencedeep*
 \begin{proof}[Proof of Lemma~\ref{lemma:convergence} on page~\pageref{lemma:convergence}]
-  If~$\indmax$ is unique, then the true threshold~$t$ is a differentiable function of weights~$\bm{w}$. The differentiability of~$L$ and~$\hat L$ follows from the chain rule. If~$\indmaxmb = \indmax$ holds, then the sampled gradient equals to
+  If~$\indmax$ is unique, then the true threshold~$t$ is a differentiable function of weights~$\bm{w}$. The differentiability of~$L$ and~$\hat{L}$ follows from the chain rule. If~$\indmaxmb = \indmax$ holds, then the sampled gradient equals to
   \begin{equation}\label{eq:grad_min_aux}
     \nabla \hat L(\bm{w})
       = \frac{1}{\nmbpos} \sum_{i\in \Imbpos} l'(t - s_i) \Brac{\nabla f(\bm{x}_{\indmax}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
