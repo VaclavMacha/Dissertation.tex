@@ -1,4 +1,4 @@
-\chapter{Primal Formulation with Linear Model}\label{chap: linear}
+\chapter{Primal Formulation: Linear Model}\label{chap: linear}
 
 In the previous chapter, we introduced the general framework for binary classification at the top. Table~\ref{tab: summary formulations} summarizes all formulations that fall into this framework. In this chapter, we focus on the particular case when the model~$f$ is linear, i.e., the model is in the following form
 \begin{equation*}
@@ -215,7 +215,7 @@ The right-hand sides of~\eqref{eq:stability1} and~\eqref{eq:stability2} are the 
 
 At the same time, there may be a considerable difference in the stability of both formulations. Since the scores of positive samples should be above the scores of negative samples, the scores~$\bm{s}$ may be interpreted as performance. Then formula~\eqref{eq:stability1} states that if the mean performance of a \emph{small number of the best} negative samples is larger than the average performance of \emph{all} positive samples, then \tauFPL fails. On the other hand, formula~\eqref{eq:stability2} states that if the average performance of \emph{all} positive samples is better than the average performance of \emph{all} negative samples, then \PatMatNP is stable. The former may well happen as accuracy at the top is interested in a good performance of only a few positive samples.
 
-\section{Convergence of stochastic gradient descent}\label{sec:convergence}
+\section{Stochastic Gradient Descent}\label{sec:convergence}
 
 In the previous section, we analyzed the formulations from Table~\ref{tab: summary formulations}, but we did not consider any optimization algorithms. In this section we show a basic version of the stochastic gradient descent and then its convergent version. Due to considering the threshold, the gradient computed on a minibatch is a biased estimate of the true gradient. Therefore we need to use variance reduction techniques similar to SAG~\cite{schmidt2017minimizing}, and the proof is rather complex.
 

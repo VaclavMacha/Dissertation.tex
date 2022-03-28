@@ -1,4 +1,4 @@
-\chapter{Binary Classiciation at the Top}\label{chap: framework}
+\chapter{Framework for Binary Classification at the Top}\label{chap: framework}
 
 In the previous chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} and fundamental evaluation matrices for the binary classification problems. Furthermore, in Section~\ref{sec: related problems}, we introduced three problems closely related to binary classification but focused on specific performance criteria. Namely: \emph{Accuracy at the top} problem, \emph{Ranking problems}, and the problem of \emph{Hypothesis testing}. Even though these problems are usually considered separately, they have one crucial thing in common. All three problems aim to minimize the number of misclassified samples below (or above) a certain threshold. In the rest of the chapter, we focus on this common property. We show that all these problems fall into the following unified framework for binary classification at the top
 \begin{mini}{\bm{w}, \, t}{
@@ -9,7 +9,7 @@ In the previous chapter, we introduced the general formulation~\eqref{eq: Binary
 \end{mini}
 where function~$G \colon \R^n \times \{0, 1\}^n \to \R$ takes the scores and labels of all samples and computes the decision threshold. The concrete form of the function~$G$ that defines the decision threshold depends on the used problem. As we show later in the chapter, all problems mentioned above differ only in the definition of the function~$G.$  Note the important distinction from the standard binary classification~\eqref{eq: Binary classification counts}: the decision threshold is no longer fixed (as in the case of neural networks) or trained independently (as in SVM) but is a function of scores of all samples. Therefore, the minimization in problem~\eqref{eq: aatp counts} is performed only concerning the one variable~$\bm{w}.$
 
-\section{Surrogate formulation}\label{sec: surrogate formulation}
+\section{Surrogate Formulation}\label{sec: surrogate formulation}
 
 The objective function of problem~\eqref{eq: aatp counts} is a weighted sum of false-positive and false-negative counts. Since these counts are discontinuous due to the presence of the Iverson function (see~\eqref{eq: confusion counts}), the whole objective function is discontinuous too. Therefore, problem~\eqref{eq: aatp counts} is difficult to solve. One way how to simplify the problem is to derive its continuous approximation. Since the only discontinuous part of the objective function is the Iverson function, the usual approach is to employ a surrogate function to replace it~\cite{li2014top, grill2016learning}.
 
@@ -68,7 +68,7 @@ The resulting objective function is continuous, and therefore the problem is eas
   and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with decreasing components.
 \end{notation}
 
-\section{Ranking problems}\label{sec: ranking}
+\section{Ranking Problems}\label{sec: ranking}
 
 The first category of problems from Section~\ref{sec: related problems} is a category of ranking problems. The general goal of problems from this category is to rank positive (relevant) samples higher than negative ones. That can be achieved in many different ways, but we focus only on the problems that concentrate on the high-ranked negative samples and try to push as many positive samples as possible above them. The simplest case is when the goal is to maximize the number of positive samples above the worst negative. Since the worst negative sample is the negative sample with the highest classification score, the decision threshold for such a case is the highest score corresponding to the negative sample. Then the aim is to maximize the number of true-positive samples above this threshold or, equivalently, minimize the number of false-negative negative below it, which may be written as
 \begin{mini}{\bm{w}, \, t}{
@@ -142,7 +142,7 @@ where~$\vartheta > 0$ is scaling parameter. Since this threshold uses the surrog
 \end{mini}
 This formulation also used only false negatives in the objective to preserve the convexity for the linear model. In such a case, the formulation is easily solvable due to the convexity and requires almost no tuning. Together with the fact that formulation~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
 
-\section{Neyman-Pearson problem}\label{sec: Neyman-Pearson}
+\section{Neyman-Pearson Problem}\label{sec: Neyman-Pearson}
 
 The last problem that we introduce in Section~\ref{sec: related problems} is the Neyman-Pearson problem, which is closely related to hypothesis testing. The hypothesis testing operates with null~$H_0$ and alternative~$H_1$ hypotheses. The goal is to decide to either reject the null hypotheses in favor of the alternative or not reject it. Since this problem is binary, two possible errors can occur. Type I occurs when~$H_0$ is true but is rejected, and Type II error happens when~$H_0$ is false but fails to be rejected. The Neyman-Pearson problem minimizes Type II error while keeping Type I error smaller than some predefined bound. Using our notation for the Neyman-Pearson problem, the null hypothesis~$H_0$ states that sample~$\bm{x}$ has a negative label. Then Type I error occurs when the sample is false-positive, while Type II error when the sample is false-negative, see Table~\ref{tab: classification metrics}. In other words, Type II corresponds to the false-negative rate, and Type I error false-positive rate. Therefore, if the bound on the Type I error is~$\tau$, we may write this as
 \begin{equation}\label{eq: NP quantile}

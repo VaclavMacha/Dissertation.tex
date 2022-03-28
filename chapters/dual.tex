@@ -1,4 +1,4 @@
-\chapter{Dual Formulation with Linear Model}\label{chap: dual}
+\chapter{Dual Formulation: Linear Model}\label{chap: dual}
 
 In Chapter~\ref{chap: framework}, we introduced a general framework for binary classification at the top. Moreover, we showed that several problem classes, considered separate problems so far, fit into this framework. The summary of all formulations is provided in Table~\ref{tab: summary formulations}. In Chapter~\ref{chap: linear} we discussed a special case when the linear model is used. Then formulation~\eqref{eq: aatp surrogate} reads
 \begin{mini}{\bm{w}, \, t}{
@@ -9,7 +9,7 @@ In Chapter~\ref{chap: framework}, we introduced a general framework for binary c
 \end{mini}
 Many formulations have nice theoretical properties such as convexity or differentiability in this specific case. However, many real-world problems are not linearly separable, and in such cases, the approach from the previous section is not sufficient. In this chapter, we use the similarity of~\eqref{eq: aatp surrogate liner primal} to primal formulation of SVM (\emph{Support Vector Machines}~\cite{cortes1995support}) and derive dual forms for all formulations from Table~\ref{tab: summary formulations}. Then we use the kernel method~\cite{scholkopf2001learning} to introduce nonlinearity into the dual formulations. Moreover, as dual problems are generally computationally expensive, we derive an efficient method to solve them.
 
-\section{Derivation of dual problems}\label{sec:Derivation of dual problems}
+\section{Derivation of Dual Problems}\label{sec:Derivation of dual problems}
 
 As discussed in the introduction, this section is dedicated to deriving dual forms for all formulations from Table~\ref{tab: summary formulations}. We did not use \Grill and \GrillNP formulations in the rest of the text since they both use true quantile as a threshold. Since many of the remaining formulations are very similar, we divide them into two families:
 \begin{itemize}
@@ -73,7 +73,7 @@ Similarly, the conjugate function for the quadratic hinge is defined in~\cite{ka
   In the rest of the text, matrix~$\K$ always refers to one of the kernel matrices defined above. 
 \end{notation}
 
-\subsection{Family of \TopPushK formulations}
+\subsection{Family of \TopPushK Formulations}
 
 In this section, we focus on the family of \TopPushK formulations. The general optimization problem that covers all formulations from this family can be written in the following way
 \begin{mini!}{\bm{w}, \, t}{
@@ -124,7 +124,7 @@ Note that we use an alternative formulation with constant~$C.$ We use this formu
   If~$K = 1,$ the upper bound in the second constraint vanishes due to the first constraint.
 \end{restatable}
 
-\subsection{Family of \PatMat formulations}
+\subsection{Family of \PatMat Formulations}
 
 In the same way, as for \TopPushK family, we introduce a general optimization problem that covers all formulations from \PatMat family and reads
 \begin{mini}{\bm{w}, \, t}{
@@ -169,7 +169,7 @@ Again, we use the alternative formulation with constant~$C.$ The following theor
   \end{align*}
 \end{restatable}
 
-\subsection{Adding kernels}
+\subsection{Kernels}
 
 As we mentioned at the beginning of the chapter, our goal is to extend our framework to be usable for linearly inseparable problems. We derived dual formulations for \TopPushK and \PatMat families in two previous sections. In this section, we show how to employ the kernels method~\cite{scholkopf2001learning} to introduce nonlinearity into these dual formulations. For simplicity, we focus only on formulations from \TopPushK family that compute the decision threshold only from negative samples. As mentioned in Notation~\ref{not: kernel matrix}, all such formulations use kernel matrix~$\Kneg.$ The derivation is the same for all other formulations.
 
@@ -194,7 +194,7 @@ where~$k(\cdot,\; \cdot)$ is applied to all rows of both arguments. Then for any
   s_j = \sum_{i = 1}^{\npos} \alpha_i k\Brac{\bm{x}_j, \bm{x}^+_i} - \sum_{i = 1}^{\nneg} \beta_i k\Brac{\bm{x}_j, \bm{x}^-_i}.
 \end{equation}
 
-\section{New Coordinate Descent Algorithm}\label{sec: coordinate descent}
+\section{Coordinate Descent Algorithm}\label{sec: coordinate descent}
 
 In the previous sections, we derived dual formulations for \TopPushK and \PatMat families of formulations. Moreover, we showed how to incorporate non-linear kernels into these formulations. As a result, we can use all presented formulations even for linearly non-separable problems. However, the dimension of the dual problems is at least equal to the number of all samples~$n,$ and therefore, it is computationally expensive to use standard techniques such as gradient descent. To handle this issue, the coordinate descent algorithm~\cite{chang2008coordinate, hsieh2008dual} has been proposed in the context of SVMs. In this section, we derive a coordinate descent algorithm suitable for our dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). We also show that we can reduce the whole optimization problem to a one-dimensional quadratic optimization problem with a closed-form solution in every iteration. Therefore, every iteration of our algorithm is cheap. For a review of other approaches see~\cite{batmaz2019review,werner2019review}.
 

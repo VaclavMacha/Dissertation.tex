@@ -210,7 +210,7 @@ Results for \PatMatNP can be obtained in a similar way.
   Thus, we finished the proof for \PatMat. The proof for \PatMatNP can be performed identically.
 \end{proof}
 
-\section{Threshold comparison}\label{app:relations}
+\section{Threshold Comparison}\label{app:relations}
 
 A lower threshold~$t$ means a lower objective function value when the objective contains only false-negative samples. Therefore, a lower threshold is preferred. The two following lemmas compare thresholds defined in Chapter~\ref{chap: framework}.
 
@@ -244,7 +244,7 @@ A lower threshold~$t$ means a lower objective function value when the objective 
 
 Since the goal of the presented formulations is to push~$s^+$ above~$s^-$, we may expect that the conditions in Lemma~\ref{lemma:thresholds2} are satisfied. 
 
-\section{Computing the threshold for \PatMat}\label{app:threshold}
+\section{Efficient Computing of the Threshold for \PatMat}\label{app:threshold}
 
 In this section, we show how to efficiently compute the threshold~\eqref{eq: aatp quantile surrogate} for \PatMat with the linear model and the hinge loss as a surrogate. Consider function
 \begin{equation}\label{eq:defin_h}
@@ -291,11 +291,11 @@ for all~$t \in [t_{i-1}, \; t_{i}]$, the precise value of~$\hat{t}$ can be compu
     = t_{i-1} + \frac{h(t_{i-1})}{\vartheta(i-1)}.
 \end{equation*}
 
-\section{Convergence of stochastic gradient descent}
+\section{Stochastic Gradient Descent}
 
 The proof of convergence of stochastic gradient descent for \PatMat and \PatMatNP is divided into three parts. In Section~\ref{app:sgd1}, we prove a general statement for convergence of stochastic gradient descent with a convex objective function. In Section~\ref{app:sgd2} we apply it to Theorem~\ref{thm:sgd}. Finally, in Section~\ref{app:sgd3}, we provide auxiliary results.
 
-\subsection{General result}\label{app:sgd1}
+\subsection{General Results}\label{app:sgd1}
 
 Consider a differentiable objective function~$L$ and the optimization method
 \begin{equation}\label{eq:update}
@@ -500,7 +500,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   Plugging~\eqref{eq:proof_est2} and~\eqref{eq:proof_est3} into~\eqref{eq:proof_est1} and summing the terms yields~\eqref{eq:nec_cond}. Then the assumptions of Theorem~\ref{thm:convergence} are verified and the theorem statement follows.
 \end{proof}
 
-\subsection{Auxiliary results}\label{app:sgd3}
+\subsection{Auxiliary Results}\label{app:sgd3}
 
 \begin{lemma}\label{lemma:bound_zero}
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_ratio}. Then there exists some~$\hat{C} > 0$ such that for all~$k$ we have
