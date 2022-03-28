@@ -48,6 +48,8 @@
       \addplot [lineaatp] table[x index=0, y index=1] {\StandardAATPComparisonROC};
       \addlegendentry{\textbf{Classifier 2}: AUC = 76.8\%}
       \addplot[mark=none, thick, dashed, myred] {x};
+      \addplot[mark=*, mygreen] coordinates {(0.01, 0.53)} node{};
+      \addplot[mark=*, myorange] coordinates {(0.1, 1.0)} node{};
   \end{groupplot}
 \end{tikzpicture}
 \end{document}
