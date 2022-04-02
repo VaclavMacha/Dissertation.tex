@@ -444,7 +444,7 @@ We again start with the hinge loss function from Notation~\ref{not: surrogates}.
   \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil \label{eq: Pat dual hinge c3}}
   \addConstraint{\delta }{\geq 0. \label{eq: Pat dual hinge c4}}
 \end{maxi!}
-Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show how to compute~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules}. However, in this case, constants~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ also depend on the third dual variable~$\delta$. We do not perform a joint maximization in~$(\alphak, \; \beta_l, \; \delta)$ but perform a maximization with respect to~$(\alphak, \; \beta_l)$, update these two values and then optimize the objective with respect to~$\delta$. Then for fixed feasible solution~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ yields
+Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show how to compute~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules}. However, in this case, constants~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ also depend on the third dual variable~$\delta$. We do not perform a joint maximization in~$(\alphak, \; \betal, \; \delta)$ but perform a maximization with respect to~$(\alphak, \; \betal)$, update these two values and then optimize the objective with respect to~$\delta$. Then for fixed feasible solution~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ yields
 \begin{maxi*}{\delta}{
   - \ntil \tau \delta
   }{}{}
@@ -479,7 +479,7 @@ The second considered surrogate function is the quadratic hinge loss from Notati
   \addConstraint{\delta }{\geq 0,
   \label{eq: Pat dual quadratic c4}}
 \end{maxi!}
-Similar to the previous case, we perform maximization only with respect to~$(\alphak, \; \beta_l).$ Then for fixed feasible solution~$\bm{\alpha},$~$\bm{\beta},$ we need to maximize the objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$, which leads to the following problem
+Similar to the previous case, we perform maximization only with respect to~$(\alphak, \; \betal).$ Then for fixed feasible solution~$\bm{\alpha},$~$\bm{\beta},$ we need to maximize the objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$, which leads to the following problem
 \begin{maxi*}{\delta}{
   - (\ntil \tau) \delta - \Brac{\frac{1}{4\vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2} \frac{1}{\delta}
   }{}{}
