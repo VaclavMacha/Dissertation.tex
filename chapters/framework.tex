@@ -97,17 +97,17 @@ To emphasize the similarity with the \TopPush, we call this formulation \TopPush
 
 The second problem from Section~\ref{sec: related problems} is the problem of Accuracy at the Top~\cite{boyd2012accuracy}. This problem aims to find an ordering of samples so that samples whose scores are among the top $\tau$-quantile are as relevant as possible. The top~$\tau$-quantile of all scores is defined by
 \begin{equation}\label{eq: aatp quantile} 
-  t_1(\bm{s})
+  t(\bm{s})
     = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.
 \end{equation}
-All relevant samples should be ranked above the quantile~$t_1$ and all irrelevant samples below the quantile~$t_1$ in an ideal case. Thus, the main difference to the ranking problems is that the problem of Accuracy at the Top considers both classification errors and does not focus only on false-negative samples. The original formulation~\cite{boyd2012accuracy} considers a balanced dataset with the same number of positive and negative samples. Paper~\cite{grill2016learning} reformulated the problem for the unbalanced dataset and derived the following formulation
+All relevant samples should be ranked above the quantile~$t$ and all irrelevant samples below the quantile~$t$ in an ideal case. Thus, the main difference to the ranking problems is that the problem of Accuracy at the Top considers both classification errors and does not focus only on false-negative samples. The original formulation~\cite{boyd2012accuracy} considers a balanced dataset with the same number of positive and negative samples. Paper~\cite{grill2016learning} reformulated the problem for the unbalanced dataset and derived the following formulation
 \begin{mini}{\bm{w}, \, t}{
   \frac{1}{\nneg} \fp(\bm{s}, t) + \frac{1}{\npos} \fn(\bm{s}, t)
   }{\label{eq: aatp}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.}
 \end{mini}
-This formulation already falls into our framework~\eqref{eq: aatp counts} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Moreover, the authors of~\cite{boyd2012accuracy, grill2016learning} used the same surrogate trick to get rid of the discontinuous objective function, as we used in Section~\ref{sec: surrogate formulation}. Thus, by replacing replaces false-positive and false-negative counts in the objective function with their surrogate counterparts we get
+This formulation already falls into our framework~\eqref{eq: aatp counts} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Moreover, the authors of~\cite{boyd2012accuracy, grill2016learning} used the same surrogate trick to get rid of the discontinuous objective function, as we used in Section~\ref{sec: surrogate formulation}. Thus, by replacing false-positive and false-negative counts in the objective function with their surrogate counterparts we get
 \begin{mini}{\bm{w}, \, t}{
   \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
@@ -116,11 +116,11 @@ This formulation already falls into our framework~\eqref{eq: aatp counts} for~$\
 \end{mini}
 This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Even though the original formulation is presented in~\cite{boyd2012accuracy}, we denote the previous formulation as \Grill based on the name of the first author of~\cite{grill2016learning}. There are two reasons for that. The first one is that we used an unbalanced dataset as in~\cite{grill2016learning}. The second one is that we use an algorithm proposed in~\cite{grill2016learning} for numerical experiments since the one from~\cite{boyd2012accuracy} is suitable only for a small dataset.
 
-The \Grill formulation~\eqref{eq: grill} is still challenging to solve due to the form of the decision threshold~\eqref{eq: aatp quantile}. The authors of~\cite{boyd2012accuracy} removed the necessity to handle the difficult quantile constraint by setting quantile as one of the samples and solving~$\nall$ independent problems. However, such an approach is infeasible for a large number of samples. The authors of~\eqref{eq: grill} proposed the projected gradient descent method, where after each gradient step, the quantile is recomputed. This approach is suitable for large data but lacks theoretical guarantees. In the following text, we propose two approximations of the true quantile~\eqref{eq: aatp quantile} that can be used to simplify formulation~\eqref{eq: grill}. The first one is a simple approximation by the mean of~$n\tau$ highest scores
+The \Grill formulation~\eqref{eq: grill} is still challenging to solve due to the form of the decision threshold~\eqref{eq: aatp quantile}. The authors of~\cite{boyd2012accuracy} removed the necessity to handle the difficult quantile constraint by setting quantile as one of the samples and solving~$\nall$ independent problems. However, such an approach is infeasible for a large number of samples. The authors of~\cite{grill2016learning} proposed the projected gradient descent method, where after each gradient step, the quantile is recomputed. This approach is suitable for large data but lacks theoretical guarantees. In the following text, we propose two approximations of the true quantile~\eqref{eq: aatp quantile} that can be used to simplify formulation~\eqref{eq: grill}. The first one is a simple approximation by the mean of~$n\tau$ highest scores
 \begin{equation}\label{eq: aatp quantile mean} 
-  t_2(\bm{s}) = \frac{1}{n\tau} \sum_{i=1}^{n\tau} s_{[i]}.
+  t(\bm{s}) = \frac{1}{n\tau} \sum_{i=1}^{n\tau} s_{[i]}.
 \end{equation}
-where for simplicity we assume, that~$n\tau$ is an integer. The main purpose of~\eqref{eq: aatp quantile mean} is to provide a convex approximation of the non-convex quantile~\eqref{eq: aatp quantile}. In fact, it is known is that it is the tightest convex approximation of~\eqref{eq: aatp quantile}. Putting~\eqref{eq: aatp quantile mean} into the constraint results in the following problem, which we call \TopMeanK
+where for simplicity we assume, that~$n\tau$ is an integer. The main purpose of~\eqref{eq: aatp quantile mean} is to provide a convex approximation of the non-convex quantile~\eqref{eq: aatp quantile}. In fact, it is known that it is the tightest convex approximation of~\eqref{eq: aatp quantile}. Putting~\eqref{eq: aatp quantile mean} into the constraint results in the following problem, which we call \TopMeanK
 \begin{mini}{\bm{w}, \, t}{
   \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: topmeank}}{}
@@ -131,7 +131,7 @@ where~$K = n\tau.$ Besides changing the form of the decision threshold, we also 
 
 The second option how to approximate the true quantile is to use surrogate counterparts to replace true counts in~\eqref{eq: aatp quantile} and solve the following equality
 \begin{equation}\label{eq: aatp quantile surrogate}
-  t_3(\bm{s}) \quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, 
+  t(\bm{s}) \quad \text{solves} \quad \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, 
 \end{equation}
 where~$\vartheta > 0$ is scaling parameter. Since this threshold uses the surrogate approximation, we denote it as surrogate top $\tau$-quantile. We get the following formulation by replacing the true quantile in the constrain and simplifying the objective function
 \begin{mini}{\bm{w}, \, t}{
@@ -144,9 +144,9 @@ This formulation also used only false negatives in the objective to preserve the
 
 \section{Neyman-Pearson Problem}\label{sec: Neyman-Pearson}
 
-The last problem that we introduce in Section~\ref{sec: related problems} is the Neyman-Pearson problem, which is closely related to hypothesis testing. The hypothesis testing operates with null~$H_0$ and alternative~$H_1$ hypotheses. The goal is to decide to either reject the null hypotheses in favor of the alternative or not reject it. Since this problem is binary, two possible errors can occur. Type I occurs when~$H_0$ is true but is rejected, and Type II error happens when~$H_0$ is false but fails to be rejected. The Neyman-Pearson problem~\cite{neyman1933ontheproblem} minimizes Type II error while keeping Type I error smaller than some predefined bound. Using our notation for the Neyman-Pearson problem, the null hypothesis~$H_0$ states that sample~$\bm{x}$ has a negative label. Then Type I error occurs when the sample is false-positive, while Type II error when the sample is false-negative, see Table~\ref{tab: classification metrics}. In other words, Type II error corresponds to the false-negative rate, and Type I error to false-positive rate. Therefore, if the bound on the Type I error is~$\tau$, we may write this as
+The last problem that we introduce in Section~\ref{sec: related problems} is the Neyman-Pearson problem, which is closely related to hypothesis testing. The hypothesis testing operates with null~$H_0$ and alternative~$H_1$ hypothesis. The goal is to decide to either reject the null hypothesis in favor of the alternative or not reject it. Since this problem is binary, two possible errors can occur. Type I occurs when~$H_0$ is true but is rejected, and Type II error happens when~$H_0$ is false but fails to be rejected. The Neyman-Pearson problem~\cite{neyman1933ontheproblem} minimizes Type II error while keeping Type I error smaller than some predefined bound. Using our notation for the Neyman-Pearson problem, the null hypothesis~$H_0$ states that sample~$\bm{x}$ has a negative label. Then Type I error occurs when the sample is false-positive, while Type II error when the sample is false-negative, see Table~\ref{tab: classification metrics}. In other words, Type II error corresponds to the false-negative rate, and Type I error to false-positive rate. Therefore, if the bound on the Type I error is~$\tau$, we may write this as
 \begin{equation}\label{eq: NP quantile}
-  t_1^{\rm NP}(\bm{s})
+  t^{\rm NP}(\bm{s})
     = \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.
 \end{equation}
 Note that we only count the false-positive samples in~\eqref{eq: NP quantile} instead of counting all positives in~\eqref{eq: aatp quantile}. Then, we may write the Neyman-Pearson problem as
@@ -169,7 +169,7 @@ We denote this formulation as \GrillNP to emphasize the relation with the origin
 
 The second formulation~\eqref{eq: topmeank} from the previous section, uses mean of~$\nall \tau$ highest scores to approximate true quantile~\eqref{eq: aatp quantile}. In the same way, we can approximate true quantile~\eqref{eq: NP quantile} by the mean of~$\nneg\tau$ highest of scores corresponding to the negative samples
 \begin{equation}\label{eq: np quantile mean} 
-  t_2^{\rm NP}(\bm{s}) = \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s^-_{[i]}.
+  t^{\rm NP}(\bm{s}) = \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s^-_{[i]}.
 \end{equation}
 For simplicity, we again assume that~$\nneg\tau$ is an integer. Putting~\eqref{eq: np quantile mean} into the constraint results in the Neyman-Pearson alternative to \TopMeanK defined as
 \begin{mini}{\bm{w}, \, t}{
@@ -183,7 +183,7 @@ This slight difference shows a close relationship between the ranking problems a
 
 The last formulation~\eqref{eq: patmat} from the previous sections uses the surrogate approximation of the true quantile~\eqref{eq: aatp quantile}. The surrogate approximation of the true quantile~\eqref{eq: NP quantile} reads
 \begin{equation}\label{eq: np quantile surrogate}
-  t_3^{\rm NP}(\bm{s}) \quad \text{solves} \quad \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau. 
+  t^{\rm NP}(\bm{s}) \quad \text{solves} \quad \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau. 
 \end{equation}
 Putting~\eqref{eq: np quantile surrogate} into the constraint results in the Neyman-Pearson alternative to \PatMat in the following form
 \begin{mini}{\bm{w}, \, t}{
@@ -283,6 +283,6 @@ Moreover, we postpone all proofs and additional results into the appendices for 
       & $\frac{1}{\nneg} \sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau$ \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of problem fomrulations that fall in the framework~\eqref{eq: aatp surrogate}. Column \textbf{Formulation} shows the name of the formulation that we use in this work. Column \textbf{Label} represents the label of the formulation in this text. Column \textbf{Source} is the citation of the work where the formulation was introduced. Column \textbf{Ours} shows whether the formulation was introduced in any of our previous papers. The last three columns show the values of parameters~$\lambda_1,$~$\lambda_2$ and the form of the decision threshold for framework~\eqref{eq: aatp surrogate}.}
+  \caption{Summary of problem fomrulations that fall in the framework~\eqref{eq: aatp surrogate}. Column \textbf{Formulation} shows the name of the formulation that we use in this work. Column \textbf{Label} represents the label of the formulation in this text. Column \textbf{Source} is the citation of the work where the formulation was introduced. Column \textbf{Ours} shows whether the formulation was introduced in any of our previous papers. The last three columns show the values of parameters~$\lambda_1,$~$\lambda_2$ and the form of the decision threshold for given framework~\eqref{eq: aatp surrogate}.}
   \label{tab: summary formulations}
 \end{table}

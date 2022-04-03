@@ -7,11 +7,11 @@ In Chapter~\ref{chap: framework}, we introduced a general framework for binary c
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini}
-Many formulations have nice theoretical properties such as convexity or differentiability in this specific case. However, many real-world problems are not linearly separable, and in such cases, the approach from the previous section is not sufficient. In this chapter, we use the similarity of~\eqref{eq: aatp surrogate liner primal} to primal formulation of SVM (\emph{Support Vector Machines}~\cite{cortes1995support}) and derive dual forms for all formulations from Table~\ref{tab: summary formulations}. Then we use the kernel method~\cite{scholkopf2001learning} to introduce nonlinearity into the dual formulations. Moreover, as dual problems are generally computationally expensive, we derive an efficient method to solve them.
+Many formulations have nice theoretical properties such as convexity or differentiability in this specific case. However, many real-world problems are not linearly separable, and in such cases, the approach from the previous section is not sufficient. In this chapter, we use the similarity of~\eqref{eq: aatp surrogate liner primal} to primal formulation of SVM~\cite{cortes1995support} and derive dual forms for all formulations from Table~\ref{tab: summary formulations}. Then we use the kernel method~\cite{scholkopf2001learning} to introduce nonlinearity into the dual formulations. Moreover, as dual problems are generally computationally expensive, we derive an efficient method to solve them.
 
 \section{Derivation of Dual Problems}\label{sec:Derivation of dual problems}
 
-As discussed in the introduction, this section is dedicated to deriving dual forms for all formulations from Table~\ref{tab: summary formulations}. We did not use \Grill and \GrillNP formulations in the rest of the text since they both use true quantile as a threshold. Since many of the remaining formulations are very similar, we divide them into two families:
+As discussed in the introduction, this section is dedicated to deriving dual forms for all formulations from Table~\ref{tab: summary formulations}. \Grill and \GrillNP formulations aren't used in the rest of the text since they both use true quantile as a threshold. Since many of the remaining formulations are very similar, we divide them into two families:
 \begin{itemize}
   \item \textbf{\TopPushK family:} \TopPush, \TopPushK, \TopMeanK and \tauFPL.
   \item \textbf{\PatMat family:} \PatMat and \PatMatNP.
@@ -30,7 +30,7 @@ Both families use surrogate false-negative rate as an objective function. Moreov
   consists of~$y \in \R$ for which the supremum is finite. 
 \end{definition}
 
-These functions will play a crucial role in the resulting form of the dual problems. Recall the hinge loss and quadratic hinge loss function defined in Notation~\ref{not: surrogates}
+These functions will play a crucial role in the resulting form of dual problems. Recall the hinge loss and quadratic hinge loss function defined in Notation~\ref{not: surrogates}
 \begin{align*}
     l_{\text{hinge}}(s) & = \max\Brac[c]{0, 1 + s}, &
     l_{\text{quadratic}}(s) & = \Brac{\max\Brac[c]{0, 1 + s}}^2.
@@ -179,7 +179,7 @@ To add kernels, we first realize that the classification score~$s_j$ for any sam
     = \bm{w}^{\top} \bm{x}_j
     = \sum_{i = 1}^{\npos} \alpha_i \bm{x}_j^{\top} \bm{x}_i^+ - \sum_{i = 1}^{\nneg} \beta_i \bm{x}_j^{\top} \bm{x}_i^-,
 \end{equation}
-where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation yields from the proof of Theorems~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
+where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation yields from the proof of Theorem~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
 \begin{equation*}
   \vecab^\top \Kneg \vecab
     = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab
@@ -196,7 +196,7 @@ where~$k(\cdot,\; \cdot)$ is applied to all rows of both arguments. Then for any
 
 \section{Coordinate Descent Algorithm}\label{sec: coordinate descent}
 
-In the previous sections, we derived dual formulations for \TopPushK and \PatMat families of formulations. Moreover, we showed how to incorporate non-linear kernels into these formulations. As a result, we can use all presented formulations even for linearly non-separable problems. However, the dimension of the dual problems is at least equal to the number of all samples~$n,$ and therefore, it is computationally expensive to use standard techniques such as gradient descent. To handle this issue, the coordinate descent algorithm~\cite{chang2008coordinate, hsieh2008dual} has been proposed in the context of SVMs. In this section, we derive a coordinate descent algorithm suitable for our dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). We also show that we can reduce the whole optimization problem to a one-dimensional quadratic optimization problem with a closed-form solution in every iteration. Therefore, every iteration of our algorithm is cheap. For a review of other approaches see~\cite{batmaz2019review,werner2019review}.
+In the previous sections, we derived dual formulations for \TopPushK and \PatMat families of formulations. Moreover, we showed how to incorporate non-linear kernels into these formulations. As a result, we can use all presented formulations even for linearly non-separable problems. However, the dimension of the dual problems is at least equal to the number of all samples~$n,$ and therefore, it is computationally expensive to use standard techniques such as gradient descent. To handle this issue, the standard coordinate descent algorithm~\cite{chang2008coordinate, hsieh2008dual} has been proposed in the context of SVMs. In this section, we derive a coordinate descent algorithm suitable for our dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). We also show that we can reduce the whole optimization problem to a one-dimensional quadratic optimization problem with a closed-form solution in every iteration. Therefore, every iteration of our algorithm is cheap. For a review of other approaches see~\cite{batmaz2019review,werner2019review}.
 
 Before we start, recall that the classification scores can be computed directly from dual variables as shown in~\eqref{sec: coordinate descent}. Using the definition of kernel matrix~$\K$, we can define a vector of scores~$\bm{s}$ by
 \begin{equation}\label{eq: dual scores}
@@ -207,14 +207,14 @@ Note that dual scores are not identical to the primal ones~\eqref{eq:pred_linear
 \pagebreak
 
 \begin{notation}\label{not: dual update rules}
-  Consider any index~$l$ that satisfies~$1 \leq l \leq \npos + \ntil.$ Since the length of~$\bm{\alpha}$ is always~$\npos,$ we define auxiliary index~$\hat{l}$ as 
+  Consider any index~$l$ that satisfies~$1 \leq l \leq \npos + \ntil.$ Note that the length of dual variable~$\bm{\alpha}$ is~$\npos$ for both formulations~\eqref{eq: toppushk family dual} and~\eqref{eq: patmat family dual}. Therefore, we can define auxiliary index~$\hat{l}$ as 
   \begin{equation*}
     \hat{l} = \begin{cases}
       l & \text{if } l \leq \npos, \\
       l - \npos & \text{otherwise}.
     \end{cases}
   \end{equation*}
-  Then the index~$l$ without hat can be safely used for kernel matrix~$\K$ or vector of scores~$\bm{s}$ while its corresponding version with hat~$\hat{l}$ for dual variables~$\bm{\alpha}$ or~$\bm{\beta}.$
+  Then the index~$l$ can be safely used for kernel matrix~$\K$ or vector of scores~$\bm{s},$ while its corresponding version~$\hat{l}$ can be used for dual variables~$\bm{\alpha}$ or~$\bm{\beta}.$
 \end{notation}
 
 \subsection{Family of \TopPushK Formulations}\label{sec: Top coordinate descent}
@@ -380,7 +380,7 @@ Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing.
     = \sum_{\Set{j}{\lambda - z_j \in [0, \mu)}}(\lambda - z_j)
     + \sum_{\Set{j}{\lambda - z_j \ge \mu}}\mu - K\mu.
 \end{equation*}
-Now we can easily compute~$\lambda(\mu)$ by solving~$g(\lambda(\mu); \mu) = 0$ for fixed~$\mu.$ To get the solution efficiently, we derive Algorithm Algorithm~\ref{alg: toppushk family lambda}, which can  be described as follows: Index~$i$ will run over~$\bm{z}$ while index~$j$ will run over~$\bm{z} + \mu$. At every iteration, we know the values of~$g(z_{i-1}; \mu)$ and~$g(z_{j-1}+\mu; \mu)$ and we want to evaluate~$g$ at the next point. We denote the number of indices~$j$ such that $\lambda - z_j \in[0, \mu)$ by~$d$. If~$z_i \le z_j + \mu$, then we consider~$\lambda = z_i$ and since one index enters the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we increase~$d$ by one. On the other hand, if~$z_i > z_j + \mu$, then we consider $\lambda = z_j + \mu$ and since one index leaves the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we decrease~$d$ by one. In both cases,~$g$ is increased by~$d$ times the difference between the new~$\lambda$ and old~$\lambda$. Once~$g$ exceeds~$0$, we stop the algorithm and linearly interpolate between the last two values. To prevent an overflow, we set~$z_{m+1} = + \infty$. Concerning the initial values, since~$z_1 \le z_1 + s\mu$, we set $i=2$, $j=1$ and $d=1$. 
+Now we can easily compute~$\lambda(\mu)$ by solving~$g(\lambda(\mu); \mu) = 0$ for fixed~$\mu.$ To get the solution efficiently, we derive Algorithm~\ref{alg: toppushk family lambda}, which can  be described as follows: Index~$i$ will run over~$\bm{z}$ while index~$j$ will run over~$\bm{z} + \mu$. At every iteration, we know the values of~$g(z_{i-1}; \mu)$ and~$g(z_{j-1}+\mu; \mu)$ and we want to evaluate~$g$ at the next point. We denote the number of indices~$j$ such that $\lambda - z_j \in[0, \mu)$ by~$d$. If~$z_i \le z_j + \mu$, then we consider~$\lambda = z_i$ and since one index enters the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we increase~$d$ by one. On the other hand, if~$z_i > z_j + \mu$, then we consider $\lambda = z_j + \mu$ and since one index leaves the set~$\Set{j}{\lambda - z_j \in [0, \mu)}$, we decrease~$d$ by one. In both cases,~$g$ is increased by~$d$ times the difference between the new~$\lambda$ and old~$\lambda$. Once~$g$ exceeds~$0$, we stop the algorithm and linearly interpolate between the last two values. To prevent an overflow, we set~$z_{m+1} = + \infty$. Concerning the initial values, since~$z_1 \le z_1 + \mu$, we set $i=2$, $j=1$ and $d=1$. 
 
 \begin{algorithm}
   \centering
