@@ -1,7 +1,7 @@
 \chapter{Dual Formulation: Linear Model}\label{chap: dual}
 
 In Chapter~\ref{chap: framework}, we introduced a general framework for binary classification at the top. Moreover, we showed that several problem classes, considered separate problems so far, fit into this framework. The summary of all formulations is provided in Table~\ref{tab: summary formulations}. In Chapter~\ref{chap: linear} we discussed a special case when the linear model is used. Then formulation~\eqref{eq: aatp surrogate} reads
-\begin{mini}{\bm{w}, \, t}{
+\begin{mini}{\bm{w}}{
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate liner primal}}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
@@ -76,7 +76,7 @@ Similarly, the conjugate function for the quadratic hinge is defined in~\cite{ka
 \subsection{Family of \TopPushK Formulations}
 
 In this section, we focus on the family of \TopPushK formulations. The general optimization problem that covers all formulations from this family can be written in the following way
-\begin{mini!}{\bm{w}, \, t}{
+\begin{mini!}{\bm{w}}{
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \Ipos} l(t - \bm{w}^{\top} \bm{x}_i)
   }{\label{eq: toppushk family}}{\label{eq: toppushk family L}}
   \addConstraint{s_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \Itil \label{eq: toppushk family c1}}
@@ -127,7 +127,7 @@ Note that we use an alternative formulation with constant~$C.$ We use this formu
 \subsection{Family of \PatMat Formulations}
 
 In the same way, as for \TopPushK family, we introduce a general optimization problem that covers all formulations from \PatMat family and reads
-\begin{mini}{\bm{w}, \, t}{
+\begin{mini}{\bm{w}}{
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \Ipos} l(t - \bm{w}^{\top} \bm{x}_i)
   }{\label{eq: patmat family}}{}
   \addConstraint{t}{\quad \text{solves} \quad \frac{1}{\ntil}\sum_{i \in \Itil} l\Brac{\vartheta(\bm{w}^{\top} \bm{x}_j - t)} = \tau,}

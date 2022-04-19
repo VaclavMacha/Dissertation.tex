@@ -3,11 +3,13 @@
 
 \propconvex*
 \begin{proof}[Proof of Proposition~\ref{prop: convexity} on page~\pageref{prop: convexity}]
-  From Notation~\ref{not: scores}, threshold~$t_0$ is just a maximum from vector~$\bm{s}^-$ of scores of all negative samples.  Since maximum is a convex function, threshold T is a convex function of weights~$\bm{w}.$ Moreover, it is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$K$ highest values of a vector is a convex function. Therefore, threshold~$t_2$ is a convex function  of weights~$\bm{w}.$ It remains to analyze threshold~$t_3.$ Let us define function~$g$ as follows
+  From Notation~\ref{not: scores}, threshold~$t_0$ is just a maximum from vector~$\bm{s}^-$ of scores of all negative samples.  Since maximum is a convex function, threshold~$t$ is a convex function of weights~$\bm{w}.$ Moreover, it is easy to show that the quantile~$t_1$ is not convex. Due to~\cite{lapin2015top}, the mean of the~$K$ highest values of a vector is a convex function. Therefore, threshold~$t_2$ is a convex function  of weights~$\bm{w}.$ It remains to analyze threshold~$t_3.$ Let us define function~$g$ as follows
   \begin{equation*}
     g(\bm{w},t) := \frac{1}{n} \sum_{i \in \I} l(\bm{w}^{\top} \bm{x}_i - t) - \tau.
   \end{equation*}
-  where we for simplicity set~$\vartheta = 1.$ Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Moreover, since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables. To show the convexity, consider~$\bm{w}, \; \tilde{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\tilde{t} = t_3(\tilde{\bm{w}})$. Then for any~$\lambda\in[0,1],$ we have 
+  where we set~$\vartheta = 1$ for simplicity. Then~$t_3$ is defined via an implicit equation~$g(\bm{w},t) = 0.$ Since~$l$ is convex, we immediately obtain that~$g$ is jointly convex in both variables.
+  
+  To show the convexity, consider~$\bm{w}, \; \tilde{\bm{w}} \in \R^d$ and the corresponding thresholds~$t = t_3(\bm{w})$,~$\tilde{t} = t_3(\tilde{\bm{w}})$. Then for any~$\lambda\in[0,1],$ we have 
   \begin{equation}\label{eq:proof_conv1}
     g\Brac{\lambda \bm{w} + (1 - \lambda)\tilde{\bm{w}}, \;\lambda t + (1 - \lambda)\tilde{t}}
     \leq \lambda g(\bm{w}, t) + (1 - \lambda) g(\tilde{\bm{w}}, \tilde{t}) = 0.
@@ -47,56 +49,64 @@
 
 \degeneratebehavior*
 
-Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we consider the hinge loss function and no regularization for all formulations from Table~\ref{tab: summary formulations}. We also assume that~$n$ is large, and the outlier may be ignored for the computation of thresholds that require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat. For~$\bm{w}_0 = (0,0),$ we have
-\begin{equation*}
-  \tau
-  = \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(\bm{w}_0^\top \bm{x}_i - t)}
-  = l(0 - \vartheta t) = 1 - \vartheta t,
-\end{equation*}
-which implies that threshold~$t$ equals
-\begin{equation}\label{eq: PatMat threshold 0}
-  t = \frac{1-\tau}{\vartheta}.
-\end{equation}
-Consequently, the value of the objective function is
-\begin{equation}\label{eq: PatMat objective 0}
-  L(\bm{w}_0)
-    = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_0^\top \bm{x}_i)
-    = l(t - 0)
-    = 1 + t,
-\end{equation}
-where the last equality follows from the definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$. For~$\bm{w}_1 = (1,0),$ the computation goes similar. Since all samples are uniformly distributed in~$[-1,1]\times[-1,1],$ scores~$\bm{w}_1^\top \bm{x}_i$ for~$i \in \I$ are uniformly distributed in~$[-1,1].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq \tau$, we have
-\begin{align*}
-  \tau
-    & = \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
-    \approx \frac{1}{2}\int_{-1}^{1} l\Brac{\vartheta(s-t)} \dd{s}
-      = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s} \\
-    & =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
-      = 1 - \vartheta t + \frac{\vartheta}{2}\int_{-1}^{1}s\dd{s}
-      = 1 - \vartheta t.
-\end{align*}
-which again implies that threshold~$t$ equals~$t = \nicefrac{1-\tau}{\vartheta}$. Note that we could ignore the~$\max$ operator in the relation above, since 
-\begin{equation*}
-  1 + \vartheta(s - t)
-    \geq 1 + \vartheta(-1 - t)
-    = 1 + \vartheta(-1 - \frac{1 - \tau}{\vartheta})
-    = \tau - \vartheta
-    \geq 0.
-\end{equation*}
-Finally, since positive samples are uniformly distributed in~$[0,1]\times[-1,1],$ corresponding scores $\bm{w}_1^\top \bm{x}_i$  for~$i \in \Ipos$ are uniformly distributed in~$[0,1].$ Therefore, for the objective function, we have
-\begin{equation*}
-  L(\bm{w}_1)
-    = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_1^\top \bm{x}_i)
-    \approx \int_{0}^{1} l(t-s)\dd{s}
-    = \int_{0}^{1} (1 + t - s)\dd{s}
-    = 0.5 + t.
-\end{equation*}
+Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we consider the hinge loss function and no regularization for all formulations from Table~\ref{tab: summary formulations}. We also assume that~$n$ is large, and the outlier may be ignored for the computation of thresholds that require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat.
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0),$ we have
+  \begin{equation*}
+    \tau
+    = \frac{1}{n}\sum_{i \in \I} l\Brac{\vartheta(\bm{w}_0^\top \bm{x}_i - t)}
+    = l(0 - \vartheta t) = 1 - \vartheta t,
+  \end{equation*}
+  which implies that threshold~$t$ equals
+  \begin{equation}\label{eq: PatMat threshold 0}
+    t = \frac{1-\tau}{\vartheta}.
+  \end{equation}
+  Consequently, the value of the objective function is
+  \begin{equation}\label{eq: PatMat objective 0}
+    L(\bm{w}_0)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_0^\top \bm{x}_i)
+      = l(t - 0)
+      = 1 + t,
+  \end{equation}
+  where the last equality follows from the definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$.
+  \item For~$\bm{w}_1 = (1,0),$ the computation is similar. Since all samples are uniformly distributed in~$[-1,1]\times[-1,1],$ scores~$\bm{w}_1^\top \bm{x}_i$ for~$i \in \I$ are uniformly distributed in~$[-1,1].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq \tau$, we have
+  \begin{align*}
+    \tau
+      & = \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
+      \approx \frac{1}{2}\int_{-1}^{1} l\Brac{\vartheta(s-t)} \dd{s}
+        = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s} \\
+      & =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
+        = 1 - \vartheta t + \frac{\vartheta}{2}\int_{-1}^{1}s\dd{s}
+        = 1 - \vartheta t.
+  \end{align*}
+  which again implies that threshold~$t$ equals
+  \begin{equation*}
+    t = \frac{1-\tau}{\vartheta}.
+  \end{equation*}
+  Note that we could ignore the~$\max$ operator in the relation above, since 
+  \begin{equation*}
+    1 + \vartheta(s - t)
+      \geq 1 + \vartheta(-1 - t)
+      = 1 + \vartheta \Brac{-1 - \frac{1 - \tau}{\vartheta}}
+      = \tau - \vartheta
+      \geq 0.
+  \end{equation*}
+  The last inequality follows from the assumption~$\vartheta \leq \tau.$ Finally, since positive samples are uniformly distributed in~$[0,1]\times[-1,1],$ corresponding scores $\bm{w}_1^\top \bm{x}_i$  for~$i \in \Ipos$ are uniformly distributed in~$[0,1].$ Therefore, for the objective function, we have
+  \begin{equation*}
+    L(\bm{w}_1)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_1^\top \bm{x}_i)
+      \approx \int_{0}^{1} l(t-s)\dd{s}
+      = \int_{0}^{1} (1 + t - s)\dd{s}
+      = 0.5 + t.
+  \end{equation*}
+\end{itemize}
 Results for \PatMatNP can be obtained in a similar way.
 
 \pagebreak
 
 \larget*
 \begin{proof}[Proof of Theorem~\ref{thm:large_t} on page~\pageref{thm:large_t}]
-  All mentioned formulations use a surrogate approximation of the false-negative rate as the objective function~$L.$ For the linear classifier, the objective function has the following form
+  All mentioned formulations use a surrogate approximation of the false-negative rate as the objective function~$L.$ The objective function has the following form
   \begin{equation*}
     L(\bm{w})
       = \frac{1}{\npos}\sum_{i \in \Ipos}l(t - \bm{w}^{\top} \bm{x}_i)
@@ -116,8 +126,8 @@ Results for \PatMatNP can be obtained in a similar way.
   Recall that we use linear model and Notation~\ref{not: scores} and let us define the following auxiliary variables
   \begin{equation*}
     \begin{aligned}
-      s_{\min} & = \min_{i \in I} s_i, \qquad
-      s_{\max} & = \max_{i \in I} s_i, \qquad
+      s_{\min} & = \min_{i \in I} s_i, \qquad & 
+      s_{\max} & = \max_{i \in I} s_i, \qquad &
       \bar{s} & = \frac{1}{n} \sum_{i \in \I} s_i. \\
     \end{aligned}
   \end{equation*}
@@ -136,7 +146,7 @@ Results for \PatMatNP can be obtained in a similar way.
       = \frac{1}{n} \frac{n}{\npos}
       = \frac{1}{\npos}.
   \end{equation*}
-  Moreover, since the average of elements of the vector is smaller or equal to their maximum, we get the following relation
+  Since the average of all elements of the vector is smaller or equal to its maximum B, we get the following relation
   \begin{equation*}
     \bar{s}
       < \frac{1}{\npos} \sum_{i \in \Ipos} s_i
@@ -144,7 +154,9 @@ Results for \PatMatNP can be obtained in a similar way.
       \leq \max_{i \in \I} s_i
       = s_{\max}
   \end{equation*}
-  where the first inequality follows from~\eqref{eq:patmat_zero_aux0}. The lower bound for~$\bar{s}$ can be computed in a similar way. Altogether, we have~$s_{\min} < \bar{s} < s_{\max}$. Then we can define
+  where the first inequality follows from~\eqref{eq:patmat_zero_aux0}. The lower bound for~$\bar{s}$ can be computed in a similar way.
+  
+  Combining all results above, we have~$s_{\min} < \bar{s} < s_{\max}$. Then we can define
   \begin{equation*}
     \vartheta_0 = \min\Brac[c]{\frac{\tau}{\bar{s} - s_{\min}}, \; \frac{1-\tau}{s_{\max}-\bar{s}}, \; \tau}.
   \end{equation*}
@@ -156,7 +168,7 @@ Results for \PatMatNP can be obtained in a similar way.
   \begin{equation*}
     1 + \vartheta(s_i - t)
       \geq 1 + \vartheta(s_{\min} - t)
-      = 1 + \vartheta \Brac{s_{\min} - \frac{1 - \tau}{\vartheta} + \bar{s}}
+      = 1 + \vartheta \Brac{s_{\min} - \frac{1 - \tau}{\vartheta} - \bar{s}}
       = \tau - \vartheta (\bar{s} - s_{\min}),
   \end{equation*}
   where the first equality follows from the definition of~$t.$ From the definition~$\vartheta_0$ we deduce
@@ -170,7 +182,7 @@ Results for \PatMatNP can be obtained in a similar way.
       \geq \tau - \frac{\tau}{\bar{s} - s_{\min}} (\bar{s} - s_{\min})
       = 0
   \end{equation}
-  Moreover, combining the definition of the hinge loss function from Notation~\ref{not: surrogates} and the inequality above, we have
+  Combining the definition of the hinge loss function from Notation~\ref{not: surrogates} and the inequality above, we have
   \begin{equation*}
     l\Brac{\vartheta (s_i - t)}
       = \max\{0, 1 + \vartheta (s_i - t), 0\}
@@ -184,7 +196,7 @@ Results for \PatMatNP can be obtained in a similar way.
       = 1 - \vartheta \Brac{\frac{1 - \tau}{\vartheta} + \bar{s}} + \vartheta \bar{s}
       = \tau,
   \end{equation*}
-  where the third equality employs the definition of~$\bar{s}$ and~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$, i.e. it solves~\eqref{eq: aatp quantile surrogate}. Similarly as we derived~\eqref{eq:patmat_zero_aux1} we get
+  where the third equality employs the definition of~$\bar{s}$ and~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$, i.e. it solves~\eqref{eq: aatp quantile surrogate}. In the same way, as we derived~\eqref{eq:patmat_zero_aux1}, we get
   \begin{equation}\label{eq:patmat_zero_aux2}
     1 + t - s_i
     \geq 1 + t-s_{\max}
@@ -201,7 +213,7 @@ Results for \PatMatNP can be obtained in a similar way.
       < 1 + \Brac{\frac{1 - \tau}{\vartheta} + \bar{s}} - \bar{s}
       = 1 + \frac{1-\tau}{\vartheta},  
   \end{equation*}
-  where the second equality follows from~\eqref{eq:patmat_zero_aux2}, the only inequality from~\eqref{eq:patmat_zero_aux0}. Using the~\eqref{eq: PatMat threshold 0} and~\eqref{eq: PatMat objective 0}, we finally get
+  where the second equality follows from~\eqref{eq:patmat_zero_aux2}, the only inequality from~\eqref{eq:patmat_zero_aux0}. Using~\eqref{eq: PatMat threshold 0} and~\eqref{eq: PatMat objective 0}, we finally get
   \begin{equation*}
     L(\bm{w})
       < 1 + \frac{1-\tau}{\vartheta}
@@ -250,12 +262,13 @@ In this section, we show how to efficiently compute the threshold~\eqref{eq: aat
 \begin{equation}\label{eq:defin_h}
   h(t) = \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} - n\tau.
 \end{equation}
-Then solving~\eqref{eq:update_t} is equivalent to looking for~$\hat{t}$ such that~$h(\hat{t}) = 0$. Function~$h$ is continuous and strictly decreasing (until it hits the global minimum) with~$h(t) \to \infty$ as~$t \to -\infty$ and~$h(t) \to -n\tau$ as~$t \to \infty$. Thus, there is a unique solution to the equation~$h(t) = 0$. For sorted data, the following lemma advises how to this equation.
+Then solving~\eqref{eq:update_t} is equivalent to looking for~$\hat{t}$ such that~$h(\hat{t}) = 0$. Function~$h$ is continuous and strictly decreasing (until it hits the global minimum) with~$h(t) \to \infty$ as~$t \to -\infty$ and~$h(t) \to -n\tau$ as~$t \to \infty$. Thus, there is a unique solution to the equation~$h(t) = 0$. For sorted data, the following lemma advises how to solve this equation.
 
 \begin{lemma}
   Consider vector of scores~$\bm{s}$ and its sorted version~$\bm{s}_{[\cdot]}$ with decreasing elements as defined in Notation~\ref{not: scores}. Define~$\gamma = \nicefrac{1}{\vartheta}$. Then for all~$i = 2, \; 3, \ldots, n$ we have
   \begin{equation}\label{eq:update_h}
-    h(s_{[j]} + \gamma) = h(s_{[j - 1]} + \gamma) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}),
+    h(s_{[j]} + \gamma)
+      = h(s_{[j - 1]} + \gamma) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}),
   \end{equation}
   with the initial condition~$h(s_{[1]} + \gamma) = -n\tau.$
 \end{lemma}
@@ -264,15 +277,16 @@ Observe that
 \begin{align*}
   h(s_{[j]}+\gamma)
     & = \sum_{i \in \I} l\Brac{\vartheta(s_i - (s_{[j]} + \gamma))} - n\tau
-    = \sum_{i \in \I} \max\Brac[c]{0,\; 1 + \vartheta\Brac{s_i - s_{[j]} - \frac{1}{\gamma}}} - n\tau \\
-    & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau,
+    = \sum_{i \in \I} \max\Brac[c]{0,\; 1 + \vartheta\Brac{s_i - s_{[j]} - \frac{1}{\vartheta}}} - n\tau \\
+    & = \sum_{i \in \I} \max\Brac[c]{0,\; \vartheta \Brac{s_i - s_{[j]}}} - n\tau
+    = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau,
 \end{align*}
 where the last equality holds since~$\vartheta > 0$ and~$s_{[i]} - s_{[j]} \leq 0$ for all~$i \geq j.$ From here, we obtain~$h(s_{[1]} + \gamma) = -n\tau$. Moreover, we have
 \begin{align*}
   h(s_{[j]} + \gamma)
-  & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau
-    = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
-  & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]} \pm s_{[j - 1]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
+  & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau \\
+  & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
+  & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]} + s_{[j - 1]} - s_{[j - 1]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
   & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j - 1]}) + \sum_{i = 1}^{j - 2} \vartheta(s_{[j - 1]} - s_{[j]}) + \vartheta(s_{[j - 1]} - s_{[j]}) - n\tau \\
   & = h(s_{[j - 1]} + \gamma) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}),
 \end{align*}
@@ -309,10 +323,13 @@ where~$\alpha^k > 0$ is a stepsize and~$g(\bm{w}^k)$ is an approximation of the 
   \item \label{ass_alpha2} the stepsize satisfies~$\sum_{k=0}^\infty (\alpha^k)^2<\infty$;
   \item \label{ass_alpha3} the stepsize satisfies~$\sum_{k=0}^\infty \norm{\alpha^{k+1}-  \alpha^k}<\infty$.
 \end{enumerate}
-Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for~$\alpha^k = \nicefrac{\alpha^0}{k+1}$.
+Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for
+\begin{equation*}
+  \alpha^k = \frac{\alpha^0}{k+1}.
+\end{equation*}
 
 \begin{theorem}\label{thm:convergence}
-  Assume that the assumptions~\ref{ass_convex}-\ref{ass_alpha2} are satisfied. If there exists some~$C$ such that for some global minimizer~$\bm{w}^*$ of~$L$ we have
+  Assume that the assumptions~\ref{ass_convex}-\ref{ass_alpha2} are satisfied. If there exists some~$C$ such that for the global minimizer~$\bm{w}^*$ of~$L$ we have
   \begin{equation}\label{eq:nec_cond}
     \sum_{k=0}^\infty \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \leq C,
   \end{equation}
@@ -329,7 +346,8 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for~$\al
     \norm{\bm{w}^{k+1} - \bm{w}^*}^2
       & = \norm{\bm{w}^k - \alpha^k g(\bm{w}^k) - \bm{w}^*}^2 \\
       & = \norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 \norm{g(\bm{w}^k)}^2 \\
-      & \leq \norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k) \pm \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 B^2\\
+      & \leq \norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 B^2\\
+      & = \norm{\bm{w}^k - \bm{w}^*}^2 + 2\alpha^k\inner{g(\bm{w}^k) + \nabla L(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + (\alpha^k)^2 B^2\\
       & \leq \norm{\bm{w}^k - \bm{w}^*}^2 + 2 \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} + 2 \alpha^k \Brac{L(\bm{w}^*) - L(\bm{w}^k)} + (\alpha^k)^2 B^2,
   \end{align*}
   where the first inequality follows from assumption~\ref{ass_gbound} and the second one from the properties of inner product and~\eqref{eq:convex_estimate}. Summing this expression for all~$k$ and using~\eqref{eq:nec_cond} leads to
@@ -358,7 +376,7 @@ For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function
 \begin{enumerate}[label={(\textbf{S\arabic*})}, left = 15pt]
   \item \label{surr_basic1} $l(s)\geq 0$ for all~$s\in\R$, $l(0)=1$ and~$l(s)\to 0$ as~$s\to-\infty$;
   \item \label{surr_basic2} $l$ is convex and strictly increasing function on~$(s_0,\infty)$, where~$s_0:=\sup\{s \mid l(s)=0\}$;
-  \item \label{surr_ratio} $\nicefrac{l'}{l}$ is a decreasing function on~$(s_0,\infty)$;
+  \item \label{surr_ratio} $\frac{l'}{l}$ is a decreasing function on~$(s_0,\infty)$;
   \item \label{surr_der1} $l'$ is a bounded function;
   \item \label{surr_der2} $l'$ is a Lipschitz continuous function with Lipschitz constant~$D$.
 \end{enumerate}
@@ -366,9 +384,11 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
 
 \sgd*
 \begin{proof}[Proof of Theorem~\ref{thm:sgd} on page~\pageref{thm:sgd}]
-  We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$L$ is convex due to Theorem~\ref{thm: convexity}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}, and assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are imposed directly in the statement of this theorem.
+  We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$L$ is convex due to Theorem~\ref{thm: convexity}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}, and assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify~\eqref{eq:nec_cond}.
 
-  It remains to verify~\eqref{eq:nec_cond}. For simplicity, we will do so only for~$\vartheta = 1$ and for~$2$ minibatches of the same size. However, the proof would be identical for different~$\vartheta$ and more minibatches. From the assumptions, we have two minibatches~$\Imb^k$ and~$\Imb^{k+1}$, which are pairwise disjoint and cover all samples. Moreover, for all~$k,$ we have~$\Imb^k = \Imb^{k+2}.$ Furthermore, the assumptions imply that the number of positive samples in each minibatch is equal to~$\nmbpos^k = \nicefrac{\npos}{2}$, where~$\npos$ is the total number of positive samples. First we estimate the difference between~$s_i^k$ defined in~\eqref{eq:defin_z} and~$\bm{x}_i^\top \bm{w}^k$. For any~$i \in \Imb^k$ we have~$s_i^k = \bm{x}_i^\top \bm{w}^k.$ Since we have two disjoint minibatches, due to the construction~\eqref{eq:defin_z} we get
+   For simplicity, we will do so only for~$\vartheta = 1$ and for~$2$ minibatches of the same size. However, the proof would be identical for different~$\vartheta$ and more minibatches. From the assumptions, we have two minibatches~$\Imb^k$ and~$\Imb^{k+1}$, which are pairwise disjoint and cover all samples. Moreover, for all~$k,$ we have~$\Imb^k = \Imb^{k+2}.$ Furthermore, the assumptions imply that the number of positive samples in each minibatch is equal to~$\nmbpos^k = \frac{1}{2} \npos$, where~$\npos$ is the total number of positive samples.
+   
+   First we estimate the difference between~$s_i^k$ defined in~\eqref{eq:defin_z} and~$\bm{x}_i^\top \bm{w}^k$. For any~$i \in \Imb^k$ we have~$s_i^k = \bm{x}_i^\top \bm{w}^k.$ Since we have two disjoint minibatches, due to the construction~\eqref{eq:defin_z} we get
   \begin{equation}\label{eq:sgd_estimate_z1}
     \begin{aligned}
       s_i^{k-1}
@@ -448,7 +468,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   \begin{subequations}\label{eq:sgd_sum}
     \begin{align}
     \label{eq:sgd_sum1}
-    \npos & \Brac{g(\bm{w}^k) + g(\bm{w}^{k+1}) - \nabla f(\bm{w}^k)-\nabla f(\bm{w}^{k+1})}\\
+    \npos & \Brac{g(\bm{w}^k) + g(\bm{w}^{k+1}) - \nabla L(\bm{w}^k)-\nabla L(\bm{w}^{k+1})}\\
     \label{eq:sgd_sum2}
     & = \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i) - \sum_{i \in \Imbpos^k} l'(t(\bm{w}^k) - \bm{x}_i^\top \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i) \\
     \label{eq:sgd_sum3}
@@ -468,7 +488,9 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
     \norm{g(\bm{w}^k) + g(\bm{w}^{k+1}) - \nabla L(\bm{w}^k) - \nabla L(\bm{w}^{k+1})}
       \leq C_1(\alpha^{k-2} + \alpha^{k-1} + \alpha^{k} + \alpha^{k+1})
   \end{equation}
-  for some~$C_1$. We now estimate
+  for some~$C_1$.
+  
+  We now estimate
   \begin{equation}\label{eq:proof_est1}
     \begin{aligned}
       \alpha^k
@@ -486,7 +508,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
     -\nabla L(\bm{w}^{k+1})}{\alpha^{k+1}(\bm{w}^*-\bm{w}^{k+1})-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
     & \leq 2B\norm{\alpha^{k+1}(\bm{w}^*-\bm{w}^{k+1})-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
     & = 2B\norm{\alpha^{k+1}(\bm{w}^*-\bm{w}^k+\alpha^kg(\bm{w}^k))-\alpha^k(\bm{w}^*-\bm{w}^{k})} \\
-    & = 2B\norm{(\alpha^{k+1}-\alpha^k)\bm{w}^* + (\alpha^k-\alpha^{k+1})\bm{w}^k +\alpha^k\alpha^{k+1} g(\bm{w}^k)} \\
+    & = 2B\norm{(\alpha^{k+1}-\alpha^k)\bm{w}^* + (\alpha^k-\alpha^{k+1})\bm{w}^k + \alpha^k\alpha^{k+1} g(\bm{w}^k)} \\
     & \leq C_5 \norm{\alpha^{k+1}-\alpha^k} + C_5(\alpha^k)^2 + C_5(\alpha^{k+1})^2.
     \end{aligned}
   \end{equation}
@@ -514,7 +536,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   \begin{equation*}
     n\tau = \sum_{i \in \I} l(s_i^k - t^k) \geq l(s_{i_0}^k - t^k).
   \end{equation*}
-  Moreover, as~$l$ is a strictly increasing function due to~\ref{surr_basic2} and~$n\tau>0$, this means 
+  Since~$l$ is a strictly increasing function due to~\ref{surr_basic2} and~$n\tau>0$, we get 
   \begin{equation}\label{eq:sigma_bound}
     l^{-1}(n\tau) \geq s_{i_0}^k-t^k.
   \end{equation}
@@ -529,8 +551,6 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   where the inequality follows from~\eqref{eq:sigma_bound} and the following equality from~\eqref{eq:update_t}. Due to~\ref{surr_basic2} we obtain that~$l'(l^{-1}(n\tau))$ is a positive number, which finishes the proof of the first part. The second part can be obtained in an identical way.
 \end{proof}
 
-\newpage
-
 \begin{lemma}\label{lemma:bound_g}
   Let~$l$ satisfy~\ref{surr_basic1}-\ref{surr_der1}. Then there exists some~$B$ such that for all~$k$ we have
   \begin{equation*}
@@ -544,7 +564,7 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
   Due to~\ref{surr_der1} the derivative~$l'$ is bounded by some~$\hat{B}$. Then Theorem~\ref{thm: differentiability} and Lemma~\ref{lemma:bound_zero} imply
   \begin{equation*}
     \norm{\nabla t(\bm{w}^k)}
-      \leq \frac{\hat{B} \sum_{i \in \I} \norm{\bm{x}_i}}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w} - t(\bm{w}))}
+      \leq \frac{\hat{B} \sum_{i \in \I} \norm{\bm{x}_i}}{\sum_{i \in \I} l'(\bm{x}_i^\top \bm{w}^k - t(\bm{w}^k))}
       \leq \frac{\hat{B}}{\hat{C}} \sum_{i\in \I} \norm{\bm{x}_i},
   \end{equation*}
   which is independent of~$k$. Then~\eqref{eq:derivatives} and again the boundedness of~$l'$ imply the existence of some~$B$ such that~$\norm{\nabla L(\bm{w}^k)} \leq B$ for all~$k$. The proof for~$g(\bm{w}^k)$ can be performed identically.
@@ -582,17 +602,17 @@ All these requirements are satisfied for the logistic loss or the Huber loss fun
 \end{proof}
 
 \begin{lemma}\label{lemma:product}
-  Consider scalars~$a_i,$~$c_i$ and vectors~$b_i,$~$d_i.$ If there is some~$\hat{C}$ such that~$\norm{a_i} \leq \hat{C}$ and~$\norm{d_i} \leq \hat{C}$, then
+  Consider scalars~$a_i,$~$c_i$ and vectors~$b_i,$~$d_i.$ If there is some~$\hat{C}$ such that~$\abs{a_i} \leq \hat{C}$ and~$\norm{d_i} \leq \hat{C}$, then
   \begin{equation*}
     \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i}
-      \leq \hat{C}\sum_{i=1}^n \Brac{\norm{a_i-c_i} + \norm{b_i-d_i}}.
+      \leq \hat{C}\sum_{i=1}^n \Brac{\abs{a_i-c_i} + \norm{b_i-d_i}}.
   \end{equation*}
 \end{lemma}
 
 \begin{proof}
   It is simple to verify
   \begin{equation*}
-    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i} \leq \sum_{i=1}^n \norm{d_i}\norm{a_i-c_i} + \sum_{i=1}^n \norm{a_i}\norm{b_i-d_i},
+    \norm{\sum_{i=1}^n a_ib_i - \sum_{i=1}^n c_id_i} \leq \sum_{i=1}^n \norm{d_i}\abs{a_i-c_i} + \sum_{i=1}^n \abs{a_i}\norm{b_i-d_i},
   \end{equation*}
   from which the statement follows.
 \end{proof}

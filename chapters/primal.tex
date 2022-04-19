@@ -5,13 +5,13 @@ In the previous chapter, we introduced the general framework for binary classifi
   f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x},
 \end{equation*}
 where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In such a case, framework~\eqref{eq: aatp surrogate} simplifies into the form below
-\begin{mini*}{\bm{w}, \, t}{
+\begin{mini*}{\bm{w}}{
   \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini*}
-In the upcoming sections, we provide a theoretical analysis of this unified framework using linear model. Moreover, we consider the problem formulations as derived in Chapter~\ref{chap: framework} and not individual algorithms which specify how to solve these formulations. The theoretical properties we mainly focus on are as follows:
+In the upcoming sections, we provide a theoretical analysis of this unified framework using linear model. We consider the problem formulations from Chapter~\ref{chap: framework} and not individual algorithms which specify how to solve these formulations. The theoretical properties we mainly focus on are as follows:
 \begin{itemize}
   \item \textit{Convexity} implies a guaranteed convergence for many optimization algorithms or their better convergence rates~\cite{boyd2004convex}.
   \item \textit{Differentiability} increases the speed of convergence.
@@ -75,7 +75,7 @@ We first provide a simple example and show that many formulations from Table~\re
   Consider~$n$ negative samples uniformly distributed in~$[-1,0]\times[-1,1]$,~$n$ positive samples uniformly distributed in~$[0,1]\times[-1,1]$ and one negative sample at~$(2,0).$ An illustration of such settings is provided in Figure~\ref{fig: degenerate behaviour} (\textbf{left}). If~$n$ is large enough, the point at~$(2,0),$ is an outlier and the problem is (almost) perfectly separable using the separating hyperplane with normal vector~$\bm{w}_1 = (1, 0)$. 
 \end{restatable}
 
-There are two important solutions for Example~\ref{ex: degenerate behaviour}. The first is the optimal solution~$\bm{w}_1=(1,0),$ which generates the optimal separating hyperplane. The second is~$\bm{w}_0=(0,0),$ a degenerate solution that does not generate any separating hyperplane. Since the dataset is perfectly separable by $\bm{w}_1$, we expect that~$\bm{w}_1$ provides a lower value of the objective function than~$\bm{w}_0$ for all formulations from Table~\ref{tab: summary formulations}. However, it is not happening. Table~\ref{tab: example} shows the threshold~$t$ and the value of the objective function~$L$ for~$\bm{w}_0$ and~$\bm{w}_1.$ For the precise computation of the results, see Appendix~\ref{app: stability}. By highlighting the better objective in Table~\ref{tab: example} by green, we see that \TopPush, \TopMeanK, and \tauFPL has a better objective in~$\bm{w}_0.$ It can be shown that~$\bm{w}_0$ is even the global minimum for these two formulations. This situation raises the question whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative, as shown in Figure~\ref{fig: degenerate behaviour} (\textbf{right}). Here, we run \TopPush with hinge loss as a surrogate and no regularization from several starting points. In all cases, \TopPush converges to zero from one of the three possible directions, and all these directions are far from the normal vector to the separating hyperplane.
+There are two important solutions for Example~\ref{ex: degenerate behaviour}. The first is the optimal solution~$\bm{w}_1=(1,0),$ which generates the optimal separating hyperplane. The second is~$\bm{w}_0=(0,0),$ a degenerate solution that does not generate any separating hyperplane. Since the dataset is perfectly separable by $\bm{w}_1$, we expect that~$\bm{w}_1$ provides a lower value of the objective function than~$\bm{w}_0$ for all formulations from Table~\ref{tab: summary formulations}. However, it is not happening. Table~\ref{tab: example} shows the threshold~$t$ and the value of the objective function~$L$ for~$\bm{w}_0$ and~$\bm{w}_1.$ For the precise computation of the results, see Appendix~\ref{app: stability}. By highlighting the better objective in Table~\ref{tab: example} by green, we see that \TopPush and \TopMeanK has a better objective in~$\bm{w}_0.$ It can be shown that~$\bm{w}_0$ is even the global minimum for these two formulations. This situation raises the question whether some tricks, such as early stopping or excluding a small ball around zero, cannot overcome this difficulty. The answer is negative, as shown in Figure~\ref{fig: degenerate behaviour} (\textbf{right}). Here, we run \TopPush with hinge loss as a surrogate and no regularization from several starting points. In all cases, \TopPush converges to zero from one of the three possible directions, and all these directions are far from the normal vector to the separating hyperplane.
 
 \begin{figure}
   \centering
@@ -113,7 +113,7 @@ There are two important solutions for Example~\ref{ex: degenerate behaviour}. Th
       & $0$
       & $1$
       & $\frac{2}{K}$
-      & \Block[fill=mygreen!50]{1-1}{$0.5+\frac{2}{K}$} \\
+      & \Block[fill=mygreen!50]{1-1}{$0.5 + \frac{2}{K}$} \\
     \midrule
     \Grill
       & \eqref{eq: grill}
@@ -138,20 +138,20 @@ There are two important solutions for Example~\ref{ex: degenerate behaviour}. Th
         & \eqref{eq: grill np}
         & $0$
         & $2$
-        & $1-2\tau$
-        & \Block[fill=mygreen!50]{1-1}{$1.5+2\tau(1-\tau)$} \\
+        & $-\tau$
+        & $???$ \\
       \tauFPL
         & \eqref{eq: tau-fpl}
         & $0$
-        & \Block[fill=mygreen!50]{1-1}{$1$}
-        & $1-\tau$
-        & $1.5-\tau$ \\
+        & $1$
+        & $\frac{2}{\tau\nneg}$
+        & \Block[fill=mygreen!50]{1-1}{$0.5 + \frac{2}{\tau\nneg}$} \\
       \PatMatNP
         & \eqref{eq: patmat np}
         & $\frac{1}{\vartheta}(1-\tau)$
         & $1+\frac{1}{\vartheta}(1-\tau)$
-        & $\frac{1}{\vartheta}(1-\tau)$
-        & \Block[fill=mygreen!50]{1-1}{$0.5 + \frac{1}{\vartheta}(1-\tau)$} \\
+        & $\frac{1}{\vartheta}(1-\tau) - 0.5$
+        & \Block[fill=mygreen!50]{1-1}{$\frac{1}{\vartheta}(1-\tau)$} \\
     \bottomrule
   \end{NiceTabular}
   \caption{Comparison of formulations from Table~\ref{tab: summary formulations} on the problem from Example~\ref{ex: degenerate behaviour}. The table shows the threshold and the objective function value for two solutions: the optimal solution~$\bm{w}_1=(1,0)$ and degenerate solution~$\bm{w}_0=(0,0).$ Three formulations have the global minimum (denoted by green color) at~$\bm{w}_0,$ which does not generate any separating hyperplane.}
@@ -165,13 +165,13 @@ The convexity derived in the previous section guarantees that there are no local
   \begin{equation}\label{eq:w_zero_nn}
     t(\bm{w})\geq \frac{1}{\npos} \sum_{i \in \Ipos} \bm{w}^{\top} \bm{x}_i,
   \end{equation}
-  then~$L(\bm{0}) \leq L(\bm{w})$. Specifically, using notation~\ref{not: scores} we get the following implications
+  then~$L(\bm{0}) \leq L(\bm{w})$. Specifically, using Notation~\ref{not: scores} we get the following implications
   \begin{align*}\label{eq:w_zero}
     s_{[1]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+ \quad
       & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPush, \\
     \frac{1}{K}\sum_{i=1}^K s_{[i]}^- \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+  \quad
       & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopPushK, \\
-    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \leq \sum_{i=1}^{\npos} s_{i}^+ \quad
+    \frac{1}{K} \sum_{i=1}^{K} s_{[i]} \geq \frac{1}{\npos} \sum_{i=1}^{\npos} s_{i}^+ \quad
       & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \TopMeanK, \\
     \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s_{[i]}^- \geq \frac{1}{\npos}\sum_{i=1}^{\npos} s_{i}^+ \quad
       & \implies \quad L(\bm{0}) \leq L(\bm{w}) \text{ for } \tauFPL. \\
@@ -221,7 +221,7 @@ In the previous section, we analyzed the formulations from Table~\ref{tab: summa
 
 Many optimization algorithms for solving the formulations from Table~\ref{tab: summary formulations} use primal-dual or purely dual formulations. Authors of~\cite{eban2017scalable} introduced dual variables and used alternating optimization to the resulting min-max problem. In~\cite{li2014top, zhang2018tau}, authors dualized the problem and solved it with the steepest gradient ascent. Authors of~\cite{macha2020nonlinear} followed the same path but added kernels to handle non-linearity. We follow the ideas of~\cite{mackey2018constrained} and~\cite{adam2019machine} and solve the problems directly in their primal formulations. Therefore, even though we use the same formulation for \TopPush as~\cite{li2014top} or for \tauFPL as~\cite{zhang2018tau}, our solution process is different. However, both algorithms should converge to the same point due to convexity.
 
-The decision variables in \eqref{eq: aatp surrogate} are the normal vector of the separating hyperplane~$\bm{w}$ and the threshold~$t$. Since the gradient descent algorith uses the following rule
+The decision variables in \eqref{eq: aatp surrogate} are the normal vector of the separating hyperplane~$\bm{w}$ and the threshold~$t$. Since the gradient descent algorithm uses the following rule
 \begin{equation*}
   \bm{w}^{k+1} \gets \bm{w}^k - \alpha^k \cdot \nabla L(\bm{w}^k),
 \end{equation*}
@@ -234,7 +234,7 @@ where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is
     & = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i).
   \end{aligned}
 \end{equation}
-The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Appendix~\ref{app:threshold}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch.
+The last part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Appendix~\ref{app:threshold}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch.
 
 For the convergence proof of stochastic gradient descent, we need differentiability. Due to Theorem~\ref{thm: differentiability}, we have only two formulations that are differentiable: \PatMat and \PatMatNP. Therefore, in the rest of the section, we consider only these two formulations. Moreover, for simplicity, we show the proof only for \PatMat. At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the vector of scores~$\bm{s}^k$ only on the active minibatch by setting
 \begin{equation}\label{eq:defin_z}
