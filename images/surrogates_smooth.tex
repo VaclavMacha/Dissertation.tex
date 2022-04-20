@@ -1,0 +1,54 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  line/.style  = {no markers, very thick},
+}
+
+\pgfmathdeclarefunction{hinge}{1}{%
+  \pgfmathparse{max(0, 1 + #1)}%
+}
+
+\pgfmathdeclarefunction{hinges}{2}{%
+    \pgfmathparse{ifthenelse(#1< -1 - #2, 0, ifthenelse(#1 >= -1 + #2, 1 + #1, 1/(4*#2)*(1 + #1 + #2)^2))}%
+}
+
+\begin{document}
+%
+\begin{tikzpicture}
+  \begin{axis}[
+    height=6cm,
+    width=14cm,
+    xmin = -2,
+    xmax = 0,
+    ymin = -0.1,
+    ymax = 1,
+    domain=-2:0,
+    smooth,
+    axis lines = left,
+    xlabel={$s$},
+    ylabel={$l(s)$},
+    grid=both,
+    grid style=dashed,
+    major grid style={line width=.2pt,draw=gray!50},
+    legend pos =north west,
+    legend cell align={left},
+    enlargelimits = false,
+  ]
+    
+    \addplot [no markers, very thick, myred, forget plot] coordinates {(-2, 0) (-1, 0)};
+    \addplot [no markers, very thick, myred] coordinates {(-1, 0) (0, 1)};
+    \addlegendentry{$l_{\text{hinge}}(s)$}
+    \addplot [line, cyan, dashed] {hinges(x, 0.25)};
+    \addlegendentry{$l_{\text{smooth hinge}}(s, 0.25)$}
+    \addplot [line, myorange, dotted] {hinges(x, 0.5)};
+    \addlegendentry{$l_{\text{smooth hinge}}(s, 0.5)$}
+    \addplot [line, mygreen, dashdotted] {hinges(x, 0.75)};
+    \addlegendentry{$l_{\text{smooth hinge}}(s, 0.75)$}
+    
+  \end{axis}
+\end{tikzpicture}
+\end{document}

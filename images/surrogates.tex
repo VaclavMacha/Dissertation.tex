@@ -31,6 +31,7 @@
     ymin = -0.1,
     ymax = 4.1,
     domain = -2:2.1,
+    smooth,
     axis lines = left,
     xtick = {-2, -1, 0, 1, 2},
     ytick = {0, 1, 2, 3, 4},
@@ -44,7 +45,11 @@
     enlargelimits = false,
   ]
     
-    \addplot[lineiver, no markers] coordinates {(-2, 0) (0, 0)};
+  
+    \addplot[lineiver, no markers, forget plot] coordinates {(-2, 0) (0, 0)};
+    \addplot[lineiver, mark=*, mark options={fill=white}, forget plot] coordinates {(0, 0)};
+    \addplot[lineiver, mark=*, mark options={fill=myred}, forget plot] coordinates {(0, 1)};
+    \addplot[lineiver, no markers] coordinates {(0, 1) (2.1, 1)};
     \addlegendentry{$\Iverson{s \geq 0}$}
     \addplot [line, cyan] {hinge(x, 1)};
     \addlegendentry{$l_{\text{hinge}}(s)$}
@@ -54,9 +59,8 @@
     \addlegendentry{$l_{\text{quadratic}}(s)$}
     \addplot [line, mygreen, dashdotted] {quadratic(x, 2)};
     \addlegendentry{$l_{\text{quadratic}}(2s)$}
-    \addplot[lineiver, no markers] coordinates {(0, 1) (2.1, 1)};
-    \addplot[lineiver, mark=*, mark options={fill=white}] coordinates {(0, 0)};
-    \addplot[lineiver, mark=*, mark options={fill=myred}] coordinates {(0, 1)};
+    
+
   \end{axis}
 \end{tikzpicture}
 \end{document}
