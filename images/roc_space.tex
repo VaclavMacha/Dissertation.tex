@@ -5,8 +5,8 @@
 % Tikz + PGFPlots styles
 % ------------------------------------------------------------------------------
 \pgfplotsset{
-  lineaatp/.style  = {mygreen, very thick},
-  linestandard/.style  = {myorange, very thick},
+  lineaatp/.style  = {mygreen, very thick, dashed},
+  linestandard/.style  = {cyan, very thick},
 }
 
 \pgfplotstableread[col sep = comma]{../data/standard_aatp_comparison_roc.csv}\StandardAATPComparisonROC
@@ -26,7 +26,10 @@
     ymax = 1.01,
     xlabel = False-positive rate,
     grid=both,
-    major grid style={line width=.1pt, draw=gray!25},
+    major grid style={
+      dotted,
+      gray,
+    },
     enlargelimits=false,
   ]
     \nextgroupplot[
@@ -44,12 +47,12 @@
       legend pos=south east,
     ]
       \addplot [linestandard] table[x index=2, y index=3] {\StandardAATPComparisonROC};
-      \addlegendentry{\textbf{Classifier 1}: AUC = 95.3\%}
+      \addlegendentry{\textbf{Classifier 1}: AUC = 95\%}
       \addplot [lineaatp] table[x index=0, y index=1] {\StandardAATPComparisonROC};
-      \addlegendentry{\textbf{Classifier 2}: AUC = 76.8\%}
+      \addlegendentry{\textbf{Classifier 2}: AUC = 77\%}
       \addplot[mark=none, thick, dashed, myred] {x};
-      \addplot[mark=*, mygreen] coordinates {(0.01, 0.53)} node{};
-      \addplot[mark=*, myorange] coordinates {(0.1, 1.0)} node{};
+      \addplot[mark=*, mygreen, mark size=3pt] coordinates {(0.01, 0.53)} node{};
+      \addplot[mark=*, cyan, mark size=3pt] coordinates {(0.1, 1.0)} node{};
   \end{groupplot}
 \end{tikzpicture}
 \end{document}
