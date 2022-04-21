@@ -382,6 +382,22 @@ For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function
 \end{enumerate}
 All these requirements are satisfied for the logistic loss or the Huber loss function. Huber loss is the hinge surrogate smoothened on an $\varepsilon$-neighborhood of zero.
 
+\begin{equation}\label{eq: smooth hinge}
+  l(s) = \begin{cases}
+    0 & \text{for } s < -1 - \varepsilon, \\
+    \frac{1}{4\varepsilon}(1 + s + \varepsilon)^2 & \text{for } - 1 - \varepsilon \leq s < - 1 + \varepsilon, \\
+    1 + s & \text{otherwise.}
+  \end{cases}
+\end{equation}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width = \linewidth]{images/surrogates_smooth.pdf}
+  \caption{Comparison of hinge loss and its smoothened version.}
+  \label{fig: surrogates smooth}
+\end{figure}
+
+
 \sgd*
 \begin{proof}[Proof of Theorem~\ref{thm:sgd} on page~\pageref{thm:sgd}]
   We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Assumption~\ref{ass_convex} is satisfied as~$L$ is convex due to Theorem~\ref{thm: convexity}. Assumption~\ref{ass_gbound} follows directly from Lemma~\ref{lemma:bound_g}, and assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are imposed directly in the statement of this theorem. It remains to verify~\eqref{eq:nec_cond}.
