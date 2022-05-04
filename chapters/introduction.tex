@@ -268,7 +268,7 @@ In the previous section, we introduced formulation~\eqref{eq: toppush rank}, whi
   \frac{1}{\nneg} \fp(\bm{s}, t) + \frac{1}{\npos} \fn(\bm{s}, t)
   }{\label{eq: aatp intro}}{}
   \addConstraint{s_i}{= f(\bm{x}_i), \quad i \in \I}
-  \addConstraint{t}{= \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau},}
+  \addConstraint{t}{= \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau},}
 \end{mini}
 where~$f: \R^d \to \R$ is a model. Even though the goal is to maximize the number of positive samples above the top $\tau$-quantile, the objective function contains false-positive and false-negative rates. It should be sufficient to include only one of them since the definition of the threshold implies the minimization of the other one as well. However, this form of objective function should be more robust~\cite{grill2016learning}. The problem of Accuracy at the Top is useful, for example, in applications where identified samples undergo expensive post-processing, such as human evaluation. For example, potentially useful drugs need to be preselected and manually investigated in drug development. Since the manual investigation is costly, we have to select only a fraction of drugs with the highest potential. However, it is precisely what Accuracy at the Top does.
 

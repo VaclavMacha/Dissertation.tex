@@ -1,0 +1,33 @@
+\chapter{Appendix for Chapter~\ref{chap: framework}}
+
+\lemmattcomparison*
+\begin{proof}
+  Since~$\bm{s}^+$ and~$\bm{s}^-$ are computed on disjunctive indices, we have
+  \begin{equation*}
+    s_{[n\tau]} \geq \min\{s_{[\npos\tau]}^+, \; s_{[\nneg\tau]}^-\}.
+  \end{equation*}
+  Since~$s_{[n\tau]}$ is the threshold for \Grill and~$s_{[\nneg\tau]}^-$ is the threshold for \GrillNP, the first statement follows. The second part can be shown in a similar way.
+\end{proof}
+
+\lemmapatmatalg*
+\begin{proof}
+  Observe that
+  \begin{align*}
+    h(t_{j})
+      = h\Brac{s_{[j]}+\frac{1}{\vartheta}}
+      & = \sum_{i \in \I} l\Brac{\vartheta\Brac{s_i - \Brac{s_{[j]} + \frac{1}{\vartheta}}}} - n\tau \\
+      & = \sum_{i \in \I} \max\Brac[c]{0,\; 1 + \vartheta\Brac{s_i - s_{[j]} - \frac{1}{\vartheta}}} - n\tau \\
+      & = \sum_{i \in \I} \max\Brac[c]{0,\; \vartheta \Brac{s_i - s_{[j]}}} - n\tau \\
+      & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau,
+  \end{align*}
+  where the last equality holds since~$\vartheta > 0$ and~$s_{[i]} - s_{[j]} \leq 0$ for all~$i \geq j.$ From here, we obtain~$h(t_{1}) = -n\tau$. Moreover, we have
+  \begin{align*}
+    h(t_{j})
+    & = \sum_{i = 1}^{j - 1} \vartheta(s_{[i]} - s_{[j]}) - n\tau \\
+    & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
+    & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]} + s_{[j - 1]} - s_{[j - 1]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
+    & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j - 1]}) + \sum_{i = 1}^{j - 2} \vartheta(s_{[j - 1]} - s_{[j]}) + \vartheta(s_{[j - 1]} - s_{[j]}) - n\tau \\
+    & = h(t_{j - 1}) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}),
+  \end{align*}
+  which finishes the proof.
+\end{proof}

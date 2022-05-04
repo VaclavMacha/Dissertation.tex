@@ -29,11 +29,11 @@ Convexity is one of the most important properties in numerical optimization. It 
     t_0(\bm{w}) &
       = s_{[1]}^-, &
     t_1(\bm{w}) &
-      = \max \Set{t}{\frac{1}{n} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}, \\
+      = \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}, \\
     t_2(\bm{w}) &
       = \frac{1}{K} \sum_{i=1}^{K} s_{[i]}, &
     t_3(\bm{w}) &
-      \quad \text{solves} \quad \frac{1}{n} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau,
+      \;\; \text{solves} \;\; \frac{1}{\nall} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau,
   \end{align*}
   Then thresholds~$t_0$, ~$t_2$ and~$t_3$ are convex functions of weights~$\bm{w},$ while the threshold~$t_1$ is non-convex.
 \end{restatable}
@@ -43,7 +43,7 @@ The proposition says that \Grill formulation uses non-convex threshold while \To
 \begin{restatable}{theorem}{thmconvex}\label{thm: convexity}
   If the threshold~$t = t(\bm{w})$ is a convex function of weights~$\bm{w}$, then function
   \begin{equation*}
-    L(\bm{w}) = \fns(\bm{s}, t)
+    L(\bm{w}) = \fns(\bm{s}, t) = \sum_{i \in \Ipos}l(t - \bm{w}^{\top} \bm{x}_i)
   \end{equation*}
   is convex.
 \end{restatable}
@@ -234,7 +234,7 @@ where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is
     & = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i).
   \end{aligned}
 \end{equation}
-The last part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Appendix~\ref{app:threshold}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch.
+The last part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Section~\ref{sec: patmat threshold alg}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch.
 
 For the convergence proof of stochastic gradient descent, we need differentiability. Due to Theorem~\ref{thm: differentiability}, we have only two formulations that are differentiable: \PatMat and \PatMatNP. Therefore, in the rest of the section, we consider only these two formulations. Moreover, for simplicity, we show the proof only for \PatMat. At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the vector of scores~$\bm{s}^k$ only on the active minibatch by setting
 \begin{equation}\label{eq:defin_z}
@@ -243,7 +243,7 @@ For the convergence proof of stochastic gradient descent, we need differentiabil
     s_i^{k-1} & \text{otherwise.}
   \end{cases} 
 \end{equation}
-We keep scores from previous minibatches intact. We use Appendix~\ref{app:threshold} to compute the surrogate quantile~$t^k$ as the unique solution of
+We keep scores from previous minibatches intact. We use Section~\ref{sec: patmat threshold alg} to compute the surrogate quantile~$t^k$ as the unique solution of
 \begin{equation}\label{eq:update_t}
   \sum_{i \in \I}l\Brac{\vartheta(s_i^k - t^k)} = n\tau.
 \end{equation}
@@ -251,10 +251,10 @@ This is an approximation of the surrogate quantile~$t(\bm{w}^k)$ from \eqref{eq:
 \begin{equation}\label{eq:update_a}
   \bm{a}^k = \sum_{i \in \Imb^k} l'\Brac{\vartheta(s_i^k - t^k)}\bm{x}_i.
 \end{equation}
-Finally, we approximate the derivative~$\nabla f(\bm{w}^k)$ from \eqref{eq:derivatives} by
+Finally, we approximate the derivative~$\nabla L(\bm{w}^k)$ from \eqref{eq:derivatives} by
 \begin{equation}\label{eq:update_g}
   g(\bm{w}^k)
-    = \frac{1}{\nmbpos^k} \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
+    = \bm{w}^k + \frac{1}{\nmbpos^k} \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
 \end{equation}
 where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability} defined by
 \begin{equation}\label{eq:update_nablat}
@@ -264,7 +264,19 @@ where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref
 A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of~\eqref{eq:update_nablat}. However, presented choice enables us to prove the convergence, and it adds stability to the algorithm for small minibatches. The whole procedure is summarized in Algorithm~\ref{alg:sgd}. Note that there are no vector operations outside of the current minibatch~$\Imb^k$. Moreover, note that a proper initialization for the first~$m$ iterations is needed.
 
 \begin{restatable}{theorem}{sgd}\label{thm:sgd}
-  Consider the \PatMat or \PatMatNP formulation, stepsizes~$\alpha^k = \nicefrac{\alpha^0}{k+1}$ and piecewise disjoint minibatches~$\Imb^1, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened (Huberized) hinge function, then Algorithm~\ref{alg:sgd} converges to the global minimum of \eqref{eq: patmat}.
+  Consider the \PatMat or \PatMatNP formulation, stepsizes
+  \begin{equation*}
+    \alpha^k = \frac{\alpha^0}{k+1}
+  \end{equation*}
+  and piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened hinge function defined by
+  \begin{equation}\label{eq: smooth hinge}
+    l(s) = \begin{cases}
+      0 & \text{for } s < -1 - \varepsilon, \\
+      \frac{1}{4\varepsilon}(1 + s + \varepsilon)^2 & \text{for } - 1 - \varepsilon \leq s < - 1 + \varepsilon, \\
+      1 + s & \text{otherwise,}
+    \end{cases}
+  \end{equation}
+  where~$\varepsilon > 0,$ then Algorithm~\ref{alg:sgd} converges to the global minimum of \eqref{eq: patmat}.
 \end{restatable}
 
 \begin{algorithm}
@@ -291,7 +303,7 @@ A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ 
 
 In this chapter, we derived theoretical properties for formulations from Table~\ref{tab: summary formulations} with the linear model. We focused on the convexity, differentiability, and stability of formulations since these three properties are crucial for fast and proper convergence. All results are summarized in Table~\ref{tab: summary formulations properties linear}. We showed that \TopPush, \TopPushK, \TopMeanK, and \tauFPL are convex, but all these formulations are vulnerable to having the global minimum at~$\bm{w}=0$. On the other hand, \Grill and \GrillNP are stable, but they are not convex or differentiable. Finally, our formulations \PatMat and \PatMatNP satisfy all three theoretical properties. 
 
-A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in green and yellow are convex, while formulations in red are non-convex. Based on Theorem~\ref{thm:large_t}, four formulations in yellow are vulnerable to having the global minimum at~$\bm{w}=0$. This theorem states that the higher the threshold, the more vulnerable the formulation is. The full arrows depict this dependence. If it points from one formulation to another, the latter one has a smaller threshold and thus is less vulnerable to this undesired global minima. The dotted arrows indicate that this usually holds but not always. The precise formulation is provided in Appendix~\ref{app:relations}. This complies with Corollaries~\ref{cor:toppush} and~\ref{cor:topmean} which state that \TopPush and \TopMeanK are most vulnerable. At the same time, it says that \tauFPL is the best one from the yellow formulations. Finally, even though \PatMatNP has a worse approximation of the true threshold than \tauFPL due to Theorem~\ref{thm:large_t}, it is more stable due to the discussion after Theorem~\ref{thm:patmat_zero}.
+A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in green and yellow are convex, while formulations in red are non-convex. Based on Theorem~\ref{thm:large_t}, four formulations in yellow are vulnerable to having the global minimum at~$\bm{w}=0$. This theorem states that the higher the threshold, the more vulnerable the formulation is. The full arrows depict this dependence. If it points from one formulation to another, the latter one has a smaller threshold and thus is less vulnerable to this undesired global minima. The dotted arrows indicate that this usually holds but not always. The precise formulation is provided in Appendix~\ref{sec: threshold comparison aatp}. This complies with Corollaries~\ref{cor:toppush} and~\ref{cor:topmean} which state that \TopPush and \TopMeanK are most vulnerable. At the same time, it says that \tauFPL is the best one from the yellow formulations. Finally, even though \PatMatNP has a worse approximation of the true threshold than \tauFPL due to Theorem~\ref{thm:large_t}, it is more stable due to the discussion after Theorem~\ref{thm:patmat_zero}.
 
 \begin{table}
   \centering
