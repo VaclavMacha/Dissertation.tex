@@ -95,7 +95,9 @@ where~$\Iverson{\cdot}$ is the Iverson function~\eqref{eq: iverson}. In the foll
     \fpr & = \frac{\fp}{\nneg}.
   \end{aligned}
 \end{equation}
-Figure~\ref{fig: scores and rates} shows the relation between classification rates and the decision threshold. The blue and red curves represent the theoretical distribution of the scores of negative and positive samples, respectively. The position of the decision threshold determines the values of the classification rates. The higher the decision threshold, the lower the false-positive rate, but at the same time, the higher the false-negative rate. Similarly, the lower the decision threshold, the higher the false-positive rate and the lower the false-negative rate. Ideally, classification without errors is the goal, but it is not usually possible. If we look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, the objective function is just the weighted sum of false-positive and false-negative samples. Therefore, we can use the notation~\eqref{eq: confusion rates} and rewrite the problem~\eqref{eq: Binary classification} to
+Figure~\ref{fig: scores and rates} shows the relation between classification rates and the decision threshold. The blue and red curves represent the theoretical distribution of the scores of negative and positive samples, respectively. If we increase the value of the threshold~$t,$ we decrease the false-positive rate, but at the same time, we also increase the false-negative rate. On the other hand, if we decrease the value of~$t,$ we decrease the false-negative rate, but at the same time, we also increase the false-positive rate. In other words, it is not possible to decrease the false-positive rate only by moving the threshold~$t$ without increasing the false-negative rate and vice versa. Therefore, we always have to find some balance between these two types of errors.
+
+If we look at the general definition of the binary classification problem~\eqref{eq: Binary classification}, the objective function is just the weighted sum of false-positive and false-negative samples. Therefore, we can use the notation~\eqref{eq: confusion rates} and rewrite the problem~\eqref{eq: Binary classification} to
 \begin{mini}{\bm{w}, t}{
     \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
   }{\label{eq: Binary classification counts}}{}
@@ -146,24 +148,67 @@ The parameters~$\lambda_1, \; \lambda_2 \in \R$ are used to specify which error 
 \begin{figure}
   \centering
   \includegraphics{images/confusion_rates.pdf}
-  \caption{The relation between classification scores and  rates. The blue curve is the theoretical distribution of the scores of negative samples, and the red curve the theoretical distribution of the scores of positive samples. Filled areas with light blue or light red represent true-negative and true-positive rates. Similarly, the filled areas with dark blue or dark red represent false-positive and false-negative rates.}
+  \caption{The relation between classification scores and  rates. The blue and red curves represent the theoretical distribution of the scores of negative and positive samples, respectively. The area between the blue line and the x-axis is divided by the decision threshold~$t.$ The left part represents a true-negative rate, while the right represents a false-positive rate. The area between the red line and the x-axis is also divided by~$t.$ The left part represents a false-negative rate, and a right represents the true-positive rate.}
   \label{fig: scores and rates}
 \end{figure}
 
 The confusion matrix is not the only way to measure the performance of binary classifiers. For example, there are many different classification matrices, and many of them are derived directly from the confusion matrix~\cite{fawcett2006introduction, metz1978basic, brodersen2010balanced, hossin2015review}. As an example, we can mention accuracy and balanced accuracy defined by
 \begin{align*}
-  \accuracy & = \frac{\tp + \tn}{n} &
-  \baccuracy & = \frac{\tpr + \tnr}{2}
+  \accuracy & = \frac{1}{n}\Brac{\tp + \tn} &
+  \baccuracy & = \frac{1}{2}\Brac{\tpr + \tnr}
 \end{align*}
-At the end of this chapter, we provide Table~\ref{tab: classification metrics} that summarizes all classification metrics used in this work. Moreover, in the following section, we introduce a different approach for the performance evaluation of binary classifiers.
+Note that the objective function in~\eqref{eq: Binary classification counts} is accuracy if~$\lambda_1 = \lambda_2 = \frac{1}{\nall}.$ Moreover, for~$\lambda_1 = \frac{1}{2\nneg}$ and~$\lambda_2 = \frac{1}{2\npos},$ the objective function is balanced accuracy. This show the importance of these two performance matrices for standard binary classification. More performance metrics derived from the confusion matrix can be found in Table~\ref{tab: classification metrics}. Moreover, in the following section, we introduce a different approach for the performance evaluation of binary classifiers.
 
-\subsection{ROC Analysis}\label{subsec: ROC}
-
-In the previous section, we defined a general binary classification formulation~\eqref{eq: Binary classification counts} that minimizes a weighted sum of false-positive and false-negative counts. Therefore, we always have to find some trade-off between the false-positive and false-negative counts and select the best hyperparameters~$\lambda_1,$ $\lambda_2,$ for given tasks. There is no universal truth, which of these two errors is worse. For example, It is probably better to classify a healthy patient as sick and do additional tests than the other way around. On the other hand, in computer security, an antivirus program with a lot of false-positive alerts is useless since it is disruptive to the user. One way to visualize the trade-off between false-positive and false-negative errors is Receiver Operating Characteristic (ROC) space~\cite{egan1975signal, fawcett2006introduction}.
-
-ROC space is a two-dimensional space with the x-axis equal to the false-positive rate and the y-axis to the true-positive rate. The left-hand side of Figure~\ref{fig: roc space} shows the ROC space with five highlighted points. Each point in the ROC space represents one fixed classifier, i.e., one pair of model~$f$ and decision threshold~$t.$ There are several important points in the ROC space. The point~$(0, 0)$ represents a classifier classifying all samples as negative, while~$(1, 1)$ is a classifier classifying all samples as positive. Both these classifiers are useless. On the other hand, the point~$(0, 1)$ represents the perfect classifier. Generally, we can say that one classifier is better than another if its representation in ROC space is to the northwest of the second one. In such a case, the classifier has a higher true-positive rate and lower false-positive rate than the second one. For example, in Figure~\ref{fig: roc space}, classifier \textbf{B} is better than classifier \textbf{C}. On the other hand, it is impossible to say which classifier is better if one has a higher true-positive rate and the other has a lower false-positive rate. We can see this situation for classifier \textbf{B} and \textbf{A}. In such a case, the preference depends on the given problem, as discussed at the beginning of this section.
-
-Another important part of the ROC space is the diagonal line highlighted in red in Figure~\ref{fig: roc space}. Any classifier that appears on this diagonal provides the same performance as a random classifier. For example, classifier \textbf{C} is represented in ROC space by point~$(0.7, 0.7).$ It means that this classifier randomly classifies 70\% of samples as positive. Therefore, any classifier that appears in ROC space in the lower right triangle is worse than a random classifier. There are usually no classifiers in this area since any classifier from the lower right triangle can be easily improved. If we negate the decision of such a classifier for every sample, we get its negated version in the upper left triangle. Such a situation is in Figure~\ref{fig: roc space} for classifier \textbf{E} and \textbf{B}. We negate every decision of classifier \textbf{E}. Therefore,  all true-positive samples became false-negative and vice versa. Since classifier \textbf{E} has a false-negative rate of 0.8, we can deduce that negated classifier will have a true-positive rate of 0.8. Similarly, since classifier \textbf{E} has a true-negative rate of 0.4, its negated version will have a false-positive rate of 0.4. Therefore the negated version of classifier \textbf{E} is represented in ROC space by point~$(0.4, 0.8),$ which is classifier~\textbf{B}.
+\begin{table}
+  \centering
+  \begin{NiceTabular}{ccc}
+    \CodeBefore
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
+    \Body
+    \toprule
+    \textbf{Name} & \textbf{Aliases} & \textbf{Formula} \\
+    \midrule
+    true negatives
+      & correct rejection
+      & $\tn$ \\
+    false positives
+      & Type I error, false alarm
+      & $\fp = \nneg - \tn$ \\
+    true positives
+      & hit
+      & $\tp$ \\
+    false negatives
+      & Type II error
+      & $\fn = \npos - \tp$ \\
+    \midrule
+    true negative rate
+      & specificity, selectivity
+      & $\tnr = \frac{\tn}{\nneg}$ \\
+    false positive rate
+      & fall-out
+      & $\fpr = \frac{\fp}{\nneg} = 1 - \tnr$ \\
+    true positive rate
+      & sensitivity, recall, hit rate
+      & $\tpr = \frac{\tp}{\npos}$ \\
+    false negative rate
+      & miss rate
+      & $\fnr = \frac{\fn}{\npos} = 1 - \tpr$ \\
+    \midrule
+    accuracy
+      & ---
+      & $\accuracy = \frac{\tp + \tn}{n}$ \\
+    balanced accuracy
+      & ---
+      & $\baccuracy = \frac{\tpr + \tnr}{2}$ \\
+    precision
+      & positive predictive value
+      & $\precision = \frac{\tp}{\tp + \fp}$ \\
+    \bottomrule
+  \end{NiceTabular}
+  \caption{Summary of classification metrics derived from confusion matrix. The first column shows the name used in this work, while the second column shows alternative names that can be found in the literature. The last column shows the formula based on the confusion matrix.}
+  \label{tab: classification metrics}
+\end{table}
 
 \begin{figure}
   \centering
@@ -172,30 +217,21 @@ Another important part of the ROC space is the diagonal line highlighted in red 
   \label{fig: roc space}
 \end{figure}
 
-Many classifiers produce directly a decision that samples are positive or negative. As an example, we can mention decision trees. Such classifiers are always represented as a single point in the ROC space. Moreover, this class of classifiers does not fit into our description from Notation~\ref{not: classifier} since such classifiers do not provide any classification scores. In this text, we restrict to the classifiers as defined in Notation~\ref{not: classifier}. We assume that the classifier consists of the model~$f$ that produces classification scores and the decision threshold~$t.$ Many standard classifiers such as neural networks or logistic regression fall into this setting. Even though the decision threshold is determined during the training process, it is possible to change it and obtain different predictions. This possibility is very often used to produce so-called ROC curves~\cite{fawcett2006introduction}. ROC curve represents how model~$f$ behaves for different thresholds~$t$ varying from~$-\infty$ to~$+\infty.$ Right-hand side of Figure~\ref{fig: roc space} provides an example of two ROC curves for two different classifiers. \textbf{Classifier 1} provides accuracy~95\% and is represented by the blue dot, while the blue line represents its ROC curve. \textbf{Classifier 2} represented by the green dot provides accuracy~76\%, and the green dashed line represents its ROC curve. A standard method how for comparing two classifiers using ROC curves is to compare corresponding areas under the ROC curves (AUC)~\cite{bradley1997use, hanley1982meaning}. Such an approach is a simple way to reduce the ROC curve to one number. In the case of standard binary classification, the larger the AUC, the better. In Figure~\ref{fig: roc space} we can see that the blue classifier has AUC 95\% while the green one has only 77\%. Therefore, for most classification problems, the blue classifier is better.
+\subsection{ROC Analysis}\label{subsec: ROC}
 
-Since both false-positive and true-positive rates are non-increasing functions of threshold~$t,$ we can efficiently compute the ROC curve from sorted classification scores~$\bm{s}$ given by the model~$f.$ In Algorithm~\ref{alg: roc curve} we show an efficient algorithm for generating the ROC curve. This algorithm gives us an interesting insight into ROC curves: ROC curves represent the ability of the model to rank the positive samples higher than the negative ones~\cite{fawcett2006introduction}. Moreover, the AUC of a classifier is equivalent to the probability that the classifier will rank a randomly chosen positive sample higher than a randomly chosen negative sample~\cite{fawcett2006introduction}. By comparing the classifiers from the right-hand side of Figure~\ref{fig: roc space}, we can deduce that \textbf{Classifier 1} is generally better at a false-positive rate larger than~$0.01.$ Otherwise, \textbf{Classifier 2} is the better one. Therefore,  there is a specific region of the ROC space where \textbf{Classifier 2} outperforms \textbf{Classifier 1}. In the next section, we discuss multiple different problems which focus on the performance only at low false-positive rates.
+In the previous section, we defined a general binary classification formulation~\eqref{eq: Binary classification counts} that minimizes a weighted sum of false-positive and false-negative counts. Therefore, we always have to find some trade-off between the false-positive and false-negative counts and select the best hyperparameters~$\lambda_1,$ $\lambda_2,$ for given tasks. There is no universal truth which of these two errors is worse. For example, It is probably better to classify a healthy patient as sick and do additional tests than the other way around. On the other hand, in computer security, an antivirus program with a lot of false-positive alerts is useless since it is disruptive to the user. One way to visualize the trade-off between false-positive and false-negative errors is Receiver Operating Characteristic (ROC) space~\cite{egan1975signal, fawcett2006introduction}.
 
-\begin{algorithm}
-  \centering
-  \begin{algorithmic}[1]
-    \Require Sorted classification scores~$\bm{s}_{[\cdot]}$ in decreasing order~$s_{[1]} \geq \dots \geq s_{[n]}$
-    \State Set $\tp \gets 0,$ $\fp \gets 0,$ $s_{\text{prev}} = +\infty,$ and an empty set~$ROC = \{~\}$ of points in ROC space
-    \For{$l \in \{1, \ldots, \nall\}$}
-      \If{$s_{[i]} \neq s_{\text{prev}}$} 
-        \State push~$(\nicefrac{\fp}{\nneg}, \nicefrac{\tp}{\npos})$ into~$ROC$
-      \EndIf
-      \If{$y_{[i]} = 1$}
-        \State $\tp \gets \tp + 1$
-      \Else
-        \State $\fp \gets \fp + 1$
-      \EndIf
-    \EndFor
-    \State push~$(\nicefrac{\fp}{\nneg}, \nicefrac{\tp}{\npos}) = (1, 1)$ into~$ROC$
-  \end{algorithmic}
-  \caption{Efficient algorithm~\cite{fawcett2006introduction} for generating ROC curve from sorted classification scores.}
-  \label{alg: roc curve}
-\end{algorithm}
+ROC space is a two-dimensional space with the x-axis equal to the false-positive rate and the y-axis to the true-positive rate. The left-hand side of Figure~\ref{fig: roc space} shows the ROC space with five highlighted points. Each point in the ROC space represents one fixed classifier, i.e., one pair of model~$f$ and decision threshold~$t.$ There are several important points in the ROC space. The point~$(0, 0)$ represents a classifier classifying all samples as negative, while~$(1, 1)$ is a classifier classifying all samples as positive. Both these classifiers are useless. On the other hand, the point (0, 1) represents the perfect classifier that classifies all samples correctly since~$\fpr = 0$ and~$\tpr = 1.$
+
+Using ROC representation, we can only decide whether one classifier is better than another in some cases. For example, in Figure~\ref{fig: roc space}, classifier \textbf{B} is better than classifier \textbf{C} since \textbf{B} has a higher true-positive rate and at the same time a lower false-positive rate. On the other hand, it is impossible to say which classifier is better if one has a higher true-positive rate and the other has a lower false-positive rate. We can see this situation for classifier \textbf{B} and \textbf{A}. In such a case, the preference depends on the given problem, as discussed at the beginning of this section.
+
+Another important part of the ROC space is the diagonal line highlighted in red in Figure~\ref{fig: roc space}. Any classifier that appears on this diagonal provides the same performance as a random classifier. For example, classifier \textbf{C} is represented in ROC space by point~$(0.7, 0.7).$ Such classifier randomly classifies 70\% of samples as positive. Therefore, any classifier that appears in ROC space in the lower right triangle is worse than a random classifier. There are usually no classifiers in this area since any classifier from the lower right triangle can be easily improved. If we negate the decision of such a classifier for every sample, we get its negated version in the upper left triangle. Such a situation is in Figure~\ref{fig: roc space} for classifier \textbf{E} and \textbf{B}. Since classifier \textbf{E} has a false-negative rate of 0.8, we can deduce that negated classifier will have a true-positive rate of 0.8. Similarly, since classifier \textbf{E} has a true-negative rate of 0.4, its negated version will have a false-positive rate of 0.4. Therefore the negated version of classifier \textbf{E} is represented in ROC space by point~$(0.4, 0.8),$ which is classifier~\textbf{B}.
+
+Many classifiers do not provide classification scores and the decision threshold, and instead, perform direct decisions on whether samples are positive or negative. As an example, we can mention decision trees. Such classifiers are always represented as a single point in the ROC space. In this text, we assume that the classifier consists of the model~$f$ that produces classification scores and the decision threshold~$t,$ see Notation~\ref{not: classifier}. Many standard classifiers such as neural networks or logistic regression fall into this setting. Even though the decision threshold is determined during the training process, it is possible to change it and obtain different predictions. This possibility is very often used to produce so-called ROC curves~\cite{fawcett2006introduction}.
+
+ROC curve shows how model~$f$ behaves for different thresholds~$t$ varying from~$-\infty$ to~$+\infty.$ Right-hand side of Figure~\ref{fig: roc space} provides an example of two ROC curves for two different classifiers. \textbf{Classifier 1} provides accuracy~95\% and is represented by the blue dot, while the blue line represents its ROC curve. \textbf{Classifier 2} represented by the green dot provides accuracy~76\%, and the green dashed line represents its ROC curve. A standard method for comparing two classifiers is to compare the corresponding areas under the ROC curves (AUC)~\cite{bradley1997use, hanley1982meaning}. Such an approach is a simple way to reduce the curve to one number. In the case of standard binary classification, the larger the AUC, the better. In Figure~\ref{fig: roc space} we can see that the blue classifier has AUC 95\% while the green one has only 77\%. Therefore, for most classification problems, the blue classifier is better. Even though we get almost the same values of accuracy and AUC for both classifiers, the accuracy is not equivalent to AUC. The similarity is only a consequence of the used example.
+
+Since both false-positive and true-positive rates are non-increasing functions of threshold~$t,$ we can efficiently compute the ROC curve from sorted classification scores~$\bm{s}$ given by the model~$f.$ Moreover, the AUC of a classifier is equivalent to the probability that the classifier will rank a randomly chosen positive sample higher than a randomly chosen negative sample~\cite{fawcett2006introduction}. By comparing the classifiers from the right-hand side of Figure~\ref{fig: roc space}, we can deduce that \textbf{Classifier 1} is generally better at a false-positive rate larger than~$0.01.$ Otherwise, \textbf{Classifier 2} is the better one. Therefore,  there is a specific region of the ROC space where \textbf{Classifier 2} outperforms \textbf{Classifier 1}. In the next section, we discuss multiple different problems which focus on the performance only at low false-positive rates.
 
 \section{Classification at the Top}\label{sec: related problems}
 
@@ -285,59 +321,6 @@ The hypothesis testing operates with null~$H_0$ and alternative~$H_1$ hypothesis
 \end{mini*}
 This formulation is very similar to the one for Accuracy at the Top~\eqref{eq: aatp intro}. The main difference is that the quantile in the constraint is not computed from all but only from negative samples. Also, note one key difference in interpretation. The~$\tau$ in Accuracy at the Top represents the total amount of samples we want to process with the smallest possible error. On the other hand, in the Neyman-Pearson problem~$\tau$ represents the maximal acceptable false-positive rate. Therefore, the former approach is useful in situations where we can process only a certain number of samples. The latter is for situations where we have strict constraints on false-positive errors.
 
-\pagebreak
-
 \section{Summary}
 
 In this chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} for binary classification and discussed how to measure the performance of binary classifiers. The first approach for performance evaluation is based on the confusion matrix. This approach is very straightforward. Moreover, it is possible to derive many different classification matrices from the confusion matrix. Table~\ref{tab: classification metrics} summarizes classification matrices derived from the confusion matrix used in the upcoming chapters. The second approach introduced in this chapter uses the ROC space to visualize the ability of classifiers to rank positive samples above negative ones. Since standard binary classification focuses on optimizing the overall performance, we discussed that there are many problems closely tied to the binary classification that focuses on the performance only of the most relevant samples. Such problems occur in many applications, from search engines to drug development. We also introduced Ranking problems, the problem of Accuracy at the Top, and the Neyman-Pearson problem and discussed their relation to the binary classification. In the upcoming chapters, we focus on these three groups of problems and introduce a general framework to handle them.
-
-\begin{table}
-  \centering
-  \begin{NiceTabular}{ccc}
-    \CodeBefore
-      \rowcolor{\headercol}{1}
-      \rowcolors{3}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \textbf{Name} & \textbf{Aliases} & \textbf{Formula} \\
-    \midrule
-    true negatives
-      & correct rejection
-      & $\tn$ \\
-    false positives
-      & Type I error, false alarm
-      & $\fp = \nneg - \tn$ \\
-    true positives
-      & hit
-      & $\tp$ \\
-    false negatives
-      & Type II error
-      & $\fn = \npos - \tp$ \\
-    \midrule
-    true negative rate
-      & specificity, selectivity
-      & $\tnr = \frac{\tn}{\nneg}$ \\
-    false positive rate
-      & fall-out
-      & $\fpr = \frac{\fp}{\nneg} = 1 - \tnr$ \\
-    true positive rate
-      & sensitivity, recall, hit rate
-      & $\tpr = \frac{\tp}{\npos}$ \\
-    false negative rate
-      & miss rate
-      & $\fnr = \frac{\fn}{\npos} = 1 - \tpr$ \\
-    \midrule
-    accuracy
-      & ---
-      & $\accuracy = \frac{\tp + \tn}{n}$ \\
-    balanced accuracy
-      & ---
-      & $\baccuracy = \frac{\tpr + \tnr}{2}$ \\
-    precision
-      & positive predictive value
-      & $\precision = \frac{\tp}{\tp + \fp}$ \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{Summary of classification metrics derived from confusion matrix. The first column shows the name used in this work, while the second column shows alternative names that can be found in the literature. The last column shows the formula based on the confusion matrix.}
-  \label{tab: classification metrics}
-\end{table}
