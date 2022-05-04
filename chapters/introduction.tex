@@ -56,12 +56,12 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
     s_i = f(\bm{x}_i; \; \bm{w}),
   \end{equation*}
   where~$\bm{w}$ represents trainable parameters (weights) of the model. Predictions are defined for all~$i \in \I$ in the following way
-  \begin{equation*}
+  \begin{equation}\label{eq: prediction}
     \hat{y}_i = \begin{cases}
       1 & \quad \text{if } s_i \geq t, \\
       0 & \quad \text{otherwise.}
     \end{cases}
-  \end{equation*}
+  \end{equation}
 \end{notation}
 
 \section{Performance Evaluation}
@@ -70,14 +70,14 @@ In the previous section, we defined general binary classification problem~\eqref
 
 \subsection{Confusion Matrix}
 
-Based on the prediction~$\hat{y}_i$ and an actual label~$y_i$ of the sample~$\bm{x}_i,$ each sample can be assigned to one of the four following categories:
+Based on the prediction~$\hat{y}_i$ from~\eqref{eq: prediction} and an actual label~$y_i$ of the sample~$\bm{x}_i,$ each sample can be assigned to one of the four following categories:
 \begin{itemize}
   \item \textbf{True negative:} sample~$\bm{x}_i$ is negative and is classified as negative, i.e.~$y_i = 0 \; \land \; \hat{y}_i = 0.$
   \item \textbf{False positive:} sample~$\bm{x}_i$ is negative and is classified as positive, i.e.~$y_i = 0 \; \land \; \hat{y}_i = 1.$
   \item \textbf{False negative:} sample~$\bm{x}_i$ is positive and is classified as negative, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 0.$
   \item \textbf{True positive:} sample~$\bm{x}_i$ is positive and is classified as positive, i.e.~$y_i = 1 \; \land \; \hat{y}_i = 1.$
 \end{itemize}
-Using these four categories, we can construct so-called confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction} that predictions for all samples from the given dataset~$\mathcal{D}$. An illustration of the confusion matrix is shown in Figure~\ref{fig: confusion matrix}. If we denote the vector of all classification scores given by model~$f$ as~$\bm{s} \in \R^n,$ we can compute all fields of the confusion matrix as follows
+If we assign each sample from dataset~$\mathcal{D}$ to one of the categories above and count the number of samples in each of these four categories, we get the confusion matrix (sometimes also called contingency table)~\cite{fawcett2006introduction}, see Figure~\ref{fig: confusion matrix}. A confusion matrix consists of four fields that contains number of true-negative (\textbf{tn}), false-positive (\textbf{fp}), false-negative (\textbf{fn}), and true-positive (\textbf{tp}) samples in the whole dataset. More formally, using the prediction rule~\eqref{eq: prediction} we can compute all fields of the confusion matrix as follows
 \begin{equation}\label{eq: confusion counts}
   \begin{aligned}
     \tp(\bm{s}, t) & = \sum_{i \in \Ipos}\Iverson{s_i \geq t}, & \quad
@@ -86,7 +86,7 @@ Using these four categories, we can construct so-called confusion matrix (someti
     \fp(\bm{s}, t) & = \sum_{i \in \Ineg}\Iverson{s_i \geq t},
   \end{aligned}
 \end{equation}
-where~$\Iverson{\cdot}$ is the Iverson function~\eqref{eq: iverson}. In the following text, we sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (and similar notation for other counts) for example to define classification metrics. In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation, we can define true-positive, false-positive, true-negative, and false-negative rates as follows
+where~$\bm{s}$ is the vector of classification scores given by model~$f,$ and~$\Iverson{\cdot}$ is the Iverson function~\eqref{eq: iverson}. In the following text, we sometimes use simplified notation~$\tp = \tp(\bm{s}, t)$ (and similar notation for other counts). In such cases, the vector of classification scores and decision threshold is fixed and is known from the context. Using the simplified notation, we can define true-positive, false-positive, true-negative, and false-negative rates as follows
 \begin{equation}\label{eq: confusion rates}
   \begin{aligned}
     \tpr & = \frac{\tp}{\npos}, & \quad
