@@ -1,4 +1,4 @@
-\chapter{Appendix for Chapter~\ref{chap: framework}}
+\chapter{Appendix for Chapter~\ref{chap: framework}}\label{app: framework}
 
 \lemmattcomparison*
 \begin{proof}
@@ -27,7 +27,8 @@
     & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
     & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j]} + s_{[j - 1]} - s_{[j - 1]}) + \vartheta(s_{[j-1]} - s_{[j]}) - n\tau \\
     & = \sum_{i = 1}^{j - 2} \vartheta(s_{[i]} - s_{[j - 1]}) + \sum_{i = 1}^{j - 2} \vartheta(s_{[j - 1]} - s_{[j]}) + \vartheta(s_{[j - 1]} - s_{[j]}) - n\tau \\
-    & = h(t_{j - 1}) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}),
+    & = h(t_{j - 1}) + (j - 1) \vartheta(s_{[j - 1]} - s_{[j]}) \\
+    & = h(t_{j - 1}) + (j - 1) \vartheta(t_{j - 1} - t_{j}),
   \end{align*}
   which finishes the proof.
 \end{proof}

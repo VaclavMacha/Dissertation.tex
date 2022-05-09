@@ -143,17 +143,17 @@ This formulation also used only false negatives in the objective to preserve the
 
 \subsection{Threshold Comparison}\label{sec: threshold comparison aatp}
 
-The previous section introduces three formulations \Grill, \TopMeanK, and \PatMat. While \Grill formulations use true top $\tau$-quantile~\eqref{eq: aatp quantile} as a threshold, the remaining two formulations use only its approximations. The following lemma shows that \TopMeanK uses a better approximation of the top $\tau$-quantile than \PatMat.
+The previous section introduces three formulations \Grill, \TopMeanK, and \PatMat. While \Grill formulations use true top $\tau$-quantile~\eqref{eq: aatp quantile} as a threshold, the remaining two formulations use only its approximations. The following lemma shows that the approximation used by \TopMeanK is better than the one used by \PatMat.
 
 \begin{lemma}[Thresholds relation~\cite{zhang2018tau}]\label{lemma: threshold comparison}
-  Consider vector of scores~$\bm{s}$ and the following thresholds
+  Consider fixed vector of scores~$\bm{s}$ and thresholds for \Grill, \TopMeanK, and \PatMat defined by
   \begin{align*}
     t_1(\bm{s}) &
       = \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}, &
-    t_3(\bm{s}) &
-      \;\; \text{solves} \;\; \frac{1}{\nall} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau, \\
     t_2(\bm{s}) &
-        = \frac{1}{\nall \tau} \sum_{i=1}^{\nall \tau} s_{[i]},
+        = \frac{1}{\nall \tau} \sum_{i=1}^{\nall \tau} s_{[i]}, &
+    t_3(\bm{s}) &
+      \;\; \text{solves} \;\; \frac{1}{\nall} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau.
   \end{align*}
   Then the following inequalities hold
   \begin{equation*}
@@ -161,43 +161,49 @@ The previous section introduces three formulations \Grill, \TopMeanK, and \PatMa
   \end{equation*}
 \end{lemma}
 
-Both \TopMeanK and \PatMat use a surrogate approximation of false-negative rate as an objective function. Since this approximation is a non-decreasing function of~$t,$ a lower threshold~$t$ means a lower value of the objective function. Therefore, a lower threshold is preferred. It seems that \TopMeanK is a better formulation since it uses a better approximation of the true quantile. Besides that, it is also easier to compute the threshold for \TopMeanK than for \PatMat. However, Chapter~\ref{chap: linear} shows that \PatMat formulation has better properties than \TopMeanK. Moreover, in the following section, we show how to efficiently compute the threshold for \PatMat with hinge loss as surrogate function.
+The previous lemma shows that for fixed scores~$\bm{s}$, the threshold~\eqref{eq: aatp quantile mean} for \TopPushK is always lower or equal to the threshold~\eqref{eq: aatp quantile surrogate} for \PatMat. These formulations use a surrogate approximation of the false-negative rate as an objective function. Since this approximation is a non-decreasing function of~$t,$ a lower threshold~$t$ means a lower objective function value. Therefore, \TopPushK seems to be a better formulation since it uses a better approximation of the true quantile. Besides that, it is also easier to compute the threshold for \TopMeanK than for \PatMat. However, Chapter~\ref{chap: linear} shows that \PatMat formulation has better properties than \TopMeanK. Moreover, the following section shows how to efficiently compute the threshold for \PatMat with hinge loss as a surrogate function.
 
 \subsection{Efficient Computing of the Threshold for \PatMat}\label{sec: patmat threshold alg}
 
-As we mentioned before, due to the properties of the surrogate function~$l$ (see
-Notation~\ref{not: surrogates}), the threshold~\eqref{eq: aatp quantile surrogate} for \PatMat is unique. In this section, we show how to efficiently find the threshold when the hinge loss is used as a surrogate. Consider function
+In this section, we show how to efficiently find the threshold~\eqref{eq: aatp quantile surrogate} for \PatMat when the hinge loss is used as a surrogate. Consider function
 \begin{equation*}
-  h(t) = \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} - n\tau.
+  h(t) = \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} - n\tau,
 \end{equation*}
-Then finding threshold~\eqref{eq: aatp quantile surrogate} for \PatMat is equivalent to looking for~$\hat{t}$ such that~$h(\hat{t}) = 0$. Function~$h$ is continuous and strictly decreasing until it hits the global minimum. Moreover,~$h(t) \to \infty$ as~$t \to -\infty$ and~$h(t) \to -n\tau$ as~$t \to \infty$. Thus, there is a unique solution to the equation~$h(t) = 0$. For sorted data, the following lemma advises how to solve this equation. The whole procedure of finding~$\hat{t}$ is summarized in Algorithm~\ref{alg: patmat threshold}.
+then finding threshold~\eqref{eq: aatp quantile surrogate} for \PatMat is equivalent to looking for~$\hat{t}$ such that~$h(\hat{t}) = 0$. Function~$h$ is continuous and strictly decreasing until it hits the global minimum. Moreover,~$h(t) \to \infty$ as~$t \to -\infty$ and~$h(t) \to -n\tau$ as~$t \to \infty$. Thus, there is a unique solution to the equation~$h(t) = 0$. For sorted data, the following lemma advises how to solve this equation. For better readability, the proof of the lemma is in Appendix~\ref{app: framework}.
 
 \begin{restatable}{lemma}{lemmapatmatalg}\label{lemma: patmat threshold algorithm}
   Consider vector of scores~$\bm{s}$ and its sorted version~$\bm{s}_{[\cdot]}$ with non-increasing elements as defined in Notation~\ref{not: scores}, and threshold for \PatMat formulation 
-  \begin{equation*}
+  \begin{equation}\label{eq: patmat h}
     h(t) = \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} - n\tau,
-  \end{equation*}
+  \end{equation}
   where~$\vartheta > 0$ and~$l$ is the hinge loss from Notation~\ref{not: surrogates}. For all~$i \in \I$ define~$t_i = s_{[i]} + \frac{1}{\vartheta}.$ Then for all~$i = 2, \; 3, \ldots, n$ we have
   \begin{equation}\label{eq:update_h}
     h(t_i)
-      = h(t_{i - 1}) + (i - 1) \vartheta(s_{[i - 1]} - s_{[i]}),
+      = h(t_{i - 1}) + (i - 1) \vartheta(t_{i - 1} - t_{i}),
   \end{equation}
   with the initial condition~$h(t_{1}) = -n\tau.$
 \end{restatable}
+
+The previous lemma shows how to compute the values of the function~\eqref{eq: patmat h}from the sorted vector of classification scores. Therefore, to solve equation~$h(t) = 0,$ we can start from initial point~$h(t_{1}) = -n\tau$ and use the recurrent relation~\eqref{eq:update_h} until we find the first threshold for which the function value of~$h$ is non-negative. Denote this threshold as~$t_{i}.$ Then, the threshold~$\hat{t}$ can be found using linear interpolation as follows
+\begin{equation*}
+  \hat{t}
+    = t_{i-1} - h(t_{i - 1})\frac{t_{i} - t_{i-1}}{h(t_{i}) - h(t_{i-1})}
+    = t_{i-1} - h(t_{i - 1})\frac{t_{i} - t_{i-1}}{(i - 1) \vartheta(t_{i - 1} - t_{i})}
+    = t_{i-1} + \frac{1}{(i - 1)\vartheta} h(t_{i - 1}),
+\end{equation*}
+where the secon equality follows from~\eqref{eq:update_h}. The whole procedure of finding~$\hat{t}$ is summarized in Algorithm~\ref{alg: patmat threshold}.
 
 \begin{algorithm}
   \centering
   \begin{algorithmic}[1]
     \Require vector $\bm{s}$ sorted into $\bm{s}_{[\cdot]}$ and 
-    \State $t_1 \gets s_{[1]}  + \frac{1}{\vartheta}$
-    \State $h(t_1) \gets -n\tau$
-    \State $i \gets 2$
-    \While{$h(t_i) \geq 0$}
+    \State Set $t_1 \gets s_{[1]}  + \frac{1}{\vartheta},$ $h(t_1) \gets -n\tau,$ and $i \gets 2$
+    \While{$h(t_i) < 0$}
       \State $t_i \gets s_{[i]}  + \frac{1}{\vartheta}$
       \State $h(t_i) \gets h(t_{i - 1}) + (i - 1) \vartheta(s_{[i - 1]} - s_{[i]})$  
       \State $i \gets i + 1$
     \EndWhile
-    \State \textbf{return} linear interpolation of the last two values~$\hat{t} \gets t_{i-1} + \frac{1}{\vartheta(i-1)}h(t_{i-1})$
+    \State \textbf{return} $\hat{t} \gets t_{i-1} + \frac{1}{(i - 1)\vartheta} h(t_{i - 1})$
   \end{algorithmic}
   \caption{An efficient algorithm for computing threshold~\eqref{eq: aatp quantile surrogate} for \PatMat formulation.}
   \label{alg: patmat threshold}
@@ -257,17 +263,17 @@ We call this formulation \PatMatNP to stress the similarity with \PatMat. The on
 
 \subsection{Threshold Comparison}
 
-The previous section introduces three formulations \GrillNP, \tauFPL, and \PatMatNP. While \GrillNP formulations use true top $\tau$-quantile~\eqref{eq: NP quantile} as a threshold, the remaining two formulations use only its approximations. The following lemma shows that \tauFPL uses a better approximation of the top $\tau$-quantile than \PatMatNP.
+In Section~\ref{sec: threshold comparison aatp}, we show that the threshold for \TopMeanK provides a better approximation of the true top $\tau$-quantile of all scores than the threshold for \PatMat. The only difference between \tauFPL and \TopMeanK is that the former computes the threshold only from negative samples while the latter uses all samples. The same holds for \PatMatNP and \PatMat. Therefore, we can show the same for \tauFPL and \PatMatNP relations as showed in Section~\ref{sec: threshold comparison aatp} for \TopMeanK and \PatMat. The following lemma shows that the approximation used by \tauFPL is better than the one used by \PatMatNP.
 
 \begin{lemma}[Thresholds relation~\cite{zhang2018tau}]
-  Consider vector of scores~$\bm{s}$ and the following thresholds
+  Consider fixed vector of scores~$\bm{s}$ and thresholds for \GrillNP, \tauFPL, and \PatMatNP defined by
   \begin{align*}
     t_1^{\rm NP}(\bm{s}) &
       = \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}, &
-      t_3^{\rm NP}(\bm{s}) &
-        \;\; \text{solves} \;\; \frac{1}{\nneg} \sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau, \\
+    t_3^{\rm NP}(\bm{s}) &
+    \;\; \text{solves} \;\; \frac{1}{\nneg} \sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau, \\
     t_2^{\rm NP}(\bm{s}) &
-      = \frac{1}{\nneg \tau} \sum_{i=1}^{\nneg \tau} s^{-}_{[i]},
+      = \frac{1}{\nneg \tau} \sum_{i=1}^{\nneg \tau} s^{-}_{[i]}.
   \end{align*}
   Then the following inequalities hold
   \begin{equation*}
@@ -275,7 +281,9 @@ The previous section introduces three formulations \GrillNP, \tauFPL, and \PatMa
   \end{equation*}
 \end{lemma}
 
-Both \tauFPL and \PatMatNP use a surrogate approximation of false-negative rate as an objective function. Since this approximation is a non-decreasing function of~$t,$ a lower threshold~$t$ means a lower value of the objective function. Therefore, a lower threshold is preferred.
+Using the same arguments as at the end of Section~\ref{sec: threshold comparison aatp}, \tauFPL is a better formulation in the sense that for the fixed vector of scores, it provides a lower threshold and lower objective function value. However, Chapter~\ref{chap: linear} shows that \PatMatNP formulation has better properties than \tauFPL.
+
+Finally, Lemma~\ref{lemma: threshold comparison 2} shows that \Grill provides a larger threshold under some conditions than \GrillNP. In the same way, \TopMeanK under some conditions provides a larger threshold than \tauFPL. Since the goal of the presented formulations is to push~$s^+$ above~$s^-$, we may expect that the conditions in Lemma~\ref{lemma: threshold comparison 2} are satisfied. The importance of these properties is discussed in Section~\ref{sec: stability}, where we show that the formulations with larger thresholds are in some sense more unstable.
 
 \begin{restatable}{lemma}{lemmattcomparison}\label{lemma: threshold comparison 2}
   Consider \Grill, \GrillNP, \TopMeanK and \tauFPL formulations and Notation~\ref{not: scores}. If the following inequality holds
@@ -289,8 +297,6 @@ Both \tauFPL and \PatMatNP use a surrogate approximation of false-negative rate 
   \end{equation*}
   then \TopMeanK has larger threshold than \tauFPL.
 \end{restatable}
-
-Since the goal of the presented formulations is to push~$s^+$ above~$s^-$, we may expect that the conditions in Lemma~\ref{lemma: threshold comparison 2} are satisfied. 
 
 \section{Summary}
 
