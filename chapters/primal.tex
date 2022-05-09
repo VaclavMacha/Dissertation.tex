@@ -221,11 +221,13 @@ In the previous section, we analyzed the formulations from Table~\ref{tab: summa
 
 Many optimization algorithms for solving the formulations from Table~\ref{tab: summary formulations} use primal-dual or purely dual formulations. Authors of~\cite{eban2017scalable} introduced dual variables and used alternating optimization to the resulting min-max problem. In~\cite{li2014top, zhang2018tau}, authors dualized the problem and solved it with the steepest gradient ascent. Authors of~\cite{macha2020nonlinear} followed the same path but added kernels to handle non-linearity. We follow the ideas of~\cite{mackey2018constrained} and~\cite{adam2019machine} and solve the problems directly in their primal formulations. Therefore, even though we use the same formulation for \TopPush as~\cite{li2014top} or for \tauFPL as~\cite{zhang2018tau}, our solution process is different. However, both algorithms should converge to the same point due to convexity.
 
-The decision variables in \eqref{eq: aatp surrogate} are the normal vector of the separating hyperplane~$\bm{w}$ and the threshold~$t$. Since the gradient descent algorithm uses the following rule
+For the convergence proof of stochastic gradient descent, we need differentiability. Due to Theorem~\ref{thm: differentiability}, we have only two formulations that are differentiable: \PatMat and \PatMatNP. Therefore, in the rest of the section, we consider only these two formulations. For simplicity, we show the proof only for \PatMat. The proof for \PatMatNP is almost the same.
+
+The decision in variable \PatMat formulation~\eqref{eq: patmat} is the normal vector of the separating hyperplane~$\bm{w}.$ Therefore, the gradient descent algorithm uses the following rule
 \begin{equation*}
   \bm{w}^{k+1} \gets \bm{w}^k - \alpha^k \cdot \nabla L(\bm{w}^k),
 \end{equation*}
-where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is a gradient of the objective function. Therefore, we need to compute gradients. The simplest idea~\cite{grill2016learning} is to compute the gradient only with respect to~$\bm{w}$ and then recompute~$t$. A more sophisticated way is based on the chain rule. For each~$\bm{w}$, the threshold~$t$ can be computed uniquely. We stress this dependence by writing~$t(\bm{w})$ instead of~$t$. By doing so, we effectively remove the threshold~$t$ from the decision variables and~$\bm{w}$ remains the only decision variable. Note that the convexity is preserved. Then we can compute the derivative via the chain rule
+where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is a gradient of the objective function. Since the decision threshold~$t$ depends on~$\bm{w},$ we need to use the chain rule to compute the gradient of the objective function. For each~$\bm{w}$, the threshold~$t$ can be computed uniquely as discussed in Section~\ref{sec: patmat threshold alg}. We stress this dependence by writing~$t(\bm{w})$ instead of~$t$. Note that the convexity is preserved. Then we can compute the derivative via the chain rule
 \begin{equation}\label{eq:derivatives}
   \begin{aligned}
   L(\bm{w})
@@ -234,9 +236,11 @@ where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is
     & = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i).
   \end{aligned}
 \end{equation}
-The last part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Section~\ref{sec: patmat threshold alg}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch.
+The last part is the computation of~$\nabla t(\bm{w})$. Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Section~\ref{sec: patmat threshold alg}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch. 
 
-For the convergence proof of stochastic gradient descent, we need differentiability. Due to Theorem~\ref{thm: differentiability}, we have only two formulations that are differentiable: \PatMat and \PatMatNP. Therefore, in the rest of the section, we consider only these two formulations. Moreover, for simplicity, we show the proof only for \PatMat. At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the vector of scores~$\bm{s}^k$ only on the active minibatch by setting
+Even though we focus only on the \PatMat formulation, the relations~\eqref{eq:derivatives} can be used for almost all formulations from Table~\ref{tab: summary formulations}. The only two exceptions are \Grill and \GrillNP, which use a slightly different objective function. However, the form on the gradient of the objective function for these two formulations is very similar. Nevertheless, the rest of the section that shows the convergence of the stochastic gradient is applicable only for \PatMat.
+
+Consider piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically, i.e., for all~$k$ we have~$\Imb^{k+m} = \Imb^k$. At iteration~$k$ we have the decision variable~$\bm{w}^k$ and the active minibatch~$\Imb^k$. First, we update the vector of scores~$\bm{s}^k$ only on the active minibatch by setting
 \begin{equation}\label{eq:defin_z}
   s_i^k = \begin{cases}
     \bm{x}_i^\top \bm{w}^k & \text{for all } i \in \Imb^k, \\
@@ -245,30 +249,26 @@ For the convergence proof of stochastic gradient descent, we need differentiabil
 \end{equation}
 We keep scores from previous minibatches intact. We use Section~\ref{sec: patmat threshold alg} to compute the surrogate quantile~$t^k$ as the unique solution of
 \begin{equation}\label{eq:update_t}
-  \sum_{i \in \I}l\Brac{\vartheta(s_i^k - t^k)} = n\tau.
+  \sum_{i \in \I}l\Brac{\vartheta\Brac{s_i^k - t^k}} = n\tau.
 \end{equation}
-This is an approximation of the surrogate quantile~$t(\bm{w}^k)$ from \eqref{eq: aatp quantile surrogate}. The only difference from the true quantile is that we use delayed scores. Then we introduce artificial variable
-\begin{equation}\label{eq:update_a}
-  \bm{a}^k = \sum_{i \in \Imb^k} l'\Brac{\vartheta(s_i^k - t^k)}\bm{x}_i.
-\end{equation}
-Finally, we approximate the derivative~$\nabla L(\bm{w}^k)$ from \eqref{eq:derivatives} by
+This is an approximation of the surrogate quantile~$t(\bm{w}^k)$ from \eqref{eq: aatp quantile surrogate}. The only difference from the true quantile is that we use delayed scores. Then we approximate the derivative~$\nabla L(\bm{w}^k)$ from \eqref{eq:derivatives} by
 \begin{equation}\label{eq:update_g}
   g(\bm{w}^k)
     = \bm{w}^k + \frac{1}{\nmbpos^k} \sum_{i \in \Imbpos^k} l'(t^k - s_i^k)(\nabla t^k - \bm{x}_i),
 \end{equation}
-where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability} defined by
+where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability}. To define the approximation~$\nabla t^k,$ we first need to define and artificial variable
+\begin{equation}\label{eq:update_a}
+  \bm{a}^k = \sum_{i \in \Imb^k} l'\Brac{\vartheta\Brac{s_i^k - t^k}}\bm{x}_i.
+\end{equation}
+Note that~$\bm{a}^k$ is an approximation of the numerator of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability}. However, this approximation uses only the current minibatch. Since our minibatches cycle periodically, we can sum the last $m$ variables~$\bm{a}^k$ and get the approximation computed from all samples and all delayed scores. Then, the approximation of~$\nabla t(\bm{w}^k)$ can be defined as follows
 \begin{equation}\label{eq:update_nablat}
   \nabla t^k
-    = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta(s_i^k - t^k)}}.
+    = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta\Brac{s_i^k - t^k}}}.
 \end{equation}
-A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of~\eqref{eq:update_nablat}. However, presented choice enables us to prove the convergence, and it adds stability to the algorithm for small minibatches. The whole procedure is summarized in Algorithm~\ref{alg:sgd}. Note that there are no vector operations outside of the current minibatch~$\Imb^k$. Moreover, note that a proper initialization for the first~$m$ iterations is needed.
+A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of~\eqref{eq:update_nablat}. However, presented choice enables us to prove the convergence, and it adds stability to the algorithm for small minibatches.
 
 \begin{restatable}{theorem}{sgd}\label{thm:sgd}
-  Consider the \PatMat or \PatMatNP formulation, stepsizes
-  \begin{equation*}
-    \alpha^k = \frac{\alpha^0}{k+1}
-  \end{equation*}
-  and piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened hinge function defined by
+  Consider the \PatMat formulation, stepsizes~$\alpha^k = \frac{1}{k+1}\alpha^0,$ and piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened hinge function defined by
   \begin{equation}\label{eq: smooth hinge}
     l(s) = \begin{cases}
       0 & \text{for } s < -1 - \varepsilon, \\
@@ -278,6 +278,8 @@ A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ 
   \end{equation}
   where~$\varepsilon > 0,$ then Algorithm~\ref{alg:sgd} converges to the global minimum of \eqref{eq: patmat}.
 \end{restatable}
+
+The whole procedure of the stochastic gradient descent for \PatMat formulation is summarized in Algorithm~\ref{alg:sgd}. Note that there are no vector operations outside of the current minibatch~$\Imb^k$. Moreover, note that a proper initialization for the first~$m$ iterations is needed.
 
 \begin{algorithm}
   \begin{algorithmic}[1]
@@ -296,8 +298,6 @@ A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ 
   \caption{Stochastic gradient descent for \PatMat formulation}
   \label{alg:sgd}
 \end{algorithm}
-
-\pagebreak
 
 \section{Summary}
 
