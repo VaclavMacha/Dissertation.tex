@@ -100,6 +100,8 @@ Using the same transition to the minibatches as in previous sections, we get the
 \end{equation}
 where~$\indmaxmb$ represents the index of the negative sample with the highest score from the current minibatch. As discussed in the previous section, such a choice of the decision threshold provides a lower estimate of the true threshold. To improve this approximation, we modify the idea presented in~\cite{adam2019machine}. The authors of~\cite{adam2019machine} suggest using delayed classification scores to compute the threshold. We used this approach in Section~\ref{sec:convergence} to prove the convergence of stochastic gradient descent for \PatMat and \PatMatNP formulation with a linear model. However, even in such a case, the resulting sampled gradient~$\hat{t}$ is just an approximation of the true gradient~$t.$ To improve this approach, we use the fact that the threshold for \TopPush is always equal to the negative sample with  the highest score. When the weights~$\bm{w}$ of model~$f$ are updated using stochastic gradient descent, the scores~$\bm{s}$ usually do not change much. It is true especially for small learning rates. Therefore, if some negative sample has the highest score, it will likely have the highest score even after the gradient step. Since we can easily track to which negative sample this highest score corresponds, we can enhance the next minibatch by this sample. This approach significantly increases the chance that the minibatch contains the negative sample with the highest score. In such a case, the sampled threshold~$\hat{t}$ is not just an approximation but equals the true threshold~$t.$ The whole procedure is summarized in Algorithm~\ref{alg: deep toppush}.
 
+\pagebreak
+
 \begin{algorithm}
   \centering
   \begin{algorithmic}[1]
@@ -140,8 +142,6 @@ In the previous section, we derived \DeepTopPush method for solving the \TopPush
     \bias(\bm{w}) = \PP\Brac[s]{\indmaxmb\neq \indmax} \Brac{\nabla L(\bm{w}) - \EE\Brac[s]{\nabla \hat{L}(\bm{w}) \middle\vert \indmaxmb\neq \indmax}}.
   \end{equation}
 \end{restatable}
-
-\pagebreak
 
 The assumptions of Theorem~\ref{theorem:convergence} hold only for \TopPush formulation. The bias~\eqref{eq:comp_bias} consists of a multiplication of two terms. As we discussed in the previous sections, there are two strategies to reduce the bias:
 \begin{enumerate}
