@@ -203,6 +203,21 @@
 
 \subsubsection{Quadratic Hinge Loss}
 
+The second considered surrogate function is the quadratic hinge loss from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the quadratic hinge loss into the dual formulation~\eqref{eq: toppushk family dual} yields
+\begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
+  }{\label{eq: Top dual quadratic}}{\label{eq: Top dual quadratic L}}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j
+  \label{eq: Top dual quadratic c1}}
+  \addConstraint{0 \leq \alpha_i}{,}{i = 1, 2, \ldots, \npos
+  \label{eq: Top dual quadratic c2}}
+  \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil,
+  \label{eq: Top dual quadratic c3}}
+\end{maxi!}
+Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used formulation and the upper bound in~\eqref{eq: Top dual quadratic c3} can be omitted for~$K = 1.$
+
 \begin{proposition}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update a,a}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,a}, indeices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -483,10 +498,51 @@
   where the first equality follows from the definition of~$J$ and the second equality is a shift by a~$\mu_2- \mu_1.$ The third equality follows from~\eqref{eq:system2_proof4} and finally, the last inequality follows from~$\abs{J} \ge K$. The chain above together with~\eqref{eq:system2_proof2} implies~$\lambda(\mu_2) - \mu_2 \le \lambda(\mu_1)- \mu_1$. Combining this with~$\mu_2 > \mu_1$ and~$\lambda(\mu_2) \ge \lambda(\mu_1)$, this implies that~$h$ from~\eqref{eq: toppushk family h} is non-increasing which is precisely the lemma statement.
 \end{proof}
 
-\subsection{Family of \PatMat Formulations}\label{sec: patmat family coordinate proofs}
+\subsection{Family of \PatMat Formulations}\label{sec: Pat coordinate descent}
+
+In this section, we derive a coordinate descent algorithm for solving dual formulation~\eqref{eq: patmat family dual} for the family of \PatMat formulations. We follow the same approach as for \TopPushK family in Section\ref{sec: Top coordinate descent}, i.e. we use update rules~\eqref{eq: update rules}. In this case, we must also consider the third primary variable~$\delta.$ Then the dual formulation~\eqref{eq: patmat family dual}  can be rewritten as a one-dimensional quadratic problem
+\begin{maxi*}{\Delta}{
+  -\frac{1}{2} a(\bm{\alpha}, \bm{\beta}, \delta) \Delta^2
+  - b(\bm{\alpha}, \bm{\beta}, \delta) \Delta
+  - c(\bm{\alpha}, \bm{\beta}, \delta)
+  }{}{}
+  \addConstraint{\Delta_{lb}(\bm{\alpha}, \bm{\beta}, \delta)}{\leq \Delta \leq \Delta_{ub}(\bm{\alpha}, \bm{\beta}, \delta)}
+\end{maxi*}
+where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~$\Delta.$ The form of the optimal solution is the same as for problem~\eqref{eq: toppushk family dual} and reads
+\begin{equation*}
+  \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma}.
+\end{equation*}
+Since we assume one of the update rule~\eqref{eq: update rules}, the constrain~\eqref{eq: patmat family dual c1} is always satisfied after the update. The exact form of the update rules depends on the surrogate function. Moreover, the form of optimal~$\delta$ also depends on the surrogate function. The upcoming text follows the same order as in the previous section. Therefore, we introduce concrete forms of update rules for hinge and quadratic hinge loss function and then show how to find an initial feasible solution.
+
 \subsubsection{Hinge Loss}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,a}
+We again start with the hinge loss function from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation~\eqref{eq: patmat family dual} yields
+\begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
+  - \delta \ntil \tau
+  }{\label{eq: Pat dual hinge}}{\label{eq: Pat dual hinge L}}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j \label{eq: Pat dual hinge c1}}
+  \addConstraint{0 \leq \alpha_i}{\leq C,}{i = 1, 2, \ldots, \npos \label{eq: Pat dual hinge c2}}
+  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil \label{eq: Pat dual hinge c3}}
+  \addConstraint{\delta }{\geq 0. \label{eq: Pat dual hinge c4}}
+\end{maxi!}
+Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show how to compute~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules}. However, in this case, constants~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ also depend on the third dual variable~$\delta$. We do not perform a joint maximization in~$(\alphak, \; \betal, \; \delta)$ but perform a maximization with respect to~$(\alphak, \; \betal)$, update these two values and then optimize the objective with respect to~$\delta$. Then for fixed feasible solution~$\bm{\alpha}$ and~$\bm{\beta},$ maximizing objective function~\eqref{eq: Pat dual hinge L} with respect to~$\delta$ yields
+\begin{maxi*}{\delta}{
+  - \ntil \tau \delta
+  }{}{}
+  \addConstraint{0 \leq \beta_j}{\leq \delta \vartheta, \quad}{j = 1, 2, \ldots, \ntil}
+  \addConstraint{\delta \geq 0.}
+\end{maxi*}
+Since~$\ntil \tau \geq 0,$ we have to find the smallest possible~$\delta$ that satisfies constraints above. Such~$\delta$ is in the following form
+\begin{equation}\label{eq: Pat dual hinge optimal delta}
+  \delta^* = \frac{1}{\vartheta} \max_{j \in \{1, 2, \ldots, \ntil \}} \beta_j.
+\end{equation}
+
+The following three propositions provide closed-form formulas for all three update rules.
+
+\begin{proposition}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,a}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \min\{- \alphak,\; \alphal - C\}, &
@@ -494,7 +550,7 @@
     \gamma & = -\frac{s_k - s_l}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk}}, &
     \delta^{\star} & = \delta.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Pat dual hinge c3} is also always satisfied since no~$\beta_j$ was updated and the sum of all~$\alpha_i$ did not change. Constraint~\eqref{eq: Pat dual hinge c2} reads
@@ -517,7 +573,7 @@
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{l}\}} \beta_j.
@@ -540,7 +596,7 @@
     \end{align*}
   \end{enumerate}
   The optimal solution~$\Delta^{\star}$ is equal to one of them, which maximizes the original objective and is feasible.
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Pat dual hinge c2} reads~$- \alphak \leq \Delta \leq C - \alphak.$ Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads~$\beta_{\max} \leq \delta \vartheta$ and~$0 \leq \betal + \Delta \leq \delta \vartheta.$ Since the optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta}, there are only two possible choices: $\delta^{\star}_1 = \frac{\beta_{\max}}{\vartheta}$ and~$\delta^{\star}_2 = \frac{\betal + \Delta}{\vartheta}.$ If~$\delta$ is feasible, all upper bounds in constraint~\eqref{eq: Pat dual hinge c3} hold. Therefore, we can simplify the constraints to~$- \betal \leq \Delta,$ which in combination with bounds for~$\alphak$ gives the lower and upper bound of~$\Delta.$ Now let us discuss how to select optimal~$\delta:$
@@ -564,7 +620,7 @@
   The optimal solution is the one, which maximizes the objective~\eqref{eq: Pat dual hinge L} and is feasible.
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
     \beta_{\max} = \max_{j \in \{1, 2, \ldots, \ntil \} \setminus \{\hat{k}, \hat{l}\}} \beta_j.
@@ -594,7 +650,7 @@
     \end{align*}
   \end{enumerate}
   The optimal solution~$\Delta^{\star}$ is equal to one of them, which maximizes the original objective and is feasible.
-\end{lemma}
+\end{proposition}
 
 \begin{proof}
   Constraint~\eqref{eq: Pat dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Pat dual hinge c2} is also always satisfied since no~$\alpha_i$ is updated. Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Pat dual hinge c3} reads
@@ -658,7 +714,40 @@
 
 \subsubsection{Quadratic Hinge Loss}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,a}
+The second considered surrogate function is the quadratic hinge loss from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate quadratic hinge} of the quadratic hinge loss into the dual formulation~\eqref{eq: patmat family dual} yields
+\begin{maxi!}{\bm{\alpha}, \bm{\beta}, \delta}{
+  - \frac{1}{2} \vecab^\top \K \vecab
+  + \sum_{i = 1}^{\npos} \alpha_i
+  - \frac{1}{4C} \sum_{i = 1}^{\npos} \alpha_i^2
+  }{\label{eq: Pat dual quadratic}}{\label{eq: Pat dual quadratic L1}}
+  \breakObjective{
+    + \frac{1}{\vartheta} \sum_{j = 1}^{\ntil} \beta_j 
+    - \frac{1}{4 \delta \vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2
+    - \delta \ntil \tau \label{eq: Pat dual quadratic L2}
+  }
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j
+  \label{eq: Pat dual quadratic c1}}
+  \addConstraint{\alpha_i}{\geq 0,}{i = 1, 2, \ldots, \npos
+  \label{eq: Pat dual quadratic c2}}
+  \addConstraint{\beta_j}{\geq 0,}{j = 1, 2, \ldots, \ntil
+  \label{eq: Pat dual quadratic c3}}
+  \addConstraint{\delta }{\geq 0,
+  \label{eq: Pat dual quadratic c4}}
+\end{maxi!}
+Similar to the previous case, we perform maximization only with respect to~$(\alphak, \; \betal).$ Then for fixed feasible solution~$\bm{\alpha},$~$\bm{\beta},$ we need to maximize the objective function~(\ref{eq: Pat dual quadratic L1}-\ref{eq: Pat dual quadratic L2}) with respect to~$\delta$, which leads to the following problem
+\begin{maxi*}{\delta}{
+  - (\ntil \tau) \delta - \Brac{\frac{1}{4\vartheta^2} \sum_{j = 1}^{\ntil} \beta_j^2} \frac{1}{\delta}
+  }{}{}
+  \addConstraint{\delta \geq 0,}
+\end{maxi*}
+with the optimal solution that equals to
+\begin{equation}\label{eq: Pat dual quadratic optimal delta}
+  \delta^* = \sqrt{\frac{1}{4\vartheta^2 \ntil \tau} \sum_{j = 1}^{\ntil} \beta_j^2}.
+\end{equation}
+
+The following three propositions provide closed-form formulas for all three update rules.
+
+\begin{proposition}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,a}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$  and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = -\alphak, \\
@@ -666,9 +755,9 @@
     \gamma & = -\frac{s_k - s_l + \frac{1}{2C}(\alphak - \alphal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{C}}, \\
     \delta^{\star}  & = \delta.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
-\begin{proof}[Proof of Lemma~\ref{thm: patmat family quadratic update a,a} on page~\pageref{thm: patmat family quadratic update a,a}]
+\begin{proof}
   Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,a}. Constraint~\eqref{eq: Pat dual quadratic c3} is also always satisfied since no~$\beta_j$ was updated. Constraint~\eqref{eq: Pat dual quadratic c2} reads
   \begin{align*}
     0 \leq \alphak + \Delta
@@ -689,7 +778,7 @@
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,b}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = \max\{- \alphak, - \betal\}, \\
@@ -697,9 +786,9 @@
     \gamma      & = -\frac{s_k + s_l  - 1 + \frac{\alphak}{2C} - \frac{1}{\vartheta} + \frac{\betal}{2 \delta \vartheta^2}}{\K_{kk} + \K_{ll} + \K_{kl} + \K_{lk} + \frac{1}{2C} + \frac{1}{2 \delta \vartheta^2}}, \\
     \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{4 \vartheta^2 \ntil \tau}({\Delta^{\star}}^2 + 2 \Delta^{\star} \betal)}.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
-\begin{proof}[Proof of Lemma~\ref{thm: patmat family quadratic update a,b} on page~\pageref{thm: patmat family quadratic update a,b}]
+\begin{proof}
   Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraints~\eqref{eq: Pat dual quadratic c2} and~\eqref{eq: Pat dual quadratic c3} reads
   \begin{align*}
     0 \leq \alphak + \Delta
@@ -726,7 +815,7 @@
   \end{equation*}
 \end{proof}
 
-\begin{lemma}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update b,b}
+\begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update b,b}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule b,b} indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
     \Delta_{lb} & = - \betak, \\
@@ -734,9 +823,9 @@
     \gamma      & = -\frac{s_k - s_l + \frac{1}{2\delta \vartheta^2}(\betak - \betal)}{\K_{kk} + \K_{ll} - \K_{kl} - \K_{lk} + \frac{1}{\delta \vartheta^2}}, \\
     \delta^{\star}  & = \sqrt{\delta^2 + \frac{1}{2 \vartheta^2 \ntil \tau}({\Delta^{\star}}^2 + \Delta^{\star} (\betak - \betal))}.
   \end{align*}
-\end{lemma}
+\end{proposition}
 
-\begin{proof}[Proof of Lemma~\ref{thm: patmat family quadratic update b,b} on page~\pageref{thm: patmat family quadratic update b,b}]
+\begin{proof}
   Constraint~\eqref{eq: Pat dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule b,b}. Constraint~\eqref{eq: Pat dual quadratic c2} is also always satisfied since no~$\alpha_i$ is updated. Constraint~\eqref{eq: Pat dual quadratic c3} reads
   \begin{align*}
     0 \leq \betak + \Delta
@@ -767,8 +856,55 @@
 
 \subsubsection{Initialization}
 
-\patinit*
-\begin{proof}[Proof of Theorem~\ref{thm: patmat family initialization} on page~\pageref{thm: patmat family initialization}]
+As in the case of problem~\eqref{eq: toppushk family dual}, all update rules~\eqref{eq: update rules} assume that the current solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Pat dual hinge} or~\eqref{eq: Pat dual quadratic}, we need to have a way how to obtain an initial feasible solution. Such a task can be formally written as a projection of random variables~$\bm{\alpha}^0,$~$\bm{\beta}^0,$~$\delta^0$ to the feasible set of solutions
+\begin{mini}{\bm{\alpha}, \bm{\beta}, \delta}{
+  \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
+  + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
+  + \frac{1}{2} (\delta - \delta^0)^2
+  }{\label{eq: patmat family initialization}}{}
+  \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
+  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos}
+  \addConstraint{0 \leq \beta_j}{\leq C_2 \delta, \quad j = 1, 2, \ldots, \ntil,}
+  \addConstraint{\delta }{\geq 0,}
+\end{mini}
+where the upper bounds in the second and third constraints depend on the used surrogate function and are defined as follows
+\begin{align*}
+  C_1 & = \begin{cases}
+    C & \text{for hinge loss}, \\
+    +\infty & \text{for quadratic hinge loss},
+  \end{cases} &
+  C_2 & = \begin{cases}
+    \vartheta & \text{for hinge loss}, \\
+    +\infty & \text{for quadratic hinge loss}.
+  \end{cases}
+\end{align*}
+Again, we will follow the same approach as in~\cite{adam2020projections} to solve this optimization problem. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ The theorem also shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ that depends only on~$\lambda$ and~$\mu.$
+
+\begin{theorem}\label{thm: patmat family initialization}
+  Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then if the following condition holds
+  \begin{equation}\label{eq: patmat family init alg condition}
+    \delta^0 \le - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
+  \end{equation}
+  the optimal solution of~\eqref{eq: patmat family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0.$ In the opposite case, the following system of two equations
+  \begin{subequations}\label{eq: patmat family init alg}
+    \begin{align}
+    0
+      & = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda} - \sum_{j=1}^{\ntil} \clip{0}{\lambda + \mu}{\beta_j^0 + \lambda},
+    \label{eq: patmat family init alg 1} \\
+    \lambda
+      & = C_2 \delta^0 + C_2^2 \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 - \mu} - \mu.
+    \label{eq: patmat family init alg 2}
+    \end{align}
+  \end{subequations}
+  has a solution $(\lambda,\mu)$ with $\lambda+\mu>0$ and the optimal solution of~\eqref{eq: patmat family initialization} is equal to
+  \begin{align*}
+    \alpha_i & = \clip{0}{C_1}{\alpha_i^0 - \lambda}, \\
+    \beta_j & = \clip{0}{\lambda + \mu}{\beta_j^0 + \lambda}, \\
+    C_2 \delta &= \lambda + \mu.
+  \end{align*}
+\end{theorem}
+
+\begin{proof}
   The Lagrangian of~\eqref{eq: patmat family initialization} reads
   \begin{align*}
     \mathcal{L}(\bm{\alpha}, \bm{\beta}; \lambda, \bm{p}, \bm{q}, \bm{u}, \bm{v})
@@ -854,7 +990,17 @@
   Here, the first equation follows from plugging~\eqref{eq:problem2_alpha} and~\eqref{eq:problem2_beta} into the feasibility condition~$\sum_i \alpha_i =\sum_j \beta_j$ while the second equation follows from plugging~\eqref{eq:problem2_rho} into~\eqref{eq:problem2_KKT_opt3}. Finally, system~\eqref{eq: patmat family init alg} follows after making the substitution $C_2 \delta = \lambda + \mu$.
 \end{proof}
 
-\patinith*
+System~\eqref{eq: patmat family init alg} is relatively simple to solve, since equation~\eqref{eq: patmat family init alg 2} provides an explicit formula for~$\lambda$. Let us denote it as $\lambda(\mu)$, then we denote the right-hand side of~\eqref{eq: patmat family init alg 1} as
+\begin{equation}\label{eq: patmat family init alg h}
+  h(\mu) :=
+    \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu)} - \sum_{j=1}^{\ntil} \clip{0}{\lambda(\mu) + \mu}{\beta_j^0 + \lambda(\mu)}.
+\end{equation}
+Then the system of equations~\eqref{eq: patmat family init alg} is equivalent to solving~$h(\mu) = 0$. The following lemma states that~$h$ is a non-decreasing function in~$\mu$ on~$(0,\infty)$ and thus the equation~$h(\mu) = 0$ is simple to solve using any root-finding method. Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
+
+\begin{lemma}\label{lemma: patmat family initialization h}
+  Function $h$ is non-decreasing in~$\mu$ on~$(0,\infty)$.
+\end{lemma}
+
 \begin{proof}[Proof of Lemma~\ref{lemma: patmat family initialization h} on page~\pageref{lemma: patmat family initialization h}]
   Consider any~$\mu_1 < \mu_2$. Then from~\eqref{eq: patmat family init alg 2} we obtain both~$\lambda(\mu_1) \ge \lambda(\mu_2)$ and~$\mu_1+\lambda(\mu_1) \ge \mu_2 + \lambda(\mu_2)$. The statement then follows from the definition of~$h$ in~\eqref{eq: patmat family init alg h}.
 \end{proof}
