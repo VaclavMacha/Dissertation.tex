@@ -354,15 +354,15 @@ where the upper bound in the second constraint depends on the used surrogate fun
     \sum_{j = 1}^{K} \Brac{\beta_{[\ntil - K + j]}^0 + \max_{i = 1, \ldots, \npos} \alpha_i^0} \le 0,
   \end{equation}
   the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}.$ In the opposite case, the following system of two equations
-  \begin{subequations}\label{eq: toppushk family initialization}
+  \begin{subequations}\label{eq: toppushk family init alg}
     \begin{align}
       \sum_{i=1}^{\npos} \clip{0}{C_1}{ \alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}} - K \mu
-      & = 0, \label{eq: toppushk family initialization 1} \\
+      & = 0, \label{eq: toppushk family init alg 1} \\
       \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu
-      & = 0, \label{eq: toppushk family initialization 2}
+      & = 0, \label{eq: toppushk family init alg 2}
     \end{align}
   \end{subequations}
-  has a solution~$(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family initialization} is equal to
+  has a solution~$(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family init alg} is equal to
   \begin{align*}
     \alpha_i
       & = \clip{0}{C_1}{\alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}}, \\
@@ -370,11 +370,11 @@ where the upper bound in the second constraint depends on the used surrogate fun
   \end{align*}
 \end{restatable}
 
-Theorem~\ref{thm: toppushk family initialization} shows the optimal solution of B that depends only on~$(\lambda, \mu)$ but does not provide any way to find such a solution. In the following text, we show that the number of variables in the system of equations~\eqref{eq: toppushk family initialization} can be reduced to one. For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq: toppushk family initialization 2} by 
+Theorem~\ref{thm: toppushk family initialization} shows the optimal solution of B that depends only on~$(\lambda, \mu)$ but does not provide any way to find such a solution. In the following text, we show that the number of variables in the system of equations~\eqref{eq: toppushk family init alg} can be reduced to one. For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq: toppushk family init alg 2} by 
 \begin{equation*}
   g(\lambda; \mu) := \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu.
 \end{equation*}
-Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing. We denote by~$\lambda(\mu)$ any such~$\lambda$ solving~\eqref{eq: toppushk family initialization 2} for a fixed~$\mu$. Denote~$\bm{z}$ the sorted version of~$-\bm{\beta}^0$. Then we have
+Then~$g$ is non-decreasing in~$\lambda$ but not necessarily strictly increasing. We denote by~$\lambda(\mu)$ any such~$\lambda$ solving~\eqref{eq: toppushk family init alg 2} for a fixed~$\mu$. Denote~$\bm{z}$ the sorted version of~$-\bm{\beta}^0$. Then we have
 \begin{equation*}
   g(\lambda; \mu)
     = \sum_{\Set{j}{\lambda - z_j \in [0, \mu)}}(\lambda - z_j)
@@ -408,7 +408,7 @@ Since~$\lambda(\mu)$ can be computed for fixed~$\mu$ using Algorithm~\ref{alg: t
   h(\mu)
     = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu.
 \end{equation}
-Then the system of equations~\eqref{eq: toppushk family initialization} is equivalent to~$h(\mu) = 0.$ The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, any root-finding algorithm such as Bisection can be used to find the optimal solution.
+Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent to~$h(\mu) = 0.$ The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, any root-finding algorithm such as Bisection can be used to find the optimal solution.
 
 \begin{restatable}{lemma}{topinith}\label{lemma: toppushk family h}
   Even though~$\lambda(\mu)$ is not unique, function~$h$ from~\eqref{eq: toppushk family h} is well-defined in the sense that it gives the same value for every choice of~$\lambda(\mu)$. Moreover,~$h$ is decreasing in~$\mu$ on~$(0, + \infty)$.
