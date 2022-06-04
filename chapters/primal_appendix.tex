@@ -196,7 +196,9 @@ Results for \PatMatNP can be obtained in a similar way.
       = 1 - \vartheta \Brac{\frac{1 - \tau}{\vartheta} + \bar{s}} + \vartheta \bar{s}
       = \tau,
   \end{equation*}
-  where the third equality employs the definition of~$\bar{s}$ and~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$, i.e. it solves~\eqref{eq: aatp quantile surrogate}. In the same way, as we derived~\eqref{eq:patmat_zero_aux1}, we get
+  where the third equality employs the definition of~$\bar{s}$ and~$t$. But this means that~$t$ is the threshold corresponding to~$\bm{w}$, i.e. it solves~\eqref{eq: aatp quantile surrogate}.
+  
+  In the same way, as we derived~\eqref{eq:patmat_zero_aux1}, we get
   \begin{equation}\label{eq:patmat_zero_aux2}
     1 + t - s_i
     \geq 1 + t-s_{\max}
@@ -248,7 +250,7 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for a st
 \pagebreak
 
 \begin{theorem}\label{thm:convergence}
-  Assume that the assumptions~\ref{ass_convex}-\ref{ass_alpha2} are satisfied. If there exists some~$C$ such that for the global minimizer~$\bm{w}^*$ of~$L$ we have
+  Assume that the assumptions~\ref{ass_convex}-\ref{ass_alpha2} are satisfied. If there exists some~$C$ such that for a global minimizer~$\bm{w}^*$ of~$L$ we have
   \begin{equation}\label{eq:nec_cond}
     \sum_{k=0}^\infty \alpha^k \inner{g(\bm{w}^k) - \nabla L(\bm{w}^k)}{\bm{w}^* - \bm{w}^k} \leq C,
   \end{equation}
@@ -301,7 +303,7 @@ For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function
   \item \label{surr_der1} $l'$ is a bounded function;
   \item \label{surr_der2} $l'$ is a Lipschitz continuous function with Lipschitz constant~$D$.
 \end{enumerate}
-All these requirements are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
+For simplicity, we also assume~$\vartheta = 1$ for the threshold in \PatMat formulation. All requirements above are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
 \begin{equation*}
   l(s) = \begin{cases}
     0 & \text{for } s < -1 - \varepsilon, \\
