@@ -831,9 +831,9 @@
       = -C_2 \sum_{j = 1}^{\ntil} v_j
       \le -C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
   \end{equation*}
-  This corresponds to the first case in the theorem statement and the violation of condition~\eqref{eq: patmat family initialization condition}.
+  This corresponds to the first case in the theorem statement and the violation of condition~\eqref{eq: patmat family init alg condition}.
 
-  \paragraph*{Case 2:} If~\eqref{eq: patmat family initialization condition} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\delta > 0$. For any fixed~$i$, the standard trick is to combine the optimality condition~\eqref{eq:problem2_KKT_opt1} with the primal feasibility condition~$0 \le \alpha_i \le C_1$, the dual feasibility conditions~$p_i \ge 0$, $q_i \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp1}, \ref{eq:problem2_KKT_comp2}) to obtain
+  \paragraph*{Case 2:} If~\eqref{eq: patmat family init alg condition} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\delta > 0$. For any fixed~$i$, the standard trick is to combine the optimality condition~\eqref{eq:problem2_KKT_opt1} with the primal feasibility condition~$0 \le \alpha_i \le C_1$, the dual feasibility conditions~$p_i \ge 0$, $q_i \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp1}, \ref{eq:problem2_KKT_comp2}) to obtain
   \begin{equation}\label{eq:problem2_alpha}
     \alpha_i = \clip{0}{C_1}{\alpha_i^0 - \lambda}.
   \end{equation}
@@ -851,10 +851,10 @@
     \delta - \delta^0 - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - C_2 \delta}
       & = 0.
   \end{align*}
-  Here, the first equation follows from plugging~\eqref{eq:problem2_alpha} and~\eqref{eq:problem2_beta} into the feasibility condition~$\sum_i \alpha_i =\sum_j \beta_j$ while the second equation follows from plugging~\eqref{eq:problem2_rho} into~\eqref{eq:problem2_KKT_opt3}. Finally, system~\eqref{eq: patmat family initialization} follows after making the substitution $C_2 \delta = \lambda + \mu$.
+  Here, the first equation follows from plugging~\eqref{eq:problem2_alpha} and~\eqref{eq:problem2_beta} into the feasibility condition~$\sum_i \alpha_i =\sum_j \beta_j$ while the second equation follows from plugging~\eqref{eq:problem2_rho} into~\eqref{eq:problem2_KKT_opt3}. Finally, system~\eqref{eq: patmat family init alg} follows after making the substitution $C_2 \delta = \lambda + \mu$.
 \end{proof}
 
 \patinith*
 \begin{proof}[Proof of Lemma~\ref{lemma: patmat family initialization h} on page~\pageref{lemma: patmat family initialization h}]
-  Consider any~$\mu_1 < \mu_2$. Then from~\eqref{eq: patmat family initialization 2} we obtain both~$\lambda(\mu_1) \ge \lambda(\mu_2)$ and~$\mu_1+\lambda(\mu_1) \ge \mu_2 + \lambda(\mu_2)$. The statement then follows from the definition of~$h$ in~\eqref{eq: patmat family initialization h}.
+  Consider any~$\mu_1 < \mu_2$. Then from~\eqref{eq: patmat family init alg 2} we obtain both~$\lambda(\mu_1) \ge \lambda(\mu_2)$ and~$\mu_1+\lambda(\mu_1) \ge \mu_2 + \lambda(\mu_2)$. The statement then follows from the definition of~$h$ in~\eqref{eq: patmat family init alg h}.
 \end{proof}

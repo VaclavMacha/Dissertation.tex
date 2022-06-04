@@ -26,8 +26,8 @@ Both families use surrogate false-negative rate as an objective function. Moreov
     l^{\star} (\bm{y})
       =  \sup_{\bm{x} \in \domain l} \{\bm{y}^{\top}\bm{x} - l(\bm{x})\}.
   \end{equation*}
-  is called conjugate function of~$l.$ The domain of the conjugate function
-  consists of~$y \in \R$ for which the supremum is finite. 
+  is called the conjugate function of~$l.$ The domain of the conjugate function
+  consists of $\bm{y} \in \R^n$ for which the supremum is finite. 
 \end{definition}
 
 These functions will play a crucial role in the resulting form of dual problems. Recall the hinge loss and quadratic hinge loss function defined in Notation~\ref{not: surrogates}
@@ -43,7 +43,7 @@ The conjugate function for the hinge loss can be found in~\cite{shnlev2014accele
     \infty & \text{otherwise.}
   \end{cases}  
 \end{equation}
-Similarly, the conjugate function for the quadratic hinge is defined in~\cite{kanamori2013conjugate} as
+Similarly, the conjugate function for the quadratic hinge was computed in~\cite{kanamori2013conjugate} as
 \begin{equation}\label{eq: conjugate quadratic hinge}
   l_{\text{quadratic}}^{\star}(y) =
   \begin{cases}
@@ -80,7 +80,7 @@ In this section, we focus on the family of \TopPushK formulations. The general o
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \Ipos} l(t - \bm{w}^{\top} \bm{x}_i)
   }{\label{eq: toppushk family}}{\label{eq: toppushk family L}}
   \addConstraint{s_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \Itil \label{eq: toppushk family c1}}
-  \addConstraint{t}{= \sum_{j = 1}^{K} s_{[j]}, \label{eq: toppushk family c2}}
+  \addConstraint{t}{= \frac{1}{K} \sum_{j = 1}^{K} s_{[j]}, \label{eq: toppushk family c2}}
 \end{mini!}
 where~$C \in \R,$ and~$\Itil$ and~$K$ is defined as follows
 \begin{align*}
@@ -123,6 +123,8 @@ Note that we use an alternative formulation with constant~$C.$ We use this formu
   \end{align*} 
   If~$K = 1,$ the upper bound in the second constraint vanishes due to the first constraint.
 \end{restatable}
+
+The dual formulation from the previous theorem for \TopPush ($K = 1$) was originally derived in~\cite{li2014top}. We only show, that our general dual formulation also covers this special case.
 
 \subsection{Family of \PatMat Formulations}
 
@@ -179,11 +181,10 @@ To add kernels, we first realize that the classification score~$s_j$ for any sam
     = \bm{w}^{\top} \bm{x}_j
     = \sum_{i = 1}^{\npos} \alpha_i \bm{x}_j^{\top} \bm{x}_i^+ - \sum_{i = 1}^{\nneg} \beta_i \bm{x}_j^{\top} \bm{x}_i^-,
 \end{equation}
-where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation yields from the proof of Theorem~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
+where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation follows from the proof of Theorem~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
 \begin{equation*}
   \vecab^\top \Kneg \vecab
-    = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab
-    = \Matrix{\bm{\alpha} \\ -\bm{\beta}}^\top \Matrix{\X^+ \X^{+\top} & \X^+ \X^{-\top} \\ \X^- \X^{+\top} & \X^- \X^{-\top} }\Matrix{\bm{\alpha} \\ -\bm{\beta}}.
+    = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab.
 \end{equation*}
 Using the standard trick, we can replace the kernel matrix~$\Kneg$ with matrix in the following form
 \begin{equation}\label{eq:kernel_nonlinear}
@@ -219,7 +220,7 @@ Note that dual scores are not identical to the primal ones~\eqref{eq:pred_linear
 
 \subsection{Family of \TopPushK Formulations}\label{sec: Top coordinate descent}
 
-Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm: toppushk family dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Our goal in this section is to derive an efficient iterative procedure for solving this problem. We follow the ideas presented in~\cite{chang2008coordinate, hsieh2008dual} for solving SVMs using a coordinate descent algorithm. However, we must modify the approach since we have an additional constraint~\eqref{eq: toppushk family dual c1}.  Due to this constraint, we always have to update (at least) two components of dual variables~$\bm{\alpha},$~$\bm{\beta}$ so that we do not violate it. Moreover, there are only three update rules which modify two components of~$\bm{\alpha},$~$\bm{\beta},$ satisfy constraints~\eqref{eq: toppushk family dual c1} and also keep~\eqref{eq: dual scores} satisfied. The first one updates two components of~$\bm{\alpha}$
+Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm: toppushk family dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Our goal in this section is to derive an efficient iterative procedure for solving this problem. We follow the ideas presented in~\cite{chang2008coordinate, hsieh2008dual} for solving SVMs using a coordinate descent algorithm. However, we must modify the approach since we have an additional constraint~\eqref{eq: toppushk family dual c1}.  Due to this constraint, we always have to update (at least) two components of dual variables~$\bm{\alpha},$~$\bm{\beta}.$ There are only three update rules which modify two components of~$\bm{\alpha},$~$\bm{\beta},$ and satisfy constraints~\eqref{eq: toppushk family dual c1} and~\eqref{eq: dual scores}. The first one updates two components of~$\bm{\alpha}$
 \begin{subequations}\label{eq: update rules}
 \begin{align}\label{eq: update rule a,a}
   \alphak & \to \alphak + \Delta, & \quad
@@ -251,7 +252,7 @@ where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~
 \begin{equation}\label{eq: Delta optimal}
   \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
 \end{equation}
-where~$-\nicefrac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ to interval~$[a, b].$ Since we assume one of the update rules~\eqref{eq: update rules}, the constrain~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Even though all three update rules hold for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the concrete form of surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as a surrogate function.
+where~$\gamma = -\frac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ to interval~$[a, b].$ Since we assume one of the update rules~\eqref{eq: update rules}, the constraint~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Even though all three update rules hold for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the concrete form of surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as a surrogate function.
 
 \subsubsection{Hinge loss}
 
@@ -362,7 +363,7 @@ where the upper bound in the second constraint depends on the used surrogate fun
       & = 0, \label{eq: toppushk family init alg 2}
     \end{align}
   \end{subequations}
-  has a solution~$(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family init alg} is equal to
+  has a solution~$(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family initialization} is equal to
   \begin{align*}
     \alpha_i
       & = \clip{0}{C_1}{\alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}}, \\
@@ -370,7 +371,7 @@ where the upper bound in the second constraint depends on the used surrogate fun
   \end{align*}
 \end{restatable}
 
-Theorem~\ref{thm: toppushk family initialization} shows the optimal solution of B that depends only on~$(\lambda, \mu)$ but does not provide any way to find such a solution. In the following text, we show that the number of variables in the system of equations~\eqref{eq: toppushk family init alg} can be reduced to one. For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq: toppushk family init alg 2} by 
+Theorem~\ref{thm: toppushk family initialization} shows the optimal solution of~\eqref{eq: toppushk family initialization} that depends only on~$(\lambda, \mu)$ but does not provide any way to find such a solution. In the following text, we show that the number of variables in the system of equations~\eqref{eq: toppushk family init alg} can be reduced to one. For any fixed $\mu$, we denote the function on the left-hand side of~\eqref{eq: toppushk family init alg 2} by 
 \begin{equation*}
   g(\lambda; \mu) := \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu.
 \end{equation*}
@@ -403,12 +404,12 @@ Now we can easily compute~$\lambda(\mu)$ by solving~$g(\lambda(\mu); \mu) = 0$ f
   \label{alg: toppushk family lambda}
 \end{algorithm}
 
-Since~$\lambda(\mu)$ can be computed for fixed~$\mu$ using Algorithm~\ref{alg: toppushk family lambda}, we can define auxiliary function H in the following form
+Since~$\lambda(\mu)$ can be computed for fixed~$\mu$ using Algorithm~\ref{alg: toppushk family lambda}, we can define auxiliary function~$h$ in the following form
 \begin{equation}\label{eq: toppushk family h}
   h(\mu)
     = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu.
 \end{equation}
-Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent to~$h(\mu) = 0.$ The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, any root-finding algorithm such as Bisection can be used to find the optimal solution.
+Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent to~$h(\mu) = 0.$ The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, any root-finding algorithm such as bisection can be used to find the optimal solution.
 
 \begin{restatable}{lemma}{topinith}\label{lemma: toppushk family h}
   Even though~$\lambda(\mu)$ is not unique, function~$h$ from~\eqref{eq: toppushk family h} is well-defined in the sense that it gives the same value for every choice of~$\lambda(\mu)$. Moreover,~$h$ is decreasing in~$\mu$ on~$(0, + \infty)$.
@@ -493,7 +494,7 @@ As in the previous section, we postpone the formulas for optimal update rules to
 
 \subsubsection{Initialization}
 
-As in the case of problem~\eqref{eq: toppushk family dual}, all update rules~\eqref{eq: update rules} assume that the current solution~$\bm{\alpha},$~$\bm{\beta}$~$\delta$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Pat dual hinge} or~\eqref{eq: Pat dual quadratic}, we need to have a way how to obtain an initial feasible solution. Such a task can be formally written as a projection of random variables~$\bm{\alpha}^0,$~$\bm{\beta}^0,$~$\delta^0$ to the feasible set of solutions
+As in the case of problem~\eqref{eq: toppushk family dual}, all update rules~\eqref{eq: update rules} assume that the current solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Pat dual hinge} or~\eqref{eq: Pat dual quadratic}, we need to have a way how to obtain an initial feasible solution. Such a task can be formally written as a projection of random variables~$\bm{\alpha}^0,$~$\bm{\beta}^0,$~$\delta^0$ to the feasible set of solutions
 \begin{mini}{\bm{\alpha}, \bm{\beta}, \delta}{
   \frac{1}{2} \norm{\bm{\alpha} - \bm{\alpha}^0}^2
   + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
@@ -511,26 +512,26 @@ where the upper bounds in the second and third constraints depend on the used su
     +\infty & \text{for quadratic hinge loss},
   \end{cases} &
   C_2 & = \begin{cases}
-    \delta \vartheta & \text{for hinge loss}, \\
+    \vartheta & \text{for hinge loss}, \\
     +\infty & \text{for quadratic hinge loss}.
   \end{cases}
 \end{align*}
-Again, we will follow the same approach as in~\cite{adam2020projections} to solve this optimization problem. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ The theorem also shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta}$~$\delta$ that depends only on~$\lambda$ and~$\mu.$
+Again, we will follow the same approach as in~\cite{adam2020projections} to solve this optimization problem. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ The theorem also shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ that depends only on~$\lambda$ and~$\mu.$
 
 \begin{restatable}{theorem}{patinit}\label{thm: patmat family initialization}
   Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then if the following condition holds
-  \begin{equation}\label{eq: patmat family initialization condition}
+  \begin{equation}\label{eq: patmat family init alg condition}
     \delta^0 \le - C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
   \end{equation}
-  the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0.$ In the opposite case, the following system of two equations
-  \begin{subequations}\label{eq: patmat family initialization}
+  the optimal solution of~\eqref{eq: patmat family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}$ and~$\delta^0 = 0.$ In the opposite case, the following system of two equations
+  \begin{subequations}\label{eq: patmat family init alg}
     \begin{align}
     0
       & = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda} - \sum_{j=1}^{\ntil} \clip{0}{\lambda + \mu}{\beta_j^0 + \lambda},
-    \label{eq: patmat family initialization 1} \\
+    \label{eq: patmat family init alg 1} \\
     \lambda
       & = C_2 \delta^0 + C_2^2 \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 - \mu} - \mu.
-    \label{eq: patmat family initialization 2}
+    \label{eq: patmat family init alg 2}
     \end{align}
   \end{subequations}
   has a solution $(\lambda,\mu)$ with $\lambda+\mu>0$ and the optimal solution of~\eqref{eq: patmat family initialization} is equal to
@@ -541,12 +542,12 @@ Again, we will follow the same approach as in~\cite{adam2020projections} to solv
   \end{align*}
 \end{restatable}
 
-System~\eqref{eq: patmat family initialization} is relatively simple to solve, since equation~\eqref{eq: patmat family initialization 2} provides an explicit formula for~$\lambda$. Let us denote it as $\lambda(\mu)$, then we denote the right-hand side of~\eqref{eq: patmat family initialization 1} as
-\begin{equation}\label{eq: patmat family initialization h}
+System~\eqref{eq: patmat family init alg} is relatively simple to solve, since equation~\eqref{eq: patmat family init alg 2} provides an explicit formula for~$\lambda$. Let us denote it as $\lambda(\mu)$, then we denote the right-hand side of~\eqref{eq: patmat family init alg 1} as
+\begin{equation}\label{eq: patmat family init alg h}
   h(\mu) :=
-    \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu)} - \sum_{j=1}^{\ntil} \clip{0}{\lambda(\mu) + \mu}{\beta_j^0 + \mu}.
+    \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu)} - \sum_{j=1}^{\ntil} \clip{0}{\lambda(\mu) + \mu}{\beta_j^0 + \lambda(\mu)}.
 \end{equation}
-Then the system of equations~\eqref{eq: patmat family initialization} is equivalent to solving~$h(\mu) = 0$. The following lemma states that~$h$ is a non-decreasing function in~$\mu$ on~$(0,\infty)$ and thus the equation~$h(\mu) = 0$ is simple to solve using any root-finding method. Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
+Then the system of equations~\eqref{eq: patmat family init alg} is equivalent to solving~$h(\mu) = 0$. The following lemma states that~$h$ is a non-decreasing function in~$\mu$ on~$(0,\infty)$ and thus the equation~$h(\mu) = 0$ is simple to solve using any root-finding method. Note that if~$\delta^0 < 0$, then it may happen that~$\lambda + \mu < 0$ if the initial~$\mu$ is chosen large. In such a case, it suffices to decrease~$\mu$ until~$\lambda + \mu$ is positive.
 
 \begin{restatable}{lemma}{patinith}\label{lemma: patmat family initialization h}
   Function $h$ is non-decreasing in~$\mu$ on~$(0,\infty)$.
@@ -556,7 +557,7 @@ Then the system of equations~\eqref{eq: patmat family initialization} is equival
 
 \section{Summary}
 
-In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derive simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulas, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
+In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derived simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulas, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
 
 \begin{algorithm*}
   \begin{minipage}{0.48\textwidth}
@@ -586,7 +587,7 @@ In this chapter, we derived dual formulation for \TopPushK and \PatMat family of
         \For{$l \in \{1, \ldots, \npos + \ntil \}$}
             \State Compute~$\Delta_{l}$ and~$\delta_{l}$
         \EndFor
-        \State Select the best~$Delta_{l}$ and~$\delta_{l}$
+        \State Select the best~$\Delta_{l}$ and~$\delta_{l}$
         \State Update~$\bm{\alpha}$,~$\bm{\beta},$~$\bm{s}$ according to~\eqref{eq: update rules}
         \State set~$\delta \leftarrow \delta_{l}$
       \Until{stopping criterion is satisfied}

@@ -327,7 +327,7 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
   \end{equation*}
   The objective is a combination of squared norm of weights, which is strictly convex function, and a surrogate approximation of false-negative rate, which is convex function due to Theorem~\ref{thm: convexity}. Therefore, the objective~$L$ is a strictly convex function. Moreover, it is also differentiable due to Theorem~\ref{thm: differentiability} and differentiability of smoothened hinge loss~$l$. As a result, Assumption~\ref{ass_convex} is satisfied.
 
-  Lemma~\ref{lemma:bound_g} says that~$\norm{g(\bm{w}^k)} \leq \norm{\bm{w}^k} + \hat{B}$ for all~$k.$ To show that Assumption~\ref{ass_gbound} is satisfied, we have to show, that~$\norm{\bm{w}^k}$ is bounded for all~$k.$ Consider sufficiently large~$k$ such that~$\alpha^k < 1,$ then
+  Lemma~\ref{lemma:bound_g} says that~$\norm{g(\bm{w}^k)} \leq \norm{\bm{w}^k} + \hat{B}$ for all~$k.$ To show that Assumption~\ref{ass_gbound} is satisfied, we have to show, that~$\norm{\bm{w}^k}$ is uniformly bounded. Consider sufficiently large~$k$ such that~$\alpha^k < 1.$ Then
   \begin{align*}
     \norm{\bm{w}^{k+1}}
       & = \norm{\bm{w}^{k} - \alpha^k g(\bm{w}^{k})}
@@ -337,14 +337,14 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
   \end{align*}
   where the first inequality follows from the triangle inequality and the last from the proof of Lemma~\ref{lemma:bound_g}. Now we have two possible cases
   \begin{itemize}
-    \item If $\bm{w}^k \leq \hat{B},$ then we get
+    \item If $\norm{\bm{w}^k} \leq \hat{B},$ then we get
     \begin{equation*}
       \norm{\bm{w}^{k+1}}
         \leq (1 - \alpha^k) \norm{\bm{w}^{k}} + \alpha^k \hat{B}
         \leq (1 - \alpha^k) \hat{B} + \alpha^k \hat{B}
         = \hat{B}.
     \end{equation*}
-    \item If $\bm{w}^k > \hat{B},$ then we get
+    \item If $\norm{\bm{w}^k} > \hat{B},$ then we get
     \begin{equation*}
       \norm{\bm{w}^{k+1}}
         \leq (1 - \alpha^k) \norm{\bm{w}^{k}} + \alpha^k B
@@ -352,7 +352,7 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
         = \norm{\bm{w}^{k}}.
     \end{equation*}
   \end{itemize}
-  Therefore, for sufficiently large~$k,$ we have~$\norm{\bm{w}^{k}} \leq \hat{B}.$ Combining this with Lemma~\ref{lemma:bound_g}, we get~$\norm{g(\bm{w}^k)} \leq 2\hat{B} = B$ and Assumption~\ref{ass_gbound} is satisfied.
+  Therefore, for sufficiently large~$k,$ we have~$\norm{\bm{w}^{k}} \leq \max \Brac[c]{\hat{B}, \; \norm{\bm{w}^0}}.$ Combining this with Lemma~\ref{lemma:bound_g}, we get~$\norm{g(\bm{w}^k)} \leq B,$ for some~$B,$ and Assumption~\ref{ass_gbound} is satisfied.
 
   Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are imposed directly in the statement of this theorem. 
 
@@ -536,7 +536,7 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
   By applying norm to the gradient~\eqref{eq:derivatives} of the objective function~$L,$ we get 
   \begin{equation*}
     \norm{\nabla L(\bm{w}^k)}
-      \leq \norm{\bm{w}^k} + \norm{\frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}^k - \bm{x}_i^{\top} \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i)},
+      \leq \norm{\bm{w}^k} + \norm{\frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}^k) - \bm{x}_i^{\top} \bm{w}^k)(\nabla t(\bm{w}^k) - \bm{x}_i)},
   \end{equation*}
   where the inequality follows from the triangle inequality. Due to~\ref{surr_der1} the derivative~$l'$ is bounded by some~$\hat{C}_1$. Then Theorem~\ref{thm: differentiability} and Lemma~\ref{lemma:bound_zero} imply
   \begin{equation*}
