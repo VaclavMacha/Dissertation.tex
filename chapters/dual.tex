@@ -7,11 +7,11 @@ In Chapter~\ref{chap: framework}, we introduced a general framework for binary c
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
 \end{mini}
-Many formulations have nice theoretical properties such as convexity or differentiability in this specific case. However, many real-world problems are not linearly separable, and in such cases, the approach from the previous section is not sufficient. In this chapter, we use the similarity of~\eqref{eq: aatp surrogate liner primal} to primal formulation of SVM~\cite{cortes1995support} and derive dual forms for all formulations from Table~\ref{tab: summary formulations}. Then we use the kernel method~\cite{scholkopf2001learning} to introduce nonlinearity into the dual formulations. Moreover, as dual problems are generally computationally expensive, we derive an efficient method to solve them.
+Many formulations have nice theoretical properties such as convexity or differentiability in this specific case. However, many real-world problems are not linearly separable, and in such cases, the approach from the previous section is not sufficient. In this chapter, we use the similarity of~\eqref{eq: aatp surrogate liner primal} to primal formulation of SVM~\cite{cortes1995support} and derive dual forms for all formulations from Table~\ref{tab: summary formulations}. Then we use the kernel method~\cite{scholkopf2001learning} to introduce nonlinearity into the dual formulations. Moreover, as dual problems are generally computationally expensive, we propose an efficient method to solve them.
 
 \section{Derivation of Dual Problems}\label{sec:Derivation of dual problems}
 
-As discussed in the introduction, this section is dedicated to deriving dual forms for all formulations from Table~\ref{tab: summary formulations}. \Grill and \GrillNP formulations aren't used in the rest of the text since they both use true quantile as a threshold. Since many of the remaining formulations are very similar, we divide them into two families:
+As discussed in the introduction, this section is dedicated to deriving dual forms for all formulations from Table~\ref{tab: summary formulations}. We do not discuss \Grill and \GrillNP formulations in the following text since both formulations are not convex, and therefore their primal and dual formulations are not equivalent. Since many of the remaining formulations are very similar, we divide them into two families:
 \begin{itemize}
   \item \textbf{\TopPushK family:} \TopPush, \TopPushK, \TopMeanK and \tauFPL.
   \item \textbf{\PatMat family:} \PatMat and \PatMatNP.

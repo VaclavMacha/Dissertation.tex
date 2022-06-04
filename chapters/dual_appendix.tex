@@ -84,8 +84,6 @@
 
 \patdual*
 
-\pagebreak
-
 \begin{proof}
   For simplicity, we show the proof only for \PatMatNP, i.e. the threshold is computed only from negative samples. Let us first realize that formulation~\eqref{eq: patmat family} is equivalent to the following formulation
   \begin{mini*}{\bm{w}, t, \bm{y}, \bm{z}}{
@@ -125,6 +123,8 @@
   where the equality follows from Definition~\ref{def: conjugate} of a conjugate function. Plugging this back into~\eqref{eq: PatMat dual function z} yields the third part of the objective function~\eqref{eq: patmat family dual L}, which finishes the proof.
 \end{proof}
 
+\newpage
+
 \section{Coordinate Descent Algorithm}
 \subsection{Family of \TopPushK Formulations}\label{sec: toppushk family coordinate proofs}
 \subsubsection{Hinge Loss}
@@ -153,13 +153,7 @@
 
 \topruleab*
 \begin{proof}[Proof of Proposition~\ref{prop: toppushk family hinge update a,b} on page~\pageref{prop: toppushk family hinge update a,b}]
-  Constraint~\eqref{eq: Top dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual hinge c2} reads
-  \begin{equation*}
-    0 \leq \alphak + \Delta \leq C
-    \quad \implies \quad
-    - \alphak \leq \Delta \leq C - \alphak.
-  \end{equation*}
-  Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Top dual hinge c3} for any~$K \geq 2$ reads
+  Constraint~\eqref{eq: Top dual hinge c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual hinge c2} reads~$- \alphak \leq \Delta \leq C - \alphak.$ Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Top dual hinge c3} for any~$K \geq 2$ reads
   \begin{align*}
     0 \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K} 
     & \quad \implies \quad
@@ -248,6 +242,8 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
 
+\newpage
+
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update a,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
@@ -270,13 +266,7 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
 \end{proposition}
 
 \begin{proof}
-  Constraint~\eqref{eq: Top dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual quadratic c2} reads
-  \begin{equation*}
-    0 \leq \alphak + \Delta
-    \quad \implies \quad
-    - \alphak \leq \Delta.
-  \end{equation*}
-  Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Top dual quadratic c3} for any~$K \geq 2$ reads
+  Constraint~\eqref{eq: Top dual quadratic c1} is always satisfied from the definition of the update rule~\eqref{eq: update rule a,b}. Constraint~\eqref{eq: Top dual quadratic c2} reads~$- \alphak \leq \Delta.$ Using the definition of~$\beta_{\max},$ constraint~\eqref{eq: Top dual quadratic c3} for any~$K \geq 2$ reads
   \begin{align*}
     0 \leq \beta_{\max} \leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i + \frac{\Delta}{K} 
     & \quad \implies \quad
@@ -333,8 +323,6 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
-
-\pagebreak
 
 \subsubsection{Initialization}
 
@@ -573,6 +561,8 @@ The following three propositions provide closed-form formulas for all three upda
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
+\newpage
+
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
@@ -619,6 +609,8 @@ The following three propositions provide closed-form formulas for all three upda
   \end{enumerate}
   The optimal solution is the one, which maximizes the objective~\eqref{eq: Pat dual hinge L} and is feasible.
 \end{proof}
+
+\newpage
 
 \begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
@@ -778,6 +770,8 @@ The following three propositions provide closed-form formulas for all three upda
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
+\newpage
+
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,b}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -852,8 +846,6 @@ The following three propositions provide closed-form formulas for all three upda
   \end{equation*}
 \end{proof}
 
-\pagebreak
-
 \subsubsection{Initialization}
 
 As in the case of problem~\eqref{eq: toppushk family dual}, all update rules~\eqref{eq: update rules} assume that the current solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Pat dual hinge} or~\eqref{eq: Pat dual quadratic}, we need to have a way how to obtain an initial feasible solution. Such a task can be formally written as a projection of random variables~$\bm{\alpha}^0,$~$\bm{\beta}^0,$~$\delta^0$ to the feasible set of solutions
@@ -878,7 +870,8 @@ where the upper bounds in the second and third constraints depend on the used su
     +\infty & \text{for quadratic hinge loss}.
   \end{cases}
 \end{align*}
-Again, we will follow the same approach as in~\cite{adam2020projections} to solve this optimization problem. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ The theorem also shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ that depends only on~$\lambda$ and~$\mu.$
+
+We show the way how to solve~\eqref{eq: patmat family initialization} only for hinge loss, since it is  trivial to solve it for quadratic hinge. Again, we will follow the same approach as in~\cite{adam2020projections} to solve this optimization problem. In the following theorem, we show that problem~\eqref{eq: patmat family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ The theorem also shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta},$~$\delta$ that depends only on~$\lambda$ and~$\mu.$
 
 \begin{theorem}\label{thm: patmat family initialization}
   Consider problem~\eqref{eq: patmat family initialization} and some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and~$\delta^0.$ Then if the following condition holds
