@@ -5,6 +5,8 @@
 \subsection{Family of \TopPushK Formulations}
 
 \topdual*
+
+\newpage
 \begin{proof}
   We show the proof only for \TopPushK formulation, i.e., the decision threshold is computed only from negative samples. The proof for the remaining formulations is identical. Firstly, we derive an alternative formulation to formulation~\eqref{eq: toppushk family}. Using Lemma~1 from~\cite{ogryczak2003minimizing}, we can rewrite the formula for the decision threshold to the following form
   \begin{equation*}
@@ -59,7 +61,7 @@
     \frac{1}{2} \norm{\bm{w}}_{2}^{2} - \bm{w}^{\top} \Brac{\sum_{i = 1}^{\npos} \alpha_i \bm{x}^+_i - \sum_{j = 1}^{\nneg} \beta_j \bm{x}^-_j}
       = - \frac{1}{2} \vecab^{\top} \Kneg \vecab,
   \end{equation*}
-  where we use Notation~\ref{not: kernel matrix}. It mean, that we get the first part of the objective function~\eqref{eq: toppushk family dual L}.
+  where we use Notation~\ref{not: kernel matrix}. It mean, that we get the first part of the objective function~\eqref{eq: toppushk family dual L}, ane we also get the relation~\eqref{eq: toppushk family dual to primal} between primal and dual variables.
   
   Optimality condition with respect to~$t$ reads 
   \begin{equation*}
@@ -79,6 +81,8 @@
   \end{equation*}
   for all $i = 1, \ldots, \; \npos,$ which finishes the proof for \TopPushK. For \TopPush, we have~$K = 1.$ From~\eqref{eq: toppushk family dual c1} and non-negativity of~$\beta_j$ we deduce that the upper bound in~\eqref{eq: toppushk family dual c2} is always fulfilled and can be omitted.
 \end{proof}
+
+\newpage
 
 \subsection{Family of \PatMat Formulations}
 
@@ -122,8 +126,6 @@
   \end{equation*}
   where the equality follows from Definition~\ref{def: conjugate} of a conjugate function. Plugging this back into~\eqref{eq: PatMat dual function z} yields the third part of the objective function~\eqref{eq: patmat family dual L}, which finishes the proof.
 \end{proof}
-
-\newpage
 
 \section{Coordinate Descent Algorithm}
 \subsection{Family of \TopPushK Formulations}\label{sec: toppushk family coordinate proofs}
@@ -172,6 +174,8 @@
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
+
+\newpage
 
 \toprulebb*
 \begin{proof}[Proof of Proposition~\ref{prop: toppushk family hinge update b,b} on page~\pageref{prop: toppushk family hinge update b,b}]
@@ -241,8 +245,6 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
-
-\newpage
 
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Top dual quadratic}]\label{prop: toppushk family quadratic update a,b}
   Consider problem~\eqref{eq: Top dual quadratic}, update rule~\eqref{eq: update rule a,b}, indeices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
@@ -323,6 +325,8 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
   \end{equation*}
   Finally, the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}.
 \end{proof}
+
+\newpage
 
 \subsubsection{Initialization}
 
@@ -561,8 +565,6 @@ The following three propositions provide closed-form formulas for all three upda
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual hinge optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
-\newpage
-
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update a,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$  and Notation~\ref{not: dual update rules}. Let us define
   \begin{equation*}
@@ -609,8 +611,6 @@ The following three propositions provide closed-form formulas for all three upda
   \end{enumerate}
   The optimal solution is the one, which maximizes the objective~\eqref{eq: Pat dual hinge L} and is feasible.
 \end{proof}
-
-\newpage
 
 \begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual hinge}]\label{thm: patmat family hinge update b,b}
   Consider problem~\eqref{eq: Pat dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Let us define
@@ -770,8 +770,6 @@ The following three propositions provide closed-form formulas for all three upda
   The optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal}. Finally, since optimal~$\delta$ is given by~\eqref{eq: Pat dual quadratic optimal delta} and no~$\beta_j$ was updated, the optimal~$\delta$ does not change.
 \end{proof}
 
-\newpage
-
 \begin{proposition}[Update rule~\eqref{eq: update rule a,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update a,b}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule a,b}, indices~$1 \leq k \leq \npos$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -808,6 +806,8 @@ The following three propositions provide closed-form formulas for all three upda
       = \sqrt{\delta^2 + \frac{1}{4\vartheta^2 \ntil \tau} (\Delta^{\star2} + 2\Delta^\star \betal)}.
   \end{equation*}
 \end{proof}
+
+\newpage
 
 \begin{proposition}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Pat dual quadratic}]\label{thm: patmat family quadratic update b,b}
   Consider problem~\eqref{eq: Pat dual quadratic}, update rule~\eqref{eq: update rule b,b} indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
