@@ -65,7 +65,20 @@
 }
 \mdtheorem[style = examplestyle]{example}[thm]{Example}
 \mdtheorem[style = examplestyle]{notation}[thm]{Notation}
-\mdtheorem[style = examplestyle]{note}[thm]{Note}
+
+
+% Note style
+\mdfdefinestyle{notestyle}{
+  linecolor = myorange!50,
+  backgroundcolor = myorange!10,
+  frametitlebackgroundcolor = myorange!50,
+  outerlinewidth = 1pt,
+  roundcorner = 1pt,
+  frametitlerule = true,
+  skipabove = 5pt,
+  skipbelow = 0pt,
+}
+\mdtheorem[style = notestyle]{note}[thm]{Note}
 
 % Proof style
 \mdfdefinestyle{proofstyle}{
