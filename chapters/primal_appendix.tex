@@ -298,12 +298,12 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for a st
 For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function~$l$ that satisfies:
 \begin{enumerate}[label={(\textbf{S\arabic*})}, left = 15pt]
   \item \label{surr_basic1} $l(s)\geq 0$ for all~$s\in\R$, $l(0)=1$ and~$l(s)\to 0$ as~$s\to-\infty$;
-  \item \label{surr_basic2} $l$ is convex and strictly increasing function on~$(s_0,\infty)$, where~$s_0:=\sup\{s \mid l(s)=0\}$;
-  \item \label{surr_ratio} $\frac{l'}{l}$ is a decreasing function on~$(s_0,\infty)$;
+  \item \label{surr_basic2} $l$ is convex and strictly increasing function on~$(s_0,\; +\infty)$, where~$s_0:=\sup\{s \mid l(s)=0\}$;
+  \item \label{surr_ratio} $\frac{l'}{l}$ is a decreasing function on~$(s_0, \; +\infty)$;
   \item \label{surr_der1} $l'$ is a bounded function;
   \item \label{surr_der2} $l'$ is a Lipschitz continuous function with Lipschitz constant~$D$.
 \end{enumerate}
-For simplicity, we also assume~$\vartheta = 1$ for the threshold in \PatMat formulation. All requirements above are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
+For simplicity, we also assume that the scaling parameter for the threshold in the \PatMat formulation is~$\vartheta = 1.$ All requirements above are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
 \begin{equation*}
   l(s) = \begin{cases}
     0 & \text{for } s < -1 - \varepsilon, \\
