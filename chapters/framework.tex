@@ -68,6 +68,10 @@ The resulting objective function is continuous, and therefore the problem is eas
   and their sorted versions~$\bm{s}^-_{[\cdot]}$, $\bm{s}^+_{[\cdot]}$ with non-increasing components.
 \end{notation}
 
+\begin{note}
+  To improve the readability of the main part of the work, we present results only for hinge loss. Results for quadratic hinge loss are in appendix
+\end{note}
+
 \section{Ranking Problems}\label{sec: ranking}
 
 The first category of problems from Section~\ref{sec: related problems} is a category of ranking problems. The general goal of problems from this category is to rank positive (relevant) samples higher than negative ones. That can be achieved in many different ways, but we focus only on the problems that concentrate on the high-ranked negative samples and try to push as many positive samples as possible above them. The simplest case is to maximize the number of positive samples above the worst negative. Since the worst negative sample is the negative sample with the highest classification score, the decision threshold for such a case is the highest score corresponding to the negative sample. Then the aim is to maximize the number of true-positive samples above this threshold or, equivalently, minimize the number of false-negative negative below it, which may be written as
@@ -261,11 +265,11 @@ Putting~\eqref{eq: np quantile surrogate} into the constraint results in the Ney
 \end{mini}
 We call this formulation \PatMatNP to stress the similarity with \PatMat. The only difference between these two formulations is that only negative samples are involved in computing the decision threshold for \PatMatNP, while \PatMat uses all samples. For \PatMat we derived and efficient algorithm (Algorithm~\ref{alg: patmat threshold}) for finding the threshold if the hinge loss is used as surrogate. Similar algorithm can be derived for \PatMatNP.
 
-\subsection{Threshold Comparison}
+\subsection{Threshold Comparison}\label{subsec: threshold comparison NP}
 
 In Section~\ref{sec: threshold comparison aatp}, we show that the threshold for \TopMeanK provides a better approximation of the true top $\tau$-quantile of all scores than the threshold for \PatMat. The only difference between \tauFPL and \TopMeanK is that the former computes the threshold only from negative samples while the latter uses all samples. The same holds for \PatMatNP and \PatMat. Therefore, we can show the same for \tauFPL and \PatMatNP relations as showed in Section~\ref{sec: threshold comparison aatp} for \TopMeanK and \PatMat. The following lemma shows that the approximation used by \tauFPL is better than the one used by \PatMatNP.
 
-\begin{lemma}[Thresholds relation~\cite{zhang2018tau}]
+\begin{lemma}[Thresholds relation~\cite{zhang2018tau}]\label{lemma: threshold comparison NP}
   Consider fixed vector of scores~$\bm{s}$ and thresholds for \GrillNP, \tauFPL, and \PatMatNP defined by
   \begin{align*}
     t_1^{\rm NP}(\bm{s}) &
@@ -301,6 +305,8 @@ Finally, Lemma~\ref{lemma: threshold comparison 2} shows that \Grill provides a 
 \section{Summary}
 
 In this chapter, we presented the general framework~\eqref{eq: aatp counts} and its surrogate approximation~\eqref{eq: aatp surrogate} to handle the problem of binary classification at the top. Moreover, we showed that many important problems might be formulated in a way that falls into the framework. In Table~\ref{tab: summary formulations}, we summarize all formulations introduced in this chapter and show their relation to the general framework~\eqref{eq: aatp surrogate}. All these formulations were derived with general model~$f$ even though many of them have been initially designed only for the linear model. The reason for that is simple. This chapter aims only to emphasize the similarities between these formulations. The theoretical properties that follow from the concrete form of the model are discussed in the upcoming chapters.
+
+In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold for \TopMeanK better approximates the true top $\tau$-quantile than the threshold for \PatMat. Since both formulations use the same objective function, that is non-decreasing function of the threshold, \TopMeanK provides a lower objective value for the fixed model. Furthermore, it is easier to compute the threshold for \TopMeanK than for \PatMat. Therefore it seems that \TopMeanK is a better formulation. To simplify the problem of finding the threshold for \PatMat, we derived an efficient algorithm for finding it when the hinge loss is used, see Section~\ref{sec: patmat threshold alg}. Moreover, in the next chapter, we will show that \PatMat has better theoretical properties. A similar relation holds for the \tauFPL and \PatMatNP, as discussed in Section~\ref{subsec: threshold comparison NP}.
 
 \begin{table}
   \centering
