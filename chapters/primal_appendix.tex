@@ -49,13 +49,78 @@
 
 \degeneratebehavior*
 
-Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we consider the hinge loss function and no regularization for all formulations from Table~\ref{tab: summary formulations}. We also assume that~$n$ is large, and the outlier may be ignored for the computation of thresholds that require a large number of points. Since the computation is simple for other formulations, we show it only for \PatMat.
+Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we consider the hinge loss function and no regularization for all formulations from Table~\ref{tab: summary formulations}. We also assume that~$n$ is large, and the outlier may be ignored for the computation of thresholds that require a large number of points.
+
+\paragraph*{\TopPush formulation~\eqref{eq: toppush surrogate}:}
 \begin{itemize}
-  \item For~$\bm{w}_0 = (0,0),$ we have
+  \item For~$\bm{w}_0 = (0,0)^{\top},$  all scores are equal to 0. Since the threshold~$t$ is the largest negative score, it also equals 0. Consequently, the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_0)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (0 - 0)}
+      = 1.
+  \end{equation*}
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the largest negative score equals~$2;$ therefore~$t = 2.$ Then, the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_1)
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + (2 - s_i)}
+      = \int_{0}^{1} \Brac{3 - s} \dd{s}
+      = \frac{5}{2},
+  \end{equation*}
+  where we can remove the~$\max$ operator since all positive samples are uniformly distributed in~$[0,1]\times[-1,1],$ and their scores are uniformly distributed in~$[0,1].$
+\end{itemize}
+
+\paragraph*{\TopPushK formulation~\eqref{eq: toppushK surrogate}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ the threshold and the objective function is the same as for \TopPush.
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the threshold is the mean of~$K$ largest negative scores. The largest negative score equals~$2$ and for sufficiently large~$n,$ the rest of~$K$ largest negative scores equal~$0.$ Therefore, the threshold is~$t = \frac{2}{K}.$ Then, the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_1)
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + \Brac{\frac{2}{K} - s}} \dd{s}
+      = \int_{0}^{1} \Brac{1 + \frac{2}{K} - s} \dd{s}
+      = \frac{1}{2} + \frac{2}{K},
+  \end{equation*}
+  where we can remove the~$\max$ operator since all positive scores are uniformly distributed in~$[0,1].$
+\end{itemize}
+
+\paragraph*{\Grill formulation~\eqref{eq: grill}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ all scores equal 0 and the threshold (top $\tau$-quantile) is also 0. The objective reads
+  \begin{equation*}
+    L(\bm{w}_0)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (0 - 0)} + \frac{1}{\nneg} \sum_{i \in \Ineg} \max\Brac[c]{0, \; 1 + (0 - 0)}
+      = 1 + 1
+      = 2.
+  \end{equation*}
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ all scores are uniformly distributed in~$[-1,1]$ and the top $\tau$-quantile of all score equals~$t = 1-2\tau.$ Then for~$\tau \leq \frac{1}{2},$ the value of the objective function is
+  \begin{align*}
+    L(\bm{w}_1)
+      & \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + \Brac{1-2\tau - s}} \dd{s} + \int_{-1}^{0} \max\Brac[c]{0, \; 1 + \Brac{s - 1 + 2\tau}} \dd{s} \\
+      & = \int_{0}^{1} \max\Brac[c]{0, 2(1 - \tau) - s} \dd{s} + \int_{-1}^{0} \max\Brac[c]{0, s + 2\tau} \dd{s} \\
+      & = \int_{0}^{1} \Brac{2(1 - \tau) - s} \dd{s} + \int_{-2\tau}^{0} \Brac{s + 2\tau} \dd{s} \\
+      & = \frac{3}{2} - 2\tau(1 - \tau)
+  \end{align*}
+\end{itemize}
+
+\paragraph*{\TopMeanK formulation~\eqref{eq: topmeank}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ the threshold and objective function is the same as for \TopPushK.
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the threshold is the mean of~$K = \nall \tau$ largest scores. Since all scores are uniformly distributed in~$[-1, 1],$ the top $\nall \tau$~fraction of all scores is uniformely distributed in~$[1 - 2\tau, 1].$ Therefore the threshold is~$t = 1 - \tau.$ Then, the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_1)
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + \Brac{1 - \tau - s}} \dd{s}
+      = \int_{0}^{1} \Brac{2 - \tau - s} \dd{s}
+      = \frac{3}{2} - \tau,
+  \end{equation*}
+\end{itemize}
+
+\paragraph*{\PatMat formulation~\eqref{eq: patmat}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ we have
   \begin{equation*}
     \tau
-    = \frac{1}{\nall}\sum_{i \in \I} l\Brac{\vartheta(\bm{w}_0^\top \bm{x}_i - t)}
-    = l(0 - \vartheta t) = 1 - \vartheta t,
+    = \frac{1}{n}\sum_{i \in \I} \max\Brac[c]{0, \; 1 + \vartheta(0 - t)}
+    = \frac{1}{n}\sum_{i \in \I} \Brac{1 - \vartheta t}
+    = 1 - \vartheta t,
   \end{equation*}
   which implies that threshold~$t$ equals
   \begin{equation}\label{eq: PatMat threshold 0}
@@ -64,45 +129,103 @@ Additionally to the assumptions from Example~\ref{ex: degenerate behaviour}, we 
   Consequently, the value of the objective function is
   \begin{equation}\label{eq: PatMat objective 0}
     L(\bm{w}_0)
-      = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_0^\top \bm{x}_i)
-      = l(t - 0)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (t - 0)}
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \Brac{1 + t}
       = 1 + t,
   \end{equation}
-  where the last equality follows from the definition of the hinge loss function and the fact that~$t \geq 0.$ This finishes the computation for~$\bm{w}_0$.
-  \item For~$\bm{w}_1 = (1,0),$ the computation is similar. Since all samples are uniformly distributed in~$[-1,1]\times[-1,1],$ scores~$\bm{w}_1^\top \bm{x}_i$ for~$i \in \I$ are uniformly distributed in~$[-1,1].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq \tau$, we have
-  \begin{align*}
-    \tau
-      & = \frac{1}{\nall} \sum_{i \in \I} l\Brac{\vartheta (\bm{w}_1^\top \bm{x}_i - t)}
-      \approx \frac{1}{2}\int_{-1}^{1} l\Brac{\vartheta(s-t)} \dd{s}
-        = \frac{1}{2} \int_{-1}^{1} \max\{0, 1 + \vartheta(s - t)\}\dd{s} \\
-      & =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
-        = 1 - \vartheta t + \frac{\vartheta}{2}\int_{-1}^{1}s\dd{s}
-        = 1 - \vartheta t.
-  \end{align*}
-  which again implies that threshold~$t$ equals
+  where the last equality follows the fact that~$t \geq 0.$
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the computation is similar. All scores are uniformly distributed in~$[-1,1].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq \tau$, we have
   \begin{equation*}
-    t = \frac{1-\tau}{\vartheta}.
+    \tau
+      = \frac{1}{n} \sum_{i \in \I} \max\Brac[c]{0, \; 1 + \vartheta (s_i - t)}
+      \approx \frac{1}{2} \int_{-1}^{1} \max\Brac[c]{0, \; 1 + \vartheta (s - t)} \dd{s}
+      =\frac{1}{2} \int_{-1}^{1} (1+\vartheta(s - t))\dd{s}
+      = 1 - \vartheta t.
   \end{equation*}
-  Note that we could ignore the~$\max$ operator in the relation above, since 
+  which again implies that threshold~$t$ is~$t = \frac{1}{\vartheta}(1-\tau).$ Note that we could ignore the~$\max$ operator in the relation above, since 
   \begin{equation*}
     1 + \vartheta(s - t)
       \geq 1 + \vartheta(-1 - t)
       = 1 + \vartheta \Brac{-1 - \frac{1 - \tau}{\vartheta}}
       = \tau - \vartheta
-      \geq 0.
+      \geq 0,
   \end{equation*}
-  The last inequality follows from the assumption~$\vartheta \leq \tau.$ Finally, since positive samples are uniformly distributed in~$[0,1]\times[-1,1],$ corresponding scores $\bm{w}_1^\top \bm{x}_i$  for~$i \in \Ipos$ are uniformly distributed in~$[0,1].$ Therefore, for the objective function, we have
+  where the last inequality follows from the assumption~$\vartheta \leq \tau.$ Finally, since positive scores are uniformly distributed in~$[0,1],$ the value of the objective function is
   \begin{equation*}
     L(\bm{w}_1)
-      = \frac{1}{\npos} \sum_{i \in \Ipos} l(t - \bm{w}_1^\top \bm{x}_i)
-      \approx \int_{0}^{1} l(t-s)\dd{s}
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (t - s_i)}
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + t - s} \dd{s}
       = \int_{0}^{1} (1 + t - s)\dd{s}
-      = 0.5 + t.
+      = \frac{1}{2} + t
   \end{equation*}
 \end{itemize}
-Results for \PatMatNP can be obtained in a similar way.
 
-\pagebreak
+\paragraph*{\GrillNP formulation~\eqref{eq: grill np}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ the threshold and objective function is the same as for \Grill.
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ negative scores are uniformly distributed in~$[-1,0]$ and the top $\tau$-quantile of negative score equals~$t = -\tau.$ Then, the value of the objective function is
+  \begin{align*}
+    L(\bm{w}_1)
+      & \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + \Brac{-\tau - s}} \dd{s} + \int_{-1}^{0} \max\Brac[c]{0, \; 1 + \Brac{s + \tau}} \dd{s} \\
+      & = \int_{0}^{1-\tau} \Brac{1 - \tau - s} \dd{s} + \int_{-1}^{0} \Brac{1 + \tau + s} \dd{s}
+      = 1 + \frac{1}{2}\tau^2
+  \end{align*}
+\end{itemize}
+
+\paragraph*{\tauFPL formulation~\eqref{eq: tau-fpl}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ the threshold and objective function is the same as for \TopPushK.
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the threshold is the mean of~$\nneg \tau$ largest negative scores. Since negative scores are uniformly distributed in~$[-1, 0],$ top $\nneg \tau$ fraction of negative scores is uniformely distributed in~$[-\tau, 0].$ Therefore the threshold is~$t = -\frac{1}{2}\tau.$ Then, the value of the objective function i
+  \begin{equation*}
+    L(\bm{w}_1)
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + \Brac{- \frac{1}{2}\tau - s}} \dd{s}
+      = \int_{0}^{1 - \frac{1}{2}\tau} \Brac{1 - \frac{1}{2}\tau - s} \dd{s}
+      = \frac{1}{2} - \frac{1}{8} \tau \Brac{4 + \tau}
+  \end{equation*}
+\end{itemize}
+
+\paragraph*{\PatMatNP formulation~\eqref{eq: patmat np}:}
+\begin{itemize}
+  \item For~$\bm{w}_0 = (0,0)^{\top},$ we have
+  \begin{equation*}
+    \tau
+      = \frac{1}{\nneg}\sum_{i \in \Ineg}  \max\Brac[c]{0, \; 1 + \vartheta(0 - t)} 
+      = \frac{1}{\nneg}\sum_{i \in \Ineg}  \Brac{1 - \vartheta t}
+      = 1 - \vartheta t,
+  \end{equation*}
+  which implies that threshold is~$t = \frac{1-\tau}{\vartheta}.$ Consequently, the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_0)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (t - 0)}
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \Brac{1 + t}
+      = 1 + t,
+  \end{equation*}
+  where the last equality follows the fact that~$t \geq 0.$
+  \item For~$\bm{w}_1 = (1,0)^{\top},$ the computation is similar. Negative scores are uniformly distributed in~$[-1,0].$ Then, if the scaling parameter~$\vartheta$ satisfies~$\vartheta \leq 2 \tau$, we have
+  \begin{align*}
+    \tau
+      & = \frac{1}{\nneg}\sum_{i \in \Ineg}  \max\Brac[c]{0, \; 1 + \vartheta(s_i - t)}
+      \approx \int_{-1}^{0} \max\Brac[c]{0, \; 1 + \vartheta(s - t)} \dd{s} \\
+      & = \int_{-1}^{0} (1 + \vartheta(s - t)) \dd{s}
+      = 1 - \vartheta t - \frac{1}{2} \vartheta.
+  \end{align*}
+  which implies that threshold is~$t = \frac{1}{\vartheta}(1-\tau) - \frac{1}{2}.$ Note that we could ignore the~$\max$ operator in the relation above, since 
+  \begin{equation*}
+    1 + \vartheta(s - t)
+      \geq 1 + \vartheta(-1 - t)
+      = 1 + \vartheta \Brac{- 1 - \frac{1 - \tau}{\vartheta} + \frac{1}{2}}
+      = \tau - \frac{1}{2} \vartheta
+      \geq 0,
+  \end{equation*}
+  where the last inequality follows from the assumption~$\vartheta \leq 2 \tau.$ Finally, since positive scores are uniformly distributed in~$[0,1],$ the value of the objective function is
+  \begin{equation*}
+    L(\bm{w}_1)
+      = \frac{1}{\npos} \sum_{i \in \Ipos} \max\Brac[c]{0, \; 1 + (t - s_i)}
+      \approx \int_{0}^{1} \max\Brac[c]{0, \; 1 + t - s} \dd{s}
+      = \int_{0}^{1} (1 + t - s)\dd{s}
+      = \frac{1}{2} + t.
+  \end{equation*}
+\end{itemize}
 
 \larget*
 \begin{proof}[Proof of Theorem~\ref{thm:large_t} on page~\pageref{thm:large_t}]
@@ -291,8 +414,6 @@ Assumptions~\ref{ass_alpha1}-\ref{ass_alpha3} are satisfied for example for a st
   which implies the theorem statement.
 \end{proof}
 
-\pagebreak
-
 \subsection{Proof of Theorem~\ref{thm:sgd}}\label{app:sgd2}
 
 For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function~$l$ that satisfies:
@@ -321,6 +442,9 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
 \end{figure}
 
 \sgd*
+
+\pagebreak
+
 \begin{proof}[Proof of Theorem~\ref{thm:sgd} on page~\pageref{thm:sgd}]
   We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Recall the form of the objective function
   \begin{equation*}
