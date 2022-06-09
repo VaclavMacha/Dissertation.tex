@@ -181,39 +181,48 @@ where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \Pat
   For simplicity, the rest of the chapter covers only the \TopPushK formulation with hinge loss. We use this formulation since it is the prototypical example for the \TopPushK family of formulations. The results for the rest of the formulations from this family can be derived almost identically. Moreover, results for the \PatMat family of formulations can be derived similarly. Therefore, derivations for the \TopPushK family with quadratic hinge loss and the \PatMat family with hinge and quadratic hinge loss are postponed to Appendix~\ref{app: dual}.
 \end{note}
 
-As we mentioned at the beginning of the chapter, our goal is to extend our framework to be usable for linearly inseparable problems. We derived dual formulations for \TopPushK and \PatMat families in two previous sections. In this section, we show how to employ the kernels method~\cite{scholkopf2001learning} to introduce nonlinearity into these dual formulations. For simplicity, we focus only on formulations from \TopPushK family that compute the decision threshold only from negative samples. As mentioned in Notation~\ref{not: kernel matrix}, all such formulations use kernel matrix~$\Kneg.$ The derivation is the same for all other formulations.
+\pagebreak
 
-To add kernels, we first realize that the classification score~$s_j$ for any sample~$\bm{x}_j \in \R^d$ reads 
+\section{Kernels}
+
+As we mentioned at the beginning of the chapter, our goal is to extend our framework to be usable for linearly inseparable problems. In two previous sections, we derived dual formulations for \TopPushK and \PatMat families. In this section, we show how to employ the kernels method~\cite{scholkopf2001learning} to introduce nonlinearity into these dual formulations. For simplicity, we focus only on the \TopPushK formulation that computes the decision threshold only from negative samples. As mentioned in Notation~\ref{not: kernel matrix}, \TopPushK formulation uses kernel matrix~$\K = \Kneg.$ The following derivation is the same for all other formulations.
+
+To add kernels, we first realize that primal variables~$\bm{w}$ can be computed from dual variables~$\bm{\alpha},$~$\bm{\beta}$ using~\eqref{eq: toppushk family dual to primal}. Therefore, the classification score for any sample~$\bm{x}$ can be calculated as follows
 \begin{equation}\label{eq:pred_linear}
-  s_j
-    = \bm{w}^{\top} \bm{x}_j
-    = \sum_{i = 1}^{\npos} \alpha_i \bm{x}_j^{\top} \bm{x}_i^+ - \sum_{i = 1}^{\nneg} \beta_i \bm{x}_j^{\top} \bm{x}_i^-,
+  s
+    = \bm{w}^{\top} \bm{x}
+    = \sum_{i = 1}^{\npos} \alpha_i \bm{x}^{\top} \bm{x}_i^+ - \sum_{i = 1}^{\nneg} \beta_i \bm{x}^{\top} \bm{x}_i^-.
 \end{equation}
-where~$\bm{\alpha} \in \R^{\npos},$~$\bm{\beta} \in \R^{\nneg}$ are dual variables. This relation follows from the proof of Theorem~\ref{thm: toppushk family dual}. Consider now any kernel function~$k: \R^d \times \R^d \to \R.$ Then the first part of the objective function~\eqref{eq: toppushk family dual L} amounts to
+Importantly, all samples~$\bm{x}_i$ in the previous formula occur only in the dot product with~$\bm{x}$ and not separately. This property allows us to use the standard kernel trick from SVMs~\cite{cortes1995support}. The kernel trick replaces the dot product of the vectors from input space using the so-called kernel function~$k: \R^d \times \R^d \to \R.$ This function represents a dot product in the space of a higher dimension
 \begin{equation*}
-  \vecab^\top \Kneg \vecab
-    = \vecab^\top \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top} } \vecab.
+  k(\bm{x}, \bm{x}') = \phi(\bm{x})^{\top} \phi(\bm{x}'),
 \end{equation*}
-Using the standard trick, we can replace the kernel matrix~$\Kneg$ with matrix in the following form
-\begin{equation}\label{eq:kernel_nonlinear}
-  \Kneg = \Matrix{k\Brac{\X^+, \X^{+}} & -k\Brac{\X^+, \X^{-}} \\ -k\Brac{\X^-, \X^{+}} & k\Brac{\X^-, \X^{-}}},
+where~$\phi: \R^d \to \R^D$ is a mapping function. The idea is to transform the input vectors using~$\phi$ into some feature space in which the classification problem is easier to solve. However, getting the explicit formula for the mapping function is usually very hard. The kernel trick allows us to avoid this explicit mapping to the feature space since we can only replace the dot product in~\eqref{eq:pred_linear} by the kernel function~$k$
+\begin{equation}\label{eq: dual scores kernel}
+  s = \sum_{i = 1}^{\npos} \alpha_i k\Brac{\bm{x}, \bm{x}^+_i} - \sum_{i = 1}^{\nneg} \beta_i k\Brac{\bm{x}, \bm{x}^-_i}.
 \end{equation}
-where~$k(\cdot,\; \cdot)$ is applied to all rows of both arguments. Then for any sample~$\bm{x}_j$, the classification score~\eqref{eq:pred_linear} is replaced by
-\begin{equation}\label{eq: scores dual kernel}
-  s_j = \sum_{i = 1}^{\npos} \alpha_i k\Brac{\bm{x}_j, \bm{x}^+_i} - \sum_{i = 1}^{\nneg} \beta_i k\Brac{\bm{x}_j, \bm{x}^-_i}.
+The downside of this approach is, that we can not compute the primal variables using~\eqref{eq: toppushk family dual to primal} if we do not know the mapping function~$\phi.$ We always have to calculate the scores using the formula above, which is computationally expensive.
+
+Now we must show how to modify the original dual problem~\eqref{eq: toppushk family dual} to incorporate kernels. Recall the form of the kernel matrix~$\K$ for \TopPushK
+\begin{equation*}
+  \K
+    = \Matrix{\X^+ \X^{+\top} & -\X^+ \X^{-\top} \\ -\X^- \X^{+\top} & \X^- \X^{-\top}}.
+\end{equation*}
+Since each component of the kernel matrix~$\K$ is computed as a dot product of two training samples, we can replace~$\K$ with a matrix in the following form
+\begin{equation}\label{eq: kernel matrix nonlinear}
+  \K = \Matrix{k\Brac{\X^+, \X^{+}} & -k\Brac{\X^+, \X^{-}} \\ -k\Brac{\X^-, \X^{+}} & k\Brac{\X^-, \X^{-}}}.
 \end{equation}
+The kernel function~$k(\cdot,\; \cdot)$ is applied to all rows of both arguments. In other words, if we use the kernel trick, the original dual problem~\eqref{eq: toppushk family dual} remains almost the same. The only change is in the construction of the kernel matrix.
 
 \section{Coordinate Descent Algorithm}\label{sec: coordinate descent}
 
-In the previous sections, we derived dual formulations for \TopPushK and \PatMat families of formulations. Moreover, we showed how to incorporate non-linear kernels into these formulations. As a result, we can use all presented formulations even for linearly non-separable problems. However, the dimension of the dual problems is at least equal to the number of all samples~$n,$ and therefore, it is computationally expensive to use standard techniques such as gradient descent. To handle this issue, the standard coordinate descent algorithm~\cite{chang2008coordinate, hsieh2008dual} has been proposed in the context of SVMs. In this section, we derive a coordinate descent algorithm suitable for our dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). We also show that we can reduce the whole optimization problem to a one-dimensional quadratic optimization problem with a closed-form solution in every iteration. Therefore, every iteration of our algorithm is cheap. For a review of other approaches see~\cite{batmaz2019review,werner2019review}.
+In the previous sections, we derived dual formulations for \TopPushK and \PatMat families of formulations. Moreover, we showed how to incorporate non-linear kernels into these formulations. As a result, we can use all presented formulations even for linearly non-separable problems. However, the dimension of the dual problems is at least equal to the number of all samples~$n,$ and therefore, it is computationally expensive to use standard techniques such as gradient descent. To handle this issue, the standard coordinate descent algorithm~\cite{chang2008coordinate, hsieh2008dual} has been proposed in the context of SVMs. In this section, we derive a coordinate descent algorithm suitable for our dual problems~(\ref{eq: toppushk family dual},~\ref{eq: patmat family dual}). We also show that we can reduce the whole optimization problem to a one-dimensional quadratic optimization problem with a closed-form solution in every iteration. Therefore, every iteration of our algorithm is cheap. For a review of other approaches see~\cite{batmaz2019review,werner2019review}. 
 
-Before we start, recall that the classification scores can be computed directly from dual variables as shown in~\eqref{sec: coordinate descent}. Using the definition of kernel matrix~$\K$, we can define a vector of scores~$\bm{s}$ by
+Recall that we perform all derivations only for \TopPushK with hinge loss. Classification scores can be computed directly from dual variables as shown in~\eqref{eq: dual scores kernel}. Using the definition~\eqref{eq: kernel matrix nonlinear} of kernel matrix~$\K$, we can define a vector of scores~$\bm{s}$ by
 \begin{equation}\label{eq: dual scores}
   \bm{s} = \K \vecab.
 \end{equation}
-Note that dual scores are not identical to the primal ones~\eqref{eq:pred_linear} (even though we use the same notation). The main difference is that dual scores use kernel function~$k.$ Therefore, they are equivalent only if the kernel function is defined as a dot product, i.e., if~$k(\bm{x}, \bm{z}) = \bm{x}^{\top} \bm{z}.$ Moreover, the vector of dual scores~\eqref{eq: dual scores} is not identical to the vector of primal scores from Notation~\ref{not: scores}, even with this choice of the kernel function. The reason is the construction of the kernel matrix~$\K$ from Notation~\ref{not: kernel matrix}. For example, for~$\Kneg$, the resulting vector of dual scores is a permutation of the vector of primal scores. Similarly, for~$\Kall$, the vector of primal scores corresponds to the elements of~\eqref{eq: dual scores} with indices~$\npos + 1, \ldots, \npos + \nall.$ Therefore for both definitions of kernel matrices from Notation~\ref{not: scores}, we can quickly get the vector of primal scores by permuting vector~\eqref{eq: dual scores} or selecting only some elements from vector~\eqref{eq: dual scores}. To simplify the indexing of the vector of scores~\eqref{eq: dual scores} and kernel matrix~$\K$, we introduce a new notation in Notation~\ref{not: dual update rules}.
-
-\pagebreak
+Note that dual scores are not identical to the primal ones~\eqref{eq:pred_linear} (even though we use the same notation). The main difference is that dual scores use kernel function~$k.$ Therefore, they are equivalent only if the kernel function is defined as a dot product in the input space, i.e., if~$k(\bm{x}, \bm{x}') = \bm{x}^{\top} \bm{x}'.$ To simplify the indexing of the vector of scores~\eqref{eq: dual scores} and kernel matrix~$\K$, we introduce a new notation in Notation~\ref{not: dual update rules}.
 
 \begin{notation}\label{not: dual update rules}
   Consider any index~$l$ that satisfies~$1 \leq l \leq \npos + \ntil.$ Note that the length of dual variable~$\bm{\alpha}$ is~$\npos$ for both formulations~\eqref{eq: toppushk family dual} and~\eqref{eq: patmat family dual}. Therefore, we can define auxiliary index~$\hat{l}$ as 
@@ -226,9 +235,9 @@ Note that dual scores are not identical to the primal ones~\eqref{eq:pred_linear
   Then the index~$l$ can be safely used for kernel matrix~$\K$ or vector of scores~$\bm{s},$ while its corresponding version~$\hat{l}$ can be used for dual variables~$\bm{\alpha}$ or~$\bm{\beta}.$
 \end{notation}
 
-\subsection{Family of \TopPushK Formulations}\label{sec: Top coordinate descent}
+\subsection{Update Rules}\label{sec: Top coordinate descent}
 
-Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm: toppushk family dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Our goal in this section is to derive an efficient iterative procedure for solving this problem. We follow the ideas presented in~\cite{chang2008coordinate, hsieh2008dual} for solving SVMs using a coordinate descent algorithm. However, we must modify the approach since we have an additional constraint~\eqref{eq: toppushk family dual c1}.  Due to this constraint, we always have to update (at least) two components of dual variables~$\bm{\alpha},$~$\bm{\beta}.$ There are only three update rules which modify two components of~$\bm{\alpha},$~$\bm{\beta},$ and satisfy constraints~\eqref{eq: toppushk family dual c1} and~\eqref{eq: dual scores}. The first one updates two components of~$\bm{\alpha}$
+Consider dual formulation~\eqref{eq: toppushk family dual} from Theorem~\ref{thm: toppushk family dual} and fixed feasible dual variables~$\bm{\alpha},$~$\bm{\beta}.$ Our goal in this section is to derive an efficient iterative procedure for solving this problem. We follow the ideas presented in~\cite{chang2008coordinate, hsieh2008dual} for solving SVMs using a coordinate descent algorithm. However, we must modify the approach since we have an additional constraint~\eqref{eq: toppushk family dual c1}.  Due to this constraint, we always have to update (at least) two components of dual variables~$\bm{\alpha},$~$\bm{\beta}.$ There are only three update rules which modify two components of~$\bm{\alpha},$~$\bm{\beta},$ and satisfy constraints~\eqref{eq: toppushk family dual c1}. The first one updates two components of~$\bm{\alpha}$
 \begin{subequations}\label{eq: update rules}
 \begin{align}\label{eq: update rule a,a}
   \alphak & \to \alphak + \Delta, & \quad
@@ -260,11 +269,9 @@ where~$a,$~$b,$~$c,$~$\Delta_{lb},$~$\Delta_{ub}$ are constants with respect to~
 \begin{equation}\label{eq: Delta optimal}
   \Delta^{\star} = \clip{\Delta_{lb}}{\Delta_{ub}}{\gamma},
 \end{equation}
-where~$\gamma = -\frac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ to interval~$[a, b].$ Since we assume one of the update rules~\eqref{eq: update rules}, the constraint~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Even though all three update rules hold for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the concrete form of surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss or quadratic hinge loss is used as a surrogate function.
+where~$\gamma = -\frac{b}{a}$ and~$\clip{a}{b}{x}$ amounts to clipping (projecting)~$x$ to interval~$[a, b].$ Since we assume one of the update rules~\eqref{eq: update rules}, the constraint~\eqref{eq: toppushk family dual c1} is always satisfied after the update. Even though all three update rules hold for any surrogate, the calculation of the optimal~$\Delta^{\star}$ depends on the concrete form of surrogate function. In the following text, we show the closed-form formula for~$\Delta^{\star},$ when the hinge loss function from Notation~\ref{not: surrogates} is used. 
 
-\subsubsection{Hinge loss}
-
-We start with the hinge loss function from Notation~\ref{not: surrogates}. Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation~\eqref{eq: toppushk family dual} yields
+Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the dual formulation~\eqref{eq: toppushk family dual} yields
 \begin{maxi!}{\bm{\alpha}, \bm{\beta}}{
   - \frac{1}{2} \vecab^\top \K \vecab
   + \sum_{i = 1}^{\npos} \alpha_i
@@ -308,8 +315,6 @@ The form of~$\K$ and~$\ntil$ depends on the used formulation as discussed in The
   \end{align*}
 \end{restatable}
 
-\pagebreak
-
 \begin{restatable}[Update rule~\eqref{eq: update rule b,b} for problem~\eqref{eq: Top dual hinge}]{proposition}{toprulebb}\label{prop: toppushk family hinge update b,b}
   Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule b,b}, indices~$\npos + 1 \leq k \leq \ntil$ and~$\npos + 1 \leq l \leq \ntil$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
   \begin{align*}
@@ -327,7 +332,7 @@ The form of~$\K$ and~$\ntil$ depends on the used formulation as discussed in The
   \end{align*}
 \end{restatable}
 
-\subsubsection{Initialization}
+\subsection{Initialization}
 
 For all update rules~\eqref{eq: update rules} we assumed that the current solution~$\bm{\alpha},$~$\bm{\beta}$ is feasible. So to create an iterative algorithm that solves problem~\eqref{eq: Top dual hinge} or~\eqref{eq: Top dual quadratic}, we need to have a way how to obtain an initial feasible solution. Such a task can be formally written as a projection of random variables~$\bm{\alpha}^0,$~$\bm{\beta}^0$ to the feasible set of solutions
 \begin{mini}{\bm{\alpha}, \bm{\beta}}{
@@ -335,10 +340,10 @@ For all update rules~\eqref{eq: update rules} we assumed that the current soluti
   + \frac{1}{2} \norm{\bm{\beta} - \bm{\beta}^0}^2
   }{\label{eq: toppushk family initialization}}{}
   \addConstraint{\sum_{i = 1}^{\npos} \alpha_i}{= \sum_{j = 1}^{\ntil} \beta_j}
-  \addConstraint{0 \leq \alpha_i}{\leq C_1, \quad i = 1, 2, \ldots, \npos,}
+  \addConstraint{0 \leq \alpha_i}{\leq C, \quad i = 1, 2, \ldots, \npos,}
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad j = 1, 2, \ldots, \ntil,}
 \end{mini}
-where the upper bound in the second constraint depends on the used surrogate function. For hinge loss function, the upper bound is~$C_1 = C,$ while for the quadratic hinge loss it is~$C_1 = + \infty.$ To solve problem~\eqref{eq: toppushk family initialization}, we follow the same approach as in~\cite{adam2020projections}. In the following theorem, we show that problem~\eqref{eq: toppushk family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ Moreover, the theorem shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta}$ that depends only on~$\lambda$ and~$\mu.$
+where the upper bound in the second constraint depends on the used surrogate function. To solve problem~\eqref{eq: toppushk family initialization}, we follow the same approach as in~\cite{adam2020projections}. In the following theorem, we show that problem~\eqref{eq: toppushk family initialization} can be written as a system of two equations of two variables~$\lambda$ and~$\mu.$ Moreover, the theorem shows the concrete form of feasible solution~$\bm{\alpha},$~$\bm{\beta}$ that depends only on~$\lambda$ and~$\mu.$
 
 \begin{restatable}{theorem}{topinit}\label{thm: toppushk family initialization}
   Consider problem~\eqref{eq: toppushk family initialization}, some initial solution~$\bm{\alpha}^0,$~$\bm{\beta}^0$ and denote the sorted version (in non-decreasing order) of~$\bm{\beta}^0$ as~$\bm{\beta}_{[\cdot]}^0.$ Then if the following condition holds
@@ -348,7 +353,7 @@ where the upper bound in the second constraint depends on the used surrogate fun
   the optimal solution of~\eqref{eq: toppushk family initialization} amounts to~$\bm{\alpha} = \bm{\beta} = \bm{0}.$ In the opposite case, the following system of two equations
   \begin{subequations}\label{eq: toppushk family init alg}
     \begin{align}
-      \sum_{i=1}^{\npos} \clip{0}{C_1}{ \alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}} - K \mu
+      \sum_{i=1}^{\npos} \clip{0}{C}{ \alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}} - K \mu
       & = 0, \label{eq: toppushk family init alg 1} \\
       \sum_{j=1}^{\ntil} \clip{0}{\mu}{\beta_j^0 + \lambda} - K\mu
       & = 0, \label{eq: toppushk family init alg 2}
@@ -357,7 +362,7 @@ where the upper bound in the second constraint depends on the used surrogate fun
   has a solution~$(\lambda, \mu)$ with $\mu > 0,$ and the optimal solution of~\eqref{eq: toppushk family initialization} is equal to
   \begin{align*}
     \alpha_i
-      & = \clip{0}{C_1}{\alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}}, \\
+      & = \clip{0}{C}{\alpha_i^0 - \lambda + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \lambda - \mu}}, \\
     \beta_j & = \clip{0}{\mu}{\beta_j^0 + \lambda}.
   \end{align*}
 \end{restatable}
@@ -398,7 +403,7 @@ Now we can easily compute~$\lambda(\mu)$ by solving~$g(\lambda(\mu); \mu) = 0$ f
 Since~$\lambda(\mu)$ can be computed for fixed~$\mu$ using Algorithm~\ref{alg: toppushk family lambda}, we can define auxiliary function~$h$ in the following form
 \begin{equation}\label{eq: toppushk family h}
   h(\mu)
-    = \sum_{i=1}^{\npos} \clip{0}{C_1}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu.
+    = \sum_{i=1}^{\npos} \clip{0}{C}{\alpha_i^0 - \lambda(\mu) + \frac{1}{K} \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0+\lambda(\mu) - \mu}} - K \mu.
 \end{equation}
 Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent to~$h(\mu) = 0.$ The following lemma describes properties of~$h.$ Since~$h$ is decreasing in~$\mu$ on~$(0, \infty)$, any root-finding algorithm such as bisection can be used to find the optimal solution.
 
@@ -408,7 +413,7 @@ Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent 
 
 \section{Summary}
 
-In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derived simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulas, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
+In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derived simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulas, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. For \TopPushK family with hinge loss, we showed the derivation in the previous section, while the derivations for \PatMat family are in Appendix~\ref{sec: Pat coordinate descent}. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
 
 \begin{algorithm*}
   \begin{minipage}{0.48\textwidth}
