@@ -261,12 +261,12 @@ where~$\nabla t^k$ is an approximation of~$\nabla t(\bm{w}^k)$ from Theorem~\ref
 \begin{equation}\label{eq:update_a}
   \bm{a}^k = \sum_{i \in \Imb^k} l'\Brac{\vartheta\Brac{s_i^k - t^k}}\bm{x}_i.
 \end{equation}
-Note that~$\bm{a}^k$ is an approximation of the numerator of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability}. However, this approximation uses only the current minibatch. Since our minibatches cycle periodically, we can sum the last $m$ variables~$\bm{a}^k$ and get the approximation computed from all samples and all delayed scores. Then, the approximation of~$\nabla t(\bm{w}^k)$ can be defined as follows
+Note that~$\bm{a}^k$ is an approximation of the numerator of~$\nabla t(\bm{w}^k)$ from Theorem~\ref{thm: differentiability}, but it uses only the current minibatch. Since our minibatches cycle periodically, we sum the last~$m$ variables~$\bm{a}^k$ and get the approximation of~$\nabla t(\bm{w}^k)$ computed from all samples and delayed scores
 \begin{equation}\label{eq:update_nablat}
   \nabla t^k
     = \frac{\bm{a}^k + \bm{a}^{k-1} + \dots + \bm{a}^{k - m + 1}}{\sum_{i \in \I} l'\Brac{\vartheta\Brac{s_i^k - t^k}}}.
 \end{equation}
-A perhaps more straightforward possibility would be to consider only~$\bm{a}^k$ in the numerator of~\eqref{eq:update_nablat}. However, presented choice enables us to prove the convergence, and it adds stability to the algorithm for small minibatches.
+It would be easier to consider only~$\bm{a}^k$ in the numerator of~\eqref{eq:update_nablat}. However, presented choice enables us to prove the convergence, and adds stability to the algorithm for small minibatches.
 
 \begin{restatable}{theorem}{sgd}\label{thm:sgd}
   Consider the \PatMat formulation, stepsizes~$\alpha^k = \frac{1}{k+1}\alpha^0,$ and piecewise disjoint minibatches~$\Imb^1, \; \Imb^2, \ldots, \; \Imb^m$ which cycle periodically~$\Imb^{k+m} = \Imb^k$. If~$l$ is the smoothened hinge function defined by
