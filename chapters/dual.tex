@@ -102,7 +102,7 @@ The following theorem shows the dual form of formulation~\eqref{eq: toppushk fam
         & $K$
         & $\K$
         & $\ntil$
-        & $\tilde{\bm{x}_j}$ \\
+        & $\tilde{\bm{x}}_j$ \\
       \midrule
       \TopPush
         & $1$
@@ -159,7 +159,7 @@ where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \Pat
     \begin{NiceTabular}{lccc}
         & $\K$
         & $\ntil$
-        & $\tilde{\bm{x}_j}$ \\
+        & $\tilde{\bm{x}}_j$ \\
       \midrule
       \PatMat
         & $\Kall$
@@ -177,9 +177,8 @@ where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \Pat
   \end{equation}
 \end{restatable}
 
-\begin{note}[Appendix]
-  ??? DOPLNIT ???
-  For simplicity, the rest of the section concerns only \TopPushK family of formulations with hinge loss function.
+\begin{note}
+  For simplicity, the rest of the chapter covers only the \TopPushK formulation with hinge loss. We use this formulation since it is the prototypical example for the \TopPushK family of formulations. The results for the rest of the formulations from this family can be derived almost identically. Moreover, results for the \PatMat family of formulations can be derived similarly. Therefore, derivations for the \TopPushK family with quadratic hinge loss and the \PatMat family with hinge and quadratic hinge loss are postponed to Appendix~\ref{app: dual}.
 \end{note}
 
 As we mentioned at the beginning of the chapter, our goal is to extend our framework to be usable for linearly inseparable problems. We derived dual formulations for \TopPushK and \PatMat families in two previous sections. In this section, we show how to employ the kernels method~\cite{scholkopf2001learning} to introduce nonlinearity into these dual formulations. For simplicity, we focus only on formulations from \TopPushK family that compute the decision threshold only from negative samples. As mentioned in Notation~\ref{not: kernel matrix}, all such formulations use kernel matrix~$\Kneg.$ The derivation is the same for all other formulations.
