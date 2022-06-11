@@ -391,101 +391,97 @@ Figure~\ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted fr
 
 Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than~$\bm{w}=0$. Thus, \yesmark\ means that it is always better while \nomark\ means that the algorithm made no progress from the starting point~$\bm{w} =0$. The latter case implies that~$\bm{w}=0$ seems to be the global minimum. We make the following observations:
 \begin{itemize}
-  \item \PatMat and \PatMatNP are the only methods which succeeded at every dataset for some hyperparameter. Moreover, for each dataset, there was some~$\beta_0$ such that these methods were successful if and only if~$\beta\in(0,\beta_0)$. This is in agreement with Theorem~\ref{thm:patmat_zero}.
+  \item \PatMat and \PatMatNP are the only methods which succeeded at every dataset for some hyperparameter. Moreover, for each dataset, there was some~$\vartheta_0$ such that these methods were successful if and only if~$\vartheta\in(0,\vartheta_0)$. This is in agreement with Theorem~\ref{thm:patmat_zero}.
   \item \TopMeanK fails everywhere which agrees with Corollary~\ref{cor:topmean}.
   \item Figure~\ref{fig:thresholds} states that the methods from Section~\ref{sec: aatp} has a higher threshold than their Neyman-Pearson variants from Section~\ref{sec: Neyman-Pearson}. This is documented in the table as the latter have a higher number of successes.
 \end{itemize}
 
 \begin{table}[!ht]
   \centering
-  \begin{NiceTabular}{llcccc}
+  \begin{NiceTabular}{lcccc}
     \CodeBefore
       \rowcolor{\headercol}{1}
       \rowcolors{3}{\rowcol}{}[restart]
     \Body
     \toprule
-    \Block[c]{1-2}{\textbf{Method}}
-     && \textbf{Ionosphere}
+    \Block[c]{1-1}{\textbf{Method}}
+      & \textbf{Ionosphere}
       & \textbf{Hepmass}
       & \textbf{FashionMNIST}
       & \textbf{CIFAR100} \\
     \midrule
     \TopPush
-     && \yesmark
+      & \yesmark
       & \nomark
       & \yesmark
       & \nomark \\
     \TopPushK
-     && \yesmark
+      & \yesmark
       & \nomark
       & \yesmark
       & \nomark \\
-    \Block{1-1}{\Grill}
-      & $\tau=0.01$
+    \midrule
+    \Grill (0.01)
       & \nomark
       & \nomark
       & \nomark
       & \nomark \\
-      & $\tau=0.05$
+      \Grill (0.05)
       & \nomark
       &\nomark
       & \nomark
       & \nomark \\
-    \Block{1-1}{\PatMat}
-      & $\tau=0.01$
+      \TopMeanK (0.01)
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+    \TopMeanK (0.05)
+      & \nomark
+      & \nomark
+      & \nomark
+      & \nomark \\
+    \PatMat (0.01)
       & \yesmark
-      & \good{\boldmath$\beta\leq 0.1$}
-      & \good{\boldmath$\beta\leq 1$}
-      & \good{\boldmath$\beta\leq 1$} \\
-      & $\tau=0.05$
+      & \good{\boldmath$\vartheta\leq 0.1$}
+      & \good{\boldmath$\vartheta\leq 1$}
+      & \good{\boldmath$\vartheta\leq 1$} \\
+    \PatMat (0.05)
       & \yesmark
-      & \good{\boldmath$\beta\leq 1$}
+      & \good{\boldmath$\vartheta\leq 1$}
       & \yesmark
       & \yesmark \\
-    \Block{1-1}{\TopMeanK}
-      & $\tau=0.01$
+    \midrule
+    \GrillNP (0.01)
       & \nomark
       & \nomark
       & \nomark
       & \nomark \\
-      & $\tau=0.05$
+    \GrillNP (0.05)
       & \nomark
       & \nomark
       & \nomark
       & \nomark \\
-    \Block{1-1}{\GrillNP}
-      & $\tau=0.01$
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-      & $\tau=0.05$
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-    \Block{1-1}{\PatMatNP}
-      & $\tau=0.01$
-      & \yesmark
-      & \good{\boldmath$\beta\leq 1$}
-      & \yesmark
-      & \good{\boldmath$\beta\leq 1$} \\
-      & $\tau=0.05$
-      & \yesmark
-      & \yesmark
-      & \yesmark &
-      \good{\boldmath$\beta\leq 1$} \\
-    \Block{1-1}{\tauFPL}
-      & $\tau=0.01$
+    \tauFPL (0.01)
       & \yesmark
       & \nomark
       & \yesmark
       & \nomark \\
-      & $\tau=0.05$
+    \tauFPL (0.05)
       & \yesmark
       & \yesmark
       & \yesmark
       & \good{\boldmath$\lambda\leq 0.001$} \\
+    \PatMatNP (0.01)
+      & \yesmark
+      & \good{\boldmath$\vartheta\leq 1$}
+      & \yesmark
+      & \good{\boldmath$\vartheta\leq 1$} \\
+    \PatMatNP (0.05)
+      & \yesmark
+      & \yesmark
+      & \yesmark
+      & \good{\boldmath$\vartheta\leq 1$} \\
     \bottomrule
   \end{NiceTabular}
   \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \yesmark\ means that the solution was better than zero for all hyperparameters while \nomark\ means that it was worse for all hyperparameters.}
@@ -512,7 +508,7 @@ We also use the Precision-Recall (PR) curve that are commonly used for unbalance
 
 \subsection{Hyperparameter choice}
 
-In Section~\ref{sec: coordinate descent} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\beta})$. We use the linear and Gaussian kernels defined by
+In Section~\ref{sec: coordinate descent} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\vartheta})$. We use the linear and Gaussian kernels defined by
 \begin{align}
   k_{\textrm{lin}}(\bm{x}, \bm{y})   & = \bm{x}^{\top} \bm{y}, \label{eq:Linear kernel} \\
   k_{\textrm{gauss}}(\bm{x}, \bm{y}) & = \exp\{-\sigma \norm{\bm{x} - \bm{y}}_2^2\} \label{eq:Gaussian kernel}
@@ -529,83 +525,6 @@ The classifiers were trained on the training set. We selected the optimal hyperp
   \end{aligned}
 \end{equation*}
 which gave the best performance on the validation set. All presented result are shown on the testing set which was not part of the training process.
-
-\begin{table}[ht]
-  \centering
-  \begin{NiceTabular}{lcrrrrrrr}
-    \CodeBefore
-      \rowcolor{\headercol}{1-2}
-      \rowcolors{4}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \Block[c]{2-1}{\textbf{Dataset}}
-      & \Block[c]{2-1}{$y^+$}  
-      & \Block[c]{2-1}{$d$}
-      & \Block[c]{1-2}{\textbf{Train}}
-      && \Block[c]{1-2}{\textbf{Validation}}
-      && \Block[c]{1-2}{\textbf{Test}} \\
-    \cline{4-9}
-      &&& \Block[c]{1-1}{$n$}
-      & \Block[c]{1-1}{$\frac{\npos}{n}$}
-      & \Block[c]{1-1}{$n$}
-      & \Block[c]{1-1}{$\frac{\npos}{n}$}
-      & \Block[c]{1-1}{$n$}
-      & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
-    \midrule
-    Ionosphere
-      & --
-      & 34
-      & 176
-      & 64.2\%
-      & 87
-      & 64.4\%
-      & 88
-      & 63.6\% \\
-    Spambase
-      & --
-      & 57
-      & 2 301
-      & 39.4\%
-      & 1 150
-      & 39.4\%
-      & 1 150
-      & 39.4\% \\
-    WhiteWineQuality
-      & 7, 8, 9
-      & 11
-      & 2 449
-      & 21.6\%
-      & 1 224
-      & 21.7\%
-      & 1 225
-      & 21.6\% \\
-    RedWineQuality
-      & 7, 8
-      & 11
-      & 800
-      & 13.5\%
-      & 400
-      & 13.8\%
-      & 399
-      & 13.5\% \\
-    Fashion-MNIST
-      & 0
-      & 784
-      & 50 000
-      & 10.0\%
-      & 10 000
-      & 10.0\%
-      & 10 000
-      & 10.0\% \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{Summary of the used datasets. It shows which original labels~$y^+$ were selected as the positive class, the number of features~$d,$ samples~$n,$ and the fraction of positive samples~$\frac{\npos}{n}$.}
-  \label{tab:Datasets}
-\end{table}
-
-\subsection{Dataset description}
-
-For numerical experiments, we consider the FashionMNIST dataset~\cite{xiao2017fashionmnist} and four smaller datasets from the UCI repository~\cite{dua2019uci}: sigillito1989classification~\cite{sigillito1989classification}, Spambase, WhiteWineQuality~\cite{cortez2009modeling} and RedWineQuality~\cite{cortez2009modeling}. Datasets that do not contain testing set were randomly divided into a training (50\%), validation (25\%) and testing (25\%) sets. For datasets that contain a testing set, the training set was randomly divided into a training and a validation set, where the validation set has the same size as the testing set. FashionMNIST dataset was converted to binary classification tasks by selecting class with label 0 as the positive class and the rest as the negative class. All datasets are summarized in Table~\ref{tab:Datasets}.
 
 \subsection{Experiments}
 
@@ -811,77 +730,6 @@ Section~\ref{sec:bias1} showed that we can use large minibatches to obtain good 
 
 Two approaches for solving \eqref{eq:problem} exist. The first approach considers the threshold constraint as it is, while the second approach uses heuristics to approximate it. In the first approach, Acc@Top~\cite{boyd2012accuracy} argues that the threshold equals one of the scores. They fix the index of a sample and solve as many optimization problems as there are samples.~\cite{eban2017scalable,adam2021general,kumar2021implicit} write the threshold as a constraint and replace both the objective and the constraint via surrogates.~\cite{eban2017scalable} uses Lagrange multipliers to obtain a minimax problem,~\cite{mackey2018constrained} implicitly removes the threshold as an optimization variable and uses the chain rule to compute the gradient while~\cite{macha2020nonlinear} solves an SVM-like dual formulation with kernels.~\cite{grill2016learning} uses the same formulation but applies surrogates only to the objective and recomputes the threshold after each gradient step. \TFCO~\cite{cotter2019optimization} solves a general class of constrained problems via a minimax reformulation. In the second approach, SoDeep~\cite{engilberge2019sodeep} or SmoothI~\cite{thonet2021smoothi} use the fact that the threshold may be easily computed from sorted scores. They approximate the sorting operator by a network trained on artificial data. \APPerf~\cite{fathony2019ap} considers a general metric and hedges against the worst-case perturbation of scores. The authors argue that the problem is bilinear in scores and use duality arguments. However, the bilinearity is lost when optimizing with respect to the weights of the original network. 
 
-\subsection{Dataset description and Computational setting}\label{sec:set}
-
-We consider the following image recognition datasets: FashionMNIST~\cite{xiao2017fashionmnist}, CIFAR100~\cite{krizhevsky2009learning}, SVHN2~\cite{netzer2011reading} and ImageNet~\cite{russakovsky2015imagenet}. These datasets were converted to binary classification tasks by selecting one class as the positive class and the rest as the negative class. ImageNet merged turtles and non-turtles. We also consider the 3A4 dataset~\cite{ma2015deep} with molecules and their activity levels. Finally, malware analysis reports of executable files were provided by a cybersecurity company. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Moreover, they contain different features, and their features may have variable lengths. Table~\ref{tab:DatasetsDeep} summarizes the used datasets. The Malware Detection dataset was represented by JSONs, which contain varying number of features. Moreover, many features are not scalar but have some hierarchical structure as well.
-
-\begin{table}
-  \centering
-  \begin{NiceTabular}{lcrrrrc}
-    \CodeBefore
-      \rowcolor{\headercol}{1-2}
-      \rowcolors{4}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \Block[c]{2-1}{\textbf{Dataset}}
-      & \Block[c]{2-1}{$d$}
-      & \Block[c]{1-2}{\textbf{Train}}
-      && \Block[c]{1-2}{\textbf{Test}}
-      && \Block[c]{2-1}{\textbf{Licence}} \\
-    \cline{3-6}
-      && \Block[c]{1-1}{$n$}
-      & \Block[c]{1-1}{$\frac{\npos}{n}$}
-      & \Block[c]{1-1}{$n$}
-      & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
-    \midrule
-    FashionMNIST
-      & $28 \times 28 \times 1$
-      & 60 000
-      & 10.00\%
-      & 10 000
-      & 10.00\%
-      & MIT \\
-    CIFAR100
-      & $32 \times 32 \times 3$
-      & 50 000
-      & 1.00\%
-      & 10 000
-      & 1.00\%
-      & not specified \\
-    SVHN2 extra
-      & $32 \times 32 \times 3$
-      & 604 388
-      & 17.28\%
-      & 26 032
-      & 19.59\%
-      & not specified \\
-    ImageNet
-      & $62 720 \times 1$
-      & 1 281 167
-      & 0.51\%
-      & 50000
-      & 0.50\%
-      & registration \\
-    3A4
-      & $9491 \times 1$
-      & 37 241
-      & 0.98\%
-      & 37 241
-      & 1.07\%
-      & CC BY 4.0 \\
-    Malware Detection
-      & variable
-      & 6 580 166
-      & 87.22\%
-      & 800 346
-      & 91.80\%
-      & proprietary\\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{Summary of the used datasets with the number of features~$d$, number of samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$ in the training set.}
-  \label{tab:DatasetsDeep}
-\end{table}
-
 We use truncated quadratic loss~$l(z) = (\max\{0, 1 + z\})^2$ as the surrogate function and~$\tau=\frac{1}{\nneg}$ and~$\tau=0.01$. This first one computes the true positive rate above the second highest-ranked negative, while the latter allows for the false positive rate of~$1\%$. All algorithms were run for~$200$ epochs on an NVIDIA P100 GPU card with balanced minibatches of 32 samples. The only exception was Malware Detection, which was run on a cluster in a distributed manner, and where the minibatch size was~$20000$. For the evaluation of numerical experiments, we use the standard receiver operating characteristic (ROC) curve. All results are computed from the test set. All codes were implemented in the Julia language~\cite{bezanson2017julia}. The network structure was the same for all methods; we describe them in the online appendix.
 
 
@@ -1013,19 +861,6 @@ Table~\ref{tab:Overall comparison} shows the true positive rate (tpr) above the 
 Figure~\ref{fig: roc curves} \textbf{A)} shows the ROC curves on CIFAR100 averaged over ten independent runs. We use the logarithmic~$x$ axis to highlight low fpr modes. \DeepTopPush performs significantly the best again whenever the false positive rate is smaller than~$0.01$.
 
 As a further test, we performed a simple experiment on ImageNet. We modified the pre-trained EfficientNet B0~\cite{tan2019efficientnet} by removing the last dense layer and adding another dense layer with one output. Then we retrained the newly added layer to perform well at the top. The original EfficientNet achieved~$68.0\%$ at the top, while \DeepTopPush achieved~$70.0\%$ for the same metric. This shows that \DeepTopPush can provide better accuracy at the top than pre-trained networks.
-
-\subsection{Application to ranking}
-
-The 3A4 dataset contains information about activity levels of approximately~$50000$ molecules, each with about~$10000$ descriptors. The activity level corresponds to the usefulness of the molecule for creating new drugs. Since medical scientists can focus on properly investigating only a small number of molecules, it is important to select a small number of molecules with high activity.
-
-We converted the continuous activity level into binary by considering a threshold on the activity. Since the input is large-dimensional, and there is no spatial structure to use convolutional neural networks, we used PCA to reduce the dimension to~$100$. Then we created a network with two hidden layers and applied \DeepTopPush to it. The test activity was evaluated at the continuous (and not binary level). Table~\ref{tab:Overall comparison} shows again the results at the top. \DeepTopPush outperforms other methods. Figure~\ref{fig:molecules} shows that high scores (output of the network) indeed correspond to high activity. Thus, even though the problem was ``binarized'' and its dimension reduced, our algorithm was able to select a small number of molecules with high activity levels. These molecules can be used for further manual (expensive) investigation.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/deep_molecules.pdf}
-  \caption{Results for the 3A4 dataset. The goal was to assign large scores to a few molecules with high activity (scores on top-right are preferred).}
-  \label{fig:molecules}
-\end{figure}
 
 \begin{figure*}[!ht]
   \centering
