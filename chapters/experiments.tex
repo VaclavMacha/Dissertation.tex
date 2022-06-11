@@ -1,34 +1,23 @@
 \chapter{Numerical Experiments}\label{chap: experiments}
 
+\section{Datasets Description}
 
-\section{Linear Model}\label{sec:num1}
+For the numerical experiments, we consider variety of different datasets, that can be divided
+into three categories:
+\begin{itemize}
+  \item Tabular datasets: The first category consists of six tabular datasets from the UCI repository~\cite{dua2019uci}. Ionosphere~\cite{sigillito1989classification}, Spambase, WhiteWineQuality, and RedWineQuality~\cite{cortez2009modeling} are small datasets with a few features. HEPMASS~\cite{baldi2016parameterized} contains a large number of samples while Gisette~\cite{guyon2005result} contains a large number of features.
+  \item Visual recognition datasets: This category contains six well-known visual recognition datasets. MNIST~\cite{deng2012mnist} and FashionMNIST~\cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers.
+  \item Real world dataset: A renowned cybersecurity company provided malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number.
+\end{itemize}
+All datasets from the first two categories are publicly available, while the last dataset is private. The summary of all datasets is provided in Table~\ref{tab: datasets summary}.
 
-In this section, we present numerical results.
+Many of the datasets from Table~\ref{tab: datasets summary}, are not originally designed for binary classification tasks. Ionosphere, Spambase, Gisette, HEPMASS, and Malware detection datasets are binary by default, and the rest of the datasets need to be binarized. For the WhiteWineQuality and RedWineQuality datasets, we consider all whines with a quality level higher than 7 to be a positive class and the rest negative. For each of the visual recognition datasets, we consider the first class to be positive and the rest to be negative, i.e. the positive class is labeled 0 or 1 depending on the dataset.
 
-\subsection{Implementational details and Hyperparameter choice}
-
-We recall that all methods fall into the framework of either \eqref{eq: aatp counts} or \eqref{eq: aatp surrogate}. Since the threshold~$t$ depends on the weights~$\bm{w}$, we can consider the decision variable to be only~$\bm{w}$. Then to apply a method, we implemented the following iterative procedure. At iteration~$j$, we have the weights~$\bm{w}^j$ to which we compute the threshold~$t^j=t(\bm{w}^j)$. Then according to \eqref{eq:derivatives}, we compute the gradient of the objective and apply the ADAM descent scheme~\cite{kingma2014adam}. All methods were run for~$10000$ iterations using the stochastic gradient descent. The minibatch size was~$512$ except for the sigillito1989classification and Spambase datasets where the full gradient was used. All methods used the hinge surrogate \eqref{eq:defin_surrogate}. The initial point is generated randomly.
-
-We run the methods for the following hyperparameters
-\begin{equation}\label{eq:beta1}
-  \begin{aligned}
-    \beta   & \in  \{0.0001,\ 0.001,\ 0.01,\ 0.1,\ 1,\ 10\}, \\
-    \lambda & \in \{0,\ 0.00001,\ 0.0001,\ 0.001,\ 0.01,\ 0.1\}, \\
-    k       & \in \{1, 3, 5, 10, 15, 20\}.
-  \end{aligned}
-\end{equation}
-For \TopPushK, \PatMat and \PatMatNP we fixed~$\lambda=0.001$ to have six hyperparameters for all methods. For all datasets, we choose the hyperparameter which minimized the criterion on the validation set. The results are computed on the testing set which was not used during training the methods.
-
-\TopPush and \tauFPL were originally implemented in the dual. However, to allow for the same framework and the stochastic gradient descent, we implemented it in the primal. These two approaches are equivalent.
-
-\subsection{Dataset description and Performance criteria}\label{sec:datasets}
-
-For the numerical results, we considered 10 datasets summarized in Table~\ref{tab:counts}. They can be downloaded from the UCI repository. sigillito1989classification~\cite{sigillito1989classification} and Spambase are small, baldi2016parameterized~\cite{baldi2016parameterized} contains a large number of samples while guyon2005result~\cite{guyon2005result} contains a large number of features. We also considered six visual recognition datasets: MNIST, FashionMNIST, CIFAR10, CIFAR20, CIFAR100 and SVHN2. MNIST and FashionMNIST are grayscale datasets of digits and fashion items, respectively. CIFAR100 is a dataset of coloured images of items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. SVHN2 contains coloured images of house numbers. As Table~\ref{tab:counts} shows, these datasets are imbalanced.
-
-Each of the visual recognition datasets was converted into ten binary datasets by considering one of the classes~$\{0,\dots,9\}$ as the positive class and the rest as the negative class. The experiments were repeated ten times for each dataset from different seeds, which influenced the starting point and minibatch creation. We use tpr@fpr as the evaluation criterion. This describes the true-positive rate at a prescribed true-negative rate, usually of~$1\%$ or~$5\%$. For the linear classifier~$\bm{w}^{\top} \bm{x} - t$, it selects the threshold~$t$ so that the desired true-negative rate is satisfied and then computes the true-positive rate for this threshold.
+Datasets that do not contain train / valid / test split were randomly divided into this three splits. A summary of all datasets with additional information on sample size and the number of samples in the train / valid / test split is given in Table~\ref{tab: datasets summary}.
 
 \begin{table}[!ht]
   \centering
+  \resizebox{\columnwidth}{!}{%
   \begin{NiceTabular}{lcrrrrrr}
     \CodeBefore
       \rowcolor{\headercol}{1-2}
@@ -36,7 +25,7 @@ Each of the visual recognition datasets was converted into ten binary datasets b
     \Body
     \toprule
     \Block[c]{2-1}{\textbf{Dataset}}
-      & \Block[c]{2-1}{$m$}
+      & \Block[c]{2-1}{$d$}
       & \Block[c]{1-2}{\textbf{Train}}
       && \Block[c]{1-2}{\textbf{Validation}}
       && \Block[c]{1-2}{\textbf{Test}} \\
@@ -64,6 +53,22 @@ Each of the visual recognition datasets was converted into ten binary datasets b
       & 39.4\%
       & 1 151
       & 39.4\% \\
+    WhiteWineQuality
+      & 11
+      & 2 449
+      & 21.6\%
+      & 1 224
+      & 21.7\%
+      & 1 225
+      & 21.6\% \\
+    RedWineQuality
+      & 11
+      & 800
+      & 13.5\%
+      & 400
+      & 13.8\%
+      & 399
+      & 13.5\% \\
     Gisette
       & 5 000
       & 1 000
@@ -80,11 +85,12 @@ Each of the visual recognition datasets was converted into ten binary datasets b
       & 50.0\%
       & 3 500 000
       & 50.0\% \\
+    \midrule
     MNIST
       & $28 \times 28 \times 1$
-      & 44 999
+      & 45 000
       & 11.2\%
-      & 15 001
+      & 15 000
       & 11.2\%
       & 10 000
       & 11.4\% \\
@@ -128,52 +134,81 @@ Each of the visual recognition datasets was converted into ten binary datasets b
       & 18.9\%
       & 26 032
       & 19.6\% \\
+    \midrule
+    Malware Detection
+      & variable
+      & 6 580 166
+      & 87.22\%
+      & ---
+      & ---
+      & 800 346
+      & 91.8\% \\
     \bottomrule
   \end{NiceTabular}
+  }
   \caption{Structure of the used datasets. The training, validation and testing sets show the number of features~$m$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$.}
-  \label{tab:counts}
+  \label{tab: datasets summary}
 \end{table}
+
+\section{Performance Evaluation}
+
+In Chapter~\ref{chap: framework}, we presented 8 different formulations that fall within the general framework for classification at the top~\eqref{eq: aatp surrogate}, see Table~\ref{tab: summary formulations}. The formulations are divided into three categories:
+\begin{itemize}
+  \item \textbf{Ranking problems:} In this category, we have \TopPush and \TopPushK formulation. Therefore, thsese formulations concentrates on pushing as many positive sample above the worst few negative samples.
+  \item \textbf{Accuracy at the Top:} In this category, we have \Grill, \TopMeanK and \PatMat formulation. The goal of the original problem of Accuracy at the Top is to maximize the number of positive samples with score higher than the top $\tau$-quantile of all scores. All three formulations use different approximation of the true $\tau$-quantile.
+  \item \textbf{Neyman-Pearson problem:} In this category, we have \GrillNP, \tauFPL and \PatMatNP. The goal of these three formulations is to maximize the number of positive samples with score higher than the than the top $\tau$-quantile of negative scores. All three formulations use different approximation of the true $\tau$-quantile.
+\end{itemize}
+As we discussed in Section~\ref{sec: performance evaluation} and~\ref{sec: related problems}, there are many different approaches to measure the classifier’s performance. However, none of the above formulations focus on these classical performance metrics.
+
+Since we are interested in the problems that falls into the general framework~\eqref{eq: aatp surrogate}, we are not interested in standard metrics such as accuracy or balanced accuracy.
+
+\section{Linear Model}\label{sec:num1}
+
+In this section, we present numerical results for formulations from Table~\ref{tab: summary formulations} in their primal form and with linear model. For simplicity, we use only hinge loss function as a surrogate. \TopPush and \tauFPL were originally implemented in the dual. However, to allow for the same framework and the stochastic gradient descent, we implemented it in the primal. These two approaches are equivalent.
+
+For all experiments we use standard stochastic gradient descend algorithm with ADAM
+optimiser~\cite{kingma2014adam}. We run each experiments for 10000 iterations with randomly generated initial
+solution. Moreover, we use minibatches of size 512 except for the Ionosphere and Spambase
+datasets where the full gradient was used.
+
+Since formulations differ in the number of available hyper-parameters (see Table~\ref{tab: summary formulations}), we fixed the number of hyper-parameter per formulation to six. For \PatMat and \PatMatNP we use fixed~$\lambda = 0.002$ and
+\begin{equation*}
+  \vartheta \in \{0.0001, 0.001, 0.01, 0.1, 1, 10\}.
+\end{equation*}
+For \TopPushK we use fixed~$\lambda = 0.002$ and
+\begin{equation*}
+  K \in \{1, 3, 5, 10, 15, 20\}.
+\end{equation*}
+For the rest of the formulations we use
+\begin{equation*}
+  K \in \{0.00002, 0.0002, 0.002, 0.02, 0.2, 0\}.
+\end{equation*}
+Finally, we use parameter~$\tau \in \{0.01, 0.05\}$ for all formulations except \TopPush and \TopPushK. It give us total number of 14 formulations (we count different values of~$\tau$ as different formulation) each of which with 6 hyper-parameters. For all datasets, we choose the hyperparameter which minimized the criterion on the validation set. The results are computed on the testing set which was not used during training the methods.
 
 \subsection{Numerical results}
 
-Figure~\ref{fig:ptau} presents the standard ROC (receiver operating characteristic) curves on selected datasets. Since all methods from this paper are supposed to work at low false-positive rates, the~$x$ axis is logarithmic. Both figures depict averages over ten runs with different seeds. The left column depicts CIFAR100 while the right one Hepmass. These are the two more complicated datasets. We selected four representative methods: \PatMat and \PatMatNP as our methods and \TopPush and \tauFPL as state-of-the-art methods. Even though all methods work well, \PatMatNP seems to outperform the remaining methods on most levels of false-positive rate.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/primal_results.pdf}
-  \caption{ROC curves (with logarithmic~$x$ axis) on CIFAR100 (left) and Hepmass (right).}
-  \label{fig:ptau}
-\end{figure}
-
-While Figure~\ref{fig:ptau} gave a glimpse of the behaviour of methods, Figures~\ref{fig:cd1} and~\ref{fig:cd2} provide a statistically more sound comparison. It employs the Nemenyi post hoc test for the Friedman test recommended in~\cite{demvsar2006statistical}. This test compares if the mean ranks of multiple methods are significantly different.
+Figure~\ref{fig: critical diagrams} employs the Nemenyi post hoc test for the Friedman test recommended in~\cite{demvsar2006statistical}. This test compares if the mean ranks of multiple methods are significantly different.
 
 We consider 14 methods (we count different values of~$\tau$ as different methods) as depicted in this table. For each dataset mentioned in Section~\ref{sec:datasets} and each method, we evaluated the fpr@tpr metric and ranked all methods. Rank 1 refers to the best performance for given criteria, while rank 14 is the worst. The~$x$-axis shows the average rank over all datasets. The Nemenyi test computes the critical difference. If two methods are within their critical difference, their performance is not deemed to be significantly different. Black wide horizontal lines group such methods.
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width = \linewidth]{images/crit_diag_fpr_1.pdf}
-  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.01$) metric.}
-  \label{fig:cd1}
-\end{figure}
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/crit_diag_fpr_5.pdf}
-  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr ($\tau=0.05$) metric.}
-  \label{fig:cd2}
+  \includegraphics[width = \linewidth]{images/crit_diag.pdf}
+  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
+  \label{fig: critical diagrams}
 \end{figure}
 
 From this figure and table, we make several observations:
 \begin{itemize}
-  \item \TopPushK (rank 5.1) provides a slight improvement over \TopPush (rank 6.7) even though this improvement is not statistically significant as both methods are connected by the black line in both Figures~\ref{fig:cd1} and~\ref{fig:cd2}.
+  \item \TopPushK (rank 5.1) provides a slight improvement over \TopPush (rank 6.7) even though this improvement is not statistically significant as both methods are connected by the black line in both Figures~\ref{fig: critical diagrams} and~\ref{fig:cd2}.
   \item Neither \Grill (ranks 12.0 and 12.1) nor \GrillNP (ranks 12.1 and 12.4) perform well. We believe this happened due to the lack of convexity as indicated in Theorem~\ref{thm: convexity} and the discussion after that.
   \item \TopMeanK (ranks 9.2 and 9.9) does not perform well either. Since the thresholds~$\tau$ are small, then~$\bm{w}=0$ is the global minimum as proved in Corollary~\ref{cor:topmean}.
   \item \PatMatNP (rank 2.1 and 2.6) seems to outperform other methods.
   \item \PatMat (ranks 5.0 and 5.4), \tauFPL (ranks 4.8 and 5.8) and \TopPushK (rank 5.1) perform similarly. Since they are connected, there is no statistical difference between their behaviours.
-  \item \PatMatNP at level~$0.01$ (rank 2.1) outperforms \PatMatNP at level~$0.05$ (rank 2.6) for~$\tau=0.01$. \PatMatNP at level~$0.05$ (rank 1.9 in Figure~\ref{fig:cd2}) outperforms \PatMatNP at level~$0.01$ (rank 3.0 in Figure~\ref{fig:cd2}) for~$\tau=0.05$. This should be because these methods are optimized for the corresponding threshold. For~$\tauFPL$ we observed this behaviour for Figure~\ref{fig:cd2} but not for Figure~\ref{fig:cd1}.
+  \item \PatMatNP at level~$0.01$ (rank 2.1) outperforms \PatMatNP at level~$0.05$ (rank 2.6) for~$\tau=0.01$. \PatMatNP at level~$0.05$ (rank 1.9 in Figure~\ref{fig:cd2}) outperforms \PatMatNP at level~$0.01$ (rank 3.0 in Figure~\ref{fig:cd2}) for~$\tau=0.05$. This should be because these methods are optimized for the corresponding threshold. For~$\tauFPL$ we observed this behaviour for Figure~\ref{fig:cd2} but not for Figure~\ref{fig: critical diagrams}.
 \end{itemize}
 
-Figure~\ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted from the best (left) to the worst (right) average ranks. The numbers in the graph show the~$p$-value for the pairwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr of both methods is the same. Even though Figure~\ref{fig:cd1} employs a comparison of mean ranks and Figure~\ref{fig:wilcoxon} a pairwise comparison of fpr@tpr, the results are almost similar. Methods grouped by the black line in the former figure usually show a large~$p$-value in the latter figure.
+Figure~\ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted from the best (left) to the worst (right) average ranks. The numbers in the graph show the~$p$-value for the pairwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr of both methods is the same. Even though Figure~\ref{fig: critical diagrams} employs a comparison of mean ranks and Figure~\ref{fig:wilcoxon} a pairwise comparison of fpr@tpr, the results are almost similar. Methods grouped by the black line in the former figure usually show a large~$p$-value in the latter figure.
 
 \begin{figure}[!ht]
   \centering
