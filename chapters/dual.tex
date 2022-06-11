@@ -2,7 +2,7 @@
 
 In Chapter~\ref{chap: framework}, we introduced a general framework for binary classification at the top. Moreover, we showed that several problem classes, considered separate problems so far, fit into this framework. The summary of all formulations is provided in Table~\ref{tab: summary formulations}. In Chapter~\ref{chap: linear} we discussed a special case when the linear model is used. Then formulation~\eqref{eq: aatp surrogate} reads
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  \lambda \norm{\bm{w}}^2 + C_1 \cdot \fps(\bm{s}, t) + C_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate liner primal}}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
@@ -82,7 +82,7 @@ In this section, we focus on the family of \TopPushK formulations. The general o
   \addConstraint{s_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \Itil \label{eq: toppushk family c1}}
   \addConstraint{t}{= \frac{1}{K} \sum_{j = 1}^{K} s_{[j]}, \label{eq: toppushk family c2}}
 \end{mini!}
-where~$C \in \R.$ The set of indices~$\Itil$ equals~$\I$ for \TopMeanK and~$\Ineg$ for other formulations. The parameter~$K$ equals~$1$ for \TopPush, $K$ for \TopPushK, $\nall \tau$ for \TopMeanK, and $\nneg \tau$ for \tauFPL. Note that we use an alternative formulation with constant~$C,$ since it is more similar to the standard SVM, and we wanted to stress this similarity. For~$C = \nicefrac{1}{\npos}$ the new formulation is identical to the original one.
+where~$C \in \R.$ The set of indices~$\Itil$ equals~$\I$ for \TopMeanK and~$\Ineg$ for other formulations. The parameter~$K$ equals~$1$ for \TopPush, $K$ for \TopPushK, $\nall \tau$ for \TopMeanK, and $\nneg \tau$ for \tauFPL. Note that we use an alternative formulation with constant~$C$ and regularization parameter~$\lambda = 1,$ since it is more similar to the standard SVM, and we wanted to stress this similarity. For~$C = \nicefrac{1}{\npos}$ the new formulation is identical to the original one.
 
 The following theorem shows the dual form of formulation~\eqref{eq: toppushk family}. The dual formulation for \TopPush was originally derived in~\cite{li2014top}. We only show, that our general dual formulation also covers this special case. To keep the readability as simple as possible, we postpone all proofs to Appendix~\ref{app: dual}.
 
@@ -140,7 +140,7 @@ In the same way, as for \TopPushK family, we introduce a general optimization pr
   }{\label{eq: patmat family}}{}
   \addConstraint{t}{\;\; \text{solves} \;\; \frac{1}{\ntil}\sum_{i \in \Itil} l\Brac{\vartheta(\bm{w}^{\top} \bm{x}_j - t)} = \tau,}
 \end{mini}
-where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \PatMatNP we have~$\Itil = \Ineg$ and~$\ntil = \nneg.$ Again, we use the alternative formulation with constant~$C.$ The following theorem shows the dual form of the formulation~\eqref{eq: patmat family}.
+where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \PatMatNP we have~$\Itil = \Ineg$ and~$\ntil = \nneg.$ Again, we use the alternative formulation with constant~$C$ and regularization parameter~$\lambda = 1.$ The following theorem shows the dual form of the formulation~\eqref{eq: patmat family}.
 
 \begin{restatable}[Dual formulation for \PatMat family]{theorem}{patdual}\label{thm: patmat family dual}
   Consider Notation~\ref{not: kernel matrix}, surrogate function~$l,$ and formulation~\eqref{eq: patmat family}. Then the corresponding dual problem has the following form

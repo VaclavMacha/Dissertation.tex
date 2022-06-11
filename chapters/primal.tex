@@ -6,7 +6,7 @@ In the previous chapter, we introduced the general framework for binary classifi
 \end{equation*}
 where~$\bm{w} \in \R^d$ is the normal vector to the separating hyperplane. In such a case, framework~\eqref{eq: aatp surrogate} simplifies into the form below
 \begin{mini*}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + C_1 \cdot \fps(\bm{s}, t) + C_2 \cdot \fns(\bm{s}, t)
   }{}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
@@ -232,12 +232,12 @@ where~$k \in \N$ denotes iteration,~$\alpha^k$ is a step size, and~$\nabla L$ is
 \begin{equation}\label{eq:derivatives}
   \begin{aligned}
   L(\bm{w})
-    & = \frac{1}{2}\norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i) , \\
+    & = \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i) , \\
   \nabla L(\bm{w})
-    & = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i).
+    & = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)(\nabla t(\bm{w}) - \bm{x}_i),
   \end{aligned}
 \end{equation}
-The only unknown part is the computation of~$\nabla t(\bm{w})$. Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Section~\ref{sec: patmat threshold alg}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch. 
+where we assume~$\frac{\lambda}{2} = \frac{1}{2}$ for simplicity. The only unknown part is the computation of~$\nabla t(\bm{w})$. Theorem~\ref{thm: differentiability} shows the computation for \PatMat with efficient computation method presented in Section~\ref{sec: patmat threshold alg}. Since we derive the gradient for the objective function in~\eqref{eq:derivatives}, it is easy to derive how to apply the stochastic gradient descent. We only have to partition the dataset into minibatches and provide an update of the weights~$\bm{w}$ based only on a minibatch, namely by replacing the mean over the whole dataset in~\eqref{eq:derivatives} by a mean over the minibatch. 
 
 Even though we focus only on the \PatMat formulation, the relations~\eqref{eq:derivatives} can be used for almost all formulations from Table~\ref{tab: summary formulations}. The only two exceptions are \Grill and \GrillNP, which use a slightly different objective function. However, the form on the gradient of the objective function for these two formulations is very similar. Nevertheless, the rest of the section that shows the convergence of the stochastic gradient is applicable only for \PatMat.
 
@@ -308,7 +308,7 @@ A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in gre
 
 \begin{table}
   \centering
-  \begin{NiceTabular}{lccccc}
+  \begin{NiceTabular}{lcccc}
     \CodeBefore
       \rowcolor{\headercol}{1}
       \rowcolors{3}{\rowcol}{}[restart]
@@ -316,64 +316,55 @@ A similar comparison is performed in Figure~\ref{fig:thresholds}. Methods in gre
     \toprule
     \Block[c]{1-1}{\textbf{Formulation}}
       & \textbf{Label}
-      & \textbf{Hyperparameters}
       & \textbf{Convex}
       & \textbf{Differentiable}
       & \textbf{Stable} \\
     \midrule
     \TopPush
       & \eqref{eq: toppush surrogate}
-      & ---
       & \yesmark
       & \nomark
       & \nomark \\
     \TopPushK
       & \eqref{eq: toppushK surrogate}
-      & $K$
       & \yesmark
       & \nomark
       & \nomark \\
     \midrule
     \Grill
       & \eqref{eq: grill}
-      & $\tau$
       & \nomark
       & \nomark
       & \yesmark \\
     \TopMeanK
       & \eqref{eq: topmeank}
-      & $\tau$
       & \yesmark
       & \nomark
       & \nomark \\
     \PatMat
       & \eqref{eq: patmat}
-      & $\tau$, $\vartheta$
       & \yesmark
       & \yesmark
       & \yesmark \\ 
     \midrule
     \GrillNP
       & \eqref{eq: grill np}
-      & $\tau$
       & \nomark
       & \nomark
       & \yesmark \\
     \tauFPL
       & \eqref{eq: tau-fpl}
-      & $\tau$
       & \yesmark
       & \nomark
       & \nomark \\
     \PatMatNP
       & \eqref{eq: patmat np}
-      & $\tau$, $\vartheta$
       & \yesmark
       & \yesmark
       & \yesmark \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of the formulations from Table~\ref{tab: summary formulations}. The second column shows the hyperparameters available for each formulation. The last three columns show whether the formulation is differentiable, convex, and stable (in the sense of having global minimum in~$\bm{w}=\bm{0}$).}
+  \caption{Summary of the formulations from Table~\ref{tab: summary formulations}. The last three columns show whether the formulation is differentiable, convex, and stable (in the sense of having global minimum in~$\bm{w}=\bm{0}$).}
   \label{tab: summary formulations properties linear}
 \end{table}
 

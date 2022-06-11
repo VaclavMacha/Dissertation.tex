@@ -2,7 +2,7 @@
 
 In the previous chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} and fundamental evaluation matrices for the binary classification problems. Furthermore, in Section~\ref{sec: related problems}, we introduced three problems closely related to binary classification but focused on specific performance criteria, namely: \emph{Accuracy at the top} problem, \emph{Ranking problems}, and the problem of \emph{Hypothesis testing}. Even though these problems are usually considered separately, they all aim to minimize the number of misclassified samples below (or above) a certain threshold. In the rest of the chapter, we focus on this common property and show that all these problems fall into the following unified framework for binary classification at the top
 \begin{mini}{\bm{w}}{
-  \lambda_1 \cdot \fp(\bm{s}, t) + \lambda_2 \cdot \fn(\bm{s}, t)
+  C_1 \cdot \fp(\bm{s}, t) + C_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}},}
@@ -42,7 +42,7 @@ With a properly defined surrogate function, we can define the surrogate approxim
 \end{equation}
 Since the surrogate function provides upper approximation of the Iverson function, the surrogate counts~\eqref{eq: confusion counts surrogate} provide upper approximations of the true counts~\eqref{eq: confusion counts}. By replacing the true counts in the objective function of~\eqref{eq: aatp counts} with their surrogate counterparts and adding a regularization for better numerical stability, we get
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \lambda_1 \cdot \fps(\bm{s}, t) + \lambda_2 \cdot \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + C_1 \cdot \fps(\bm{s}, t) + C_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
@@ -81,16 +81,16 @@ The first category of problems from Section~\ref{sec: related problems} is a cat
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-.}
 \end{mini}
-Since the decision threshold~$t$ in the previous definition is computed from the sorted vector of negative scores~$\bm{s}^-_{[\cdot]}$, it is a function of all negative scores. Therefore, formulation~\eqref{eq: toppush} is just a special case of the general formulation~\eqref{eq: aatp counts} for $\lambda_1 = 0$ and~$\lambda_2 = \nicefrac{1}{\npos}$. The authors in~\cite{li2014top} proposed an efficient method to solve formulation~\eqref{eq: toppush} and called it \TopPush. They replaced the true counts in the objective function of~\eqref{eq: toppush} with its surrogate counterpart in the same way as we did in Section~\ref{sec: surrogate formulation}. The resulting formulation has the following form
+Since the decision threshold~$t$ in the previous definition is computed from the sorted vector of negative scores~$\bm{s}^-_{[\cdot]}$, it is a function of all negative scores. Therefore, formulation~\eqref{eq: toppush} is just a special case of the general formulation~\eqref{eq: aatp counts} for $C_1 = 0$ and~$C_2 = \nicefrac{1}{\npos}$. The authors in~\cite{li2014top} proposed an efficient method to solve formulation~\eqref{eq: toppush} and called it \TopPush. They replaced the true counts in the objective function of~\eqref{eq: toppush} with its surrogate counterpart in the same way as we did in Section~\ref{sec: surrogate formulation}. The resulting formulation has the following form
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: toppush surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= s_{[1]}^-,}
 \end{mini}
 which again falls into our framework~\eqref{eq: aatp surrogate}. To stress the origin of this formulation, we denote it as \TopPush. Unfortunately, \TopPush formulation can be very sensitive to outliers, especially when the linear model is used, as shown in Section~\ref{sec: stability}. To robustify the formulation, we follow the idea presented in~\cite{lapin2015top} and replace the highest negative score by the mean of~$K$ highest negative scores. The resulting formulation is as follows
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: toppushK surrogate}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \frac{1}{K} \sum_{i = 1}^{K} s_{[i]}^-.}
@@ -110,14 +110,14 @@ All relevant samples should be ranked above the quantile~$t$ and all irrelevant 
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.}
 \end{mini}
-This formulation already falls into our framework~\eqref{eq: aatp counts} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Moreover, the authors of~\cite{boyd2012accuracy, grill2016learning} used the same surrogate trick to get rid of the discontinuous objective function, as we used in Section~\ref{sec: surrogate formulation}. Thus, by replacing false-positive and false-negative counts in the objective function with their surrogate counterparts we get
+This formulation already falls into our framework~\eqref{eq: aatp counts} for~$C_1 = \nicefrac{1}{\nneg}$ and~$C_2 = \nicefrac{1}{\npos}$. Moreover, the authors of~\cite{boyd2012accuracy, grill2016learning} used the same surrogate trick to get rid of the discontinuous objective function, as we used in Section~\ref{sec: surrogate formulation}. Thus, by replacing false-positive and false-negative counts in the objective function with their surrogate counterparts we get
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.}{~}
 \end{mini}
-This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$\lambda_1 = \nicefrac{1}{\nneg}$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Even though the original formulation is presented in~\cite{boyd2012accuracy}, we denote the previous formulation as \Grill based on the name of the first author of~\cite{grill2016learning}. There are two reasons for that. The first one is that we used an unbalanced dataset as in~\cite{grill2016learning}. The second one is that we use an algorithm proposed in~\cite{grill2016learning} for numerical experiments since the one from~\cite{boyd2012accuracy} is suitable only for a small dataset.
+This formulation falls into our framework~\eqref{eq: aatp surrogate} for~$C_1 = \nicefrac{1}{\nneg}$ and~$C_2 = \nicefrac{1}{\npos}$. Even though the original formulation is presented in~\cite{boyd2012accuracy}, we denote the previous formulation as \Grill based on the name of the first author of~\cite{grill2016learning}. There are two reasons for that. The first one is that we used an unbalanced dataset as in~\cite{grill2016learning}. The second one is that we use an algorithm proposed in~\cite{grill2016learning} for numerical experiments since the one from~\cite{boyd2012accuracy} is suitable only for a small dataset.
 
 The \Grill formulation~\eqref{eq: grill} is still challenging to solve due to the form of the decision threshold~\eqref{eq: aatp quantile}. The authors of~\cite{boyd2012accuracy} removed the necessity to handle the difficult quantile constraint by setting quantile as one of the samples and solving~$\nall$ independent problems. However, such an approach is infeasible for a large number of samples. The authors of~\cite{grill2016learning} proposed the projected gradient descent method, where after each gradient step, the quantile is recomputed. This approach is suitable for large data but lacks theoretical guarantees. In the following text, we propose two approximations of the true quantile~\eqref{eq: aatp quantile} that can be used to simplify formulation~\eqref{eq: grill}. The first one is a simple approximation by the mean of~$n\tau$-th highest scores
 \begin{equation}\label{eq: aatp quantile mean} 
@@ -125,7 +125,7 @@ The \Grill formulation~\eqref{eq: grill} is still challenging to solve due to th
 \end{equation}
 where for simplicity we assume, that~$n\tau$ is an integer. The main purpose of~\eqref{eq: aatp quantile mean} is to provide a convex approximation of the non-convex quantile~\eqref{eq: aatp quantile}. In fact, it is known that it is the tightest convex approximation of~\eqref{eq: aatp quantile}. Putting~\eqref{eq: aatp quantile mean} into the constraint results in the following problem, which we call \TopMeanK
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: topmeank}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \frac{1}{K} \sum_{i=1}^{K} s_{[i]},}
@@ -138,7 +138,7 @@ The second option how to approximate the true quantile is to use surrogate count
 \end{equation}
 where~$\vartheta > 0$ is fixed scaling parameter. Due to the properties of the surrogate function~$l$ (see Notation\ref{not: surrogates}), the problem above has a unique solution, and we do not have to use the maximum as in the case of true threshold~\eqref{eq: aatp quantile}. Since this threshold uses the surrogate approximation, we denote it as surrogate top $\tau$-quantile. We get the following formulation by replacing the true quantile in the constrain and simplifying the objective function
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: patmat}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\;\; \text{solves} \;\; \frac{1}{\nall}\sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau.}
@@ -227,11 +227,11 @@ Note that we only count the false-positive samples in~\eqref{eq: NP quantile} in
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.}{~}
 \end{mini}
-This problem falls within our framework for~\eqref{eq: aatp counts} for~$\lambda_1 = 0$ and~$\lambda_2 = \nicefrac{1}{\npos}$. Moreover, formulation~\eqref{eq: NP problem} differs from~\eqref{eq: aatp} by two things. The first one is the absence of a false-positive rate in the objective function. The second one is that the threshold is computed from negative samples only. Therefore, we can use the same techniques to approximate both objective function and the decision threshold.
+This problem falls within our framework for~\eqref{eq: aatp counts} for~$C_1 = 0$ and~$C_2 = \nicefrac{1}{\npos}$. Moreover, formulation~\eqref{eq: NP problem} differs from~\eqref{eq: aatp} by two things. The first one is the absence of a false-positive rate in the objective function. The second one is that the threshold is computed from negative samples only. Therefore, we can use the same techniques to approximate both objective function and the decision threshold.
 
 To follow the previous section, we first derive the Neyman-Pearson alternative to the \Grill formulation. We need to add false-positive counts in the objective function to do that. Moreover, we also need to replace true counts with their surrogate counterparts and add the regularization. The resulting formulation is as follows
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\nneg}\fps(\bm{s}, t) + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: grill np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max \Set{t}{\frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}.}
@@ -244,7 +244,7 @@ The second formulation~\eqref{eq: topmeank} from the previous section, uses mean
 \end{equation}
 For simplicity, we again assume that~$\nneg\tau$ is an integer. Putting~\eqref{eq: np quantile mean} into the constraint results in the Neyman-Pearson alternative to \TopMeanK defined as
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: tau-fpl}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s^-_{[i]}.}
@@ -258,7 +258,7 @@ The last formulation~\eqref{eq: patmat} from the previous sections uses the surr
 \end{equation}
 Putting~\eqref{eq: np quantile surrogate} into the constraint results in the Neyman-Pearson alternative to \PatMat in the following form
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fns(\bm{s}, t)
   }{\label{eq: patmat np}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\;\; \text{solves} \;\; \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau.}
@@ -310,7 +310,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
 
 \begin{table}
   \centering
-  \begin{NiceTabular}{lcccccc}
+  \begin{NiceTabular}{lccccccc}
     \CodeBefore
       \rowcolor{\headercol}{1}
       \rowcolors{3}{\rowcol}{}[restart]
@@ -320,14 +320,16 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \textbf{Label}
       & \textbf{Source}
       & \textbf{Ours}
-      & $\lambda_1$
-      & $\lambda_2$
+      & \Block[c]{1-1}{\textbf{Hyper-}\\\textbf{parameters}}
+      & $C_1$
+      & $C_2$
       & \textbf{Threshold} \\
     \midrule
     \TopPush
       & \eqref{eq: toppush surrogate}
       & \cite{li2014top}
       & \nomark
+      & $\lambda$
       & 0
       & $\frac{1}{\npos}$
       & $s_{[1]}^-$ \\
@@ -335,6 +337,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: toppushK surrogate}
       & \cite{adam2021general}
       & \yesmark
+      & $\lambda,$ $K$
       & 0
       & $\frac{1}{\npos}$
       & $\frac{1}{K}\sum_{i = 1}^{K} s_{[i]}^-$ \\
@@ -343,6 +346,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: grill}
       & \cite{grill2016learning}
       & \nomark
+      & $\lambda$
       & $\frac{1}{\nneg}$
       & $\frac{1}{\npos}$
       & $\max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}$ \\
@@ -350,6 +354,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: topmeank}
       & ---
       & \nomark
+      & $\lambda$
       & 0
       & $\frac{1}{\npos}$
       & $\frac{1}{K} \sum_{i=1}^{K} s_{[i]}$ \\
@@ -357,6 +362,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: patmat}
       & \cite{adam2021general}
       & \yesmark
+      & $\lambda,$ $\vartheta$
       & 0
       & $\frac{1}{\npos}$
       & $\frac{1}{\nall} \sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau$ \\
@@ -365,6 +371,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: grill np}
       & ---
       & \nomark
+      & $\lambda$
       & $\frac{1}{\nneg}$ 
       & $\frac{1}{\npos}$
       & $\max \Set{t}{ \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} \geq \tau}$ \\
@@ -372,6 +379,7 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: tau-fpl}
       & \cite{zhang2018tau}
       & \nomark
+      & $\lambda$
       & 0
       & $\frac{1}{\npos}$
       & $\frac{1}{\nneg\tau} \sum_{i=1}^{\nneg\tau} s^-_{[i]}$ \\
@@ -379,11 +387,12 @@ In Section~\ref{sec: threshold comparison aatp}, we showed that the threshold fo
       & \eqref{eq: patmat np}
       & \cite{adam2021general}
       & \yesmark
+      & $\lambda,$ $\vartheta$
       & 0
       & $\frac{1}{\npos}$
       & $\frac{1}{\nneg} \sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau$ \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of problem fomrulations that fall in the framework~\eqref{eq: aatp surrogate}. Column \textbf{Formulation} shows the name of the formulation that we use in this work. Column \textbf{Label} represents the label of the formulation in this text. Column \textbf{Source} is the citation of the work where the formulation was introduced. Column \textbf{Ours} shows whether the formulation was introduced in any of our previous papers. The last three columns show the values of parameters~$\lambda_1,$~$\lambda_2$ and the form of the decision threshold for given framework~\eqref{eq: aatp surrogate}.}
+  \caption{Summary of problem fomrulations that fall in the framework~\eqref{eq: aatp surrogate}. Column \textbf{Formulation} shows the name of the formulation that we use in this work. Column \textbf{Label} represents the label of the formulation in this text. Column \textbf{Source} is the citation of the work where the formulation was introduced. Column \textbf{Ours} shows whether the formulation was introduced in any of our previous papers. Column \textbf{Hyperparameters} shows the hyperparameters available for each formulation. The last three columns show the values of parameters~$C_1,$~$C_2$ and the form of the decision threshold for given framework~\eqref{eq: aatp surrogate}.}
   \label{tab: summary formulations}
 \end{table}

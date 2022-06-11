@@ -424,7 +424,7 @@ For the proof of Theorem~\ref{thm:sgd}, we consider a general surrogate function
   \item \label{surr_der1} $l'$ is a bounded function;
   \item \label{surr_der2} $l'$ is a Lipschitz continuous function with Lipschitz constant~$D$.
 \end{enumerate}
-For simplicity, we also assume that the scaling parameter for the threshold in the \PatMat formulation is~$\vartheta = 1.$ All requirements above are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
+For simplicity, we also assume that the scaling parameter for the threshold in the \PatMat formulation is~$\vartheta = 1,$ and regularization parameter is~$\lambda = 1.$ All requirements above are satisfied for the hinge loss smoothened on an $\varepsilon$-neighborhood of -1
 \begin{equation*}
   l(s) = \begin{cases}
     0 & \text{for } s < -1 - \varepsilon, \\
@@ -449,7 +449,7 @@ Figure~\ref{fig: surrogates smooth} shows the comparison of the hinge loss and i
   We intend to apply Theorem~\ref{thm:convergence} and thus, we need to verify its assumptions. Recall the form of the objective function
   \begin{equation*}
     L(\bm{w}^k)
-      = \norm{\bm{w}^k}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}^k) - \bm{x}_i^{\top} \bm{w}^k).
+      = \frac{1}{2} \norm{\bm{w}^k}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}^k) - \bm{x}_i^{\top} \bm{w}^k).
   \end{equation*}
   The objective is a combination of squared norm of weights, which is strictly convex function, and a surrogate approximation of false-negative rate, which is convex function due to Theorem~\ref{thm: convexity}. Therefore, the objective~$L$ is a strictly convex function. Moreover, it is also differentiable due to Theorem~\ref{thm: differentiability} and differentiability of smoothened hinge loss~$l$. As a result, Assumption~\ref{ass_convex} is satisfied.
 

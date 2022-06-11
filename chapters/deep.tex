@@ -2,7 +2,7 @@
 
 In Chapter~\ref{chap: framework} we introduced a general framework for binary classification at the top samples and showed multiple formulations that fall into it. All these formulations are summarized in Table~\ref{tab: summary formulations}. In Chapter~\ref{chap: linear}, we discussed the theoretical properties of all formulations for the special case of a linear model. Since many real-world problems are not linearly separable, in Chpater~\ref{chap: dual}, we derived dual forms of all formulations and employed non-linear kernels. Moreover, we derived an efficient algorithm to solve these dual formulations. However, it is still computationally expensive.  Especially the evaluation of new samples is costly since the classification score for every new sample is computed from all training samples. More precisely, the classification score is calculated only from training samples whose corresponding dual variables are non-zero. Therefore, the dual formulations are unsuitable for large data. To overcome this issue, the following chapter is dedicated to our framework~\eqref{eq: aatp surrogate} with an arbitrary model model~$f.$ We can mention neural networks as a prototypical example of such a model. We will not discuss \Grill and \GrillNP formulations from Table~\ref{tab: summary formulations}, since their authors introduced in~\cite{grill2016learning} an algorithm to solve this formulation that is suitable even for non-linear models. Therefore, we focus only on the remaining formulations that use surrogate false-negative rate as an objective function, i.e., we assume the following general formulation
 \begin{mini}{\bm{w}}{
-  \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l \Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l \Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}
   }{\label{eq: aatp deep general}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}},}
@@ -10,14 +10,14 @@ In Chapter~\ref{chap: framework} we introduced a general framework for binary cl
 where~$f$ is an arbitrary model. Our goal is to show how to solve this formulation in a suitable way for large data. The standard approach is to use stochastic gradient descent. To do so, we need to know the gradient of the objective function, and therefore, we assume that the model~$f$ is differentiable. The optimization problem~\eqref{eq: aatp deep general} depends on two decision variables~$\bm{w}$ and~$t.$ However, for all formulations from Table~\ref{tab: summary formulations} and each~$\bm{w}$, the threshold~$t$ can be computed uniquely. We stress this dependence by writing~$t(\bm{w})$ instead of~$t$. By doing so, we effectively remove the threshold~$t$ from the decision variables and~$\bm{w}$ remains the only decision variable. Denoting the objective of~\eqref{eq: aatp deep general} by~$L(\bm{w}),$ the chain rule implies that the gradient is equal to
 \begin{equation}\label{eq: deep L gradient true}
   \nabla L(\bm{w})
-    = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla t(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
+    = \lambda \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla t(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
 \end{equation}
 The only remaining part is the computation of~$\nabla t(\bm{w})$. It is simple for most of the formulations from Table~\ref{tab: summary formulations}. Moreover, Theorem~\ref{thm: differentiability} shows the computation for \PatMat.
 
 The basic idea of the stochastic gradient descent is to split the dataset into several small minibatches~$\Imb^1, \, \Imb^2, \ldots, \, \Imb^m$ and at each iteration perform all operations only on one of them. This approach is easily applicable when for example, cross-entropy is used as an objective function since cross-entropy is additive and easily decomposable. However, in our case, the decision threshold~$t$ depends on all scores~$\bm{s},$ and consequently, the objective function is non-additive and non-decomposable. Therefore, we cannot compute the true threshold only from one minibatch, and we need to use some approximation~$\hat{t}$ of it. The most straightforward way to approximate the true threshold is to use the same rule as for the whole dataset and compute the sampled threshold~$\hat{t}$ only on data from one minibatch. By replacing all computations on the whole dataset~$\I$ with their counterparts computed only on the minibatch~$\Imb,$ we get the sampled gradient in the following form
 \begin{equation}\label{eq: deep L gradient sampled}
   \nabla \hat{L}(\bm{w})
-    = \bm{w} + \frac{1}{\nmbpos} \sum_{i \in \Imbpos} l'\Brac{\hat{t}(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla \hat{t}(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
+    = \lambda \bm{w} + \frac{1}{\nmbpos} \sum_{i \in \Imbpos} l'\Brac{\hat{t}(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla \hat{t}(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
 \end{equation}
 where~$\nmbpos$ denotes the number of positive samples in the minibatch and~$\hat{t}$ denotes the sampled version of the true threshold~$t.$ The whole procedure of stochastic gradient descent for formulations from Table~\ref{tab: summary formulations} is summarized in Algorithm~\ref{alg: deep basic}.
 
@@ -83,7 +83,7 @@ In the previous sections, we derived Algorithm~\ref{alg: deep basic} that can be
 
 We start with \TopPush formulation presented in~\cite{li2014top}. Authors of~\cite{li2014top} proposed the \TopPush formulation with a linear model and solved it in its dual form. In Section~\ref{sec: ranking} we generalized this formulation for general model~$f,$ and in Chapter~\ref{chap: linear} we solved the formulation directly in its primal form for a linear model. For general model~$f,$ we stay in the primal form to be able to employ stochastic gradient descent. It means that we have the following optimization problem
 \begin{mini}{\bm{w}}{
-  \frac{1}{\npos} \fn(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \fn(\bm{s}, t)
   }{\label{eq: toppush deep}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{= \max_{j \in \Ineg} \; s_{j}.}
@@ -91,12 +91,12 @@ We start with \TopPush formulation presented in~\cite{li2014top}. Authors of~\ci
 Since the threshold always equals one of the scores, its computation has a simple local formula. In other words, if the highest negative score corresponds to sample~$\bm{x}_{\indmax},$ then the gradient of the threshold equals~$\nabla t = \nabla f(\bm{x}_{\indmax}; \bm{w}).$ Therefore, the gradient of the objective function of~\eqref{eq: toppush deep} reads
 \begin{equation}\label{eq: deep L gradient true toppush}
   \nabla L(\bm{w})
-    = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{f(\bm{x}_{\indmax}; \bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla f(\bm{x}_{\indmax}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
+    = \lambda \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{f(\bm{x}_{\indmax}; \bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla f(\bm{x}_{\indmax}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
 \end{equation}
 Using the same transition to the minibatches as in previous sections, we get the following formula for sampled gradient
 \begin{equation}\label{eq: deep L gradient sampled toppush}
   \nabla \hat{L}(\bm{w})
-    = \bm{w} + \frac{1}{\nmbpos} \sum_{i \in \Imbpos} l'\Brac{f(\bm{x}_{\indmaxmb}; \bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla f(\bm{x}_{\indmaxmb}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})},
+    = \lambda \bm{w} + \frac{1}{\nmbpos} \sum_{i \in \Imbpos} l'\Brac{f(\bm{x}_{\indmaxmb}; \bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla f(\bm{x}_{\indmaxmb}; \bm{w}) - \nabla f(\bm{x}_i; \bm{w})},
 \end{equation}
 where~$\indmaxmb$ represents the index of the negative sample with the highest score from the current minibatch. As discussed in the previous section, such a choice of the decision threshold provides a lower estimate of the true threshold. To improve this approximation, we modify the idea presented in~\cite{adam2019machine}. The authors of~\cite{adam2019machine} suggest using delayed classification scores to compute the threshold. We used this approach in Section~\ref{sec:convergence} to prove the convergence of stochastic gradient descent for \PatMat and \PatMatNP formulation with a linear model. However, even in such a case, the resulting sampled gradient~$\hat{t}$ is just an approximation of the true gradient~$t.$ To improve this approach, we use the fact that the threshold for \TopPush is always equal to the negative sample with  the highest score. When the weights~$\bm{w}$ of model~$f$ are updated using stochastic gradient descent, the scores~$\bm{s}$ usually do not change much. It is true especially for small learning rates. Therefore, if some negative sample has the highest score, it will likely have the highest score even after the gradient step. Since we can easily track to which negative sample this highest score corresponds, we can enhance the next minibatch by this sample. This approach significantly increases the chance that the minibatch contains the negative sample with the highest score. In such a case, the sampled threshold~$\hat{t}$ is not just an approximation but equals the true threshold~$t.$ The whole procedure is summarized in Algorithm~\ref{alg: deep toppush}.
 
