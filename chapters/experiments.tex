@@ -212,7 +212,179 @@ Figure~\ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted fr
 
 \begin{figure}[!ht]
   \centering
-  \includegraphics[width = \linewidth]{images/wilcoxon_fpr_1.pdf}
+  \resizebox{\columnwidth}{!}{%
+  \begin{NiceTabular}{
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm}
+    Wc{0.6cm} 
+  }[
+    corners,
+    hvlines,
+    last-row,
+    first-col,
+    rules/color=[gray]{0.9},
+    rules/width=1pt,
+  ]
+    \GrillNP (0.05)
+      &&&&&&&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}} \\
+    \GrillNP (0.01)
+      &&&&&&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0} \\
+    \Grill (0.01)
+      &&&&&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!33]{1-1}{{\scriptsize 0.330}}
+      & {\scriptsize 0} \\
+    \Grill (0.05)
+      &&&&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!26]{1-1}{{\scriptsize 0.265}}
+      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.001}}
+      & {\scriptsize 0} \\
+    \TopMeanK (0.01)
+      &&&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \TopMeanK (0.05)
+      &&&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \TopPush
+      &&&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \tauFPL (0.01)
+      &&&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \PatMat (0.01)
+      &&&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.002}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \TopPushK
+      &&&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!38]{1-1}{{\scriptsize 0.387}}
+      & \Block[fill=myblue!10]{1-1}{{\scriptsize 0.039}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \PatMat (0.05)
+      &&&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!40]{1-1}{{\scriptsize 0.405}}
+      & \Block[fill=myblue!15]{1-1}{{\scriptsize 0.109}}
+      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.002}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \tauFPL (0.05)
+      &&
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & \Block[fill=myblue!70]{1-1}{{\scriptsize 0.946}}
+      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.005}}
+      & \Block[fill=myblue!19]{1-1}{{\scriptsize 0.194}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \PatMatNP (0.05)
+      &
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \PatMatNP (0.01)
+      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0}
+      & {\scriptsize 0} \\
+    \midrule
+    & \Block[c]{1-1}{\rotate \GrillNP (0.05)}
+    & \Block[c]{1-1}{\rotate \GrillNP (0.01)}
+    & \Block[c]{1-1}{\rotate \Grill (0.01)}
+    & \Block[c]{1-1}{\rotate \Grill (0.05)}
+    & \Block[c]{1-1}{\rotate \TopMeanK (0.01)}
+    & \Block[c]{1-1}{\rotate \TopMeanK (0.05)}
+    & \Block[c]{1-1}{\rotate \TopPush}
+    & \Block[c]{1-1}{\rotate \tauFPL (0.01)}
+    & \Block[c]{1-1}{\rotate \PatMat (0.01)}
+    & \Block[c]{1-1}{\rotate \TopPushK}
+    & \Block[c]{1-1}{\rotate \PatMat (0.05)}
+    & \Block[c]{1-1}{\rotate \tauFPL (0.05)}
+    & \Block[c]{1-1}{\rotate \PatMatNP (0.05)}
+    & \Block[c]{1-1}{\rotate \PatMatNP (0.01)}
+  \end{NiceTabular}
+  }
   \caption{The~$p$-value for the parwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr(0.01) of both methods is the same. The methods are sorted by mean rank (left = better).}
   \label{fig:wilcoxon}
 \end{figure}
