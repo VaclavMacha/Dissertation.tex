@@ -391,7 +391,13 @@ Similarly to the previous case, the form of~$\K$ and~$\ntil$ depends on the used
   \begin{equation}\label{eq:problem3_proof0}
     K\bar{v} - \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 + \bar{v}} \geq 0.
   \end{equation}
-  Denote by~$\beta_{[j]}^0$ the sorted version of~$\beta_j^0$. Then the function on the left-hand side of~\eqref{eq:problem3_proof0} as a function of~$\bar{v}$ is increasing on~$\left(-\infty, \; -\beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0 \right]$ and non-decreasing otherwise. Thus,~\eqref{eq:problem3_proof0} can be satisfied if and only if its function value at~$- \beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0$ is non-negative. But this is precisely the violation of~\eqref{eq:problem3_cond}.
+  Denote by~$\beta_{[j]}^0$ the sorted version of~$\beta_j^0$. Then the function on the left-hand side of~\eqref{eq:problem3_proof0} as a function of~$\bar{v}$ is increasing on~$\left(-\infty, \; -\beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0 \right]$ and non-increasing otherwise. Thus,~\eqref{eq:problem3_proof0} can be satisfied if and only if its function value at~$- \beta_{[\npos - K + 1]}^0 - \max_{i} \alpha_i^0$ is non-negative
+  \begin{multline*}
+    K\Brac{- \beta_{[\npos - K + 1]}^0 - \max_{i=1,\dots,\npos} \alpha_i^0} - \sum_{j=1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0 - \beta_{[\npos - K + 1]}^0 - \max_{i=1,\dots,\npos} \alpha_i^0} \\
+    = K\Brac{- \beta_{[\npos - K + 1]}^0 - \max_{i=1,\dots,\npos} \alpha_i^0} - \sum_{j=1}^{K} \Brac{\beta_{[\npos - K + j]}^0 - \beta_{[\npos - K + 1]}^0}
+    =  - \sum_{j=1}^{K} \Brac{\beta_{[\npos - K + j]}^0 + \max_{i=1,\dots,\npos} \alpha_i^0} \geq 0,
+  \end{multline*}
+  which is precisely condition~\eqref{eq:problem3_cond}.
   
   \paragraph*{Case 2:} If~\eqref{eq:problem3_cond} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\sum_i \alpha_i > 0$. For simplicity, we define
   \begin{align*}
@@ -958,9 +964,9 @@ We show the way how to solve~\eqref{eq: patmat family initialization} only for h
   \begin{equation*}
     \delta^0
       = -C_2 \sum_{j = 1}^{\ntil} v_j
-      \le -C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0}.
+      \le -C_2 \sum_{j = 1}^{\ntil} \clip[u]{0}{+\infty}{\beta_j^0 + \max_{i=1,\dots,\npos} \alpha_i^0},
   \end{equation*}
-  This corresponds to the first case in the theorem statement and the violation of condition~\eqref{eq: patmat family init alg condition}.
+  which is precisely condition~\eqref{eq: patmat family init alg condition}.
 
   \paragraph*{Case 2:} If~\eqref{eq: patmat family init alg condition} holds true, then from the discussion above we obtain that the optimal solution satisfies~$\delta > 0$. For any fixed~$i$, the standard trick is to combine the optimality condition~\eqref{eq:problem2_KKT_opt1} with the primal feasibility condition~$0 \le \alpha_i \le C_1$, the dual feasibility conditions~$p_i \ge 0$, $q_i \ge 0$ and the complementarity conditions~(\ref{eq:problem2_KKT_comp1}, \ref{eq:problem2_KKT_comp2}) to obtain
   \begin{equation}\label{eq:problem2_alpha}
