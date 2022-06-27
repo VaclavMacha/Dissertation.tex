@@ -2,7 +2,7 @@
 
 In Chapter~\ref{chap: framework}, we introduced a general framework for binary classification at the top. Moreover, we showed that several problem classes, considered separate problems so far, fit into this framework. The summary of all formulations is provided in Table~\ref{tab: summary formulations}. In Chapter~\ref{chap: linear} we discussed a special case when the linear model is used. Then formulation~\eqref{eq: aatp surrogate} reads
 \begin{mini}{\bm{w}}{
-  \lambda \norm{\bm{w}}^2 + C_1 \cdot \fps(\bm{s}, t) + C_2 \cdot \fns(\bm{s}, t)
+  \frac{\lambda}{2} \norm{\bm{w}}^2 + C_1 \cdot \fps(\bm{s}, t) + C_2 \cdot \fns(\bm{s}, t)
   }{\label{eq: aatp surrogate liner primal}}{}
   \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad i \in \I}
   \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
