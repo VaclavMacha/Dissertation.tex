@@ -1,0 +1,101 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\tikzstyle{line_node} = [line width=1pt, rounded corners, color=black, ->]
+\tikzstyle{line_cv} = [line width=3pt, color=mygreen, line cap=round]
+
+\begin{document}
+\begin{tikzpicture}
+  \node at (5.5,2.4) {True-positive rate at False-positive rate $0.05$}; 
+  \draw (1,0) -- (10,0); 
+  \foreach \x in {1,...,10} \draw (\x,0.1) -- (\x,-0.1) node[anchor=north]{$\x$}; 
+  \draw[line_node] (2.43,0) -- (2.43,0.4) -- (0.9, 0.4) node[anchor=east] {\PatMatNP(0.05)}; 
+  \draw[line_node] (3.72,0) -- (3.72,0.8) -- (0.9, 0.8) node[anchor=east] {\tauFPL(0.05)}; 
+  \draw[line_node] (3.77,0) -- (3.77,1.2) -- (0.9, 1.2) node[anchor=east] {\PatMatNP(0.01)}; 
+  \draw[line_node] (3.86,0) -- (3.86,1.6) -- (0.9, 1.6) node[anchor=east] {\BaseLine}; 
+  \draw[line_node] (4.32,0) -- (4.32,2.0) -- (0.9, 2.0) node[anchor=east] {\TopPushK(10)}; 
+  \draw[line_node] (5.08,0) -- (5.08,2.0) -- (10.1, 2.0) node[anchor=west] {\TopPushK(5)}; 
+  \draw[line_node] (6.13,0) -- (6.13,1.6) -- (10.1, 1.6) node[anchor=west] {\tauFPL(0.01)}; 
+  \draw[line_node] (6.79,0) -- (6.79,1.2) -- (10.1, 1.2) node[anchor=west] {\TopPush}; 
+  \draw[line_node] (9.37,0) -- (9.37,0.8) -- (10.1, 0.8) node[anchor=west] {\GrillNP(0.05)}; 
+  \draw[line_node] (9.53,0) -- (9.53,0.4) -- (10.1, 0.4) node[anchor=west] {\GrillNP(0.01)}; 
+  \draw[line_cv] (2.43,0.2) -- (3.86, 0.2); 
+  \draw[line_cv] (3.72,0.4) -- (5.08, 0.4); 
+  \draw[line_cv] (5.08,0.2) -- (6.13, 0.2); 
+  \draw[line_cv] (6.13,0.2) -- (6.79, 0.2); 
+  \draw[line_cv] (9.37,0.2) -- (9.53, 0.2); 
+
+  \node at (5.5,5.9) {True-positive rate at False-positive rate $0.01$}; 
+  \draw (1,3.5) -- (10,3.5); 
+  \foreach \x in {1,...,10} \draw (\x,3.6) -- (\x,3.4) node[anchor=north]{$\x$}; 
+  \draw[line_node] (2.89,3.5) -- (2.89,3.9) -- (0.9, 3.9) node[anchor=east] {\PatMatNP(0.05)}; 
+  \draw[line_node] (3.09,3.5) -- (3.09,4.3) -- (0.9, 4.3) node[anchor=east] {\PatMatNP(0.01)}; 
+  \draw[line_node] (3.68,3.5) -- (3.68,4.7) -- (0.9, 4.7) node[anchor=east] {\tauFPL(0.05)}; 
+  \draw[line_node] (4.13,3.5) -- (4.13,5.1) -- (0.9, 5.1) node[anchor=east] {\TopPushK(10)}; 
+  \draw[line_node] (4.67,3.5) -- (4.67,5.5) -- (0.9, 5.5) node[anchor=east] {\TopPushK(5)}; 
+  \draw[line_node] (5.41,3.5) -- (5.41,5.5) -- (10.1, 5.5) node[anchor=west] {\BaseLine}; 
+  \draw[line_node] (5.54,3.5) -- (5.54,5.1) -- (10.1, 5.1) node[anchor=west] {\tauFPL(0.01)}; 
+  \draw[line_node] (6.79,3.5) -- (6.79,4.7) -- (10.1, 4.7) node[anchor=west] {\TopPush}; 
+  \draw[line_node] (9.31,3.5) -- (9.31,4.3) -- (10.1, 4.3) node[anchor=west] {\GrillNP(0.05)}; 
+  \draw[line_node] (9.5,3.5) -- (9.5,3.9) -- (10.1, 3.9) node[anchor=west] {\GrillNP(0.01)}; 
+  \draw[line_cv] (2.89,3.7) -- (4.13, 3.7); 
+  \draw[line_cv] (3.68,3.9) -- (4.67, 3.9); 
+  \draw[line_cv] (4.13,4.1) -- (5.54, 4.1); 
+  \draw[line_cv] (5.41,3.7) -- (6.79, 3.7); 
+  \draw[line_cv] (9.31,3.7) -- (9.5, 3.7); 
+
+  \node at (5.5,9.4) {True-positive rate at $K = 10$}; 
+  \draw (1,7.0) -- (10,7.0); 
+  \foreach \x in {1,...,10} \draw (\x,7.1) -- (\x,6.9) node[anchor=north]{$\x$}; 
+  \draw[line_node] (3.19,7.0) -- (3.19,7.4) -- (0.9, 7.4) node[anchor=east] {\PatMatNP(0.01)}; 
+  \draw[line_node] (4.17,7.0) -- (4.17,7.8) -- (0.9, 7.8) node[anchor=east] {\TopPushK(5)}; 
+  \draw[line_node] (4.28,7.0) -- (4.28,8.2) -- (0.9, 8.2) node[anchor=east] {\tauFPL(0.05)}; 
+  \draw[line_node] (4.56,7.0) -- (4.56,8.6) -- (0.9, 8.6) node[anchor=east] {\TopPushK(10)}; 
+  \draw[line_node] (4.62,7.0) -- (4.62,9.0) -- (0.9, 9.0) node[anchor=east] {\tauFPL(0.01)}; 
+  \draw[line_node] (5.12,7.0) -- (5.12,9.0) -- (10.1, 9.0) node[anchor=west] {\PatMatNP(0.05)}; 
+  \draw[line_node] (5.13,7.0) -- (5.13,8.6) -- (10.1, 8.6) node[anchor=west] {\TopPush}; 
+  \draw[line_node] (6.94,7.0) -- (6.94,8.2) -- (10.1, 8.2) node[anchor=west] {\BaseLine}; 
+  \draw[line_node] (8.36,7.0) -- (8.36,7.8) -- (10.1, 7.8) node[anchor=west] {\GrillNP(0.05)}; 
+  \draw[line_node] (8.63,7.0) -- (8.63,7.4) -- (10.1, 7.4) node[anchor=west] {\GrillNP(0.01)}; 
+  \draw[line_cv] (3.19,7.2) -- (4.62, 7.2); 
+  \draw[line_cv] (4.17,7.4) -- (5.13, 7.4); 
+  \draw[line_cv] (6.94,7.2) -- (8.36, 7.2); 
+  \draw[line_cv] (8.36,7.2) -- (8.63, 7.2); 
+
+  \node at (5.5,12.9) {True-positive rate at $K = 5$}; 
+  \draw (1,10.5) -- (10,10.5); 
+  \foreach \x in {1,...,10} \draw (\x,10.6) -- (\x,10.4) node[anchor=north]{$\x$}; 
+  \draw[line_node] (3.59,10.5) -- (3.59,10.9) -- (0.9, 10.9) node[anchor=east] {\PatMatNP(0.01)}; 
+  \draw[line_node] (4.18,10.5) -- (4.18,11.3) -- (0.9, 11.3) node[anchor=east] {\TopPushK(5)}; 
+  \draw[line_node] (4.37,10.5) -- (4.37,11.7) -- (0.9, 11.7) node[anchor=east] {\tauFPL(0.05)}; 
+  \draw[line_node] (4.78,10.5) -- (4.78,12.1) -- (0.9, 12.1) node[anchor=east] {\TopPushK(10)}; 
+  \draw[line_node] (4.79,10.5) -- (4.79,12.5) -- (0.9, 12.5) node[anchor=east] {\TopPush}; 
+  \draw[line_node] (4.82,10.5) -- (4.82,12.5) -- (10.1, 12.5) node[anchor=west] {\tauFPL(0.01)}; 
+  \draw[line_node] (5.11,10.5) -- (5.11,12.1) -- (10.1, 12.1) node[anchor=west] {\PatMatNP(0.05)}; 
+  \draw[line_node] (7.0,10.5) -- (7.0,11.7) -- (10.1, 11.7) node[anchor=west] {\BaseLine}; 
+  \draw[line_node] (8.09,10.5) -- (8.09,11.3) -- (10.1, 11.3) node[anchor=west] {\GrillNP(0.05)}; 
+  \draw[line_node] (8.28,10.5) -- (8.28,10.9) -- (10.1, 10.9) node[anchor=west] {\GrillNP(0.01)}; 
+  \draw[line_cv] (3.59,10.7) -- (5.11, 10.7); 
+  \draw[line_cv] (7.0,10.7) -- (8.28, 10.7); 
+
+  \node at (5.5,16.4) {True-positive rate at $K = 1$}; 
+  \draw (1,14.0) -- (10,14.0); 
+  \foreach \x in {1,...,10} \draw (\x,14.1) -- (\x,13.9) node[anchor=north]{$\x$}; 
+  \draw[line_node] (4.44,14.0) -- (4.44,14.4) -- (0.9, 14.4) node[anchor=east] {\PatMatNP(0.01)}; 
+  \draw[line_node] (4.69,14.0) -- (4.69,14.8) -- (0.9, 14.8) node[anchor=east] {\tauFPL(0.05)}; 
+  \draw[line_node] (4.98,14.0) -- (4.98,15.2) -- (0.9, 15.2) node[anchor=east] {\TopPushK(10)}; 
+  \draw[line_node] (5.0,14.0) -- (5.0,15.6) -- (0.9, 15.6) node[anchor=east] {\PatMatNP(0.05)}; 
+  \draw[line_node] (5.04,14.0) -- (5.04,16.0) -- (0.9, 16.0) node[anchor=east] {\tauFPL(0.01)}; 
+  \draw[line_node] (5.18,14.0) -- (5.18,16.0) -- (10.1, 16.0) node[anchor=west] {\TopPush}; 
+  \draw[line_node] (5.19,14.0) -- (5.19,15.6) -- (10.1, 15.6) node[anchor=west] {\TopPushK(5)}; 
+  \draw[line_node] (6.38,14.0) -- (6.38,15.2) -- (10.1, 15.2) node[anchor=west] {\BaseLine}; 
+  \draw[line_node] (6.98,14.0) -- (6.98,14.8) -- (10.1, 14.8) node[anchor=west] {\GrillNP(0.05)}; 
+  \draw[line_node] (7.14,14.0) -- (7.14,14.4) -- (10.1, 14.4) node[anchor=west] {\GrillNP(0.01)}; 
+  \draw[line_cv] (4.44,14.2) -- (5.19, 14.2); 
+  \draw[line_cv] (4.98,14.4) -- (6.38, 14.4); 
+  \draw[line_cv] (6.38,14.2) -- (7.14, 14.2); 
+\end{tikzpicture}
+\end{document}
