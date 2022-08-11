@@ -1,124 +1,159 @@
 \chapter{Numerical Experiments}\label{chap: experiments}
 
-\section{Datasets Description}
+In the previous sections, we derived general framework for classification at the top and showed that multiple well-known formulations fall into it. The summary of all formulations presented in this work is in Table~\ref{tab: summary formulations}. The goal of this chapter is to experimentally verify the properties of these formulations. 
 
-For the numerical experiments, we consider variety of different datasets, that can be divided
-into three categories:
+\section{Settings}
+
+In this section we describe in detail all settings used for experiments. Formulations from Table~\ref{tab: summary formulations} can be divided into three categories:
 \begin{itemize}
-  \item Tabular datasets: The first category consists of six tabular datasets from the UCI repository~\cite{dua2019uci}. Ionosphere~\cite{sigillito1989classification}, Spambase, WhiteWineQuality, and RedWineQuality~\cite{cortez2009modeling} are small datasets with a few features. HEPMASS~\cite{baldi2016parameterized} contains a large number of samples while Gisette~\cite{guyon2005result} contains a large number of features.
-  \item Visual recognition datasets: This category contains six well-known visual recognition datasets. MNIST~\cite{deng2012mnist} and FashionMNIST~\cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers.
-  \item Real world dataset: A renowned cybersecurity company provided malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number.
+  \item The first category contains \TopPush and \TopPushK formulations. Formulations from this category minimize the surrogate approximation of the false-negative rate. As a threshold, these formulations use the mean of a small fraction of the negative samples with the highest scores.
+  \item The first category consists of \Grill, \TopMeanK, and \PatMat. These formulations again use the surrogate approximation of the false-negative rate as an objective function. The only exception is the \Grill formulation which also adds the surrogate approximation of the false-positive rate into the objective function for better stability. All three formulation uses some kind of approximation of the top $\tau$-quantile of all scores as a threshold.
+  \item The last category consists of \GrillNP, \tauFPL, and \PatMatNP. These formulations use the same objectives as their corresponding formulations from the previous category and differ only in the definition of the decision threshold. All three formulation uses some kind of approximation of the top $\tau$-quantile of negative scores as a threshold.
 \end{itemize}
-All datasets from the first two categories are publicly available, while the last dataset is private. The summary of all datasets is provided in Table~\ref{tab: datasets summary}.
+To simplify the setup of all experiments, we decided to test only formulations that use only negative samples for the threshold computation, i.e. only formulations from the first and third categories. The performance of these formulations can be easily compared using some basic performance metrics as we show later in this section.
 
-Many of the datasets from Table~\ref{tab: datasets summary}, are not originally designed for binary classification tasks. Ionosphere, Spambase, Gisette, HEPMASS, and Malware detection datasets are binary by default, and the rest of the datasets need to be binarized. For the WhiteWineQuality and RedWineQuality datasets, we consider all whines with a quality level higher than 7 to be a positive class and the rest negative. For each of the visual recognition datasets, we consider the first class to be positive and the rest to be negative, i.e. the positive class is labeled 0 or 1 depending on the dataset.
+\subsection{Formulations and Hyperparameters}
 
-Datasets that do not contain train / valid / test split were randomly divided into this three splits. A summary of all datasets with additional information on sample size and the number of samples in the train / valid / test split is given in Table~\ref{tab: datasets summary}.
+At the beginning of this section, we discussed which formulations we use for experiments. In total, we use five different formulations from Table~\ref{tab: summary formulations}, namely \TopPush, \TopPushK, \GrillNP, \tauFPL, and \PatMatNP. Moreover, for \TopPushK we use two different values of~$K = \{5, 10\}$ and consider the resulting formulations as separate formulations, i.e. we have \TopPushK(5) and \TopPushK(10). Similarly, for \GrillNP, \tauFPL and \PatMat we use two different values of~$\tau = \{0.01, 0.05\}.$ For all formulations, we use the hinge loss defined in Notation~\ref{not: surrogates} as a surrogate function.
+
+We have a total of 9 different formulations, however, all these formulations fall into our general framework. To show that these formulations work properly, we have to compare them to some standard methods. In previous chapters, we showed how to solve presented formulations in their primal (Chapters~\ref{chap: linear} and~\ref{chap: deep}) and dual form (Chapter~\ref{chap: dual}). Whenever we use the primal form in the experiments, we use binary cross-entropy defined in the following way as a baseline formulation 
+\begin{mini}{\bm{w}}{
+  \frac{1}{\nall} \sum_{i \in \I} \Brac{- y_i \log(s_i) - (1 - y_i) \log (1 - s_i)}
+  }{\label{eq: crossentropy}}{}
+  \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I.}
+\end{mini}
+We decided to use binary cross-entropy, since it is one of the most used objective functions for binary classification in machine learning applications. In the following text, we will denote binary cross-entropy as \BaseLine for simplicity. In experiments with dual forms, we use C-SVC variant of SVM~\cite{boser1992training, cortes1995support} defined as follows
+\begin{mini}{\bm{w}, b, \bm{\xi}}{
+  \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \I} \xi_i
+  }{\label{eq: SVM}}{}
+  \addConstraint{y_i}{\Brac{\bm{w}^{\top} \phi(\bm{x}_i) + b} \geq 1 - \xi_i, \quad i \in \I}
+  \addConstraint{\xi_i}{\geq 0, \quad i \in \I,}
+\end{mini}
+where~$y_i \in \{-1, 1\}$ for all~$i \in \I$ and~$\phi(\bm{x}_i)$ maps~$\bm{x}_i$ into a higher-dimensional space (see Section~\ref{sec: kernels}). The corresponding dual form is as follows
+\begin{maxi}{\bm{\alpha}}{
+  - \frac{1}{2} \bm{\alpha}^{\top} \K \bm{\alpha} - \sum_{i = 1}^{\nall} \alpha_i
+  }{\label{eq: SVM dual}}{}
+  \addConstraint{\sum_{i = 1}^{\nall} y_i \alpha_i}{= 0}
+  \addConstraint{0 \leq \alpha_i }{\leq C, \quad i = 1, 2, \ldots, \nall,}
+\end{maxi}
+where the kernel matrix~$\K$ is defined as
+\begin{equation*}
+  \K_{i,j} = y_i y_j k(\bm{x}_i, \bm{x}_j) = \phi(\bm{x}_i)^{\top} \phi(\bm{x}_j),
+\end{equation*}
+for all~$i, j = 1, 2, \ldots, \nall.$ Note that the dual form of C-SVC is very similar to the dual forms of our formulations derived in Chapter~\ref{chap: dual}. In the following text, we will C-SVC as \SVM for simplicity.
+
+In total, we used 11 different formulations in the experiments. However, not all formulations are used for all experiments. For example \GrillNP formulations are not used for experiments with dual forms, since the primal problem is not convex and therefore we did not derive the dual form. Moreover, \BaseLine formulation is also not used for experiments with dual forms. On the other hand, \SVM is used only for experiments with dual forms.
+
+Since considered formulations differ in the number of available hyper-parameters, we decided to fix the number of hyper-parameters per formulation to six. For most of the considered formulations, the remaining hyper-parameter is the regularization constant~$\lambda$. The only exceptions are the formulations derived from \PatMatNP, since they also have the scaling parameter~$\vartheta.$ Therefore, we use the following six values of this hyper-parameter
+\begin{equation*}
+  \lambda \in \Brac[c]{10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}, 1}
+\end{equation*}
+for all formulations except \PatMatNP. Since we used a slightly different (but equivalent) primal formulation for the derivation of the dual forms, we use~$\lambda$ to compute hyper-parameter~$C$ used in dual forms
+\begin{equation*}
+  C = \frac{1}{\lambda \ntil},
+\end{equation*}
+where~$\ntil = \nall$ for \SVM and~$\ntil = \npos$ otherwise. For formulations derived from \PatMatNP, we fixed~$\lambda$ to~$10^{-3}$ and use the following six different values of the scaling parameter
+\begin{equation*}
+  \vartheta \in \Brac[c]{10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}, 1}.
+\end{equation*}
+In all experiments, the best hyperparameter is selected based on the validation data and the appropriate performance metric.
+
+\subsection{Performance Criteria}
+
+\subsection{Datasets Description}
+
+For the numerical experiments, we consider variety of different datasets summarized in Table~\ref{tab: datasets summary}, that can be divided into three categories:
+
+\paragraph*{Visual recognition datasets:}
+
+This category contains six well-known visual recognition datasets. MNIST \cite{deng2012mnist} and FashionMNIST \cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers. All datasets from this category are publicly available.
+
+\paragraph*{Steganography datasets:}
+
+For all experiments, we generate dataset from base database of cover images that contains approximately 4 500 000 images from Flickr. All images are JPEG with quality factor 80. To create datasets, we use different techniques of generating stego images. Since generating stego images is expensive, we only generate stego images from 10\% of cover images. Since the database of all images is large, we currently use only a subset with 452 317 cover images and 45 236 stego images.
+
+We generate dataset in the following two ways:
+\begin{itemize}
+  \item \textbf{Nsf5:} Stego images were generated using simulated F5 with matrix embedding turned off. All images were described using 22500 features and split into train / validation / test set in ratio 0.45 / 0.05 / 0.5.
+  \item  \textbf{JMiPOD:} We first select all images that can be cropped to to size $256 \times 256 \times 3$ and than cropped them looselesly using \emph{jpegtran} library. Than, we use J-MiPOD~\cite{cogranne2020steganography} algorithm to generate stego images. We split the data into train / validation / test set in ratio 0.375 / 0.125 / 0.5.
+\end{itemize}
+
+Since we are interested in low false-positive rates, we need a lot of negative (cover) samples to estimate it. This is evident in~\eqref{eq: patmat np} where the threshold~$t$ is a surrogate approximation of false-positive rate, i.e., the threshold is computed only from negative samples. Positive samples occurs only in the objective function. Since generating of stego images is expensive and we do not need them to estimate false-positive rate, we decided to reduce the number of positive samples in train data. We use the following three scenarios:
+\begin{enumerate}
+  \item \textbf{Nsf5-10:} The ratio of stego to cover images is 10\%.
+  \item \textbf{Nsf5-1:} The ratio of stego to cover images is 1\%.
+  \item \textbf{JMiPOD-10:} The ratio of stego to cover images is 10\%.
+\end{enumerate}
+The validation and test set is always the same, see Table\ref{tab: Nsf5 dataset}
+
+\paragraph*{Malware detection dataset:}
+
+A renowned cybersecurity company provided malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number.
+
+All visual recognition datasets from Table~\ref{tab: datasets summary} are originally divided into training and test sets. For these datasets, we select 25\% samples from the training set to obtain the validation set. The rest of the datasets contain only the training set. For these datasets, we select 12.5\% of the samples from the training set as the validation set and 50\% of the samples from the training set as the test set. In all cases, we performed stratified sampling, i.e. we split each class of the data set independently according to the criteria described above.
+
 
 \begin{table}[!ht]
   \centering
   \resizebox{\columnwidth}{!}{%
-  \begin{NiceTabular}{lcrrrrrr}
-    \CodeBefore
+    \begin{NiceTabular}{lccrrrrrr}
+      \CodeBefore
       \rowcolor{\headercol}{1-2}
       \rowcolors{4}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \Block[c]{2-1}{\textbf{Dataset}}
+      \Body
+      \toprule
+      \Block[c]{2-1}{\textbf{Dataset}}
+      & \Block[c]{2-1}{$y^+$}
       & \Block[c]{2-1}{$d$}
       & \Block[c]{1-2}{\textbf{Train}}
       && \Block[c]{1-2}{\textbf{Validation}}
       && \Block[c]{1-2}{\textbf{Test}} \\
-    \cline{3-8}
-      && \Block[c]{1-1}{$n$}
+      \cline{4-9}
+      &&& \Block[c]{1-1}{$n$}
       & \Block[c]{1-1}{$\frac{\npos}{n}$}
       & \Block[c]{1-1}{$n$}
       & \Block[c]{1-1}{$\frac{\npos}{n}$}
       & \Block[c]{1-1}{$n$}
       & \Block[c]{1-1}{$\frac{\npos}{n}$} \\
-    \midrule
-    Ionosphere
-      & 34
-      & 175
-      & 36.0\%
-      & 88
-      & 36.4\%
-      & 88
-      & 35.2\% \\
-    Spambase
-      & 57
-      & 2 300
-      & 39.4\%
-      & 1 150
-      & 39.4\%
-      & 1 151
-      & 39.4\% \\
-    WhiteWineQuality
-      & 11
-      & 2 449
-      & 21.6\%
-      & 1 224
-      & 21.7\%
-      & 1 225
-      & 21.6\% \\
-    RedWineQuality
-      & 11
-      & 800
-      & 13.5\%
-      & 400
-      & 13.8\%
-      & 399
-      & 13.5\% \\
-    Gisette
-      & 5 000
-      & 1 000
-      & 50.0\%
-      & 1 500
-      & 50.0\%
-      & 500
-      & 50.0\% \\
-    Hepmass
-      & 28
-      & 5 250 000
-      & 50.0\%
-      & 1 750 000
-      & 50.0\%
-      & 3 500 000
-      & 50.0\% \\
-    \midrule
-    MNIST
+      \midrule
+      MNIST
+      & 1
       & $28 \times 28 \times 1$
       & 45 000
-      & 11.2\%
+      & 11.3\%
       & 15 000
       & 11.2\%
       & 10 000
       & 11.4\% \\
-    FashionMNIST
+      FashionMNIST
+      & 1
       & $28 \times 28\times 1$
       & 45 000
       & 10.0\%
       & 15 000
-      & 10.0\%
+      & 9.9\%
       & 10 000
       & 10.0\% \\
-    CIFAR10
+      CIFAR10
+      & 1
       & $32 \times 32 \times 3$
       & 37 500
       & 10.0\%
       & 12 500
-      & 10.0\%
+      & 9.9\%
       & 10 000
       & 10.0\% \\
-    CIFAR20
+      CIFAR20
+      & 1
       & $32 \times 32 \times 3$
       & 37 500
       & 5.0\%
       & 12 500
-      & 5.0\%
+      & 5.1\%
       & 10 000
       & 5.0\% \\
-    CIFAR100
+      CIFAR100
+      & 1
       & $32 \times 32 \times 3$
       & 37 500
       & 1.0\%
@@ -126,7 +161,8 @@ Datasets that do not contain train / valid / test split were randomly divided in
       & 1.0\%
       & 10 000
       & 1.0\% \\
-    SVHN2
+      SVHN2
+      & 1
       & $32 \times 32\times 3$
       & 54 944
       & 18.9\%
@@ -134,8 +170,37 @@ Datasets that do not contain train / valid / test split were randomly divided in
       & 18.9\%
       & 26 032
       & 19.6\% \\
-    \midrule
-    Malware Detection
+      SVHN2-Extra
+      & 1
+      & $32 \times 32\times 3$
+      & 453 291
+      & 17.3\%
+      & 151 097
+      & 17.1\%
+      & 26 032
+      & 19.6\% \\
+      \midrule
+      Nsf5 Small
+      & ---
+      & $22 510 \times 1$
+      & 186 583
+      & 9.1\%
+      & 62 194
+      & 9.1\%
+      & 248 776
+      & 9.1\% \\
+      JMiPOD Small
+      & ---
+      & $256 \times 256\times 3$
+      & 186 515
+      & 9.1\%
+      & 62 172
+      & 9.1\%
+      & 248 686
+      & 9.1\% \\
+      \midrule
+      Malware
+      & ---
       & variable
       & 6 580 166
       & 87.22\%
@@ -143,734 +208,74 @@ Datasets that do not contain train / valid / test split were randomly divided in
       & ---
       & 800 346
       & 91.8\% \\
-    \bottomrule
-  \end{NiceTabular}
+      \bottomrule
+    \end{NiceTabular}
   }
-  \caption{Structure of the used datasets. The training, validation and testing sets show the number of features~$m$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$.}
+  \caption{Structure of the used datasets: The training, validation and testing sets show the positive label~$y^+,$ the number of features~$d$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$.}
   \label{tab: datasets summary}
 \end{table}
 
-\section{Performance Evaluation}
+\section{Results}
 
-In Chapter~\ref{chap: framework}, we presented 8 different formulations that fall within the general framework for classification at the top~\eqref{eq: aatp surrogate}, see Table~\ref{tab: summary formulations}. The formulations are divided into three categories:
+\subsection{Linear Model and Full Data}
+
+\subsection{Linear Model and SGD}
+
+% \begin{figure}[!ht]
+%   \centering
+%   \includegraphics[width = \linewidth]{images/critical_diagrams_primal.pdf}
+%   \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
+%   \label{fig: critical diagrams primal}
+% \end{figure}
+
+% \subsection{Dual Formulations}
+
+% \begin{figure}[!ht]
+%   \centering
+%   \includegraphics[width = \linewidth]{images/critical_diagrams_dual_linear.pdf}
+%   \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
+%   \label{fig: critical diagrams dual linear}
+% \end{figure}
+
+% \begin{figure}[!ht]
+%   \centering
+%   \includegraphics[width = \linewidth]{images/critical_diagrams_dual.pdf}
+%   \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
+%   \label{fig: critical diagrams dual}
+% \end{figure}
+
+% \subsection{Non-linear model and SGD}
+
+% \begin{figure}[!ht]
+%   \centering
+%   \includegraphics[width = \linewidth]{images/critical_diagrams_primalnn.pdf}
+%   \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
+%   \label{fig: critical diagrams primalnn}
+% \end{figure}
+
+\section{Conclusion}
+
+\subsection{Linear Model}
+
+In this paper, we achieved the following results:
 \begin{itemize}
-  \item \textbf{Ranking problems:} In this category, we have \TopPush and \TopPushK formulation. Therefore, thsese formulations concentrates on pushing as many positive sample above the worst few negative samples.
-  \item \textbf{Accuracy at the Top:} In this category, we have \Grill, \TopMeanK and \PatMat formulation. The goal of the original problem of Accuracy at the Top is to maximize the number of positive samples with score higher than the top $\tau$-quantile of all scores. All three formulations use different approximation of the true $\tau$-quantile.
-  \item \textbf{Neyman-Pearson problem:} In this category, we have \GrillNP, \tauFPL and \PatMatNP. The goal of these three formulations is to maximize the number of positive samples with score higher than the than the top $\tau$-quantile of negative scores. All three formulations use different approximation of the true $\tau$-quantile.
-\end{itemize}
-As we discussed in Section~\ref{sec: performance evaluation} and~\ref{sec: related problems}, there are many different approaches to measure the classifier’s performance. However, none of the above formulations focus on these classical performance metrics.
-
-Since we are interested in the problems that falls into the general framework~\eqref{eq: aatp surrogate}, we are not interested in standard metrics such as accuracy or balanced accuracy.
-
-\section{Linear Model}\label{sec:num1}
-
-In this section, we present numerical results for formulations from Table~\ref{tab: summary formulations} in their primal form and with linear model. For simplicity, we use only hinge loss function as a surrogate. \TopPush and \tauFPL were originally implemented in the dual. However, to allow for the same framework and the stochastic gradient descent, we implemented it in the primal. These two approaches are equivalent.
-
-For all experiments we use standard stochastic gradient descend algorithm with ADAM
-optimiser~\cite{kingma2014adam}. We run each experiments for 10000 iterations with randomly generated initial
-solution. Moreover, we use minibatches of size 512 except for the Ionosphere and Spambase
-datasets where the full gradient was used.
-
-Since formulations differ in the number of available hyper-parameters (see Table~\ref{tab: summary formulations}), we fixed the number of hyper-parameter per formulation to six. For \PatMat and \PatMatNP we use fixed~$\lambda = 0.002$ and
-\begin{equation*}
-  \vartheta \in \{0.0001, 0.001, 0.01, 0.1, 1, 10\}.
-\end{equation*}
-For \TopPushK we use fixed~$\lambda = 0.002$ and
-\begin{equation*}
-  K \in \{1, 3, 5, 10, 15, 20\}.
-\end{equation*}
-For the rest of the formulations we use
-\begin{equation*}
-  K \in \{0.00002, 0.0002, 0.002, 0.02, 0.2, 0\}.
-\end{equation*}
-Finally, we use parameter~$\tau \in \{0.01, 0.05\}$ for all formulations except \TopPush and \TopPushK. It give us total number of 14 formulations (we count different values of~$\tau$ as different formulation) each of which with 6 hyper-parameters. For all datasets, we choose the hyperparameter which minimized the criterion on the validation set. The results are computed on the testing set which was not used during training the methods.
-
-\subsection{Numerical results}
-
-Figure~\ref{fig: critical diagrams} employs the Nemenyi post hoc test for the Friedman test recommended in~\cite{demvsar2006statistical}. This test compares if the mean ranks of multiple methods are significantly different.
-
-We consider 14 methods (we count different values of~$\tau$ as different methods) as depicted in this table. For each dataset mentioned in Section~\ref{sec:datasets} and each method, we evaluated the fpr@tpr metric and ranked all methods. Rank 1 refers to the best performance for given criteria, while rank 14 is the worst. The~$x$-axis shows the average rank over all datasets. The Nemenyi test computes the critical difference. If two methods are within their critical difference, their performance is not deemed to be significantly different. Black wide horizontal lines group such methods.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/crit_diag.pdf}
-  \caption{Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Black wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets of the tpr@fpr at $\tau=0.05$ (top) and at $\tau=0.01$ (bottom).}
-  \label{fig: critical diagrams}
-\end{figure}
-
-From this figure and table, we make several observations:
-\begin{itemize}
-  \item \TopPushK (rank 5.1) provides a slight improvement over \TopPush (rank 6.7) even though this improvement is not statistically significant as both methods are connected by the black line in both Figures~\ref{fig: critical diagrams} and~\ref{fig:cd2}.
-  \item Neither \Grill (ranks 12.0 and 12.1) nor \GrillNP (ranks 12.1 and 12.4) perform well. We believe this happened due to the lack of convexity as indicated in Theorem~\ref{thm: convexity} and the discussion after that.
-  \item \TopMeanK (ranks 9.2 and 9.9) does not perform well either. Since the thresholds~$\tau$ are small, then~$\bm{w}=0$ is the global minimum as proved in Corollary~\ref{cor:topmean}.
-  \item \PatMatNP (rank 2.1 and 2.6) seems to outperform other methods.
-  \item \PatMat (ranks 5.0 and 5.4), \tauFPL (ranks 4.8 and 5.8) and \TopPushK (rank 5.1) perform similarly. Since they are connected, there is no statistical difference between their behaviours.
-  \item \PatMatNP at level~$0.01$ (rank 2.1) outperforms \PatMatNP at level~$0.05$ (rank 2.6) for~$\tau=0.01$. \PatMatNP at level~$0.05$ (rank 1.9 in Figure~\ref{fig:cd2}) outperforms \PatMatNP at level~$0.01$ (rank 3.0 in Figure~\ref{fig:cd2}) for~$\tau=0.05$. This should be because these methods are optimized for the corresponding threshold. For~$\tauFPL$ we observed this behaviour for Figure~\ref{fig:cd2} but not for Figure~\ref{fig: critical diagrams}.
+  \item We presented a unified framework for the three criteria from Chapter~\ref{chap: framework}. These criteria include ranking, accuracy at the top and hypothesis testing.
+  \item We showed that several known methods (\TopPush, \Grill, \tauFPL) fall into our framework and derived some completely new methods (\PatMat, \PatMatNP).
+  \item We performed a theoretical analysis of the methods. We showed that known methods suffer from certain disadvantages. While \TopPush and \tauFPL are sensitive to outliers, \Grill is non-convex. We proved the global convergence of the stochastic gradient descent for \PatMat and \PatMatNP.
+  \item We performed a numerical comparison and we showed a good performance of our method \PatMatNP.
 \end{itemize}
 
-Figure~\ref{fig:wilcoxon} provides a similar comparison. Both axes are sorted from the best (left) to the worst (right) average ranks. The numbers in the graph show the~$p$-value for the pairwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr of both methods is the same. Even though Figure~\ref{fig: critical diagrams} employs a comparison of mean ranks and Figure~\ref{fig:wilcoxon} a pairwise comparison of fpr@tpr, the results are almost similar. Methods grouped by the black line in the former figure usually show a large~$p$-value in the latter figure.
 
-\begin{figure}[!ht]
-  \centering
-  \resizebox{\columnwidth}{!}{%
-  \begin{NiceTabular}{
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm}
-    Wc{0.6cm} 
-  }[
-    corners,
-    hvlines,
-    last-row,
-    first-col,
-    rules/color=[gray]{0.9},
-    rules/width=1pt,
-  ]
-    \GrillNP (0.05)
-      &&&&&&&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}} \\
-    \GrillNP (0.01)
-      &&&&&&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0} \\
-    \Grill (0.01)
-      &&&&&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!33]{1-1}{{\scriptsize 0.330}}
-      & {\scriptsize 0} \\
-    \Grill (0.05)
-      &&&&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!26]{1-1}{{\scriptsize 0.265}}
-      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.001}}
-      & {\scriptsize 0} \\
-    \TopMeanK (0.01)
-      &&&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \TopMeanK (0.05)
-      &&&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \TopPush
-      &&&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \tauFPL (0.01)
-      &&&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \PatMat (0.01)
-      &&&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.002}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \TopPushK
-      &&&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!38]{1-1}{{\scriptsize 0.387}}
-      & \Block[fill=myblue!10]{1-1}{{\scriptsize 0.039}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \PatMat (0.05)
-      &&&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!40]{1-1}{{\scriptsize 0.405}}
-      & \Block[fill=myblue!15]{1-1}{{\scriptsize 0.109}}
-      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.002}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \tauFPL (0.05)
-      &&
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & \Block[fill=myblue!70]{1-1}{{\scriptsize 0.946}}
-      & \Block[fill=myblue!5]{1-1}{{\scriptsize 0.005}}
-      & \Block[fill=myblue!19]{1-1}{{\scriptsize 0.194}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \PatMatNP (0.05)
-      &
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \PatMatNP (0.01)
-      & \Block[fill=myblue!75]{1-1}{{\scriptsize 1}}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0}
-      & {\scriptsize 0} \\
-    \midrule
-    & \Block[c]{1-1}{\rotate \GrillNP (0.05)}
-    & \Block[c]{1-1}{\rotate \GrillNP (0.01)}
-    & \Block[c]{1-1}{\rotate \Grill (0.01)}
-    & \Block[c]{1-1}{\rotate \Grill (0.05)}
-    & \Block[c]{1-1}{\rotate \TopMeanK (0.01)}
-    & \Block[c]{1-1}{\rotate \TopMeanK (0.05)}
-    & \Block[c]{1-1}{\rotate \TopPush}
-    & \Block[c]{1-1}{\rotate \tauFPL (0.01)}
-    & \Block[c]{1-1}{\rotate \PatMat (0.01)}
-    & \Block[c]{1-1}{\rotate \TopPushK}
-    & \Block[c]{1-1}{\rotate \PatMat (0.05)}
-    & \Block[c]{1-1}{\rotate \tauFPL (0.05)}
-    & \Block[c]{1-1}{\rotate \PatMatNP (0.05)}
-    & \Block[c]{1-1}{\rotate \PatMatNP (0.01)}
-  \end{NiceTabular}
-  }
-  \caption{The~$p$-value for the parwise Wilcoxon signed-rank test, where the null hypothesis is that the mean tpr@fpr(0.01) of both methods is the same. The methods are sorted by mean rank (left = better).}
-  \label{fig:wilcoxon}
-\end{figure}
+\subsection{Dual}\label{sec:Conclusion}
 
-Table~\ref{tab:fails} investigates the impact of~$\bm{w}=0$ as a potential global minimum. Each method was optimized for six different values of hyperparameters. The table depicts the condition under which the final value has a lower objective than~$\bm{w}=0$. Thus, \yesmark\ means that it is always better while \nomark\ means that the algorithm made no progress from the starting point~$\bm{w} =0$. The latter case implies that~$\bm{w}=0$ seems to be the global minimum. We make the following observations:
+In this paper, we analyzed and extended the general framework for binary classification on top samples from~\cite{adam2021general} to nonlinear problems. Achieved results can be summarized as follows:
 \begin{itemize}
-  \item \PatMat and \PatMatNP are the only methods which succeeded at every dataset for some hyperparameter. Moreover, for each dataset, there was some~$\vartheta_0$ such that these methods were successful if and only if~$\vartheta\in(0,\vartheta_0)$. This is in agreement with Theorem~\ref{thm:patmat_zero}.
-  \item \TopMeanK fails everywhere which agrees with Corollary~\ref{cor:topmean}.
-  \item Figure~\ref{fig:thresholds} states that the methods from Section~\ref{sec: aatp} has a higher threshold than their Neyman-Pearson variants from Section~\ref{sec: Neyman-Pearson}. This is documented in the table as the latter have a higher number of successes.
+  \item We derived the dual formulations for \TopPush, \TopPushK and \PatMat.
+  \item We proposed a new method for solving the dual problems. We performed its complexity analysis. For selected surrogate functions we also derived the exact formulas needed in the method.
+  \item We performed a numerical analysis of the proposed method. We showed its good convergence as well as improved performance of nonlinear kernels over the linear one.
 \end{itemize}
+Based on the numerical analysis from Section~\ref{sec:Numerical experiments}, we recommend using \TopPush or \TopPushK for problems where the resulting recall should be small. Otherwise, we recommend using \PatMat with an appropriately selected~$\tau$ parameter.
 
-\begin{table}[!ht]
-  \centering
-  \begin{NiceTabular}{lcccc}
-    \CodeBefore
-      \rowcolor{\headercol}{1}
-      \rowcolors{3}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \Block[c]{1-1}{\textbf{Method}}
-      & \textbf{Ionosphere}
-      & \textbf{Hepmass}
-      & \textbf{FashionMNIST}
-      & \textbf{CIFAR100} \\
-    \midrule
-    \TopPush
-      & \yesmark
-      & \nomark
-      & \yesmark
-      & \nomark \\
-    \TopPushK
-      & \yesmark
-      & \nomark
-      & \yesmark
-      & \nomark \\
-    \midrule
-    \Grill (0.01)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-      \Grill (0.05)
-      & \nomark
-      &\nomark
-      & \nomark
-      & \nomark \\
-      \TopMeanK (0.01)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-    \TopMeanK (0.05)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-    \PatMat (0.01)
-      & \yesmark
-      & \good{\boldmath$\vartheta\leq 0.1$}
-      & \good{\boldmath$\vartheta\leq 1$}
-      & \good{\boldmath$\vartheta\leq 1$} \\
-    \PatMat (0.05)
-      & \yesmark
-      & \good{\boldmath$\vartheta\leq 1$}
-      & \yesmark
-      & \yesmark \\
-    \midrule
-    \GrillNP (0.01)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-    \GrillNP (0.05)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
-    \tauFPL (0.01)
-      & \yesmark
-      & \nomark
-      & \yesmark
-      & \nomark \\
-    \tauFPL (0.05)
-      & \yesmark
-      & \yesmark
-      & \yesmark
-      & \good{\boldmath$\lambda\leq 0.001$} \\
-    \PatMatNP (0.01)
-      & \yesmark
-      & \good{\boldmath$\vartheta\leq 1$}
-      & \yesmark
-      & \good{\boldmath$\vartheta\leq 1$} \\
-    \PatMatNP (0.05)
-      & \yesmark
-      & \yesmark
-      & \yesmark
-      & \good{\boldmath$\vartheta\leq 1$} \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{Necessary hyperparameter choice for the solution to have a better objective than zero. \yesmark\ means that the solution was better than zero for all hyperparameters while \nomark\ means that it was worse for all hyperparameters.}
-  \label{tab:fails}
-\end{table}
+\subsection{Neural Networks}
 
-
-\section{Dual}\label{sec:Numerical experiments}
-
-In this section, we present numerical results. All codes were implemented in the Julia language~\cite{bezanson2017julia} and are available online.\footnote{All codes are available at \url{https://github.com/VaclavMacha/ClassificationOnTop_new.jl}}
-
-\subsection{Performance criteria}
-
-For the evaluation of numerical experiments, we use precision and recall. For a threshold~$t$ they are defined by
-\begin{equation}\label{eq:prec_rec}
-  \begin{alignedat}{2}
-      \precision
-      & = \frac{\sum_{i = 1}^{\npos} [\bm{w}^{\top}\bm{x}^+_{i} - t]}{\sum_{i = 1}^{n} [\bm{w}^{\top}\bm{x}_{i} - t]}, & \qquad
-      \recall
-      & = \frac{1}{\npos} \sum_{i = 1}^{\npos} [\bm{w}^{\top}\bm{x}^+_{i} - t].
-  \end{alignedat}
-\end{equation}
-We also use the Precision-Recall (PR) curve that are commonly used for unbalanced data~\cite{davis2006relationship} and precision at a certain level of recall which we denote by~$\pratrec$.
-
-\subsection{Hyperparameter choice}
-
-In Section~\ref{sec: coordinate descent} we introduced Algorithm~\ref{alg:Coordinate descent} for solving dual problems~(\ref{eq: TopPushK dual},~\ref{eq: PatMat dual}). We let it run for~$20000$ \repeatloop loops, which corresponds to~$40000$ updates of coordinates of~$(\bm{\alpha},\bm{\vartheta})$. We use the linear and Gaussian kernels defined by
-\begin{align}
-  k_{\textrm{lin}}(\bm{x}, \bm{y})   & = \bm{x}^{\top} \bm{y}, \label{eq:Linear kernel} \\
-  k_{\textrm{gauss}}(\bm{x}, \bm{y}) & = \exp\{-\sigma \norm{\bm{x} - \bm{y}}_2^2\} \label{eq:Gaussian kernel}
-\end{align}
-and the truncated quadratic loss~\eqref{eq:Truncated quadratic loss} with~$\vartheta = 1$ as a surrogate. 
-
-The classifiers were trained on the training set. We selected the optimal hyperparameter from
-\begin{equation*}
-  \begin{aligned}
-    \tau   & \in \{0.01,\ 0.05,\ 0.1\}, &
-    K      & \in \{5,\ 10\}, &
-    C      & \in \{0.1,\ 1,\ 10\}, &
-    \sigma & \in \{0.01,\ 0.05\} 
-  \end{aligned}
-\end{equation*}
-which gave the best performance on the validation set. All presented result are shown on the testing set which was not part of the training process.
-
-\subsection{Experiments}
-
-In Figure~\ref{fig:PR comparison} we present the PR curves for all methods with two different kernels evaluated on the FashionMNIST dataset. The left column corresponds to the linear kernel~\eqref{eq:Linear kernel} while the right one to the Gaussian kernel~\eqref{eq:Gaussian kernel} with~$\sigma = 0.01$. The nonlinear Gaussian kernel significantly outperforms the linear kernel. This will be confirmed later in Table~\ref{tab:Metrics comparison} where we present a comparison from multiple datasets. 
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results1.pdf}
-  \caption{PR curves for all methods and  FashionMNIST dataset. The left column corresponds to the linear kernel~\eqref{eq:Linear kernel} and the right column corresponds to the Gaussian kernel~\eqref{eq:Gaussian kernel}.}
-  \label{fig:PR comparison}
-\end{figure}
-
-For a better illustration of how the methods from Figure~\ref{fig:PR comparison} work, we present density estimates of scores~$\bm s$ from \eqref{eq:defin_s}. High scores predict positive labels while low scores predict negative labels. The rows of Figure~\ref{fig:Scores comparison} depict the linear \eqref{eq:Linear kernel} and the Gaussian kernels \eqref{eq:Gaussian kernel} with~$\sigma = 0.01$ while each column corresponds to one method. The black vertical lines depict the top 5\%-quantile of all scores (on the testing set). Since a smaller overlap of scores of samples with positive and negative labels implies a better separation, we deduce the benefit of the Gaussian over the linear kernel.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results2.pdf}
-  \caption{Density estimates for scores corresponding to samples with positive and negative labels for the FashionMNIST dataset.}
-  \label{fig:Scores comparison}
-\end{figure}
-
-In Table~\ref{tab:Metrics comparison} we present the precision of all methods across all datasets from Table~\ref{tab:Datasets}. For each dataset, we trained each method and computed precision at certain levels of recall. The depicted values are averages over all datasets. For each kernel and each level of recall, the best precision is highlighted in light green. Moreover, the best overall precision for each level of recall is depicted in dark green. We can make several observations from Table~\ref{tab:Metrics comparison}:
-\begin{itemize}
-  \item All methods perform better with the Gaussian kernels than with the linear kernel. 
-  \item \TopPush and \TopPushK perform better for sufficiently small recall. This happened because they consider the threshold to be the maximal~$K$ negative scores and small recall corresponds to high threshold. However, for the same reason, \TopPush is not robust.
-  \item \PatMat is the best for all kernels if the recall is sufficiently large. The reason is again the form of the decision threshold.
-\end{itemize}
-
-\begin{table}[ht]
-  \centering
-  \begin{NiceTabular}{cllllllll}
-    \CodeBefore
-      \rowcolor{\headercol}{1-2}
-      \rowcolors{4}{\rowcol}{}[restart, cols=2-]
-    \Body
-    \toprule
-    & \Block[c]{2-2}{\textbf{Method}}
-      && \Block[c]{1-6}{$\pratrec$} \\
-    \cline{4-9}
-    &&& 0.05
-      & 0.1
-      & 0.2
-      & 0.4
-      & 0.6
-      & 0.8 \\
-    \midrule
-    \Block[borders=right]{6-1}{\rotate Linear kernel}
-    & \TopPush
-     && \Block[fill=mygreen!25]{1-1}{79.83}
-      & 64.27
-      & \Block[fill=mygreen!25]{1-1}{65.55}
-      & 61.85
-      & 57.89
-      & 51.83 \\
-    & \Block{1-1}{\TopPushK}
-      & $K = 5$
-      & 73.96
-      & \Block[fill=mygreen!25]{1-1}{65.41}
-      & 64.82
-      & 60.28
-      & 56.94
-      & 50.52 \\
-     && $K = 10$
-      & 60.63
-      & 61.97
-      & 59.69
-      & 56.89
-      & 54.40
-      & 49.83 \\
-    & \Block{1-1}{\PatMat}
-      & $\tau = 0.01$
-      & 63.67
-      & 60.30
-      & 58.74
-      & 57.75
-      & 53.32
-      & 48.42 \\
-     && $\tau = 0.05$
-      & 54.05
-      & 60.91
-      & 63.32
-      & 55.24
-      & 52.55
-      & 48.30 \\
-     && $\tau = 0.1$
-      & 57.02
-      & 61.24
-      & 62.49
-      & \Block[fill=mygreen!25]{1-1}{63.11}
-      & \Block[fill=mygreen!25]{1-1}{59.91}
-      & \Block[fill=mygreen!25]{1-1}{52.14} \\
-    \midrule
-    \Block[borders=right]{6-1}{\rotate Gaussian kernel}
-    & \TopPush
-     && \Block[fill=mygreen!50]{1-1}{97.50}
-     & 86.06
-     & 81.28
-     & 76.15
-     & 71.13
-     & 60.17 \\
-    & \Block{1-1}{\TopPushK}
-      & $K = 5$
-      & 92.50
-      & 87.56
-      & 85.31
-      & 78.47
-      & 70.77
-      & 57.10 \\
-     && $K = 10$
-      & 89.50
-      & 87.56
-      & 83.15
-      & 79.09
-      & 71.88
-      & 59.27 \\
-    & \Block{1-1}{\PatMat}
-      & $\tau = 0.01$
-      & 89.65
-      & \Block[fill=mygreen!50]{1-1}{89.11}
-      & \Block[fill=mygreen!50]{1-1}{86.75}
-      & 80.77
-      & 75.44
-      & 65.95 \\
-     && $\tau = 0.05$
-      & 80.77
-      & 81.28
-      & 85.74
-      & 82.92
-      & 74.91
-      & 65.04 \\
-     && $\tau = 0.1$
-      & 81.30
-      & 84.14
-      & 82.58
-      & \Block[fill=mygreen!50]{1-1}{83.12}
-      & \Block[fill=mygreen!50]{1-1}{77.82}
-      & \Block[fill=mygreen!50]{1-1}{66.50} \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{The precision of all methods averaged across all datasets from Table~\ref{tab:Datasets}. Each column represents precision at a certain level of recall. Light green depicts the best method for the given kernel and dark green depicts the best overall method.}
-  \label{tab:Metrics comparison}
-\end{table}
-
-In Figure~\ref{fig:Convergence comparison}, we investigate the convergence of methods. In each column, we show the convergence of primal and dual problems for one method. To solve the primal problem, we use the gradient method proposed in~\cite{adam2021general}. For the dual problem, we use our Algorithm~\ref{alg:Coordinate descent}. Since~\cite{adam2021general} considers only linear kernels, we present them. Moreover, since the computation of the objective is expensive, the results are presented for the sigillito1989classification dataset. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual problems. This means that the problem was solved to optimality. However, there is a little gap between optimal solution of primal and dual problems for \PatMat.
-
-\begin{figure}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/dual_results3.pdf}
-  \caption{Convergence of the objectives for the primal (red line) and dual (blue line) problems for the sigillito1989classification dataset with linear kernel.}
-  \label{fig:Convergence comparison}
-\end{figure}
-
-Finally, Table~\ref{tab:Time comparison} depicts the time comparison for all methods and all datasets. It shows the average time in milliseconds needed for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The time is relatively stable and for most of the datasets it is below one millisecond. Since we run all experiments for 20000 \repeatloop loops, the evaluation of one method with one hyperparameter setting takes a few seconds for smaller datasets and approximately 7 minutes for FashionMNIST. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods. It is almost the same for all datasets, which corresponds to the fact that the complexity of step~\ref{alg: line 5} is independent of the size of the dataset. Note that in all experiments we used precomputed kernel matrix~$\K$ saved on the hard drive and not in memory.
-
-\begin{table}[ht]
-  \centering
-  \begin{NiceTabular}{clccc}
-    \CodeBefore
-      \rowcolor{\headercol}{1}
-      \rowcolors{3}{\rowcol}{}[restart, cols=2-]
-    \Body
-    \toprule
-      & \Block[c]{1-1}{\textbf{Dataset}}
-      & \textbf{\TopPush}
-      & \textbf{\TopPushK}
-      & \textbf{\PatMat} \\
-    \midrule
-    \Block[borders=right]{5-1}{\rotate One \repeatloop \\ loop [ms]}
-    & Ionosphere
-      & $0.04 \pm 0.00$
-      & $0.03 \pm 0.00$
-      & $0.03 \pm 0.00$ \\
-    & Spambase
-      & $0.56 \pm 0.02$
-      & $0.49 \pm 0.01$
-      & $0.50 \pm 0.01$ \\
-    & WhiteWineQuality
-      & $0.62 \pm 0.03$
-      & $0.53 \pm 0.01$
-      & $0.54 \pm 0.01$ \\
-    & RedWineQuality
-      & $0.17 \pm 0.01$
-      & $0.14 \pm 0.01$
-      & $0.15 \pm 0.01$ \\
-    & Fashion-MNIST
-      & $17.16 \pm 0.74$
-      & $15.95 \pm 0.14$
-      & $15.54 \pm 0.80$ \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{The average time with standard deviation (in milliseconds) for one \repeatloop loop in Algorithm~\ref{alg:Coordinate descent}. The average time for one~$\Delta_l$ in step~\ref{alg: line 5} in Algorithm~\ref{alg:Coordinate descent} took between~$1.7\cdot 10^{-7}$ and~$3.1\cdot 10^{-7}$ seconds for each methods.}
-  \label{tab:Time comparison}
-\end{table}
-
-
-\section{Neural Networks}\label{sec:numerics}
-
-This section presents numerical results for \DeepTopPush. Table~\ref{table:summary} shows that it is similar to \PatMatNP. While the former maximizes the number of positives above the largest negative, while the latter maximizes the number of positives above the~$\nneg\tau$-largest negative. The former may be understood as requiring no false-positives, while the latter allows for false positive rate~$\tau$.
-
-Section~\ref{sec:bias1} showed that we can use large minibatches to obtain good results for \PatMatNP for small fractions of top samples~$\tau$. Section~\ref{sec:bias2} showed that \DeepTopPush works well even with small minibatches if we track the threshold by enhancing the minibatch by one sample. We present numerical comparisons in several sections, each with a different purpose. Comparison with the prior art \TFCO and \APPerf is performed on several visual recognition datasets and shows that \DeepTopPush outperforms other methods. Then we present two real-world applications. The first one shows that \DeepTopPush can handle ranking problems. The second one presents results on a complex malware detection problem. Finally, we show similarities between \DeepTopPush and \PatMatNP and explain why enhancing the minibatch in Algorithm~\ref{alg: deeoptoppush} works.
-
-\subsection{related work deep}
-
-Two approaches for solving \eqref{eq:problem} exist. The first approach considers the threshold constraint as it is, while the second approach uses heuristics to approximate it. In the first approach, Acc@Top~\cite{boyd2012accuracy} argues that the threshold equals one of the scores. They fix the index of a sample and solve as many optimization problems as there are samples.~\cite{eban2017scalable,adam2021general,kumar2021implicit} write the threshold as a constraint and replace both the objective and the constraint via surrogates.~\cite{eban2017scalable} uses Lagrange multipliers to obtain a minimax problem,~\cite{mackey2018constrained} implicitly removes the threshold as an optimization variable and uses the chain rule to compute the gradient while~\cite{macha2020nonlinear} solves an SVM-like dual formulation with kernels.~\cite{grill2016learning} uses the same formulation but applies surrogates only to the objective and recomputes the threshold after each gradient step. \TFCO~\cite{cotter2019optimization} solves a general class of constrained problems via a minimax reformulation. In the second approach, SoDeep~\cite{engilberge2019sodeep} or SmoothI~\cite{thonet2021smoothi} use the fact that the threshold may be easily computed from sorted scores. They approximate the sorting operator by a network trained on artificial data. \APPerf~\cite{fathony2019ap} considers a general metric and hedges against the worst-case perturbation of scores. The authors argue that the problem is bilinear in scores and use duality arguments. However, the bilinearity is lost when optimizing with respect to the weights of the original network. 
-
-We use truncated quadratic loss~$l(z) = (\max\{0, 1 + z\})^2$ as the surrogate function and~$\tau=\frac{1}{\nneg}$ and~$\tau=0.01$. This first one computes the true positive rate above the second highest-ranked negative, while the latter allows for the false positive rate of~$1\%$. All algorithms were run for~$200$ epochs on an NVIDIA P100 GPU card with balanced minibatches of 32 samples. The only exception was Malware Detection, which was run on a cluster in a distributed manner, and where the minibatch size was~$20000$. For the evaluation of numerical experiments, we use the standard receiver operating characteristic (ROC) curve. All results are computed from the test set. All codes were implemented in the Julia language~\cite{bezanson2017julia}. The network structure was the same for all methods; we describe them in the online appendix.
-
-
-\subsection{Used network architecture}\label{app:network}
-
-For 3A4, we preprocessed the input with~$9491$ into a~$100$-dimensional input by PCA. Then we used two dense layers of size~$100\times 50$ and~$50\times 25$ with batch-normalization after these layers. The last layer was dense.
-
-For FashionMNIST, we used a network alternating two hidden convolutional layers with two max-pooling layers finished with a dense layer. The convolutional layers used kernels~$5\times 5$ and had~$20$ and~$50$ channels, respectively. For CIFAR100 and SVHN2, we increased the number of hidden and max-pooling layers from two to three. The convolutional layers used kernels~$3\times 3$ and had~$64$,~$128$, and~$128$ channels, respectively. A more detailed description can be found in our codes online. We are fully aware that these architectures are suboptimal. Since the accuracy at the top needs to select only a few relevant samples and the rest of the dataset's performance is irrelevant, such a network can be used. Moreover, using a simpler network has the advantage of faster experiments.
-
-For ImageNet, we merged all turtles into the positive class and all non-turtles into the negative class. Then we used the pre-trained EfficientNet B0, where we replaced the last dense layer with~$1000$ outputs by a dense layer into a scalar output.
-
-\subsection{Comparison with prior art}\label{sec:comparison}
-
-We compare our methods with \BaseLine, which uses the weighted cross-entropy. Moreover, we use two prior art methods which have codes available online, namely \TFCO~\cite{cotter2019optimization,narasimhan2019optimizing} and \APPerf~\cite{fathony2019ap}. We did not implement the original TopPush because its duality arguments restrict the classifiers to only linear ones. Table~\ref{table:time} shows the time requirement per epoch. All methods besides \APPerf have similar time requirements, while \APPerf is much slower. This difference increases drastically when the minibatch size increases, as noted in~\cite{fathony2019ap}. We do not present the results for SVHN for \APPerf because it was too slow and for \TFCO because we encountered a TensorFlow memory error. All these methods are designed to maximize true-positives when the false positive rate is at most~$\tau$. This is the same as for \PatMatNP.
-
-\begin{table}[!ht]
-  \centering
-  \begin{NiceTabular}{lccc}
-    \CodeBefore
-      \rowcolor{\headercol}{1}
-      \rowcolors{3}{\rowcol}{}[restart]
-    \Body
-    \toprule
-    \Block[c]{1-1}{\textbf{Method}}
-      & \textbf{FashionMNIST}
-      & \textbf{CIFAR100}
-      & \textbf{SVHN} \\
-    \midrule
-    BaseLine
-      & 4.4s
-      & 5.1s
-      & 62.8s \\
-    \DeepTopPush
-      & 4.8s
-      & 5.6s
-      & 66.6s \\
-    \PatMatNP
-      & 4.8s
-      & 5.6s
-      & 66.6s \\
-    \TFCO
-      & 7.2s
-      & 6.5s
-      & - \\
-    \APPerf
-      & 95.3s
-      & 81.2s
-      & - \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{Time requirements per epoch for investigated methods for minibatches of size~$\nmb=32$.}
-  \label{table:time}
-\end{table}
-
-\begin{table}[ht]
-  \centering
-  \begin{NiceTabular}{clccccc}
-    \CodeBefore
-      \rowcolor{\headercol}{1}
-      \rowcolors{3}{\rowcol}{}[restart, cols=2-]
-    \Body
-    \toprule
-      & \Block[c]{1-1}{\textbf{Dataset}}
-      & \textbf{BaseLine}
-      & \textbf{\DeepTopPush}
-      & \textbf{\PatMatNP}
-      & \textbf{\TFCO}
-      & \textbf{\APPerf} \\
-    \midrule
-    \Block[borders=right]{4-1}{\rotate tpr@fpr \\ $\tau=\nicefrac{1}{\nneg}$}
-    & FashionMNIST
-      & $5.06 \pm 1.41$
-      & \Block[fill=mygreen!25]{1-1}{$27.30 \pm 5.91$}
-      & $22.21 \pm 5.62$
-      & $11.30 \pm 3.44$
-      & $9.90$ \\
-    & CIFAR100
-      & $1.70 \pm 0.46$
-      & \Block[fill=mygreen!25]{1-1}{$14.40 \pm 5.44$}
-      & $8.10 \pm 3.45$
-      & $7.70 \pm 2.28$
-      & $5.00$ \\
-    & 3A4
-      & $2.58 \pm 0.61$ 
-      & \Block[fill=mygreen!25]{1-1}{$5.61 \pm 1.70$}
-      & $3.79 \pm 0.90$
-      & $3.03 \pm 1.52$
-      & $3.03$ \\
-    & SVHN
-      & $6.51 \pm 1.37$
-      & \Block[fill=mygreen!25]{1-1}{$12.21 \pm 5.39$}
-      & $12.07 \pm 4.41$ 
-      & ---
-      & --- \\
-    \midrule
-    \Block[borders=right]{4-1}{\rotate tpr@fpr \\ $\tau=0.01$}
-    & FashionMNIST
-      & $63.14 \pm 1.39$
-      & \Block[fill=mygreen!25]{1-1}{$75.37 \pm 1.18$}
-      & $74.11 \pm 1.00$
-      & $73.27 \pm 2.92$
-      & $64.60$ \\
-    & CIFAR100
-      & $49.40 \pm 4.90$
-      & \Block[fill=mygreen!25]{1-1}{$70.20 \pm 2.14$}
-      & $66.30 \pm 2.33$
-      & $67.30 \pm 1.79$
-      & $65.00$ \\
-    & 3A4
-      & $57.80 \pm 0.35$ 
-      & $60.08 \pm 3.35$
-      & \Block[fill=mygreen!25]{1-1}{$65.91 \pm 0.59$}
-      & $54.55 \pm 10.22$
-      & $63.64$ \\
-    & SVHN
-      & $84.72 \pm 0.84$
-      & $91.05 \pm 1.45$
-      & \Block[fill=mygreen!25]{1-1}{$91.07 \pm 0.30$}
-      & ---
-      & --- \\
-    \bottomrule
-  \end{NiceTabular}
-  \caption{The true positive rates (in \%) at two levels of false positive rates averaged across ten indepenedent runs with standard deviation. The best methods are highlighted.}
-  \label{tab:Overall comparison}
-\end{table}
-
-Table~\ref{tab:Overall comparison} shows the true positive rate (tpr) above the second-largest negative and at the prescribed false positive rate (fpr)~$\tau=0.01$. Using the second-largest negative, which corresponds to~$\tau=\frac{1}{\nneg}$, allows for one outlier. The results are averaged over ten independent runs except for \APPerf, which is too slow. The best result for each metric (in columns) is highlighted. All methods are better than \BaseLine. This is not surprising as all these methods are designed to work well for low false positive rates. \DeepTopPush outperforms all other methods at the top, while it performs well at the low fpr of~$\tau=0.01$. There \PatMatNP, which also falls into our framework, performs well. Both these methods outperform the state of the art methods. 
-
-Figure~\ref{fig: roc curves} \textbf{A)} shows the ROC curves on CIFAR100 averaged over ten independent runs. We use the logarithmic~$x$ axis to highlight low fpr modes. \DeepTopPush performs significantly the best again whenever the false positive rate is smaller than~$0.01$.
-
-As a further test, we performed a simple experiment on ImageNet. We modified the pre-trained EfficientNet B0~\cite{tan2019efficientnet} by removing the last dense layer and adding another dense layer with one output. Then we retrained the newly added layer to perform well at the top. The original EfficientNet achieved~$68.0\%$ at the top, while \DeepTopPush achieved~$70.0\%$ for the same metric. This shows that \DeepTopPush can provide better accuracy at the top than pre-trained networks.
-
-\begin{figure*}[!ht]
-  \centering
-  \includegraphics[width = \linewidth]{images/deep_results1.pdf}
-  \caption{\textbf{A)} ROC curves averaged over ten runs on the CIFAR100 dataset. \textbf{B)} ROC curve for Malware Detection dataset. The circles show the thresholds the methods were optimized for.}
-  \label{fig: roc curves}
-\end{figure*}
-
-\subsection{Real-world application}
-
-This section shows a real-world application of the accuracy at the top. A renowned cybersecurity company provided malware analysis reports of executable files. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number. We processed the data by a public implementation of hierarchical multi-instance learning (HMIL)~\cite{pevny2017using}. Then we applied \DeepTopPush and \PatMatNP at~$\tau=10^{-3}$ and~$\tau=10^{-2}$. The latter maximizes the true positives rate when the false positive rate is at most~$\tau$. The minibatch size was~$20000$, which allowed us to obtain precise threshold estimates and unbiased sampled gradients due to Section~\ref{sec:bias1}.
-
-Figure~\ref{fig: roc curves} \textbf{B)} shows the performance on the test set. \DeepTopPush is again the best at low false positive rates. This is extremely important in cybersecurity as it prevents false alarms for malware. Even at the extremely low false positive rate~$\tau=10^{-5}$, our algorithm correctly identified~$46\%$ of malware. The circles denote the thresholds for which the methods were optimized. \DeepTopPush should have the best performance at the leftmost point, \PatMatNP ($\tau=10^{-3}$) at~$\tau=10^{-3}$ and similarly \PatMatNP($\tau=10^{-2}$).
+We proposed \DeepTopPush as an efficient method for solving the constrained non-decomposable problem of accuracy at the top, which focuses on the performance only above a threshold. We implicitly removed some optimization variables, created an unconstrained end-to-end network and used the stochastic gradient descent to train it. We modified the minibatch so that the sampled threshold (computed on a minibatch) is a good estimate of the true threshold (computed on all samples). We showed both theoretically and numerically that this procedure reduces the bias of the sampled gradient. The time increase over the standard method with no threshold is small. We demonstrated the usefulness of \DeepTopPush both on visual recognition datasets, a ranking problem and on a real-world application of malware detection.
