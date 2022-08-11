@@ -82,7 +82,7 @@ In this section, we focus on the family of \TopPushK formulations. The general o
   \addConstraint{s_j}{= \bm{w}^{\top} \bm{x}_j, \quad j \in \Itil \label{eq: toppushk family c1}}
   \addConstraint{t}{= \frac{1}{K} \sum_{j = 1}^{K} s_{[j]}, \label{eq: toppushk family c2}}
 \end{mini!}
-where~$C \in \R.$ The set of indices~$\Itil$ equals~$\I$ for \TopMeanK and~$\Ineg$ for other formulations. The parameter~$K$ equals~$1$ for \TopPush, $K$ for \TopPushK, $\nall \tau$ for \TopMeanK, and $\nneg \tau$ for \tauFPL. Note that we use an alternative formulation with constant~$C$ and regularization parameter~$\lambda = 1,$ since it is more similar to the standard SVM, and we wanted to stress this similarity. For~$C = \nicefrac{1}{\npos}$ the new formulation is identical to the original one.
+where~$C \in \R.$ The set of indices~$\Itil$ equals~$\I$ for \TopMeanK and~$\Ineg$ for other formulations. The parameter~$K$ equals~$1$ for \TopPush, $K$ for \TopPushK, $\nall \tau$ for \TopMeanK, and $\nneg \tau$ for \tauFPL. Note that we use an alternative formulation with constant~$C$, since it is more similar to the standard SVM, and we wanted to stress this similarity. For~$C = \nicefrac{1}{\lambda \npos}$ the new formulation is identical to the original one.
 
 The following theorem shows the dual form of formulation~\eqref{eq: toppushk family}. The dual formulation for \TopPush was originally derived in~\cite{li2014top}. We only show, that our general dual formulation also covers this special case. To keep the readability as simple as possible, we postpone all proofs to Appendix~\ref{app: dual}.
 
@@ -140,7 +140,7 @@ In the same way, as for \TopPushK family, we introduce a general optimization pr
   }{\label{eq: patmat family}}{}
   \addConstraint{t}{\;\; \text{solves} \;\; \frac{1}{\ntil}\sum_{i \in \Itil} l\Brac{\vartheta(\bm{w}^{\top} \bm{x}_j - t)} = \tau,}
 \end{mini}
-where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \PatMatNP we have~$\Itil = \Ineg$ and~$\ntil = \nneg.$ Again, we use the alternative formulation with constant~$C$ and regularization parameter~$\lambda = 1.$ The following theorem shows the dual form of the formulation~\eqref{eq: patmat family}.
+where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \PatMatNP we have~$\Itil = \Ineg$ and~$\ntil = \nneg.$ Again, we use the alternative formulation with constant~$C.$ The following theorem shows the dual form of the formulation~\eqref{eq: patmat family}.
 
 \begin{restatable}[Dual formulation for \PatMat family]{theorem}{patdual}\label{thm: patmat family dual}
   Consider Notation~\ref{not: kernel matrix}, surrogate function~$l,$ and formulation~\eqref{eq: patmat family}. Then the corresponding dual problem has the following form
@@ -183,7 +183,7 @@ where~$C \in \R.$ For \PatMat we have~$\Itil = \I$ and~$\ntil = \nall.$ For \Pat
 
 \pagebreak
 
-\section{Kernels}
+\section{Kernels}\label{sec: kernels}
 
 As we mentioned at the beginning of the chapter, our goal is to extend our framework to be usable for linearly inseparable problems. In two previous sections, we derived dual formulations for \TopPushK and \PatMat families. In this section, we show how to employ the kernels method~\cite{scholkopf2001learning} to introduce nonlinearity into these dual formulations. For simplicity, we focus only on the \TopPushK formulation that computes the decision threshold only from negative samples. As mentioned in Notation~\ref{not: kernel matrix}, \TopPushK formulation uses kernel matrix~$\K = \Kneg.$ The following derivation is the same for all other formulations.
 
