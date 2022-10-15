@@ -256,38 +256,32 @@ The two previous metric are specific for the formulations from our framework. Ho
   \label{tab: metrics summary}
 \end{table}
 
+\newpage
+
 \subsection{Datasets Description}
 
-For the numerical experiments, we consider variety of different datasets summarized in Table~\ref{tab: datasets summary}, that can be divided into three categories:
+For the numerical experiments, we consider variety of different datasets summarized in Table~\ref{tab: datasets summary}, that can be divided into three categories. In the following subsections, we describe in details all three categories. It is worth mentioning, that not all datasets that are used in experiments are primarily designed for the classification at the top. In fact, all datasets from the first category are general image classification datasets. We use these datasets for two reasons. The first one is that they are publicly available. The second reason is, that all these datasets are well known, and therefore it is easier to present the results on them. However, there are also some drawbacks. For example, many state-of-the-art neural network architectures achieve almost the perfect classification on these datasets and therefore there is no room for improvement. For this reason, we use much simpler architectures in the experiments to show the behavior of formulations presented in this work.
 
 \subsubsection{Visual recognition datasets}
 
 This category contains six well-known visual recognition datasets. MNIST \cite{deng2012mnist} and FashionMNIST \cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers. All datasets from this category are publicly available.
 
+All dataset in this category are originally divided only into training and test sets. Therefore, we select 25\% samples from the training set to obtain the validation set. 
+
 \subsubsection{Steganography datasets}
 
-For all experiments, we generate dataset from base database of cover images that contains approximately 4 500 000 images from Flickr. All images are JPEG with quality factor 80. To create datasets, we use different techniques of generating stego images. Since generating stego images is expensive, we only generate stego images from 10\% of cover images. Since the database of all images is large, we currently use only a subset with 452 317 cover images and 45 236 stego images.
+To show the importance of classification at the top, we need to find the field in which the maximizing true-positive rate at the low false-positive rate is an important task. Such a field can be for example steganography and steganalysis. The standard way how to share secret information these days is the use of encryption. However, in such a case, the presence of a secret message (even though encrypted) is obvious. Steganography aims to hide the fact that communication taking place, by hiding the secret message within an ordinary file (usually called cover file) in order to avoid detection. The secret message is then extracted at its destination. The secret data can be hidden in almost any type of digital content, however the most popular are images. There are two reasons for this. The first of them is the ubiquity of images on the Internet and therefore the ease to use them as cover files for secret messages. The second reason is their large potential payload, i.e. it is possible to hide a lot of information in the images with high resolution. With an appropriate cover image and steganography tools, it is possible to create an stego-image (image with a hidden message) that can not be recognized from the cover image by human perception. However, each tool leaves a fingerprint or signature in the image, that can be used to detect stego images. The field that tries to detect stego images and possibly decrypt messages from them is called steganalysis. In steganalysis, the goal is to achieve the best true-positive rate with the lowest possible false-positive rate. Therefore steganalysis is the branch suitable for the classification at the top, since many of the formulations derived in this work focus precisely on this task. \cite{morkel2005overview, silman2001steganography} 
 
-We generate dataset in the following two ways:
+For the eperiments, we have a large dataset of cover-images that consists of approximatel 450 000 images from Flickr. All these images are in the JPEG format with quality factor 80. Since the dataset does not contain any stego images, we use two different ways to generate them:
 \begin{itemize}
-  \item \textbf{Nsf5:} Stego images were generated using simulated F5 with matrix embedding turned off. All images were described using 22500 features and split into train / validation / test set in ratio 0.45 / 0.05 / 0.5.
-  \item  \textbf{JMiPOD:} We first select all images that can be cropped to to size $256 \times 256 \times 3$ and than cropped them looselesly using \emph{jpegtran} library. Than, we use J-MiPOD~\cite{cogranne2020steganography} algorithm to generate stego images. We split the data into train / validation / test set in ratio 0.375 / 0.125 / 0.5.
+  \item \textbf{Nsf5:} Stego images were generated using simulated F5 with matrix embedding turned off. All images were described using 22 500 features and split into train / validation / test set in ratio 0.45 / 0.05 / 0.5.
+  \item  \textbf{JMiPOD:} We first select all images that can be cropped to to size $256 \times 256 \times 3$ and than cropped them looselesly using \emph{jpegtran} library. Than, we use JMiPOD~\cite{cogranne2020steganography} algorithm to generate stego images. We split the data into train / validation / test set in ratio 0.375 / 0.125 / 0.5.
 \end{itemize}
-
-Since we are interested in low false-positive rates, we need a lot of negative (cover) samples to estimate it. This is evident in~\eqref{eq: patmat np} where the threshold~$t$ is a surrogate approximation of false-positive rate, i.e., the threshold is computed only from negative samples. Positive samples occurs only in the objective function. Since generating of stego images is expensive and we do not need them to estimate false-positive rate, we decided to reduce the number of positive samples in train data. We use the following three scenarios:
-\begin{enumerate}
-  \item \textbf{Nsf5-10:} The ratio of stego to cover images is 10\%.
-  \item \textbf{Nsf5-1:} The ratio of stego to cover images is 1\%.
-  \item \textbf{JMiPOD-10:} The ratio of stego to cover images is 10\%.
-\end{enumerate}
-The validation and test set is always the same, see Table\ref{tab: Nsf5 dataset}
+Since we are interested in low false-positive rates, we need a lot of negative (cover) samples to estimate it. This is evident in~\eqref{eq: patmat np} where the threshold~$t$ is a surrogate approximation of false-positive rate, i.e., the threshold is computed only from negative samples. Positive (stego) samples occurs only in the objective function. Since generating of stego images is expensive and we do not need them to estimate false-positive rate, we decided to use 10\% of all cover images to generate their stego counterparts. The resulting sizes of train / validation / test splits as well as the number of stego images in them, are in Table~\ref{tab: datasets summary}.
 
 \subsubsection{Malware detection dataset}
 
 A renowned cybersecurity company provided malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number.
-
-All visual recognition datasets from Table~\ref{tab: datasets summary} are originally divided into training and test sets. For these datasets, we select 25\% samples from the training set to obtain the validation set. The rest of the datasets contain only the training set. For these datasets, we select 12.5\% of the samples from the training set as the validation set and 50\% of the samples from the training set as the test set. In all cases, we performed stratified sampling, i.e. we split each class of the data set independently according to the criteria described above.
-
 
 \begin{table}[!ht]
   \centering
@@ -376,7 +370,7 @@ All visual recognition datasets from Table~\ref{tab: datasets summary} are origi
       & 26 032
       & 19.6\% \\
       \midrule
-      Nsf5 Small
+      \bad{Nsf5}
       & ---
       & $22 510 \times 1$
       & 186 583
@@ -385,7 +379,7 @@ All visual recognition datasets from Table~\ref{tab: datasets summary} are origi
       & 9.1\%
       & 248 776
       & 9.1\% \\
-      JMiPOD Small
+      \bad{JMiPOD}
       & ---
       & $256 \times 256\times 3$
       & 186 515
@@ -395,7 +389,7 @@ All visual recognition datasets from Table~\ref{tab: datasets summary} are origi
       & 248 686
       & 9.1\% \\
       \midrule
-      Malware
+      \bad{Malware}
       & ---
       & variable
       & 6 580 166
@@ -407,7 +401,7 @@ All visual recognition datasets from Table~\ref{tab: datasets summary} are origi
       \bottomrule
     \end{NiceTabular}
   }
-  \caption{Structure of the used datasets: The training, validation and testing sets show the positive label~$y^+,$ the number of features~$d$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$.}
+  \caption{Structure of the used datasets: The training, validation and testing sets show the positive label~$y^+,$ the number of features~$d$, samples~$n$ and the fraction of positive samples~$\frac{\npos}{n}$. Datasets depicted in red are not publicly available.}
   \label{tab: datasets summary}
 \end{table}
 
