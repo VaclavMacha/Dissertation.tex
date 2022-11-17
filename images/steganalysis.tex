@@ -24,7 +24,7 @@
   \begin{axis}[
     height=8cm,
     width=14cm,
-    xmin = 0.00002,
+    xmin = 0.00001,
     xmax = 1.01,
     xmode = log,
     ymin = -0.05,
@@ -48,11 +48,11 @@
   ]
 
     \addplot [lineDeepTP]  table[x index=2, y index=3] {\StegoPatMatA};
-    \addlegendentry{\PatMatNP($10^{-3}$)}
+    \addlegendentry{\PatMatNP$\left( 10^{-3} \right)$}
     \addplot [linePatMat1]  table[x index=2, y index=3] {\StegoPatMatB};
-    \addlegendentry{\PatMatNP($10^{-4}$)}
+    \addlegendentry{\PatMatNP$\left( 10^{-4} \right)$}
     \addplot [linePatMat2] table[x index=2, y index=3] {\StegoPatMatC};
-    \addlegendentry{\PatMatNP($10^{-5}$)}
+    \addlegendentry{\PatMatNP$\left( 10^{-5} \right)$}
     \addplot [lineBaseLine]  table[x index=2, y index=3] {\StegoBaseline};
     \addlegendentry{\BaseLine}
   \end{axis}
