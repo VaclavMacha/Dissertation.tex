@@ -14,9 +14,9 @@ To simplify the setup of all experiments, we decided to focus on formulations th
 
 \subsection{Formulations and Hyperparameters}
 
-At the beginning of this section, we discussed which formulations we use for experiments. In total, we use five different formulations from Table~\ref{tab: summary formulations}, namely \TopPush, \TopPushK, \GrillNP, \tauFPL, and \PatMatNP. Moreover, for \TopPushK we use two different values of~$K = \{5, 10\}$ and consider the resulting formulations as separate formulations, i.e. we have \TopPushK(5) and \TopPushK(10). Similarly, for \GrillNP, \tauFPL and \PatMat we use two different values of~$\tau = \{0.01, 0.05\}.$ For all formulations, we use the hinge loss defined in Notation~\ref{not: surrogates} as a surrogate function.
+At the beginning of this section, we discussed which formulations we use for experiments. In total, we use four different formulations from Table~\ref{tab: summary formulations}, namely \TopPush, \TopPushK, \tauFPL, and \PatMatNP. We decided to omit the \GrillNP formulation in final experiments, because it provides very poor results in preliminary experiments. Moreover, for \TopPushK we use two different values of~$K = \{5, 10\}$ and consider the resulting formulations as separate formulations, i.e. we have \TopPushK(5) and \TopPushK(10). Similarly, for \tauFPL and \PatMat we use two different values of~$\tau = \{0.01, 0.05\}.$ For all formulations, we use the hinge loss defined in Notation~\ref{not: surrogates} as a surrogate function.
 
-We have a total of 9 different formulations, however, all these formulations fall into our general framework. To show that these formulations work properly, we have to compare them to some standard methods. In previous chapters, we showed how to solve presented formulations in their primal (Chapters~\ref{chap: linear} and~\ref{chap: deep}) and dual form (Chapter~\ref{chap: dual}). Whenever we use the primal form in the experiments, we use binary cross-entropy defined in the following way as a baseline formulation 
+We have a total of 7 different formulations, however, all these formulations fall into our general framework. To show that these formulations work properly, we have to compare them to some standard methods. In previous chapters, we showed how to solve presented formulations in their primal (Chapters~\ref{chap: linear} and~\ref{chap: deep}) and dual form (Chapter~\ref{chap: dual}). Whenever we use the primal form in the experiments, we use binary cross-entropy defined in the following way as a baseline formulation 
 \begin{mini}{\bm{w}}{
   \frac{1}{\nall} \sum_{i \in \I} \Brac{- y_i \log(s_i) - (1 - y_i) \log (1 - s_i)}
   }{\label{eq: crossentropy}}{}
@@ -42,7 +42,7 @@ where the kernel matrix~$\K$ is defined as
 \end{equation*}
 for all~$i, j = 1, 2, \ldots, \nall.$ Note that the dual form of C-SVC is very similar to the dual forms of our formulations derived in Chapter~\ref{chap: dual}. In the following text, we will denote C-SVC as \SVM for simplicity.
 
-In total, we have 11 different formulations. However, not all formulations are used for all experiments. For example \GrillNP formulations are not used for experiments with dual forms, since the primal problem is not convex and therefore we did not derive the dual form. Moreover, \BaseLine formulation is also not used for experiments with dual forms. On the other hand, \SVM is used only for experiments with dual forms. The summary of all formulations used for experiments is in Table~\ref{tab: formulations experiments summary}.
+In total, we have 9 different formulations. However, not all formulations are used for all experiments: \BaseLine formulation is also not used for experiments with dual forms, and \SVM is used only for experiments with dual forms. The summary of all formulations used for experiments is in Table~\ref{tab: formulations experiments summary}.
 
 Since considered formulations differ in the number of available hyper-parameters, we decided to fix the number of hyper-parameters per formulation to six. For most of the considered formulations, the remaining hyper-parameter is the regularization constant~$\lambda$. The only exceptions are the formulations derived from \PatMatNP, since they also have the scaling parameter~$\vartheta.$ Therefore, we use the following six values of this hyper-parameter
 \begin{equation*}
@@ -98,16 +98,6 @@ In all experiments, the best hyperparameter is selected based on the validation 
       & $\lambda$
       & \yesmark
       & \yesmark \\
-    \GrillNP(0.01)
-      & $\tau = 0.01$
-      & $\lambda$
-      & \yesmark
-      & \nomark \\
-    \GrillNP(0.05)
-      & $\tau = 0.05$
-      & $\lambda$
-      & \yesmark
-      & \nomark \\
     \tauFPL(0.01)
       & $\tau = 0.01$
       & $\lambda$
