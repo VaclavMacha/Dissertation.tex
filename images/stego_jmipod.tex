@@ -1,0 +1,63 @@
+\documentclass[tikz]{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  lineBaseLine/.style = {very thick, densely dotted},
+  lineDeepTP/.style   = {very thick, mypurple},
+  linePatMat1/.style  = {very thick, mygreen, dashed},
+  linePatMat2/.style  = {very thick, myblue, dashdotted},
+  linePatMat3/.style  = {very thick, myorange, dashdotdotted},
+}
+
+\pgfplotstableread[col sep = comma]{../data/stego_jmipod_baseline.csv}\StegoBaseline
+\pgfplotstableread[col sep = comma]{../data/stego_jmipod_deeptoppush.csv}\StegoDeepTP
+\pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-3.csv}\StegoPatMatA
+\pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-4.csv}\StegoPatMatB
+\pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-5.csv}\StegoPatMatC
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+\begin{tikzpicture}
+  \begin{axis}[
+    height=8cm,
+    width=14cm,
+    xmin = 0.000002,
+    xmax = 1.01,
+    xmode = log,
+    ymin = -0.05,
+    ymax = 1.01,
+    xlabel = {False positive rate},
+    ylabel = {True positive rate},
+    ytick = {0, 0.2, 0.4, 0.6, 0.8, 1},
+    grid=both,
+    major grid style={
+      dotted,
+      gray,
+    },
+    minor grid style={
+      dotted,
+      gray!75,
+    },
+    legend pos = south east,
+    legend cell align={left},
+    enlargelimits = false,
+  ]
+
+    \addplot [lineDeepTP]  table[x index=4, y index=5] {\StegoDeepTP};
+    \addlegendentry{\DeepTopPush: 97.86\%}
+    \addplot [linePatMat1]  table[x index=4, y index=5] {\StegoPatMatA};
+    \addlegendentry{\PatMatNP($ 10^{-3} $): 97.37\%}
+    \addplot [linePatMat2]  table[x index=4, y index=5] {\StegoPatMatB};
+    \addlegendentry{\PatMatNP($ 10^{-4} $): 97.36\%}
+    \addplot [linePatMat3] table[x index=4, y index=5] {\StegoPatMatC};
+    \addlegendentry{\PatMatNP($ 10^{-5} $): 96.85\%}
+    \addplot [lineBaseLine]  table[x index=4, y index=5] {\StegoBaseline};
+    \addlegendentry{\BaseLine: 97.81\%}
+  \end{axis}
+\end{tikzpicture}
+\end{document}
