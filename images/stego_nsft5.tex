@@ -12,10 +12,11 @@
   linePatMat3/.style  = {very thick, myorange, dashdotdotted},
 }
 
-\pgfplotstableread[col sep = comma]{../data/stego_nsft5_baseline.csv}\StegoBaseline
-\pgfplotstableread[col sep = comma]{../data/stego_nsft5_patmatnp_1e-3.csv}\StegoPatMatA
-\pgfplotstableread[col sep = comma]{../data/stego_nsft5_patmatnp_1e-4.csv}\StegoPatMatB
-\pgfplotstableread[col sep = comma]{../data/stego_nsft5_patmatnp_1e-5.csv}\StegoPatMatC
+\pgfplotstableread[col sep = comma]{../data/stego_nsf5_baseline.csv}\StegoBaseline
+\pgfplotstableread[col sep = comma]{../data/stego_nsf5_deeptoppush.csv}\StegoDeepTP
+\pgfplotstableread[col sep = comma]{../data/stego_nsf5_patmatnp_1e-3.csv}\StegoPatMatA
+\pgfplotstableread[col sep = comma]{../data/stego_nsf5_patmatnp_1e-4.csv}\StegoPatMatB
+\pgfplotstableread[col sep = comma]{../data/stego_nsf5_patmatnp_1e-5.csv}\StegoPatMatC
 
 % ------------------------------------------------------------------------------
 % Document
@@ -25,7 +26,7 @@
   \begin{axis}[
     height=8cm,
     width=14cm,
-    xmin = 0.00001,
+    xmin = 0.000001,
     xmax = 1.01,
     xmode = log,
     ymin = -0.05,
@@ -47,14 +48,16 @@
     enlargelimits = false,
   ]
 
+    \addplot [lineDeepTP]  table[x index=4, y index=5] {\StegoDeepTP};
+    \addlegendentry{\DeepTopPush}
     \addplot [linePatMat1]  table[x index=4, y index=5] {\StegoPatMatA};
-    \addlegendentry{\PatMatNP($10^{-3}$): 99.24\%}
+    \addlegendentry{\PatMatNP($10^{-3}$)}
     \addplot [linePatMat2]  table[x index=4, y index=5] {\StegoPatMatB};
-    \addlegendentry{\PatMatNP($10^{-4}$): 95.93\%}
+    \addlegendentry{\PatMatNP($10^{-4}$)}
     \addplot [linePatMat3] table[x index=4, y index=5] {\StegoPatMatC};
-    \addlegendentry{\PatMatNP($10^{-5}$): 96.08\%}
+    \addlegendentry{\PatMatNP($10^{-5}$)}
     \addplot [lineBaseLine]  table[x index=4, y index=5] {\StegoBaseline};
-    \addlegendentry{\BaseLine: 99.34\%}
+    \addlegendentry{\BaseLine}
   \end{axis}
 \end{tikzpicture}
 \end{document}

@@ -26,7 +26,7 @@
   \begin{axis}[
     height=8cm,
     width=14cm,
-    xmin = 0.000002,
+    xmin = 0.000001,
     xmax = 1.01,
     xmode = log,
     ymin = -0.05,
@@ -49,15 +49,15 @@
   ]
 
     \addplot [lineDeepTP]  table[x index=4, y index=5] {\StegoDeepTP};
-    \addlegendentry{\DeepTopPush: 97.86\%}
+    \addlegendentry{\DeepTopPush}
     \addplot [linePatMat1]  table[x index=4, y index=5] {\StegoPatMatA};
-    \addlegendentry{\PatMatNP($ 10^{-3} $): 97.37\%}
+    \addlegendentry{\PatMatNP($ 10^{-3} $)}
     \addplot [linePatMat2]  table[x index=4, y index=5] {\StegoPatMatB};
-    \addlegendentry{\PatMatNP($ 10^{-4} $): 97.36\%}
+    \addlegendentry{\PatMatNP($ 10^{-4} $)}
     \addplot [linePatMat3] table[x index=4, y index=5] {\StegoPatMatC};
-    \addlegendentry{\PatMatNP($ 10^{-5} $): 96.85\%}
+    \addlegendentry{\PatMatNP($ 10^{-5} $)}
     \addplot [lineBaseLine]  table[x index=4, y index=5] {\StegoBaseline};
-    \addlegendentry{\BaseLine: 97.81\%}
+    \addlegendentry{\BaseLine}
   \end{axis}
 \end{tikzpicture}
 \end{document}
