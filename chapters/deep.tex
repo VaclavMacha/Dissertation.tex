@@ -125,7 +125,7 @@ where~$\indmaxmb$ represents the index of the negative sample with the highest s
   Algorithm~\ref{alg: deep toppush} is applicable only on the \TopPush formulation since all other formulations use more samples to compute the threshold. However, we can modify the algorithm to be usable, for example, with \TopPushK formulation. Since \TopPushK uses the mean of~$K$ highest negative scores as a threshold, we need to enhance the current minibatch by~$K$ indices corresponding to the $K$ highest negative scores. However, since our goal was to use small minibatches, such an approach makes sense only for small~$K.$ 
 \end{note}
 
-\section{Theoretical Justification}
+\section{Theoretical Justification}\label{sec: biased threshold estimate}
 
 In the previous section, we derived \DeepTopPush method for solving the \TopPush formulation. In Section~\ref{sec: bias sampled gradient}, we discussed that the convergence proof of stochastic gradient descent requires that the sampled gradient is an unbiased estimate of the true gradient. Therefore, we are ultimately interested in the bias of the sampled gradient~$\nabla \hat{L}(\bm{w})$ defined in~\eqref{eq:defin_bias}. Recall that~$\indmax$ is the index of true threshold on the whole dataset, while~$\indmaxmb$ is the index of sampled threshold on the minibatch. We split the computation based on whether these two indices are identical or not.
 

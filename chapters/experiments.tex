@@ -363,6 +363,8 @@ ranks differ by at least the critical difference
 \end{equation*}
 where critical values~$q_{\alpha}$ are based on the Studentized range statistic divided by~$\sqrt{2},$ see Table 5(a) in~\cite{demvsar2006statistical}. The results of this post hoc test can be easily visualized using critical difference diagrams proposed in~\cite{demvsar2006statistical}.  The $x$-axis of such diagram shows the average rank over all datasets for each formulation. Formulations that are not significatnly different according to the Nemenyi test are connected using green horizontal line. As an example of such diagrams see Figure~\ref{fig: critical diagrams primal}.
 
+\subsection{Implementation}
+
 \section{Image Recognition}
 
 This section contains results for six well-known visual recognition datasets. MNIST \cite{deng2012mnist} and FashionMNIST \cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers. All these datasets are originally divided only into training and test sets. Therefore, we select 25\% samples from the training set to obtain the validation set. For a more detailed description of the structure of datasets, see Table~\ref{tab: datasets summary}.
@@ -1167,6 +1169,8 @@ In this subsection, we discuss result for the case of primal formulations with l
   \label{fig: critical diagrams primal NN}
 \end{figure}
 
+\newpage
+
 \section{Steganalysis}
 
 To show the importance of classification at the top, we need to find the field in which the maximizing true-positive rate at the low false-positive rate is an important task. Such a field can be for example steganography and steganalysis. The standard way how to share secret information these days is the use of encryption. However, in such a case, the presence of a secret message (even though encrypted) is obvious. Steganography aims to hide the fact that communication taking place, by hiding the secret message within an ordinary file (usually called cover file) in order to avoid detection. The secret message is then extracted at its destination. The secret data can be hidden in almost any type of digital content, however the most popular are images. There are two reasons for this. The first of them is the ubiquity of images on the Internet and therefore the ease to use them as cover files for secret messages. The second reason is their large potential payload, i.e. it is possible to hide a lot of information in the images with high resolution. With an appropriate cover image and steganography tools, it is possible to create an stego-image (image with a hidden message) that can not be recognized from the cover image by human perception. However, each tool leaves a fingerprint or signature in the image, that can be used to detect stego images. The field that tries to detect stego images and possibly decrypt messages from them is called steganalysis. In steganalysis, the goal is to achieve the best true-positive rate with the lowest possible false-positive rate. Therefore steganalysis is the branch suitable for the classification at the top, since many of the formulations derived in this work focus precisely on this task. \cite{morkel2005overview, silman2001steganography} 
@@ -1330,26 +1334,26 @@ where~$t$ is the largest score of negative samples, i.e. this is precisely the c
       & \best{78.11} \\
     \bottomrule
   \end{NiceTabular}
-  \caption{\textbf{JMiPOD dataset:}  All presented results are medians of ten independent runs with different random seeds. Each column of the table corresponds to one performance metric and every row to one formulation. The best result for each metric is highlighted in green, while the worst result is highlighted in red.}
+  \caption{\textbf{JMiPOD dataset:} All presented results are medians of ten independent runs with different random seeds. Each column of the table corresponds to one performance metric and every row to one formulation. The best result for each metric is highlighted in green, while the worst result is highlighted in red.}
   \label{tab: jmipod median}
 \end{table}
 
 \section{Malware Detection}
 
-A renowned cybersecurity company provided malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number.
+In the previous section, we presented results from the domain of steganalysis. Another domain in which formulations from presented framework can be very useful, is the domain of malware detection. As an example, consider standard antivirus software on a personal computer. Every user wants to be protected, so the goal of antivirus software is to detect as much malware as possible. However, if the antivirus software is too restrictive, it can easily happen, that clean software is marked as malware, i.e. the antivirus software can easily produce false alarms. If the antivirus software produces false alarms too often, it can be very annoying to the user and may lead to uninstalling the antivirus software. Therefore, the goal of every antivirus software is to maximize a true-positive rate at a very low false-positive rate, which is precisely what the formulations from the framework do.
 
-This section shows a real-world application of the accuracy at the top. A renowned cybersecurity company provided malware analysis reports of executable files. Its structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number. We processed the data by a public implementation of hierarchical multi-instance learning (HMIL)~\cite{pevny2017using}. Then we applied \DeepTopPush and \PatMatNP at $\tau=10^{-3}$ and $\tau=10^{-2}$. The latter maximizes the true positives rate when the false positive rate is at most $\tau$. The minibatch size was $20000$, which allowed us to obtain precise threshold estimates and unbiased sampled gradients due to Section \ref{sec:bias1}.
+In this section, we presented results on a real-world dataset provided by a renowned cybersecurity company. The dataset consists of malware analysis reports of executable files. This is an extremely tough dataset as individual samples are JSON files whose size ranges from 1kB to 2.5MB. The structure of the sample is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This is in sharp contrast with standard datasets, where each sample has the same number of features, and each feature is a real number. The usual approach how to process such complicated data is to create manually feature vectors and use them for training instead of the original data. However, such an approach is extremely time-demanding and requires expert knowledge of the original data. For this reason, we decided to use a different approach that is called Hierarchical Multiple Instance Learning (HMIL)~\cite{pevny2017using}. For the training, we use a publicly available implementation of HMIL~\cite{mandlik2021mill}, which allows train models directly from JSON files without the necessity of complicated feature extraction.
 
-Figure~\ref{fig: malware detection} shows the performance on the test set. \DeepTopPush is again the best at low false positive rates. This is extremely important in cybersecurity as it prevents false alarms for malware. Even at the extremely low false positive rate $\tau=10^{-5}$, our algorithm correctly identified $46\%$ of malware. The circles denote the thresholds for which the methods were optimized. \DeepTopPush should have the best performance at the leftmost point, \PatMatNP$\left(10^{-3}\right)$ at $\tau=10^{-3}$ and similarly \PatMatNP$\left(10^{-2}\right)$.
+Since the dataset is very large (see Table~\ref{tab: datasets summary}), we train each formulation only one time. Moreover, we use only the formulations that worked the best in the previous experiments, i.e. we use only the \BaseLine, \PatMatNP($10^{-2}$), \PatMatNP($10^{-3}$) and \BaseLine. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings. We also use balanced mini-batches of size 2000, which allows us to obtain a very good estimate of the true thresholds as discussed in Section~\ref{sec: biased threshold estimate}. Finally, we use a fixed number of epochs to 100 for all formulations.
+
+Figure~\ref{fig: malware detection} shows the performance of all formulations on the test set. For the comparison, we use ROC curves and we use filled circles to highlight the thresholds for which the formulation were optimized. It is clear, that \DeepTopPush (blue line) is the best at low false-positive rates. Even at the extremely low false positive rate $\tau=10^{-5}$, \DeepTopPush correctly identified $46\%$ of malware. We can also see, that \PatMatNP($10^{-3}$) is the best at false-positive rate~$10^{-3}$, which is exactly the point for which the formulation should be optimized. However, \DeepTopPush performs almost as well as \PatMatNP($10^{-3}$) at this false-positive rate. Finally, at the false-positive rate~$10^{-2}$ all formulations perform equally well.
 
 \begin{figure}
   \centering
   \includegraphics{images/malware_detection.pdf}
-  \caption{\textbf{Malware detection:} ROC curves with logaithmic $x$-axis.}
+  \caption{\textbf{Malware detection:} ROC curves with logaithmic $x$-axis. The circles show the thresholds the formulations were optimized for.}
   \label{fig: malware detection}
 \end{figure}
-
-\newpage
 
 \section{Conclusion}
 
