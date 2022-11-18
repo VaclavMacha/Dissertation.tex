@@ -62,8 +62,8 @@ In all experiments, the best hyperparameter is selected based on the validation 
   \centering
   \begin{NiceTabular}{lcccc}
     \CodeBefore
-    \rowcolor{\headercol}{1}
-    \rowcolors{3}{\rowcol}{}[restart]
+      \rowcolor{\headercol}{1}
+      \rowcolors{3}{\rowcol}{}[restart]
     \Body
     \toprule
     \textbf{Formulation}
@@ -393,17 +393,20 @@ In the following subsection we present results of all experiments performed for 
 \begin{table}
   \centering
   \resizebox{\columnwidth}{!}{% 
-    \begin{NiceTabular}{lcccccccc}
+    \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra
-        & Nsf5Small\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & 68.54
@@ -412,8 +415,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=mygreen!50]{1-1}{1.40}
         & \Block[fill=myred!50]{1-1}{2.00}
         & 0.04
-        & \Block[fill=myred!50]{1-1}{0.02}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \Block[fill=myred!50]{1-1}{0.02}\\
       \TopPush
         & 89.38
         & \Block[fill=mygreen!50]{1-1}{93.70}
@@ -421,8 +423,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=myred!50]{1-1}{0.40}
         & 4.00
         & \Block[fill=myred!50]{1-1}{0.02}
-        & \Block[fill=myred!50]{1-1}{0.02}
-        & \Block[fill=mygreen!50]{1-1}{5.05} \\
+        & \Block[fill=myred!50]{1-1}{0.02}\\
       \TopPushK(5)
         & 89.60
         & 93.30
@@ -430,8 +431,7 @@ In the following subsection we present results of all experiments performed for 
         & 1.10
         & 3.00
         & 0.04
-        & 0.06
-        & 0.02 \\
+        & 0.06\\
       \TopPushK(10)
         & \Block[fill=mygreen!50]{1-1}{89.64}
         & 92.75
@@ -439,8 +439,7 @@ In the following subsection we present results of all experiments performed for 
         & 0.70
         & 4.50
         & 0.04
-        & \Block[fill=mygreen!50]{1-1}{0.09}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \Block[fill=mygreen!50]{1-1}{0.09}\\
       \tauFPL(0.01)
         & 83.35
         & 92.40
@@ -448,8 +447,7 @@ In the following subsection we present results of all experiments performed for 
         & 0.80
         & 2.50
         & 0.03
-        & \Block[fill=myred!50]{1-1}{0.02}
-        & 0.24 \\
+        & \Block[fill=myred!50]{1-1}{0.02}\\
       \tauFPL(0.05)
         & \Block[fill=myred!50]{1-1}{40.26}
         & \Block[fill=myred!50]{1-1}{79.65}
@@ -457,8 +455,7 @@ In the following subsection we present results of all experiments performed for 
         & 1.00
         & \Block[fill=mygreen!50]{1-1}{5.50}
         & 0.04
-        & \Block[fill=mygreen!50]{1-1}{0.09}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \Block[fill=mygreen!50]{1-1}{0.09}\\
       \PatMatNP(0.01)
         & 87.88
         & 92.75
@@ -466,8 +463,7 @@ In the following subsection we present results of all experiments performed for 
         & 1.10
         & 4.00
         & 0.12
-        & \Block[fill=mygreen!50]{1-1}{0.09}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \Block[fill=mygreen!50]{1-1}{0.09}\\
       \PatMatNP(0.05)
         & 51.72
         & 81.60
@@ -475,8 +471,7 @@ In the following subsection we present results of all experiments performed for 
         & 1.20
         & 3.00
         & \Block[fill=mygreen!50]{1-1}{0.14}
-        & 0.06
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & 0.06\\
       \bottomrule
     \end{NiceTabular}
   }
@@ -487,17 +482,20 @@ In the following subsection we present results of all experiments performed for 
 \begin{table}
   \centering
   \resizebox{\columnwidth}{!}{% 
-    \begin{NiceTabular}{lcccccccc}
+    \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra
-        & Nsf5Small\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & \Block[fill=mygreen!50]{1-1}{99.65}
@@ -506,8 +504,7 @@ In the following subsection we present results of all experiments performed for 
         & 32.90
         & 54.50
         & 5.53
-        & \Block[fill=myred!50]{1-1}{5.91}
-        & 99.88 \\
+        & \Block[fill=myred!50]{1-1}{5.91}\\
       \TopPush
         & \Block[fill=myred!50]{1-1}{99.12}
         & \Block[fill=myred!50]{1-1}{98.30}
@@ -515,8 +512,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=myred!50]{1-1}{16.30}
         & 43.50
         & \Block[fill=myred!50]{1-1}{5.22}
-        & 6.40
-        & 99.16 \\
+        & 6.40\\
       \TopPushK(5)
         & 99.21
         & \Block[fill=myred!50]{1-1}{98.30}
@@ -524,8 +520,7 @@ In the following subsection we present results of all experiments performed for 
         & 20.20
         & \Block[fill=myred!50]{1-1}{42.50}
         & 6.78
-        & 7.42
-        & 99.84 \\
+        & 7.42\\
       \TopPushK(10)
         & 99.30
         & \Block[fill=myred!50]{1-1}{98.30}
@@ -533,8 +528,7 @@ In the following subsection we present results of all experiments performed for 
         & 20.80
         & 46.50
         & 6.15
-        & 8.07
-        & \Block[fill=mygreen!50]{1-1}{99.90} \\
+        & 8.07\\
       \tauFPL(0.01)
         & 99.47
         & 98.75
@@ -542,8 +536,7 @@ In the following subsection we present results of all experiments performed for 
         & 24.00
         & 44.00
         & 6.90
-        & 7.76
-        & 99.82 \\
+        & 7.76\\
       \tauFPL(0.05)
         & 99.56
         & 99.20
@@ -551,8 +544,7 @@ In the following subsection we present results of all experiments performed for 
         & 25.70
         & 50.50
         & 8.16
-        & 9.69
-        & \Block[fill=mygreen!50]{1-1}{99.90} \\
+        & 9.69\\
       \PatMatNP(0.01)
         & 99.52
         & 98.85
@@ -560,8 +552,7 @@ In the following subsection we present results of all experiments performed for 
         & 33.70
         & 56.00
         & 9.28
-        & \Block[fill=mygreen!50]{1-1}{12.47}
-        & \Block[fill=myred!50]{1-1}{99.10} \\
+        & \Block[fill=mygreen!50]{1-1}{12.47}\\
       \PatMatNP(0.05)
         & \Block[fill=mygreen!50]{1-1}{99.65}
         & \Block[fill=mygreen!50]{1-1}{99.40}
@@ -569,8 +560,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=mygreen!50]{1-1}{34.80}
         & \Block[fill=mygreen!50]{1-1}{58.50}
         & \Block[fill=mygreen!50]{1-1}{9.34}
-        & 12.25
-        & 99.74 \\
+        & 12.25\\
       \bottomrule
     \end{NiceTabular}
   }
@@ -581,17 +571,20 @@ In the following subsection we present results of all experiments performed for 
 \begin{table}
   \centering
   \resizebox{\columnwidth}{!}{% 
-    \begin{NiceTabular}{lcccccccc}
+    \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra
-        & Nsf5Small\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & \Block[fill=mygreen!50]{1-1}{99.86}
@@ -600,8 +593,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=mygreen!50]{1-1}{76.26}
         & \Block[fill=mygreen!50]{1-1}{88.48}
         & \Block[fill=mygreen!50]{1-1}{57.82}
-        & \Block[fill=mygreen!50]{1-1}{56.10}
-        & 99.76 \\
+        & \Block[fill=mygreen!50]{1-1}{56.10}\\
       \TopPush
         & \Block[fill=myred!50]{1-1}{99.78}
         & \Block[fill=myred!50]{1-1}{99.42}
@@ -609,8 +601,7 @@ In the following subsection we present results of all experiments performed for 
         & 65.76
         & 82.10
         & 51.08
-        & 51.30
-        & 99.65 \\
+        & 51.30 \\
       \TopPushK(5)
         & 99.8
         & \Block[fill=myred!50]{1-1}{99.42}
@@ -618,8 +609,7 @@ In the following subsection we present results of all experiments performed for 
         & \Block[fill=myred!50]{1-1}{65.70}
         & \Block[fill=myred!50]{1-1}{81.52}
         & \Block[fill=myred!50]{1-1}{50.98}
-        & 50.69
-        & \Block[fill=mygreen!50]{1-1}{99.90} \\
+        & 50.69\\
       \TopPushK(10)
         & 99.82
         & 99.48
@@ -627,8 +617,7 @@ In the following subsection we present results of all experiments performed for 
         & 66.87
         & 81.91
         & 51.90
-        & \Block[fill=myred!50]{1-1}{50.58}
-        & 99.89 \\
+        & \Block[fill=myred!50]{1-1}{50.58}\\
       \tauFPL(0.01)
         & 99.84
         & 99.72
@@ -636,8 +625,7 @@ In the following subsection we present results of all experiments performed for 
         & 69.24
         & 82.96
         & 51.04
-        & 50.62
-        & \Block[fill=mygreen!50]{1-1}{99.90} \\
+        & 50.62\\
       \tauFPL(0.05)
         & 99.81
         & 99.80
@@ -645,8 +633,7 @@ In the following subsection we present results of all experiments performed for 
         & 70.86
         & 84.56
         & 51.78
-        & 50.76
-        & 99.88 \\
+        & 50.76\\
       \PatMatNP(0.01)
         & 99.85
         & 99.68
@@ -654,8 +641,7 @@ In the following subsection we present results of all experiments performed for 
         & 74.56
         & 86.13
         & 56.38
-        & 51.93
-        & \Block[fill=myred!50]{1-1}{99.50} \\
+        & 51.93\\
       \PatMatNP(0.05)
         & 99.84
         & 99.81
@@ -663,8 +649,7 @@ In the following subsection we present results of all experiments performed for 
         & 75.44
         & 87.22
         & 56.40
-        & 52.50
-        & 99.69 \\
+        & 52.50\\
       \bottomrule
     \end{NiceTabular}
   }
@@ -687,14 +672,18 @@ In the following subsection we present results of all experiments performed for 
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lcccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}\\
       \midrule
       \SVM
         & 97.89
@@ -763,14 +752,18 @@ In the following subsection we present results of all experiments performed for 
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lcccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}\\
       \midrule
       \SVM
         & 99.74
@@ -839,14 +832,18 @@ In the following subsection we present results of all experiments performed for 
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lcccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}\\
       \midrule
       \SVM
         & 99.94
@@ -928,15 +925,19 @@ In this subsection, we discuss result for the case of primal formulations with l
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & \Block[fill=mygreen!50]{1-1}{99.26}
@@ -1013,15 +1014,19 @@ In this subsection, we discuss result for the case of primal formulations with l
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & \Block[fill=mygreen!50]{1-1}{100.00}
@@ -1098,15 +1103,19 @@ In this subsection, we discuss result for the case of primal formulations with l
   \centering
   \resizebox{\columnwidth}{!}{% 
     \begin{NiceTabular}{lccccccc}
+      \CodeBefore
+        \rowcolor{\headercol}{1}
+        \rowcolors{3}{\rowcol}{}[restart]
+      \Body
       \toprule
-      Formulation
-        & MNIST
-        & FashionMNIST
-        & CIFAR10
-        & CIFAR20
-        & CIFAR100
-        & SVHN2
-        & SVHN2Extra\\
+      \textbf{Formulation}
+        & \textbf{MNIST}
+        & \textbf{FashionMNIST}
+        & \textbf{CIFAR10}
+        & \textbf{CIFAR20}
+        & \textbf{CIFAR100}
+        & \textbf{SVHN2}
+        & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
         & \Block[fill=mygreen!50]{1-1}{100.00}
