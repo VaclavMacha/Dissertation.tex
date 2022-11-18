@@ -1197,6 +1197,153 @@ In this subsection, we discuss result for the case of primal formulations with l
 
 \subsection{Steganalysis}
 
+
+\begin{figure}
+  \centering
+  \includegraphics{images/stego_nsft5.pdf}
+  \caption{???}
+  \label{fig: steganalysis nsft5}
+\end{figure}
+
+\begin{table}[!ht]
+  \centering
+  \begin{NiceTabular}{lccccccc}
+    \CodeBefore
+    \rowcolor{\headercol}{1-2}
+    \rowcolors{4}{\rowcol}{}[restart]
+    \Body
+    \toprule
+    \Block[c]{2-1}{\textbf{Formulation}}
+    & \Block[c]{2-1}{$\auroc$}
+    & \Block[c]{1-3}{$\tpratk$}
+    &&& \Block[c]{1-3}{$\tpratfpr$} \\
+    \cline{3-8}
+    && $1$
+    & $10$
+    & $5$
+    & $10^{-5}$
+    & $10^{-4}$
+    & $10^{-3}$ \\
+    \midrule
+    \BaseLine
+    & \Block[fill=myred!50]{1-1}{95.84}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & \Block[fill=myred!50]{1-1}{0.02}
+    & \Block[fill=myred!50]{1-1}{0.7} \\
+    \DeepTopPush
+    & 98.29
+    & \Block[fill=mygreen!50]{1-1}{5.07}
+    & \Block[fill=mygreen!50]{1-1}{35.48}
+    & \Block[fill=mygreen!50]{1-1}{57.66}
+    & \Block[fill=mygreen!50]{1-1}{48.65}
+    & 89.56
+    & 93.67 \\
+    \PatMatNP($10^{-5}$)
+    & 98.81
+    & 2.55
+    & 23.02
+    & 47.24
+    & 35.28
+    & \Block[fill=mygreen!50]{1-1}{91.9}
+    & 95.84 \\
+    \PatMatNP($10^{-4}$)
+    & 98.98
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & 0.05
+    & 4.34
+    & 1.78
+    & 79.76
+    & \Block[fill=mygreen!50]{1-1}{96.18} \\
+    \PatMatNP($10^{-3}$)
+    & \Block[fill=mygreen!50]{1-1}{99.26}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & 0.01
+    & \Block[fill=myred!50]{1-1}{0.0}
+    & 0.29
+    & 91.98 \\
+    \bottomrule
+  \end{NiceTabular}
+  \caption{NSF5}
+  \label{tab: NSF5}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics{images/stego_jmipod.pdf}
+  \caption{???}
+  \label{fig: steganalysis jmipod}
+\end{figure}
+
+\begin{table}[!ht]
+  \centering
+  \begin{NiceTabular}{lccccccc}
+    \CodeBefore
+      \rowcolor{\headercol}{1-2}
+      \rowcolors{4}{\rowcol}{}[restart]
+    \Body
+    \toprule
+    \Block[c]{2-1}{\textbf{Formulation}}
+      & \Block[c]{2-1}{$\auroc$}
+      & \Block[c]{1-3}{$\tpratk$}
+      &&& \Block[c]{1-3}{$\tpratfpr$} \\
+    \cline{3-8}
+      && $1$
+      & $10$
+      & $5$
+      & $10^{-5}$
+      & $10^{-4}$
+      & $10^{-3}$ \\
+    \midrule
+    \BaseLine
+      & 97.5
+      & \Block[fill=myred!50]{1-1}{13.52}
+      & \Block[fill=myred!50]{1-1}{24.65}
+      & \Block[fill=myred!50]{1-1}{29.54}
+      & \Block[fill=myred!50]{1-1}{27.28}
+      & \Block[fill=myred!50]{1-1}{44.58}
+      & \Block[fill=myred!50]{1-1}{63.84} \\
+    \DeepTopPush
+      & \Block[fill=myred!50]{1-1}{97.26}
+      & \Block[fill=mygreen!50]{1-1}{34.25}
+      & \Block[fill=mygreen!50]{1-1}{42.57}
+      & \Block[fill=mygreen!50]{1-1}{47.3}
+      & \Block[fill=mygreen!50]{1-1}{43.59}
+      & 60.42
+      & 73.67 \\
+    \PatMatNP($10^{-5}$)
+      & 97.66
+      & 21.24
+      & 31.6
+      & 39.38
+      & 33.54
+      & 60.35
+      & 78.04 \\
+    \PatMatNP($10^{-4}$)
+      & 97.49
+      & 25.66
+      & 36.76
+      & 45.19
+      & 38.28
+      & 63.49
+      & 77.43 \\
+    \PatMatNP($10^{-3}$)
+      & \Block[fill=mygreen!50]{1-1}{98.0}
+      & 26.99
+      & 38.76
+      & 44.83
+      & 42.17
+      & \Block[fill=mygreen!50]{1-1}{64.5}
+      & \Block[fill=mygreen!50]{1-1}{78.11} \\
+    \bottomrule
+  \end{NiceTabular}
+  \caption{Results for \textbf{J-MiPOD-10} dataset at payload 0.1 and with 10\% ratio of stego to cover images in train data. All results are computed on test data and are averaged over 10 random seeds. The table shows 7 different performance metrics that are based on the criteria that are optimized by the used methods. The best results for each metric are highlighted in green.}
+  \label{tab: jmipod median}
+\end{table}
+
 \subsection{Malware Detection}
 
 \newpage
