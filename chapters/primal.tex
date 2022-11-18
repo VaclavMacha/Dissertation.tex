@@ -105,7 +105,7 @@ There are two important solutions for Example~\ref{ex: degenerate behaviour}. Th
     \TopPush
       & \eqref{eq: toppush surrogate}
       & $0$
-      & \Block[fill=mygreen!50]{1-1}{$1$}
+      & \best{$1$}
       & $2$
       & $\frac{5}{2}$ \\
     \TopPushK
@@ -113,18 +113,18 @@ There are two important solutions for Example~\ref{ex: degenerate behaviour}. Th
       & $0$
       & $1$
       & $\frac{2}{K}$
-      & \Block[fill=mygreen!50]{1-1}{$\frac{1}{2} + \frac{2}{K}$} \\
+      & \best{$\frac{1}{2} + \frac{2}{K}$} \\
     \midrule
     \Grill
       & \eqref{eq: grill}
       & $0$
       & $2$
       & $1 - 2\tau$
-      & \Block[fill=mygreen!50]{1-1}{$\frac{3}{2} + 2\tau(1-\tau)$} \\
+      & \best{$\frac{3}{2} + 2\tau(1-\tau)$} \\
     \TopMeanK
       & \eqref{eq: topmeank}
       & $0$
-      & \Block[fill=mygreen!50]{1-1}{$1$}
+      & \best{$1$}
       & $1-\tau$
       & $\frac{3}{2} - \tau$ \\
     \PatMat
@@ -132,26 +132,26 @@ There are two important solutions for Example~\ref{ex: degenerate behaviour}. Th
       & $\frac{1}{\vartheta}(1-\tau)$
       & $1+\frac{1}{\vartheta}(1-\tau)$
       & $\frac{1}{\vartheta}(1-\tau)$
-      & \Block[fill=mygreen!50]{1-1}{$\frac{1}{2} + \frac{1}{\vartheta}(1-\tau)$} \\
+      & \best{$\frac{1}{2} + \frac{1}{\vartheta}(1-\tau)$} \\
     \midrule
     \GrillNP
       & \eqref{eq: grill np}
       & $0$
       & $2$
       & $-\tau$
-      & \Block[fill=mygreen!50]{1-1}{$1 + \frac{1}{2}\tau^2$} \\
+      & \best{$1 + \frac{1}{2}\tau^2$} \\
     \tauFPL
       & \eqref{eq: tau-fpl}
       & $0$
       & $1$
       & $-\frac{1}{2}\tau$
-      & \Block[fill=mygreen!50]{1-1}{$\frac{1}{2} - \frac{1}{8} \tau \Brac{4 + \tau}$} \\
+      & \best{$\frac{1}{2} - \frac{1}{8} \tau \Brac{4 + \tau}$} \\
     \PatMatNP
       & \eqref{eq: patmat np}
       & $\frac{1}{\vartheta}(1-\tau)$
       & $1+\frac{1}{\vartheta}(1-\tau)$
       & $\frac{1}{\vartheta}(1-\tau) - \frac{1}{2}$
-      & \Block[fill=mygreen!50]{1-1}{$\frac{1}{\vartheta}(1-\tau)$} \\
+      & \best{$\frac{1}{\vartheta}(1-\tau)$} \\
     \bottomrule
   \end{NiceTabular}
   \caption{Comparison of formulations from Table~\ref{tab: summary formulations} on the problem from Example~\ref{ex: degenerate behaviour}. The table shows the threshold and the objective function value for two solutions: the optimal solution~$\bm{w}_1=(1,0)$ and degenerate solution~$\bm{w}_0=(0,0).$ Two formulations have the global minimum (denoted by green color) at~$\bm{w}_0,$ which does not generate any separating hyperplane.}

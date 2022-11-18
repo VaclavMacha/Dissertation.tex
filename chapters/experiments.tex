@@ -394,19 +394,19 @@ In the following subsection we present results of all experiments performed for 
       \BaseLine
         & 68.54
         & 85.65
-        & \Block[fill=myred!50]{1-1}{1.25}
-        & \Block[fill=mygreen!50]{1-1}{1.40}
-        & \Block[fill=myred!50]{1-1}{2.00}
+        & \worst{1.25}
+        & \best{1.40}
+        & \worst{2.00}
         & 0.04
-        & \Block[fill=myred!50]{1-1}{0.02}\\
+        & \worst{0.02}\\
       \TopPush
         & 89.38
-        & \Block[fill=mygreen!50]{1-1}{93.70}
+        & \best{93.70}
         & 2.25
-        & \Block[fill=myred!50]{1-1}{0.40}
+        & \worst{0.40}
         & 4.00
-        & \Block[fill=myred!50]{1-1}{0.02}
-        & \Block[fill=myred!50]{1-1}{0.02}\\
+        & \worst{0.02}
+        & \worst{0.02}\\
       \TopPushK(5)
         & 89.60
         & 93.30
@@ -416,13 +416,13 @@ In the following subsection we present results of all experiments performed for 
         & 0.04
         & 0.06\\
       \TopPushK(10)
-        & \Block[fill=mygreen!50]{1-1}{89.64}
+        & \best{89.64}
         & 92.75
         & 3.90
         & 0.70
         & 4.50
         & 0.04
-        & \Block[fill=mygreen!50]{1-1}{0.09}\\
+        & \best{0.09}\\
       \tauFPL(0.01)
         & 83.35
         & 92.40
@@ -430,30 +430,30 @@ In the following subsection we present results of all experiments performed for 
         & 0.80
         & 2.50
         & 0.03
-        & \Block[fill=myred!50]{1-1}{0.02}\\
+        & \worst{0.02}\\
       \tauFPL(0.05)
-        & \Block[fill=myred!50]{1-1}{40.26}
-        & \Block[fill=myred!50]{1-1}{79.65}
+        & \worst{40.26}
+        & \worst{79.65}
         & 3.60
         & 1.00
-        & \Block[fill=mygreen!50]{1-1}{5.50}
+        & \best{5.50}
         & 0.04
-        & \Block[fill=mygreen!50]{1-1}{0.09}\\
+        & \best{0.09}\\
       \PatMatNP(0.01)
         & 87.88
         & 92.75
-        & \Block[fill=mygreen!50]{1-1}{5.00}
+        & \best{5.00}
         & 1.10
         & 4.00
         & 0.12
-        & \Block[fill=mygreen!50]{1-1}{0.09}\\
+        & \best{0.09}\\
       \PatMatNP(0.05)
         & 51.72
         & 81.60
         & 3.80
         & 1.20
         & 3.00
-        & \Block[fill=mygreen!50]{1-1}{0.14}
+        & \best{0.14}
         & 0.06\\
       \bottomrule
     \end{NiceTabular}
@@ -478,32 +478,32 @@ In the following subsection we present results of all experiments performed for 
         & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
-        & \Block[fill=mygreen!50]{1-1}{99.65}
+        & \best{99.65}
         & 99.30
         & 43.40
         & 32.90
         & 54.50
         & 5.53
-        & \Block[fill=myred!50]{1-1}{5.91}\\
+        & \worst{5.91}\\
       \TopPush
-        & \Block[fill=myred!50]{1-1}{99.12}
-        & \Block[fill=myred!50]{1-1}{98.30}
-        & \Block[fill=myred!50]{1-1}{31.10}
-        & \Block[fill=myred!50]{1-1}{16.30}
+        & \worst{99.12}
+        & \worst{98.30}
+        & \worst{31.10}
+        & \worst{16.30}
         & 43.50
-        & \Block[fill=myred!50]{1-1}{5.22}
+        & \worst{5.22}
         & 6.40\\
       \TopPushK(5)
         & 99.21
-        & \Block[fill=myred!50]{1-1}{98.30}
+        & \worst{98.30}
         & 35.50
         & 20.20
-        & \Block[fill=myred!50]{1-1}{42.50}
+        & \worst{42.50}
         & 6.78
         & 7.42\\
       \TopPushK(10)
         & 99.30
-        & \Block[fill=myred!50]{1-1}{98.30}
+        & \worst{98.30}
         & 37.90
         & 20.80
         & 46.50
@@ -532,14 +532,14 @@ In the following subsection we present results of all experiments performed for 
         & 33.70
         & 56.00
         & 9.28
-        & \Block[fill=mygreen!50]{1-1}{12.47}\\
+        & \best{12.47}\\
       \PatMatNP(0.05)
-        & \Block[fill=mygreen!50]{1-1}{99.65}
-        & \Block[fill=mygreen!50]{1-1}{99.40}
-        & \Block[fill=mygreen!50]{1-1}{46.80}
-        & \Block[fill=mygreen!50]{1-1}{34.80}
-        & \Block[fill=mygreen!50]{1-1}{58.50}
-        & \Block[fill=mygreen!50]{1-1}{9.34}
+        & \best{99.65}
+        & \best{99.40}
+        & \best{46.80}
+        & \best{34.80}
+        & \best{58.50}
+        & \best{9.34}
         & 12.25\\
       \bottomrule
     \end{NiceTabular}
@@ -565,28 +565,28 @@ In the following subsection we present results of all experiments performed for 
         & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
-        & \Block[fill=mygreen!50]{1-1}{99.86}
-        & \Block[fill=mygreen!50]{1-1}{99.83}
-        & \Block[fill=mygreen!50]{1-1}{84.00}
-        & \Block[fill=mygreen!50]{1-1}{76.26}
-        & \Block[fill=mygreen!50]{1-1}{88.48}
-        & \Block[fill=mygreen!50]{1-1}{57.82}
-        & \Block[fill=mygreen!50]{1-1}{56.10}\\
+        & \best{99.86}
+        & \best{99.83}
+        & \best{84.00}
+        & \best{76.26}
+        & \best{88.48}
+        & \best{57.82}
+        & \best{56.10}\\
       \TopPush
-        & \Block[fill=myred!50]{1-1}{99.78}
-        & \Block[fill=myred!50]{1-1}{99.42}
-        & \Block[fill=myred!50]{1-1}{73.84}
+        & \worst{99.78}
+        & \worst{99.42}
+        & \worst{73.84}
         & 65.76
         & 82.10
         & 51.08
         & 51.30 \\
       \TopPushK(5)
         & 99.8
-        & \Block[fill=myred!50]{1-1}{99.42}
+        & \worst{99.42}
         & 76.67
-        & \Block[fill=myred!50]{1-1}{65.70}
-        & \Block[fill=myred!50]{1-1}{81.52}
-        & \Block[fill=myred!50]{1-1}{50.98}
+        & \worst{65.70}
+        & \worst{81.52}
+        & \worst{50.98}
         & 50.69\\
       \TopPushK(10)
         & 99.82
@@ -595,7 +595,7 @@ In the following subsection we present results of all experiments performed for 
         & 66.87
         & 81.91
         & 51.90
-        & \Block[fill=myred!50]{1-1}{50.58}\\
+        & \worst{50.58}\\
       \tauFPL(0.01)
         & 99.84
         & 99.72
@@ -669,16 +669,16 @@ One of the basic assumption of the critical difference diagrams to work properly
       \midrule
       \SVM
         & 97.89
-        & \Block[fill=mygreen!50]{1-1}{95.40}
+        & \best{95.40}
         & 9.10
         & 4.90
-        & \Block[fill=mygreen!50]{1-1}{11.50}
+        & \best{11.50}
         & 4.52 \\
       \TopPush
         & 97.62
         & 94.80
         & 10.45
-        & \Block[fill=mygreen!50]{1-1}{6.10}
+        & \best{6.10}
         & 11.00
         & 5.23 \\
       \TopPushK(5)
@@ -692,19 +692,19 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 97.97
         & 94.90
         & 9.85
-        & \Block[fill=mygreen!50]{1-1}{6.10}
+        & \best{6.10}
         & 11.00
         & 5.18 \\
       \tauFPL(0.01)
-        & \Block[fill=mygreen!50]{1-1}{98.02}
+        & \best{98.02}
         & 95.05
-        & \Block[fill=mygreen!50]{1-1}{10.70}
+        & \best{10.70}
         & 5.90
         & 10.5
-        & \Block[fill=mygreen!50]{1-1}{5.25} \\
+        & \best{5.25} \\
       \tauFPL(0.05)
         & 92.56
-        & \Block[fill=myred!50]{1-1}{92.20}
+        & \worst{92.20}
         & 10.15
         & 5.10
         & 10.0
@@ -712,16 +712,16 @@ One of the basic assumption of the critical difference diagrams to work properly
       \PatMatNP(0.01)
         & 88.37
         & 92.50
-        & \Block[fill=myred!50]{1-1}{7.45}
+        & \worst{7.45}
         & 1.40
-        & \Block[fill=myred!50]{1-1}{5.00}
-        & \Block[fill=myred!50]{1-1}{4.02} \\
+        & \worst{5.00}
+        & \worst{4.02} \\
       \PatMatNP(0.05)
-        & \Block[fill=myred!50]{1-1}{52.60}
+        & \worst{52.60}
         & 92.50
-        & \Block[fill=myred!50]{1-1}{7.45}
-        & \Block[fill=myred!50]{1-1}{1.30}
-        & \Block[fill=myred!50]{1-1}{5.00}
+        & \worst{7.45}
+        & \worst{1.30}
+        & \worst{5.00}
         & 4.05 \\
       \bottomrule
     \end{NiceTabular}
@@ -748,32 +748,32 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 99.74
         & 98.90
         & 60.00
-        & \Block[fill=mygreen!50]{1-1}{44.80}
+        & \best{44.80}
         & 59.00
-        & \Block[fill=myred!50]{1-1}{59.72} \\
+        & \worst{59.72} \\
       \TopPush
         & 99.74
         & 98.80
         & 57.10
-        & \Block[fill=myred!50]{1-1}{37.70}
+        & \worst{37.70}
         & 59.50
         & 72.54 \\
       \TopPushK(5)
-        & \Block[fill=mygreen!50]{1-1}{99.82}
+        & \best{99.82}
         & 98.90
         & 56.25
         & 38.80
-        & \Block[fill=myred!50]{1-1}{57.50}
+        & \worst{57.50}
         & 71.40 \\
       \TopPushK(10)
-        & \Block[fill=mygreen!50]{1-1}{99.82}
+        & \best{99.82}
         & 98.90
         & 56.90
         & 38.70
         & 58.00
         & 71.61 \\
       \tauFPL(0.01)
-        & \Block[fill=mygreen!50]{1-1}{99.82}
+        & \best{99.82}
         & 98.90
         & 58.10
         & 39.10
@@ -781,24 +781,24 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 73.52 \\
       \tauFPL(0.05)
         & 99.74
-        & \Block[fill=mygreen!50]{1-1}{99.10}
-        & \Block[fill=mygreen!50]{1-1}{60.80}
+        & \best{99.10}
+        & \best{60.80}
         & 44.40
         & 61.00
-        & \Block[fill=mygreen!50]{1-1}{74.26} \\
+        & \best{74.26} \\
       \PatMatNP(0.01)
-        & \Block[fill=myred!50]{1-1}{99.30}
-        & \Block[fill=myred!50]{1-1}{98.10}
-        & \Block[fill=myred!50]{1-1}{54.70}
+        & \worst{99.30}
+        & \worst{98.10}
+        & \worst{54.70}
         & 44.60
         & 62.50
         & 63.47 \\
       \PatMatNP(0.05)
         & 99.38
-        & \Block[fill=myred!50]{1-1}{98.10}
-        & \Block[fill=myred!50]{1-1}{54.70}
+        & \worst{98.10}
+        & \worst{54.70}
         & 44.50
-        & \Block[fill=mygreen!50]{1-1}{63.50}
+        & \best{63.50}
         & 63.48 \\
       \bottomrule
     \end{NiceTabular}
@@ -827,13 +827,13 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 90.02
         & 79.75
         & 87.80
-        & \Block[fill=myred!50]{1-1}{90.14} \\
+        & \worst{90.14} \\
       \TopPush
         & 99.94
         & 99.56
         & 89.35
         & 79.06
-        & \Block[fill=myred!50]{1-1}{87.03}
+        & \worst{87.03}
         & 92.77 \\
       \TopPushK(5)
         & 99.95
@@ -850,7 +850,7 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 87.78
         & 92.67 \\
       \tauFPL(0.01)
-        & \Block[fill=mygreen!50]{1-1}{99.97}
+        & \best{99.97}
         & 99.68
         & 89.83
         & 79.07
@@ -858,23 +858,23 @@ One of the basic assumption of the critical difference diagrams to work properly
         & 92.98 \\
       \tauFPL(0.05)
         & 99.93
-        & \Block[fill=mygreen!50]{1-1}{99.80}
-        & \Block[fill=mygreen!50]{1-1}{90.34}
-        & \Block[fill=mygreen!50]{1-1}{80.17}
+        & \best{99.80}
+        & \best{90.34}
+        & \best{80.17}
         & 88.56
-        & \Block[fill=mygreen!50]{1-1}{93.16} \\
+        & \best{93.16} \\
       \PatMatNP(0.01)
-        & \Block[fill=myred!50]{1-1}{99.78}
-        & \Block[fill=myred!50]{1-1}{99.40}
+        & \worst{99.78}
+        & \worst{99.40}
         & 87.62
         & 78.82
-        & \Block[fill=mygreen!50]{1-1}{89.78}
+        & \best{89.78}
         & 90.80 \\
       \PatMatNP(0.05)
-        & \Block[fill=myred!50]{1-1}{99.78}
-        & \Block[fill=myred!50]{1-1}{99.40}
-        & \Block[fill=myred!50]{1-1}{87.61}
-        & \Block[fill=myred!50]{1-1}{78.76}
+        & \worst{99.78}
+        & \worst{99.40}
+        & \worst{87.61}
+        & \worst{78.76}
         & 89.52
         & 90.82 \\
       \bottomrule
@@ -918,8 +918,8 @@ In this subsection, we discuss result for the case of primal formulations with l
         & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
-        & \Block[fill=mygreen!50]{1-1}{99.26}
-        & \Block[fill=mygreen!50]{1-1}{98.10}
+        & \best{99.26}
+        & \best{98.10}
         & 11.40
         & 3.50
         & 5.00
@@ -928,16 +928,16 @@ In this subsection, we discuss result for the case of primal formulations with l
       \DeepTopPush
         & 98.42
         & 97.60
-        & \Block[fill=myred!50]{1-1}{0.20}
+        & \worst{0.20}
         & 0.20
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.17}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00}
+        & \worst{0.17}
+        & \worst{0.00} \\
       \TopPushK(5)
         & 98.54
         & 97.50
         & 2.00
-        & \Block[fill=myred!50]{1-1}{0.00}
+        & \worst{0.00}
         & 8.50
         & 10.58
         & 16.12 \\
@@ -945,10 +945,10 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 98.24
         & 96.90
         & 12.55
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{100.00} \\
+        & \best{100.00}
+        & \best{100.00}
+        & \best{100.00}
+        & \best{100.00} \\
       \tauFPL(0.01)
         & 98.72
         & 97.50
@@ -956,7 +956,7 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 0.20
         & 9.00
         & 9.52
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00} \\
       \tauFPL(0.05)
         & 96.78
         & 96.50
@@ -968,14 +968,14 @@ In this subsection, we discuss result for the case of primal formulations with l
       \PatMatNP(0.01)
         & 98.54
         & 97.45
-        & \Block[fill=mygreen!50]{1-1}{32.45}
+        & \best{32.45}
         & 4.80
         & 20.00
         & 13.92
         & 19.33 \\
       \PatMatNP(0.05)
-        & \Block[fill=myred!50]{1-1}{82.86}
-        & \Block[fill=myred!50]{1-1}{94.30}
+        & \worst{82.86}
+        & \worst{94.30}
         & 26.55
         & 5.90
         & 11.50
@@ -1004,23 +1004,23 @@ In this subsection, we discuss result for the case of primal formulations with l
         & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
+        & \best{100.00}
+        & \best{99.90}
         & 83.35
         & 48.00
         & 82.00
         & 94.66
         & 97.71 \\
       \DeepTopPush
-        & \Block[fill=myred!50]{1-1}{99.82}
-        & \Block[fill=myred!50]{1-1}{99.70}
-        & \Block[fill=myred!50]{1-1}{5.85}
+        & \worst{99.82}
+        & \worst{99.70}
+        & \worst{5.85}
         & 8.90
         & 9.00
         & 40.14
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00} \\
       \TopPushK(5)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
+        & \best{100.00}
         & 99.85
         & 34.30
         & 7.70
@@ -1028,45 +1028,45 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 86.54
         & 93.96 \\
       \TopPushK(10)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
+        & \best{100.00}
+        & \best{99.90}
         & 27.95
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00}
+        & \worst{0.00}
+        & \worst{0.00}
+        & \worst{0.00} \\
       \tauFPL(0.01)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
+        & \best{100.00}
+        & \best{99.90}
         & 24.40
         & 11.50
         & 65.50
         & 87.60
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00} \\
       \tauFPL(0.05)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
+        & \best{100.00}
+        & \best{99.90}
         & 82.75
         & 18.00
         & 66.50
         & 94.51
         & 97.52 \\
       \PatMatNP(0.01)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
+        & \best{100.00}
+        & \best{99.90}
         & 91.55
         & 52.20
         & 79.00
         & 95.49
         & 98.43 \\
       \PatMatNP(0.05)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.90}
-        & \Block[fill=mygreen!50]{1-1}{91.75}
-        & \Block[fill=mygreen!50]{1-1}{57.70}
-        & \Block[fill=mygreen!50]{1-1}{85.00}
-        & \Block[fill=mygreen!50]{1-1}{95.53}
-        & \Block[fill=mygreen!50]{1-1}{98.50} \\
+        & \best{100.00}
+        & \best{99.90}
+        & \best{91.75}
+        & \best{57.70}
+        & \best{85.00}
+        & \best{95.53}
+        & \best{98.50} \\
       \bottomrule
     \end{NiceTabular}
   }
@@ -1090,8 +1090,8 @@ In this subsection, we discuss result for the case of primal formulations with l
         & \textbf{SVHN2Extra}\\
       \midrule
       \BaseLine
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.98}
+        & \best{100.00}
+        & \best{99.98}
         & 96.85
         & 84.67
         & 95.94
@@ -1099,14 +1099,14 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 99.20 \\
       \DeepTopPush
         & 99.98
-        & \Block[fill=myred!50]{1-1}{99.95}
-        & \Block[fill=myred!50]{1-1}{49.51}
+        & \worst{99.95}
+        & \worst{49.51}
         & 59.40
         & 56.68
         & 83.12
         & 1.61 \\
       \TopPushK(5)
-        & \Block[fill=mygreen!50]{1-1}{100.0}
+        & \best{100.0}
         & 99.97
         & 77.10
         & 55.50
@@ -1114,16 +1114,16 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 96.57
         & 98.32 \\
       \TopPushK(10)
-        & \Block[fill=mygreen!50]{1-1}{100.00}
-        & \Block[fill=mygreen!50]{1-1}{99.98}
+        & \best{100.00}
+        & \best{99.98}
         & 74.26
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00}
-        & \Block[fill=myred!50]{1-1}{0.00} \\
+        & \worst{0.00}
+        & \worst{0.00}
+        & \worst{0.00}
+        & \worst{0.00} \\
       \tauFPL(0.01)
-        & \Block[fill=mygreen!50]{1-1}{100.0}
-        & \Block[fill=mygreen!50]{1-1}{99.98}
+        & \best{100.0}
+        & \best{99.98}
         & 70.96
         & 60.03
         & 90.16
@@ -1139,19 +1139,19 @@ In this subsection, we discuss result for the case of primal formulations with l
         & 99.12 \\
       \PatMatNP(0.01)
         & 99.99
-        & \Block[fill=mygreen!50]{1-1}{99.98}
+        & \best{99.98}
         & 97.90
         & 84.38
         & 93.84
         & 98.74
-        & \Block[fill=mygreen!50]{1-1}{99.38} \\
+        & \best{99.38} \\
       \PatMatNP(0.05)
-        & \Block[fill=myred!50]{1-1}{99.96}
+        & \worst{99.96}
         & 99.96
-        & \Block[fill=mygreen!50]{1-1}{98.24}
-        & \Block[fill=mygreen!50]{1-1}{88.39}
-        & \Block[fill=mygreen!50]{1-1}{96.56}
-        & \Block[fill=mygreen!50]{1-1}{98.76}
+        & \best{98.24}
+        & \best{88.39}
+        & \best{96.56}
+        & \best{98.76}
         & 99.32 \\
       \bottomrule
     \end{NiceTabular}
@@ -1208,19 +1208,19 @@ Figure~\ref{fig: steganalysis nsft5} shows ROC curves for the test set of \textb
     & $10^{-3}$ \\
     \midrule
     \BaseLine
-    & \Block[fill=myred!50]{1-1}{95.84}
-    & \Block[fill=myred!50]{1-1}{0.0}
-    & \Block[fill=myred!50]{1-1}{0.0}
-    & \Block[fill=myred!50]{1-1}{0.0}
-    & \Block[fill=myred!50]{1-1}{0.0}
-    & \Block[fill=myred!50]{1-1}{0.02}
-    & \Block[fill=myred!50]{1-1}{0.7} \\
+    & \worst{95.84}
+    & \worst{0.0}
+    & \worst{0.0}
+    & \worst{0.0}
+    & \worst{0.0}
+    & \worst{0.02}
+    & \worst{0.7} \\
     \DeepTopPush
     & 98.29
-    & \Block[fill=mygreen!50]{1-1}{5.07}
-    & \Block[fill=mygreen!50]{1-1}{35.48}
-    & \Block[fill=mygreen!50]{1-1}{57.66}
-    & \Block[fill=mygreen!50]{1-1}{48.65}
+    & \best{5.07}
+    & \best{35.48}
+    & \best{57.66}
+    & \best{48.65}
     & 89.56
     & 93.67 \\
     \PatMatNP($10^{-5}$)
@@ -1229,22 +1229,22 @@ Figure~\ref{fig: steganalysis nsft5} shows ROC curves for the test set of \textb
     & 23.02
     & 47.24
     & 35.28
-    & \Block[fill=mygreen!50]{1-1}{91.9}
+    & \best{91.9}
     & 95.84 \\
     \PatMatNP($10^{-4}$)
     & 98.98
-    & \Block[fill=myred!50]{1-1}{0.0}
+    & \worst{0.0}
     & 0.05
     & 4.34
     & 1.78
     & 79.76
-    & \Block[fill=mygreen!50]{1-1}{96.18} \\
+    & \best{96.18} \\
     \PatMatNP($10^{-3}$)
-    & \Block[fill=mygreen!50]{1-1}{99.26}
-    & \Block[fill=myred!50]{1-1}{0.0}
-    & \Block[fill=myred!50]{1-1}{0.0}
+    & \best{99.26}
+    & \worst{0.0}
+    & \worst{0.0}
     & 0.01
-    & \Block[fill=myred!50]{1-1}{0.0}
+    & \worst{0.0}
     & 0.29
     & 91.98 \\
     \bottomrule
@@ -1290,18 +1290,18 @@ where~$t$ is the largest score of negative samples, i.e. this is precisely the c
     \midrule
     \BaseLine
       & 97.5
-      & \Block[fill=myred!50]{1-1}{13.52}
-      & \Block[fill=myred!50]{1-1}{24.65}
-      & \Block[fill=myred!50]{1-1}{29.54}
-      & \Block[fill=myred!50]{1-1}{27.28}
-      & \Block[fill=myred!50]{1-1}{44.58}
-      & \Block[fill=myred!50]{1-1}{63.84} \\
+      & \worst{13.52}
+      & \worst{24.65}
+      & \worst{29.54}
+      & \worst{27.28}
+      & \worst{44.58}
+      & \worst{63.84} \\
     \DeepTopPush
-      & \Block[fill=myred!50]{1-1}{97.26}
-      & \Block[fill=mygreen!50]{1-1}{34.25}
-      & \Block[fill=mygreen!50]{1-1}{42.57}
-      & \Block[fill=mygreen!50]{1-1}{47.3}
-      & \Block[fill=mygreen!50]{1-1}{43.59}
+      & \worst{97.26}
+      & \best{34.25}
+      & \best{42.57}
+      & \best{47.3}
+      & \best{43.59}
       & 60.42
       & 73.67 \\
     \PatMatNP($10^{-5}$)
@@ -1321,13 +1321,13 @@ where~$t$ is the largest score of negative samples, i.e. this is precisely the c
       & 63.49
       & 77.43 \\
     \PatMatNP($10^{-3}$)
-      & \Block[fill=mygreen!50]{1-1}{98.0}
+      & \best{98.0}
       & 26.99
       & 38.76
       & 44.83
       & 42.17
-      & \Block[fill=mygreen!50]{1-1}{64.5}
-      & \Block[fill=mygreen!50]{1-1}{78.11} \\
+      & \best{64.5}
+      & \best{78.11} \\
     \bottomrule
   \end{NiceTabular}
   \caption{\textbf{JMiPOD dataset:}  All presented results are medians of ten independent runs with different random seeds. Each column of the table corresponds to one performance metric and every row to one formulation. The best result for each metric is highlighted in green, while the worst result is highlighted in red.}
