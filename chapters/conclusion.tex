@@ -1,27 +1,12 @@
 \chapter*{Conclusion}
 \addcontentsline{toc}{chapter}{Conclusion}
 
-% \subsection{Linear Model}
+In this work, we studied the problem of classification at the top that is closely related to the binary classification. We showed that many of well known categories of problems such as ranking, accuracy at the top or hypothesis testing are closely related classification at the top. In Chapter~\ref{chap: framework}, we study these three categories in detail and showed, that they can be all formulated in a similar way. This lead us to introduce unified framework for classification at the top~\eqref{eq: aatp surrogate}. We showed that several known formulation (\TopPush, \Grill, \tauFPL) fall into our framework and derived some completely new formulations (\PatMat, \PatMatNP). The summary of all presented formulations is in Table~\ref{tab: summary formulations}.
 
-% In this paper, we achieved the following results:
-% \begin{itemize}
-%   \item We presented a unified framework for the three criteria from Chapter~\ref{chap: framework}. These criteria include ranking, accuracy at the top and hypothesis testing.
-%   \item We showed that several known methods (\TopPush, \Grill, \tauFPL) fall into our framework and derived some completely new methods (\PatMat, \PatMatNP).
-%   \item We performed a theoretical analysis of the methods. We showed that known methods suffer from certain disadvantages. While \TopPush and \tauFPL are sensitive to outliers, \Grill is non-convex. We proved the global convergence of the stochastic gradient descent for \PatMat and \PatMatNP.
-%   \item We performed a numerical comparison and we showed a good performance of our method \PatMatNP.
-% \end{itemize}
+In Chapter~\ref{chap: linear}, we performed a theoretical analysis of the presented formulations when the linear model is used. We showed that known formulations suffer from certain disadvantages. While \TopPush and \tauFPL are sensitive to outliers, \Grill is non-convex. On the other hand, we shoed that newly introduce \PatMat and \PatMatNP formulations are robust and convex. We also  proved the global convergence of the stochastic gradient descent for \PatMat and \PatMatNP.
 
+In Chapter~\ref{chap: dual}, we extended the framework~\eqref{eq: aatp surrogate} to nonlinear problems. We showed, that all presented formulations (with the exception of \Grill and \GrillNP) can be divided into two families based on the form of the constrains, namely \TopPushK and \PatMat family of formulations. We derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we proposed a new coordinate descent algorithm for solving the resulting dual problems. For selected surrogate functions we also derived the closed-form formulas needed in the coordinate descent algorithm. Since the coordinate decent algorithm has to be initialized wit the feasible solution, we also showed how to find an initial feasible solution.
 
-% \subsection{Dual}\label{sec:Conclusion}
+In Chapter~\ref{chap: deep}, we study the primal formulations with non-linear models. We showed, that when we use non-linear model, the resulting formulations are non-decomposable. This property is caused by the special threshold constraint in~\eqref{eq: aatp surrogate}, and prevents us from using of stochastic gradient descent in standard way. We introduce modified stochastic gradient descend for our formulations. Unfortunatelly, we showed that using of stochastic gradient descent peads to the biased eastimate of the true gradient. We suggested that this can migitiate by using large minibatche, however, such an approach is often not possible. For such cases, we proposed \DeepTopPush as an efficient alternative to \TopPush formulation, that does not suffer from this issue. For \DeepTopPush, we implicitly removed some optimization variables, created an unconstrained end-to-end network and used the stochastic gradient descent to train it. We modified the minibatch so that the sampled threshold (computed on a minibatch) is a good estimate of the true threshold (computed on all samples). We showed both theoretically and numerically that this procedure reduces the bias of the sampled gradient.
 
-% In this paper, we analyzed and extended the general framework for binary classification on top samples from~\cite{adam2021general} to nonlinear problems. Achieved results can be summarized as follows:
-% \begin{itemize}
-%   \item We derived the dual formulations for \TopPush, \TopPushK and \PatMat.
-%   \item We proposed a new method for solving the dual problems. We performed its complexity analysis. For selected surrogate functions we also derived the exact formulas needed in the method.
-%   \item We performed a numerical analysis of the proposed method. We showed its good convergence as well as improved performance of nonlinear kernels over the linear one.
-% \end{itemize}
-% Based on the numerical analysis from Section~\ref{sec:Numerical experiments}, we recommend using \TopPush or \TopPushK for problems where the resulting recall should be small. Otherwise, we recommend using \PatMat with an appropriately selected~$\tau$ parameter.
-
-% \subsection{Neural Networks}
-
-% We proposed \DeepTopPush as an efficient method for solving the constrained non-decomposable problem of accuracy at the top, which focuses on the performance only above a threshold. We implicitly removed some optimization variables, created an unconstrained end-to-end network and used the stochastic gradient descent to train it. We modified the minibatch so that the sampled threshold (computed on a minibatch) is a good estimate of the true threshold (computed on all samples). We showed both theoretically and numerically that this procedure reduces the bias of the sampled gradient. The time increase over the standard method with no threshold is small. We demonstrated the usefulness of \DeepTopPush both on visual recognition datasets, a ranking problem and on a real-world application of malware detection.
+In Chapter~\ref{chap: experiments}, we performed a numerical comparison of presented formulations. We showed a good performance of our newly introduce formulation \PatMatNP, when used in its primal form. We also showed, that \DeepTopPush formulation can be very useful, especially for very large real-world dataset. On steganalysis datasets and malware detection dataset, we demonstrated, that standard formulations provide poor results at very low false-positive rates, while formulations proposed in this work, work very well on them.
