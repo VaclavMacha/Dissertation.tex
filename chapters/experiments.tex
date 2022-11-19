@@ -4,7 +4,7 @@ In the previous sections, we derived general framework for classification at the
 
 \section{Settings}\label{sec: settings}
 
-In this section we describe in detail all settings used for experiments. 
+In this section we describe in detail all settings used for experiments. The section consists of five subsections. In the first one, we discuss which formulations from Table~\ref{tab: summary formulations} we use for the experimental evaluation. In this subsection, we also introduce baseline formulations that are used for the comparison. In the second one, we introduce datasets used in experiments and describe their structure. A detailed description of the datasets is then provided in separate sections with results.  The third and four subsections contain a detailed description of used performance metrics. The last subsection contains a description of tools used for implementation and the link to the GitHub repository with all relevant codes.
 
 \subsection{Formulations}
 
@@ -383,7 +383,19 @@ In this subsection, we present results for a primal form of formulations from Ta
 
 For comparison of all formulations, we use two different approaches. In the first one, we compare specific performance metrics on specific datasets. Since we have six hyperparameters for each formulation, we always select the best result for each formulation on the validation set based on the criterion for which the specific formulation is optimized. Then for each formulation, we select the median of the best results from ten independent runs. The results are presented in Table~\ref{tab: primal linear medians}.
 
-The second approach uses critical difference diagrams introduced in Subsection~\ref{sec: cd evaluation}. One of the basic assumption of the critical difference diagrams to work properly is the large number of datasets. Since we perform all experiments for each formulation and each dataset ten times with different randomseed for train/valid/test split, we decided to consider each of this run as a separate dataset. It is important, that we use this settings only for the critical difference diagrams. The results are presented in Figure~\ref{fig: primal linear CD}.
+The second approach uses critical difference diagrams introduced in Section~\ref{sec: cd evaluation}. One of the basic assumption of the critical difference diagrams to work properly is the large number of datasets. Since we perform all experiments for each formulation and each dataset ten times with different randomseed for train/valid/test split, we decided to consider each of this run as a separate dataset. It is important, that we use this settings only for the critical difference diagrams. The results are presented in Figure~\ref{fig: primal linear CD}.
+
+From Table~\ref{tab: primal linear medians} and Figure~\ref{fig: primal linear CD}, we make several observations:
+\begin{itemize}
+  \item Most of the formulations perform well on the criteria for which they are optimized.
+  \item \TopPushK(5) and \TopPushK(10) provides a slight improvement over \TopPush in most of the experiments. However, that improvements are usually not statistically significant as can be seen in Figure~\ref{fig: primal linear CD}, where all three formulations are connected by green line for almost all metrics. The only exception is $\tpratfpr=0.01$ metric for which \TopPush is significatnly worse than the remaining formulations.
+  \item \BaseLine formulation works the best for $\auroc$ metric for which is significatnly better than other formulations, see Figure~\ref{fig: primal linear CD}. The same can be also seen from Table~\ref{tab: primal linear medians}, where \BaseLine provides consistenly the best results for $\auroc$ for all datasets.
+  \item \BaseLine formulation is not suitable for any other metric than $\auroc.$ It is especially evident for metrics tat operates at the absolute top such as~$\tpratk = 1,$~$\tpratk = 5,$ or $\tpratk = 10.$
+  \item \PatMatNP formulations provides very good results for all metrics. Moreover, \PatMatNP(0.01) is the best formulation for $\tpratfpr = 0.01,$ and \PatMatNP(0.05) is the best formulation for $\tpratfpr = 0.05.$ It means that both methods are the best for the criterion for which they are optimised. This behaviour can be seen also in Table~\ref{tab: primal linear medians}, where \PatMatNP(0.05) is the best formulation for $\tpratfpr = 0.01$ almost for all datasets.
+  \item \tauFPL(0.05) works very good for both $\tpratfpr = 0.01$ and $\tpratfpr = 0.05.$ In fact, for both metrics the formulation achieves almost as good results as \PatMatNP formulations.
+  \item All formulations provide very poor results for CIFAR datastets and $\tpratk$ metrics. This is caused by the use of simple linear model. It is even more evident for SVHN2 datasets, fow which the best $\auroc$ is only 57.82\% for SVHN2 and 56.10\% for SVHN2Extra. However, the obtained results are still relevant, since we compare the relative performance of the formulations to each other and not the absolute performance.
+\end{itemize}
+
 
 \begin{table}[!p]
   \centering
@@ -657,6 +669,8 @@ The second approach uses critical difference diagrams introduced in Subsection~\
   \label{fig: primal linear CD}
 \end{figure}
 
+\newpage
+
 \subsection{Dual Formulation: Linear Model}\label{sec: results dual}
 
 In this subsection, we present results for a dual form of formulations from Table~\ref{tab: formulations experiments summary} with a gaussian kernel model, i.e. resutls presented here are related to the Chapter~\ref{chap: dual}. For training, we use coordinate descend algorithm introduced in Section~\ref{sec: coordinate descent} and we use the number of steps of this algorithm that corresponds to 20 epochs. For all experiments, we use precomputed kernel matrix with a gaussian kernel function defined as 
@@ -664,6 +678,23 @@ In this subsection, we present results for a dual form of formulations from Tabl
   k(\bm{x}_i, \bm{x}_j) = \exp\Brac[c]{- \frac{\norm{\bm{x}_i - \bm{x}_j}^2}{d}},
 \end{equation*}
 where~$d$ is the dimension of the primal problem. We used this setting since it is the default setting for radial basis kernel type in LIBSVM~\cite{chang2011libsvm}. For computational reasons, we use only this one choice of the kernel function. Therefore, the presented results are just a comparison of formulations for this specific kernel function and not the best possible results that can be achieved.
+
+For comparison of all formulations, we use the same two approaches as in Section~\ref{sec: results primal linear}. From Table~\ref{tab: dual gauss medians} and Figure~\ref{fig: dual gauss CD}, we make several observations:
+\begin{itemize}
+  \item 
+\end{itemize}
+
+\newpage
+
+\subsection{Primal Formulation: Non-Linear Model}\label{sec: results primal nonlinear}
+
+In this subsection, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a non-linear model, i.e. resutls presented here are related to the Chapter~\ref{chap: deep}. For training, we use the same setting as in Section~\ref{sec: results primal linear}. For MNIST and FashionMNIST datasets, we use a neural network that consists of two convolution layers always followed by a max pooling layer, and one fully connected layer of the proper size for binary classification. The rest of the datasets use a similar architecture, but with three convolutional layers instead of just two. We purposely do not use state-of-the-art architectures, since they often lead to a perfect separation of used datasets. Our goal is to show, that formulations from Table~\ref{tab: formulations experiments summary} can improve specific metrics such as $\tpratfpr = 0.05$ (when compared to \BaseLine) even with these subpar architectures.
+
+For comparison of all formulations, we use the same two approaches as in Section~\ref{sec: results primal linear}. From Table~\ref{tab: primal nonlinear medians} and Figure~\ref{fig: primal nonlinear  CD}, we make several observations:
+\begin{itemize}
+  \item 
+\end{itemize}
+
 
 \begin{table}[!p]
   \centering
@@ -907,11 +938,6 @@ where~$d$ is the dimension of the primal problem. We used this setting since it 
   \caption{\textbf{Dual formulations with gaussian kernel:} Critical difference (CD) diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank 1 being the best. Green wide horizontal lines group together methods with the mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
   \label{fig: dual gauss CD}
 \end{figure}
-
-\subsection{Primal Formulation: Non-Linear Model}\label{sec: results primal nonlinear}
-
-In this subsection, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a non-linear model, i.e. resutls presented here are related to the Chapter~\ref{chap: deep}. For training, we use the same setting as in Subsection~\ref{sec: results primal linear}. For MNIST and FashionMNIST datasets, we use a neural network that consists of two convolution layers always followed by a max pooling layer, and one fully connected layer of the proper size for binary classification. The rest of the datasets use a similar architecture, but with three convolutional layers instead of just two. We purposely do not use state-of-the-art architectures, since they often lead to a perfect separation of used datasets. Our goal is to show, that formulations from Table~\ref{tab: formulations experiments summary} can improve specific metrics such as $\tpratfpr = 0.05$ (when compared to \BaseLine) even with these subpar architectures.
-
 
 
 \begin{table}[!p]
