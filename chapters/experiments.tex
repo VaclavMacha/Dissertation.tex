@@ -365,6 +365,11 @@ where critical values~$q_{\alpha}$ are based on the Studentized range statistic 
 
 \subsection{Implementation}
 
+For the implementation of all formulations we use the Julia programming language~\cite{bezanson2017julia}. The dual formulations are implemented from scratch in pure Julia, while the primal formulations are implemented using Flux.jl~\cite{innes:2018, Flux.jl-2018} library. This library provides all the necessary tools for building neural networks. Moreover, the library allows the implementation of a custom gradient for any function, which allows us to implement all formulations from Table~\ref{tab: summary formulations}. For experiments with SVM, we use the Julia wrapper for the LIBSVM library~\cite{chang2011libsvm}. All codes used for experiments as well as all configurations of all experiments are publicly available on GitHub:
+\begin{center}
+  \url{https://github.com/VaclavMacha/ClassificationAtTopExperiments.jl}
+\end{center}
+
 \section{Image Recognition}
 
 This section contains results for six well-known visual recognition datasets. MNIST \cite{deng2012mnist} and FashionMNIST \cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers. All these datasets are originally divided only into training and test sets. Therefore, we select 25\% samples from the training set to obtain the validation set. For a more detailed description of the structure of datasets, see Table~\ref{tab: datasets summary}.
