@@ -679,12 +679,25 @@ In this subsection, we present results for a dual form of formulations from Tabl
 \end{equation*}
 where~$d$ is the dimension of the primal problem. We used this setting since it is the default setting for radial basis kernel type in LIBSVM~\cite{chang2011libsvm}. For computational reasons, we use only this one choice of the kernel function. Therefore, the presented results are just a comparison of formulations for this specific kernel function and not the best possible results that can be achieved.
 
+In Figure~\ref{fig: dual convergence}, we investigate the convergence of coordinate descend algorithm introduced in Section~\ref{sec: coordinate descent} for three formulations, namely \TopPush, \TopPushK and \PatMatNP. In each column, we show the convergence of primal and dual objective function for one formulation. To solve the primal problem, we used full gradient descent. Since we use full gradient to compute the optimal solution of primal form, we use very small Ionosphere dataset. This dataset is used only for this experiment. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual form. This means that the problem was solved to optimality. However, there is a little gap between optimal solution of primal and dual form for \PatMatNP. 
+
 For comparison of all formulations, we use the same two approaches as in Section~\ref{sec: results primal linear}. From Table~\ref{tab: dual gauss medians} and Figure~\ref{fig: dual gauss CD}, we make several observations:
 \begin{itemize}
-  \item 
+  \item We observed, that some formulations had problems with convergence an in some cases even diverge for some datasets. That can be caues by the inproper choice of the kernel function. As a results CD diagrams does not provide reliable results. If the formulation diverge in a few experiments, it immediately obtaind very high ranks for these experiments that totaly skwev the final diagram. It is especially evident for \PatMatNP and \SVM formulations.
+  \item Figure~\ref{fig: dual gauss CD} shows, that \PatMatNP formulations provides the worst results for all metrics. This can be caues by the bad convergence of the coordinate descent algorithm as showed in Figure~\ref{fig: dual convergence}. However, it is important to say, that Figure~\ref{fig: dual gauss CD} shows only relative results. From Table~\ref{tab: dual gauss medians} is clear, that even thoug that \PatMatNP provides usually worse results than other formulations, the results are in many cases only slightly worse.
+  \item Similarly to \PatMatNP, the \SVM formulation does not perform well for most of the metrics, but as shown in Table~\ref{tab: dual gauss medians}, the results are usually only slihtly worse than the results of other formulations.
+  \item \tauFPL formulations work very well for $\tpratfpr = 0.01,$ $\tpratfpr = 0.05$ and $\auroc$ metric.
+  \item \TopPush, \TopPushK(5) and \TopPushK(10) provides very good results for $\tpratk = 1,$ $\tpratk = 5$ and $\tpratk = 10.$
 \end{itemize}
 
 \newpage
+
+\begin{figure}
+  \centering
+  \includegraphics{images/convergence_dual.pdf}
+  \caption{Convergence of the objectives for the primal (red line) and dual (blue dashed line) forms for with linear kernel.}
+  \label{fig: dual convergence}
+\end{figure}
 
 \subsection{Primal Formulation: Non-Linear Model}\label{sec: results primal nonlinear}
 
@@ -692,7 +705,13 @@ In this subsection, we present results for a primal form of formulations from Ta
 
 For comparison of all formulations, we use the same two approaches as in Section~\ref{sec: results primal linear}. From Table~\ref{tab: primal nonlinear medians} and Figure~\ref{fig: primal nonlinear  CD}, we make several observations:
 \begin{itemize}
-  \item 
+  \item Most of the formulations perform well on the criteria for which they are optimized.
+  \item Most of te formulations provides almost perfect separation on MNIST and FashionMNIST datasets.
+  \item \DeepTopPush does not provide good results. In fact, the formulation is the worst in five out of six metrics in Figure~\ref{fig: primal nonlinear  CD}. However, it can be caused by the use of a relatively large minibatches with respect to the size ot the datasets. The true power of the formulation is shows in Section~\ref{sec: steganalysis} and~\ref{sec: malware detection}.
+  \item \BaseLine formulation performs consistentnly very well for all metrics.
+  \item \TopPushK(10) fails for many times. This is especially evident from Table~\ref{tab: primal nonlinear medians}. We can see, that the formulation achieves 100\% for $\tpratk = 10$ metric, which seems as a very good result. However, if take a look at the~$\auroc$ we can see that the formulation achieves 0\%. The reason for that is simple, \TopPushK(10) assigns the same score to all samples and therefore achieves 100\% true-positive rate, but also 100\% false-positive rate. This shows the disadvantage of~$\tpratk$ metrics.
+  \item \PatMatNP formulations provides very good results for all metrics. Moreover, \PatMatNP(0.01) is the best formulation for $\tpratfpr = 0.01,$ and \PatMatNP(0.05) is the best formulation for $\tpratfpr = 0.05.$ It means that both methods are the best for the criterion for which they are optimised. This behaviour can be seen also in Table~\ref{tab: primal linear medians}, where \PatMatNP(0.05) is the best formulation for $\tpratfpr = 0.01$ for all datasets.
+  \item \tauFPL formulations does not work well.
 \end{itemize}
 
 
