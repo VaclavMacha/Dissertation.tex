@@ -18,13 +18,19 @@
 \acknowledgment{Thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks}
 
 \titleCZE{Title title title title title title}
+
 \thesistype{Disertační práce}
+
 \abstractCZE{Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract}
+
 \keywordsCZE{Keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords}
 
-\titleENG{Title title title title title title}
-\abstractENG{Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract}
-\keywordsENG{Keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords}
+\titleENG{General Framework for Classification at the Top}
+
+\abstractENG{Many binary classification problems minimize misclassification above (or below) a threshold. We called this problem as a classification at the top, since the performance is evaluated only on a small number of relevat (top) samples. We show that instances of ranking problems, accuracy at the top, or hypothesis testing may be written in similar way. We propose a general framework to handle these classes of problems and show which formulations (both known and newly proposed \PatMat and \PatMatNP) fall into this framework. We provide a theoretical analysis of this framework when used with linear model and mention selected possible pitfalls the formulations may encounter. We show the convergence of the stochastic gradient descent for selected formulations even though the gradient estimate is inherently biased. Moreover, we derive dual forms of selected formulations and introduced new coordinate descent algorithm to solve them. We also study the case, when the selected formulations are used with non-linear models (for example arbitrary deep neural network). Since the threshold depends on all samples, the resulting optimization problem is non-decomposable. We modify the stochastic gradient descent to handle the non-decomposability in an end-to-end training manner and propose a way to estimate the threshold only from values on the current minibatch. Finally, we propose new \DeepTopPush formulation that uses enhanced mini-batches o get better estimate of the true threshold. We demonstrate the good performance of proposed formulations on visual recognition datasets and on a real-world application on steganalysis and malware detection.}
+
+\keywordsENG{Binary classification, ranking, accuracy at the top, Neyman-Pearson} 
+
 
 % ------------------------------------------------------------------------------
 % Document
