@@ -374,9 +374,8 @@ For the implementation of all formulations we use the Julia programming language
 
 This section contains results for six well-known visual recognition datasets. MNIST \cite{deng2012mnist} and FashionMNIST \cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of coloured images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains coloured images of house numbers. All these datasets are originally divided only into training and test sets. Therefore, we select 25\% samples from the training set to obtain the validation set. For a more detailed description of the structure of datasets, see Table~\ref{tab: datasets summary}.
 
-In the following subsection we present results of all experiments performed for this work. In the first three subsections we focus on the over all comparison of the formulations on all datasets. The last two subsections are dedicated to two specific problems that are suitable for the formulations from presented framework.
 
-\subsection{Primal Formulation: Linear Model}
+\subsection{Primal Formulation: Linear Model}\label{sec: results primal linear}
 
 \begin{table}[!p]
   \centering
@@ -653,7 +652,7 @@ One of the basic assumption of the critical difference diagrams to work properly
 
 \newpage
 
-\subsection{Dual Formulation: Linear Model}
+\subsection{Dual Formulation: Linear Model}\label{sec: results dual}
 
 \begin{table}[!p]
   \centering
@@ -900,7 +899,7 @@ One of the basic assumption of the critical difference diagrams to work properly
 
 \newpage
 
-\subsection{Primal Formulation: Non-Linear Model}
+\subsection{Primal Formulation: Non-Linear Model}\label{sec: results primal nonlinear}
 
 In this subsection, we discuss result for the case of primal formulations with linear model, i.e. resutls presented here are related to the Chapter~\ref{chap: linear}.
 
@@ -1360,30 +1359,3 @@ Figure~\ref{fig: malware detection} shows the performance of all formulations on
   \caption{\textbf{Malware detection:} ROC curves with logaithmic $x$-axis. The circles show the thresholds the formulations were optimized for.}
   \label{fig: malware detection}
 \end{figure}
-
-\section{Conclusion}
-
-% \subsection{Linear Model}
-
-% In this paper, we achieved the following results:
-% \begin{itemize}
-%   \item We presented a unified framework for the three criteria from Chapter~\ref{chap: framework}. These criteria include ranking, accuracy at the top and hypothesis testing.
-%   \item We showed that several known methods (\TopPush, \Grill, \tauFPL) fall into our framework and derived some completely new methods (\PatMat, \PatMatNP).
-%   \item We performed a theoretical analysis of the methods. We showed that known methods suffer from certain disadvantages. While \TopPush and \tauFPL are sensitive to outliers, \Grill is non-convex. We proved the global convergence of the stochastic gradient descent for \PatMat and \PatMatNP.
-%   \item We performed a numerical comparison and we showed a good performance of our method \PatMatNP.
-% \end{itemize}
-
-
-% \subsection{Dual}\label{sec:Conclusion}
-
-% In this paper, we analyzed and extended the general framework for binary classification on top samples from~\cite{adam2021general} to nonlinear problems. Achieved results can be summarized as follows:
-% \begin{itemize}
-%   \item We derived the dual formulations for \TopPush, \TopPushK and \PatMat.
-%   \item We proposed a new method for solving the dual problems. We performed its complexity analysis. For selected surrogate functions we also derived the exact formulas needed in the method.
-%   \item We performed a numerical analysis of the proposed method. We showed its good convergence as well as improved performance of nonlinear kernels over the linear one.
-% \end{itemize}
-% Based on the numerical analysis from Section~\ref{sec:Numerical experiments}, we recommend using \TopPush or \TopPushK for problems where the resulting recall should be small. Otherwise, we recommend using \PatMat with an appropriately selected~$\tau$ parameter.
-
-% \subsection{Neural Networks}
-
-% We proposed \DeepTopPush as an efficient method for solving the constrained non-decomposable problem of accuracy at the top, which focuses on the performance only above a threshold. We implicitly removed some optimization variables, created an unconstrained end-to-end network and used the stochastic gradient descent to train it. We modified the minibatch so that the sampled threshold (computed on a minibatch) is a good estimate of the true threshold (computed on all samples). We showed both theoretically and numerically that this procedure reduces the bias of the sampled gradient. The time increase over the standard method with no threshold is small. We demonstrated the usefulness of \DeepTopPush both on visual recognition datasets, a ranking problem and on a real-world application of malware detection.
