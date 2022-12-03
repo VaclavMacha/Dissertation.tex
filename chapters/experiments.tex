@@ -4,27 +4,30 @@ In the previous sections, we derived a general framework for classification at t
 
 \section{Settings}\label{sec: settings}
 
-In this section, we describe in detail all settings used for experiments. The section consists of five subsections. The first one discusses which formulations from Table~\ref{tab: summary formulations} we use for the experimental evaluation. In this subsection, we also introduce baseline formulations used for the comparison. In the second one, we introduce datasets used in experiments and describe their structure. A detailed description of the datasets is then provided in separate sections with the results of the experiments. The third and four subsections contain a detailed description of used performance metrics. The last subsection contains a description of tools used for implementation and the link to the GitHub repository with all relevant codes.
+In this section, we describe in detail all settings used for experiments. The section consists of five subsections. The first one discusses which formulations from Table~\ref{tab: summary formulations} we use for the experimental evaluation. In this subsection, we also introduce baseline formulations used for the comparison. In the second one, we introduce datasets used in experiments and describe their structure. A detailed description of the datasets is then provided in separate sections with the results of the experiments. The third and fourth subsections contain a detailed description of performance metrics. The last subsection contains a description of tools used for implementation. All codes used for experiments, as well as all configurations of all experiments, are publicly available on GitHub:
+\begin{center}
+  \url{https://github.com/VaclavMacha/ClassificationAtTopExperiments.jl}
+\end{center}
 
 \subsection{Formulations}
 
 Formulations from Table~\ref{tab: summary formulations} can be divided into three categories:
 \begin{itemize}
   \item The first category contains \TopPush and \TopPushK formulations. These formulations minimize the surrogate approximation of the false-negative rate and use the mean of a small fraction of the negative samples with the highest scores as a threshold.
-  \item The second category consists of \Grill, \TopMeanK, and \PatMat formulation. Similarly to \TopPush and \TopPushK, these formulations use the surrogate approximation of the false-negative rate as an objective function. The only exception is that the \Grill formulation also adds the surrogate approximation of the false-positive rate into the objective function for better stability. All three formulations use some approximation of the top $\tau$-quantile of all scores as a threshold.
+  \item The second category consists of \Grill, \TopMeanK, and \PatMat formulation. Similarly to \TopPush and \TopPushK, these formulations use the surrogate approximation of the false-negative rate as an objective function. The \Grill formulation also adds the surrogate approximation of the false-positive rate into the objective function. All three formulations use some approximation of the top $\tau$-quantile of all scores as a threshold.
   \item The last category consists of \GrillNP, \tauFPL, and \PatMatNP. These formulations use the same objectives as their corresponding formulations from the previous category. However, they differ in the definition of the decision threshold. All three formulations use some kind of approximation of the top $\tau$-quantile of negative scores as a threshold.
 \end{itemize}
-To simplify the setup of all experiments, we decided to focus on formulations that use only negative samples for the threshold computation, i.e., formulations from the first and third categories. Moreover, we decided to omit the \GrillNP formulation in the final experiments because it provides poor results in preliminary experiments. The performance of selected formulations can be compared using some basic performance metrics, as shown later in Section~\ref{sec: performance criteria}.
+To simplify the setup of all experiments, we decided to focus on formulations that use only negative samples for the threshold computation, i.e., formulations from the first and third categories. Moreover, we decided to omit the \GrillNP formulation in the final experiments because of its poor results in preliminary experiments. The performance of selected formulations can be compared by basic performance metrics, as shown later in Section~\ref{sec: performance criteria}.
 
 In total, we use four different formulations from Table~\ref{tab: summary formulations}, namely \TopPush, \TopPushK, \tauFPL, and \PatMatNP. Moreover, for \TopPushK, we use two different values of~$K = \{5, 10\}$ and consider the resulting formulations as separate formulations, i.e., we have \TopPushK(5) and \TopPushK(10). Similarly, for \tauFPL and \PatMat we use two different values of~$\tau = \{0.01, 0.05\}.$ For all formulations, we use the hinge loss defined in Notation~\ref{not: surrogates} as a surrogate function.
 
-The final number of unique formulations is seven. However, all these formulations fall into our general framework. To show that these formulations bring some advantages, we must compare them to standard methods. In previous chapters, we showed how to solve presented formulations in their primal (Chapters~\ref{chap: linear} and~\ref{chap: deep}) and dual form (Chapter~\ref{chap: dual}). Whenever we use the primal form in the experiments, we use binary cross-entropy defined in the following way as a baseline formulation for comparison
+The final number of unique formulations is seven. To show that they bring advantages, we must compare them to standard methods. In previous chapters, we showed how to solve presented formulations in their primal (Chapters~\ref{chap: linear} and~\ref{chap: deep}) and dual form (Chapter~\ref{chap: dual}). Whenever we use the primal form in the experiments, we use binary cross-entropy defined in the following way as a baseline formulation
 \begin{mini}{\bm{w}}{
   \frac{1}{\nall} \sum_{i \in \I} \Brac{- y_i \log(s_i) - (1 - y_i) \log (1 - s_i)}
   }{\label{eq: crossentropy}}{}
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I.}
 \end{mini}
-We decided to use binary cross-entropy since it is one of the most used objective functions for binary classification in machine learning applications. We will denote binary cross-entropy in the following text as \BaseLine for simplicity. In experiments with dual forms of our formulations, we use C-SVC variant of SVM~\cite{boser1992training, cortes1995support,chang2011libsvm} defined as follows
+We decided to use binary cross-entropy since it is one of the most used objective functions for binary classification in machine learning applications. We will denote binary cross-entropy in the following text as \BaseLine. In experiments with dual forms of our formulations, we use C-SVC variant of SVM~\cite{boser1992training, cortes1995support,chang2011libsvm} defined by
 \begin{mini}{\bm{w}, b, \bm{\xi}}{
   \frac{1}{2} \norm{\bm{w}}^2 + C \sum_{i \in \I} \xi_i
   }{\label{eq: SVM}}{}
@@ -42,15 +45,15 @@ where the kernel matrix~$\K$ is defined for all~$i, j = 1, 2, \ldots, \nall$ as
 \begin{equation*}
   \K_{i,j} = y_i y_j k(\bm{x}_i, \bm{x}_j) = \phi(\bm{x}_i)^{\top} \phi(\bm{x}_j).
 \end{equation*}
-Note that the dual form of C-SVC is very similar to the dual forms of our formulations derived in Chapter~\ref{chap: dual}. We will denote C-SVC as \SVM for simplicity in the following text.
+Note that the dual form of C-SVC is very similar to the dual forms of our formulations derived in Chapter~\ref{chap: dual}. We will denote C-SVC as \SVM.
 
-In total, we have nine different formulations for experiments, as seen in Table~\ref{tab: formulations experiments summary}. Nevertheless, not all formulations are used for all experiments: \BaseLine formulation is used only for experiments with primal forms of our formulations, while \SVM is used only when dual forms are used. The following section discusses which hyper-parameters are used for each formulation. We also show how we convert these parameters for dual forms of the formulations.
+In total, we have nine different formulations for experiments, as seen in Table~\ref{tab: formulations experiments summary}. \BaseLine formulation is used only for experiments with primal forms of our formulations, while \SVM is used only when dual forms are used. The following section discusses which hyper-parameters are used for each formulation. We also show how we convert these parameters for dual forms of the formulations.
 
 \pagebreak
 
 \subsection{Hyperparameters}
 
-Since selected formulations differ in the number of available hyper-parameters, we decided to fix the number of hyper-parameters per formulation to six. For most of the considered formulations, the remaining hyper-parameter is the regularization constant~$\lambda$. The only exceptions are the formulations derived from \PatMatNP since they also have the scaling parameter~$\vartheta.$ Therefore, we use the following six values of this hyper-parameter
+The selected formulations differ in the number of available hyper-parameters. Therefore, we decided to use a fixed value for all but one of the hyper-parameters for each formulation. We then use six different values for the remaining non-fixed hyper-parameter to fine-tune the formulation. For most of the considered formulations, the only hyper-parameter is the regularization constant~$\lambda$. The only exceptions are the formulations derived from \PatMatNP since they also have the scaling parameter~$\vartheta.$ Therefore, we use the following six values of this hyper-parameter
 \begin{equation*}
   \lambda \in \Brac[c]{10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}, 1}
 \end{equation*}
@@ -136,11 +139,11 @@ where~$\ntil = \nall$ for \SVM and~$\ntil = \npos$ otherwise. In all experiments
 
 We consider various datasets summarized in Table~\ref{tab: datasets summary} for the numerical experiments. All these datasets can be divided into three categories:
 \begin{enumerate}
-  \item \textbf{Image Recognition:} In this category, we test formulations from Table~\ref{tab: formulations experiments summary} on datasets from the domain of image recognition. We use this domain since it is one of the most popular; therefore, plenty of publicly available datasets exist.
-  \item \textbf{Steganalysis:} In this category, we use selected formulations in the domain of steganalysis. In this domain, the problem of maximizing the true-positive rate at the specific level of the false-positive rate is well-known and essential, as we show at the beginning of Section~\ref{sec: steganalysis}. Therefore, formulations from Table~\ref{tab: formulations experiments summary} can be advantageous in this domain.
-  \item \textbf{Malware Detection:} In this category, we use selected formulations for malware detection. Like in steganalysis, maximizing the true-positive rate at the specific level of the false-positive rate is crucial for malware detection, as discussed at the beginning of Section~\ref{sec: malware detection}. Therefore, formulations from Table~\ref{tab: formulations experiments summary} may be advantageous for malware detection.
+  \item \textbf{Image Recognition:} In this category, we test formulations from Table~\ref{tab: formulations experiments summary} on datasets from the domain of image recognition. We use this domain since it is one of the most popular with plenty of publicly available datasets.
+  \item \textbf{Steganalysis:} In this category, we use selected formulations in the domain of steganalysis. In this domain, the problem of maximizing the true-positive rate at the specific level of the false-positive rate is well-known and essential, as we show at the beginning of Section~\ref{sec: steganalysis}.
+  \item \textbf{Malware Detection:} In this category, we use selected formulations for malware detection. Like in steganalysis, maximizing the true-positive rate at the specific level of the false-positive rate is crucial for malware detection, as discussed at the beginning of Section~\ref{sec: malware detection}.
 \end{enumerate}
-Each category has a separate section with results and a more detailed description later in the text. It is worth mentioning that not all datasets used in experiments are primarily designed for the classification at the top. For example, all datasets from the first category are general-purpose image classification datasets. We use these datasets since they are publicly available and well-known. Therefore it is easier to present the results to them. On top of that, we want to show that formulations presented in this work can be beneficial even for such general-purpose datasets.
+Each category has a separate section later in the text. It is worth mentioning that not all datasets used in experiments are primarily designed for the classification at the top. For example, all datasets from the first category are general-purpose image classification datasets. We use these datasets since they are publicly available and well-known. Since all these datasets are multi-class, we need to adjust the labels to get binary classification problems. Therefore, for each data set, we select one class as the positive class and consider the rest as the negative class. 
 
 \begin{table}[!ht]
   \centering
@@ -266,11 +269,11 @@ Each category has a separate section with results and a more detailed descriptio
 
 \subsection{Performance Criteria}\label{sec: performance criteria}
 
-In the previous subsections, we described all formulations and datasets used for the experiments. In this section, we describe which performance criteria are used for evaluation and how these criteria are related to the tested formulations.
+In this section, we describe which performance criteria are used for evaluation and how these criteria are related to the tested formulations.
 
 As we discussed at the beginning of Section~\ref{sec: settings}, we decided to test only formulations that minimize the false-negative rate (or a combination of false-negative and false-positive rate) and use only negative samples for the threshold computation. This choice allows us to use simple metrics to compare used formulations. The first metric that we use in experiments is~$\tpratk$ defined as follows
 \begin{equation*}
-  \tpratk = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \geq t} \quad \text{where} \quad t = \sum_{j = 1}^{K} s^{-}_{[j]}.
+  \tpratk = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \geq t} \quad \text{where} \quad t = \frac{1}{K} \sum_{j = 1}^{K} s^{-}_{[j]}.
 \end{equation*}
 This metric computes the true-positive rate at threshold~$t$ defined as the mean of $K$-largest negative scores. For~$K = 1$, the threshold corresponds to the threshold used by \TopPush formulation. Otherwise, threshold~$t$ corresponds to the threshold used by \TopPushK. Moreover, since minimizing the false-negative rate is equivalent to maximizing the true-positive rate, both \TopPush and \TopPushK should optimize the $\tpratk$ metric. In the upcoming experiments, we use this metric with three different values of~$K \in \{1, 5, 10\}.$
 
@@ -362,12 +365,12 @@ The two previous metrics are specific to the formulations from our framework. Ho
 
 All metrics from Section~\ref{sec: performance criteria} can be used to compare different formulations on a single dataset. However, these metrics are unsuitable for comparing multiple formulations on multiple datasets. To address this issue, we follow the suggestion from~\cite{demvsar2006statistical} and use the Friedman test~\cite{friedman1940comparison}.
 
-Consider that we have~$D,$ datasets, and~$k$ formulations. Then for each dataset~$i$, each formulation~$j$ is ranked by rank~$r^i_j$ according to some performance criterium. Any performance metric from the previous section can be used. The formulation that provides the best result gets ranked 1; the second best gets ranked 2, and so on. If two formulations provide the same results, the average ranks are assigned. For example, consider four formulations that achieve the following four results on some metric $\{0.9, 0.75, 0.75, 0.6\}$ (the higher is better). Then the assigned ranks are $\{1, 2.5, 2.5, 4\}$. Finally, the average rank overall dataset for formulation~$j$ is computed as
+Consider that we have~$m,$ datasets, and~$k$ formulations. Then for each dataset~$i$, each formulation~$j$ is ranked by rank~$r^i_j$ according to some performance criterium. Any performance metric from the previous section can be used. The formulation that provides the best result gets ranked 1; the second best gets ranked 2, and so on. If two formulations provide the same results, the average ranks are assigned. The average rank overall dataset for formulation~$j$ is computed as
 \begin{equation*}
-  R_j = \frac{1}{D} \sum_{i = 1}^{D} r^{i}_{j}.
+  R_j = \frac{1}{m} \sum_{i = 1}^{m} r^{i}_{j}.
 \end{equation*}
 The Friedman test compares the average ranks of formulations under the null hypothesis, which states that all formulations are equivalent. Therefore, their average ranks should be equal. If the null hypothesis is rejected, we proceed with the post hoc Nemenyi test~\cite{nemenyi1963distribution} that compares all formulations to each other. The performance of the two formulations is significantly different if the corresponding average
-ranks differ by at least the critical difference defined as
+ranks differ by at least the critical difference
 \begin{equation*}
   CD = q_{\alpha} \sqrt{\frac{k(k + 1)}{6D}},
 \end{equation*}
@@ -375,21 +378,18 @@ where critical values~$q_{\alpha}$ are based on the Studentized range statistic 
 
 \subsection{Implementation}
 
-For the implementation of all experiments, we use the Julia programming language~\cite{bezanson2017julia}. The dual formulations are implemented from scratch, while the primal formulations are implemented using Flux.jl~\cite{innes:2018, Flux.jl-2018} library. This library provides all the necessary tools for building neural networks. Moreover, the library allows the implementation of a custom gradient for any function, which allows us to implement all formulations from Table~\ref{tab: summary formulations}. For experiments with SVM, we use the Julia wrapper for the LIBSVM library~\cite{chang2011libsvm}. All codes used for experiments, as well as all configurations of all experiments, are publicly available on GitHub:
-\begin{center}
-  \url{https://github.com/VaclavMacha/ClassificationAtTopExperiments.jl}
-\end{center}
+For the implementation of all experiments, we use the Julia programming language~\cite{bezanson2017julia}. The dual formulations are implemented from scratch, while the primal formulations are implemented using Flux.jl~\cite{innes:2018, Flux.jl-2018} library. This library provides all the necessary tools for building neural networks. Moreover, the library allows the implementation of a custom gradient for any function, which allows us to implement all formulations from Table~\ref{tab: summary formulations}. For experiments with SVM, we use the Julia wrapper for the LIBSVM library~\cite{chang2011libsvm}.
 
 \section{Image Recognition}
 
-In this section, we present experiments with six well-known image recognition datasets. All these datasets are publicly available. MNIST~\cite{deng2012mnist} and FashionMNIST~\cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of colored images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains colored images of house numbers. All these datasets are originally divided only into training and test sets. Therefore, we select 25\% samples from the training set to obtain the validation set. For a more detailed description of the structure of datasets, see Table~\ref{tab: datasets summary}.
+In this section, we present experiments with six well-known image recognition datasets. All these datasets are publicly available. MNIST~\cite{deng2012mnist} and FashionMNIST~\cite{xiao2017fashionmnist} are grayscale datasets of digits and fashion items, respectively. CIFAR100~\cite{krizhevsky2009learning} is a dataset of colored images of different items grouped into 100 classes. CIFAR10 and CIFAR20 merge these classes into 10 and 20 superclasses, respectively. Finally, SVHN2~\cite{netzer2011reading} contains colored images of house numbers. All these datasets are originally divided only into training and test sets. We select 25\% samples from the training set to obtain the validation set. For a more detailed description of the structure of datasets, see Table~\ref{tab: datasets summary}.
 
 None of these datasets is primarily designed for the problem of classification at the top. We presented these datasets to show that introduced formulations can be helpful even for general-purpose datasets and may lead to improve performance on specific metrics. However, there are some drawbacks to using these datasets. For example, many state-of-the-art neural network architectures achieve almost the perfect classification on some of these datasets. Therefore, there is no room for improvement, and we have to use much simpler architectures to show the behavior of formulations presented in this work (Section~\ref{sec: results primal nonlinear}).
 
 
 \subsection{Primal Formulation: Linear Model}\label{sec: results primal linear}
 
-In this section, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a linear model. The results presented in this section are related to Chapter~\ref{chap: linear}. For training, we use stochastic gradient descent with balanced mini-batches of size 512. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and initial step length~$\alpha = 0.01$, which we discount every five epochs by the factor of~$0.8$ using an exponential decay scheme. We also use a fixed number of epochs to 100, and repeat each experiment ten times with different random seeds.
+In this section, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a linear model. For training, we use stochastic gradient descent with balanced mini-batches of size 512. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and initial step length~$\alpha = 0.01$, which we discount every five epochs by the factor of~$0.8$ using an exponential decay scheme. We also use a fixed number of epochs to 100, and repeat each experiment ten times with different random seeds.
 
 For comparison of all formulations, we use two different approaches. The first one compares concrete performance metrics on each dataset separately. Since we have six hyperparameters for each formulation, we always select the best result for each formulation on the validation set based on the criterion for which the specific formulation is optimized. Then for each formulation, we select the median of the best results from ten independent runs. The second approach uses critical difference diagrams introduced in Section~\ref{sec: cd evaluation}. One of the basic assumptions of the critical difference diagrams to work appropriately is a large number of used datasets. Since we performed all experiments for each formulation and each dataset ten times with different random seeds for train/valid/test split, we decided to consider each of these runs as a separate dataset. It is important to say that we use this setting only for the critical difference diagrams. From Table~\ref{tab: primal linear medians} and Figure~\ref{fig: primal linear CD}, we make several observations:
 \begin{itemize}
@@ -399,6 +399,13 @@ For comparison of all formulations, we use two different approaches. The first o
   \item \tauFPL(0.05) works very well for both $\tpratfpr = 0.01$ and $\tpratfpr = 0.05.$. The formulation achieves almost as good results for both metrics as \PatMatNP formulations.
   \item All formulations provide very poor results for CIFAR and SVHN2 datasets, as shown in Table~\ref{tab: primal linear medians}. The use of a simple linear model causes this. However, the obtained results are still relevant since we compare the relative performance of the formulations to each other and not the absolute performance.
 \end{itemize}
+
+\begin{figure}[!p]
+  \centering
+  \input{images/critical_diagrams_primal.tex}
+  \caption{\textbf{Primal formulation with linear model:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
+  \label{fig: primal linear CD}
+\end{figure}
 
 
 \begin{table}[!p]
@@ -611,7 +618,7 @@ For comparison of all formulations, we use two different approaches. The first o
         & 51.08
         & 51.30 \\
       \TopPushK(5)
-        & 99.8
+        & 99.80
         & \worst{99.42}
         & 76.67
         & \worst{65.70}
@@ -665,23 +672,15 @@ For comparison of all formulations, we use two different approaches. The first o
   \label{tab: primal linear medians}
 \end{table}
 
-
-\begin{figure}[!p]
-  \centering
-  \input{images/critical_diagrams_primal.tex}
-  \caption{\textbf{Primal formulation with linear model:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
-  \label{fig: primal linear CD}
-\end{figure}
-
 \pagebreak
 
 \subsection{Dual Formulation: Linear Model}\label{sec: results dual}
 
-In this section, we present results for a dual form of formulations from Table~\ref{tab: formulations experiments summary} with a gaussian kernel model. The results presented here are related to Chapter~\ref{chap: dual}. For training, we use the coordinate descent algorithm introduced in Section~\ref{sec: coordinate descent}. We set a number of steps of the algorithm in a way that corresponds to 20 epochs. For all experiments, we use precomputed kernel matrix with a gaussian kernel function defined as 
+In this section, we present results for a dual form of formulations from Table~\ref{tab: formulations experiments summary} with a Gaussian kernel model. For training, we use the coordinate descent algorithm introduced in Section~\ref{sec: coordinate descent}. We set a number of steps to 20 epochs. For all experiments, we use precomputed kernel matrix with a Gaussian kernel function defined as 
 \begin{equation*}
   k(\bm{x}_i, \bm{x}_j) = \exp\Brac[c]{- \frac{\norm{\bm{x}_i - \bm{x}_j}^2}{d}},
 \end{equation*}
-where~$d$ is the dimension of the primal problem. We used this since it is the default setting for radial basis kernel type in LIBSVM~\cite{chang2011libsvm}. For computational reasons, we use only this one choice of the kernel function. Therefore, the presented results are just a comparison of formulations for this specific kernel function and not the best possible results that can be achieved.
+where~$d$ is the dimension of the primal problem. We used this since it is the default setting for radial basis kernel type in LIBSVM~\cite{chang2011libsvm}.
 
 In Figure~\ref{fig: dual convergence}, we investigate the convergence of the coordinate descend algorithm introduced in Section~\ref{sec: coordinate descent} for three formulations, namely \TopPush, \TopPushK, and \PatMatNP. In each column, we show the primal and dual objective function convergence for one formulation. To solve the primal problem, we used full gradient descent. For this experiment, we use the Ionosphere dataset~\cite{sigillito1989classification}. This dataset is used only for this experiment. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual problems. It means that both problems were solved to optimality. However, there is a little gap between the optimal primal and dual form solution for \PatMatNP. In other words, \PatMatNP may suffer from convergence issues when solving the proposed coordinate descent algorithm.  
 
@@ -705,7 +704,7 @@ For comparison of all formulations, we use the same two approaches as in Section
 
 \subsection{Primal Formulation: Non-Linear Model}\label{sec: results primal nonlinear}
 
-In this section, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a non-linear model. The results presented in this section are related to Chapter~\ref{chap: deep}. For training, we use the same setting as in Section~\ref{sec: results primal linear}. For MNIST and FashionMNIST datasets, we use a neural network consisting of two convolution layers, followed by a max pooling layer and one fully connected layer of the proper size for binary classification. The rest of the datasets use a similar architecture but with three convolutional layers instead of just two. We purposely do not use state-of-the-art architectures since they often lead to a perfect separation of used datasets. Our goal is to show that formulations from Table~\ref{tab: formulations experiments summary} can improve specific metrics such as $\tpratfpr = 0.05$ (when compared to \BaseLine) even with these subpar architectures.
+In this section, we present results for a primal form of formulations from Table~\ref{tab: formulations experiments summary} with a non-linear model. For training, we use the same setting as in Section~\ref{sec: results primal linear}. For MNIST and FashionMNIST datasets, we use a neural network consisting of two convolution layers, followed by a max pooling layer and one fully connected layer of the proper size for binary classification. The rest of the datasets use a similar architecture but with three convolutional layers instead of just two. We purposely do not use state-of-the-art architectures since they often lead to a perfect separation of used datasets. Our goal is to show that formulations from Table~\ref{tab: formulations experiments summary} can improve specific metrics such as $\tpratfpr = 0.05$ (when compared to \BaseLine) even with these subpar architectures.
 
 For comparison of all formulations, we use the same two approaches as in Section~\ref{sec: results primal linear}. From Table~\ref{tab: primal nonlinear medians} and Figure~\ref{fig: primal nonlinear  CD}, we make several observations:
 \begin{itemize}
@@ -718,6 +717,12 @@ For comparison of all formulations, we use the same two approaches as in Section
   \item \tauFPL formulations do not work well.
 \end{itemize}
 
+\begin{figure}[!p]
+  \centering
+  \input{images/critical_diagrams_dual.tex}
+  \caption{\textbf{Dual formulations with gaussian kernel:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
+  \label{fig: dual gauss CD}
+\end{figure}
 
 \begin{table}[!p]
   \centering
@@ -957,11 +962,10 @@ For comparison of all formulations, we use the same two approaches as in Section
 
 \begin{figure}[!p]
   \centering
-  \input{images/critical_diagrams_dual.tex}
-  \caption{\textbf{Dual formulations with gaussian kernel:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
-  \label{fig: dual gauss CD}
+  \input{images/critical_diagrams_primalnn.tex}
+  \caption{\textbf{Primal formulations with non-linear model:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
+  \label{fig: primal nonlinear CD}
 \end{figure}
-
 
 \begin{table}[!p]
   \centering
@@ -1226,13 +1230,6 @@ For comparison of all formulations, we use the same two approaches as in Section
   \label{tab: primal nonlinear medians}
 \end{table}
 
-\begin{figure}[!p]
-  \centering
-  \input{images/critical_diagrams_primalnn.tex}
-  \caption{\textbf{Primal formulations with non-linear model:} Critical difference diagrams (level of importance 0.05) of the Nemenyi post hoc test for the Friedman test. Each diagram shows the mean rank of each method, with rank one being the best. The green horizontal lines group methods with mean ranks that are not significantly different. The critical difference diagrams were computed for mean rank averages over all datasets.}
-  \label{fig: primal nonlinear CD}
-\end{figure}
-
 \pagebreak
 
 \section{Steganalysis}\label{sec: steganalysis}
@@ -1241,15 +1238,15 @@ In the previous section, we presented results on standard image recognition data
 
 The standard way to share secret information these days is through encryption. However, in such a case, the presence of a secret message (even though encrypted) is obvious. Steganography aims to hide the fact that communication is taking place by hiding the secret message within an ordinary file (usually called a cover file) to avoid detection. The secret message is then extracted at its destination. The secret data can be hidden in almost any type of digital content. However, the most popular are images. There are two reasons for this. The first of them is the ubiquity of images on the Internet and, therefore, the ease of using them as cover files for secret messages. The second reason is their large potential payload, i.e., it is possible to hide a lot of information in high-resolution images. With an appropriate cover image and steganography tools, it is possible to create a stego-image (image with a hidden message) that can not be recognized from the cover image by human perception. However, each tool leaves a fingerprint or signature in the image that can be used to detect stego images. The field that tries to detect stego images and possibly decrypt messages from them is called steganalysis. In steganalysis, the goal is to achieve the best true-positive rate with the lowest possible false-positive rate. Therefore steganalysis is the domain suitable for the problem of classification at the top.~\cite{morkel2005overview, silman2001steganography} 
 
-For the experiments, we have a large dataset of cover images comprising approximately 450 000 images from Flickr. All these images are in JPEG format with a quality factor of 80. Since the dataset does not contain any stego images, we use two different ways to generate them. For this work, we named the resulting datasets as \textbf{Nsf5} and \textbf{JMiPOD} based on the algorithms used for generating stego images.
+For the experiments, we have a large private dataset of cover images comprising approximately 450 000 images from Flickr. All these images are in JPEG format with a quality factor of 80. Since the dataset does not contain any stego images, we use two different ways to generate them. For this work, we named the resulting datasets as \textbf{Nsf5} and \textbf{JMiPOD} based on the algorithms used for generating stego images.
 
 \subsection{Nsf5}
 
 In this case, we generate stego images using simulated F5 with matrix embedding turned off, and we use payload 0.2. Since we are interested in low false-positive rates, we need a lot of negative (cover) samples to estimate it. It is evident in~\eqref{eq: patmat np} where the threshold~$t$ is a surrogate approximation of false-positive rate, i.e., the threshold is computed only from negative samples. Positive (stego) samples occur only in the objective function. Since generating stego images is expensive and we do not need them to estimate the false-positive rate, we decided to use 10\% of all cover images to generate their stego counterparts. All images are then described using 22 500 features and split into train/validation/test sets in ratio 0.45/0.05/0.5. The resulting sizes of the splits, as well as the number of stego images in them, are summarized in Table~\ref{tab: datasets summary}. 
 
-Since the resulting classification task is relatively easier to solve, we decided to use a simple linear model. The number o training samples and their size are not too large. Therefore we can load the whole dataset into memory. It allows us to use full gradient descent instead of its stochastic version. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use a fixed number of epochs to 1000 for all formulations. Finally, we repeat each experiment ten times with ten different random seeds.
+Since the resulting classification task is relatively easier to solve, we decided to use a simple linear model. The number of training samples and their size are not too large. Therefore we can load the whole dataset into memory. It allows us to use full gradient descent instead of its stochastic version. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use a fixed number of epochs to 1000 for all formulations. Finally, we repeat each experiment ten times with ten different random seeds.
 
-Figure~\ref{fig: steganalysis nsf5} shows ROC curves for the test set of \textbf{Nsf5} dataset. For simplicity, we show ROC curves only for one experiment run. Moreover, Table~\ref{tab: steganalysis nsf5} shows seven different performance metrics computed for each formulation. Each shown result in this table is a median of ten independent runs. \BaseLine provides inferior results for all metrics. Surprisingly, \BaseLine is the worst even for the $\auroc.$ On the other hand, \DeepTopPush excels at very low false-positive rates, as seen from the table and the figure. In fact, \DeepTopPush provides the best results for four out of seven performance metrics (the best results are highlighted in green). Note that all these four metrics operate at extremely low false-positive rates. We can also see, that \PatMatNP($10^{-5}$) is the best at false-positive rate~$10^{-4}$. This unexpected result is probably caused by the approximation of the true top $\tau$-quantile of all scores of negative samples used in \PatMatNP formulation. Therefore, \PatMatNP($10^{-5}$) is optimized for a false-positive rate slightly higher than~$10^{-5}$ and as a consequence outperforms \PatMatNP($10^{-5}$) at false-positive rate~$10^{-4}$. Similar behavior can be seen for \PatMatNP($10^{-4}$) and \PatMatNP($10^{-3}$) at false-positive rate~$10^{-4}$.
+Figure~\ref{fig: steganalysis nsf5} shows ROC curves for the test set of \textbf{Nsf5} dataset. For simplicity, we show ROC curves only for one experiment run. Moreover, Table~\ref{tab: steganalysis nsf5} shows seven different performance metrics computed for each formulation. Each shown result in this table is a median of ten independent runs. \BaseLine provides inferior results for all metrics. Surprisingly, \BaseLine is the worst even for the $\auroc.$ On the other hand, \DeepTopPush excels at very low false-positive rates, as seen from the table and the figure. In fact, \DeepTopPush provides the best results for four out of seven performance metrics (the best results are highlighted in green). Note that all these four metrics operate at extremely low false-positive rates. We can also see that \PatMatNP($10^{-5}$) is the best at false-positive rate~$10^{-4}$. This is probably caused by the approximation of the true top $\tau$-quantile of all scores of negative samples used in \PatMatNP formulation. Therefore, \PatMatNP($10^{-5}$) is optimized for a false-positive rate slightly higher than~$10^{-5}$ and as a consequence outperforms \PatMatNP($10^{-5}$) at false-positive rate~$10^{-4}$. Similar behavior can be seen for \PatMatNP($10^{-4}$) and \PatMatNP($10^{-3}$) at false-positive rate~$10^{-4}$.
 
 \begin{figure}
   \centering
@@ -1409,9 +1406,9 @@ Figure~\ref{fig: steganalysis jmipod} shows ROC curves for the test set of \text
 
 In the previous section, we presented results from the domain of steganalysis. Another domain in which formulations from the presented framework can be very useful is the domain of malware detection. As an example, consider standard antivirus software on a personal computer. Every user wants to be protected, so the goal of antivirus software is to detect as much malware as possible. However, if the antivirus is too restrictive, it can easily happen that clean software is marked as malware, i.e., the antivirus can easily produce false alarms. If the antivirus produces false alarms too often, it can be very annoying to the user and may lead to uninstalling the antivirus completely. Therefore, the goal of every antivirus is to maximize a true-positive rate at a very low false-positive rate, which is precisely what the formulations from the framework do.
 
-In this section, we presented results on a real-world dataset provided by a renowned cybersecurity company. The dataset consists of malware analysis reports of executable files. The dataset is extremely tough as individual samples are JSON files whose size ranges from 1kB to 2.5MB. The sample structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This contrasts sharply with standard datasets, where each sample has the same number of features, and each feature is a real number. The usual approach to processing such complicated data is to manually create feature vectors and use them for training instead of the original data. However, such an approach is extremely time-demanding and requires expert knowledge of the original data. For this reason, we decided to use a different approach called Hierarchical Multiple Instance Learning (HMIL)~\cite{pevny2017using}. For the training, we use a publicly available implementation of HMIL~\cite{mandlik2021mill}, which allows training models directly from JSON files without requiring complicated feature extraction.
+In this section, we present results on a real-world dataset provided by a renowned cybersecurity company. The dataset consists of malware analysis reports of executable files. The dataset is extremely tough as individual samples are JSON files whose size ranges from 1kB to 2.5MB. The sample structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This contrasts sharply with standard datasets, where each sample has the same number of features, and each feature is a real number. The usual approach to processing such complicated data is to manually create feature vectors and use them for training instead of the original data. However, such an approach is extremely time-demanding and requires expert knowledge of the original data. For this reason, we decided to use a different approach called Hierarchical Multiple Instance Learning (HMIL)~\cite{pevny2017using}. For the training, we use a publicly available implementation of HMIL~\cite{mandlik2021mill}, which allows training models directly from JSON files without requiring complicated feature extraction.
 
-Since the dataset is huge (see Table~\ref{tab: datasets summary}), we train each formulation only one time. Moreover, we use only the formulations that worked the best in the previous experiments, i.e., we use only the \BaseLine, \PatMatNP($10^{-2}$), \PatMatNP($10^{-3}$) and \BaseLine. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use balanced mini-batches of size 2000, which allows us to obtain a very good estimate of the true thresholds as discussed in Section~\ref{sec: biased threshold estimate}. Finally, we use a fixed number of epochs to 100 for all formulations.
+Since the dataset is huge (see Table~\ref{tab: datasets summary}), we train each formulation only one time. Moreover, we use only the formulations that worked the best in the previous experiments, i.e., we use only the \BaseLine, \PatMatNP($10^{-2}$), \PatMatNP($10^{-3}$) and \DeepTopPush. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use balanced mini-batches of size 2000, which allows us to obtain a very good estimate of the true thresholds as discussed in Section~\ref{sec: biased threshold estimate}. Finally, we use a fixed number of epochs to 100 for all formulations.
 
 Figure~\ref{fig: malware detection} shows the ROC curves for all formulations. For use filled circles to highlight the thresholds for which the formulations were optimized. It is clear that \DeepTopPush is the best at low false-positive rates. Even at the extremely low false positive rate $\tau=10^{-5}$, \DeepTopPush correctly identified $46\%$ of malware. We can also see that \PatMatNP($10^{-3}$) is the best at false-positive rate~$10^{-3}$, which is exactly the point for which the formulation should be optimized. However, at this false-positive rate, \DeepTopPush performs almost as well as \PatMatNP($10^{-3}$). Finally, all formulations perform equally well at the false-positive rate~$10^{-2}$.
 
