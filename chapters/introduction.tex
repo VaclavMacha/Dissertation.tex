@@ -1,0 +1,55 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+The modern world is a world of information. In the past few decades, we have witnessed rapid growth in computer computational power. This development allowed the spread of computers, smartphones, the internet, smart sensors, etc, to every possible aspect of our lives. Due to the use of all these new technologies, we can automatically generate and store data, which can be very useful. The problem is, that the amount of this data is enormous. Their processing and extraction of useful information is therefore a very demanding goal. There are plenty of techniques how to achieve such a goal. In this work, we focus on one specific problem of data processing which is called classification. The problem of data classification is simple to describe, but hard to solve. Let's say we have a basket that contains apples and watermelons. It means, we have two different kinds of fruit in the basket. The aim of the classification is to find out what kind of fruit the individual items in the basket are. More generally, in classification, we have a finite number of predefined classes, and the goal is to find out which of the classes the given object belongs. This decision is made based on some features that describe the object. Many real-world problems can be formulated as classification tasks:
+\begin{itemize}
+  \item \textbf{Medical Diagnosis:} In medicine, classification is often used to improve disease diagnosis. In such a case, the features are medical records such as the patient's blood tests, temperature, or x-ray images. The classes are whether the patient has some disease or not. We can for example classify whether the patient has cancer, based on the mammogram images~\cite{viale2012current, levy2016breast}.
+  \item \textbf{Autonomous Cars:} Another example of the usage of classification is the recognition of traffic signs for autonomous cars ~\cite{swaminathan2019autonomous}.
+  \item \textbf{Internet Security:} These days, the internet is a crucial part of our lives. With the increasing usage of the internet, the number of attacks increases as well. An essential part of the defense are intrusion detection systems~\cite{grill2016learning, scarfone2007guide} that search for malicious activities (network attacks) in network traffic. Classification can be used to improve such systems as shown in~\cite{giacinto2002intrusion, shanbhag2009accurate}.
+  \item \textbf{Marketing:} In marketing, the task can be to classify customers based on their buying interests. Such information can be used to build a personalized recommendation system for customers and therefore increase income~\cite{kaefer2005neural, zhang2007building}.
+\end{itemize}
+The question is how to teach computers to classify? Going back to the example, it's pretty easy to distinguish apples from watermelons. This is because we have seen apples and watermelons many times and learned how they differ, i.e., we learned from the data how to distinguish them. Therefore, we have to "teach" computers as well. 
+
+For the computer, the task is much more difficult. Classification is much more difficult for a computer because it doesn't know anything about apples or watermelons, which means we have to teach it. 
+
+
+The first step to do that is to describe the object of interest in a way computer can understand. In our example, we can, for example, use weight to describe individual items from the basket.
+
+
+
+There are plenty of different approaches how to do that. We can divide all these approaches into two basic groups: supervised and unsupervised learning. Supervised learning assumes that data used for training contains labels, while unsupervised learning does not have this assumption. In this work, we focus only on supervised learning, i.e., we assume that training data consists of features that describe the object of interest and the label of the class to which the object belongs.
+
+
+
+If we go back to our example, one possible feature that can be used for fruit is its weight, and the label is the name of the fruit. 
+
+
+Furthermore, a vast number of algorithms try to solve classifications problems. Typically these algorithms consist of three phases:
+\begin{itemize}
+  \item \textbf{Training:} The classification problems usually fall into the category of supervised learning. It means that we assume the prior knowledge of the target classes in the training phase. The training data typically consists of pairs (sample, label) and can be described as follows
+  \begin{equation*}\label{eq: training set}
+    \mathcal{D}_{\mathrm{train}} = \Brac[c]{(\bm{x}_i, y_i)}_{i=1}^{n},
+  \end{equation*}
+  where the sample~$\bm{x}_i \in \R^d$ is a~$d$-dimensional vector of features that describes the object of interes and the label~$y_i \in \{1, 2, \ldots, k\}$ represents target class. Moreover~$n \in \N$ is a number of training samples and~$k \in \N$ is a number of target classes. In this phase, the algorithm uses the training data to learn a model, i.e., set model parameters according to some predefined criterion, to describe the training data as best as possible.
+  \item \textbf{Validation:} All algorithms usually have some hyperparameters that can be changed to improve the resulting model. The validation phase is used to select the best hyperparameter settings that lead to the most performant and robust model.
+  \item \textbf{Testing:} In the testing phase, the model is used to assign labels~$\hat{y}_i \in \{1, 2, \ldots, k\}$ to the data from the testing set, which is not known during the training phase.
+\end{itemize}
+The previous definition of the training set is general for any classification problem with multiple classes. However, we focus on the special subclass of classification problems called binary classification in this work. The binary classification is a special case of classification in which the number of classes is~$k=2.$ These two classes are usually referred to as negative and positive classes. Moreover, the positive class is usually the one we are more interested. Returning to example with cancer, the positive class would represent that the patient has cancer while the negative that the patient is healthy.
+
+
+\section*{Structure of the work}
+
+The rest of the work is organized as follows:
+\begin{itemize}
+  \item Chapter~\ref{chap: binary classification} introduces the general formulation for binary classification and discussed how to measure the performance of binary classifiers. Furthermore, we show that standard binary classification optimizes overall performance. However, many problems closely tied to binary classification only focus on the performance of the most relevant samples. We introduce three categories of such problems and discuss their relation to binary classification.
+  \item Chapter~\ref{chap: framework} introduces a general optimization framework for classification at the top. Many problems fall into this framework even though they are usually considered separate problems. We describe Ranking problems, Accuracy at the Top, and the Neyman-Pearson problem in more detail and show that many formulations from these three categories fall into the framework. Moreover, we derive two new formulations closely related to the existing one. Finally, we discussed the basic properties and relations between introduced formulations. All formulations are introduced in a general form with arbitrary model~$f$, even though many of them have been initially designed only for a linear model. Theoretical properties of the formulations with different models are discussed later.
+  \item Chapter~\ref{chap: linear} is dedicated to the linear model and formulations in their primal form, i.e., in the form presented in this chapter. This chapter shows that some formulations have nice properties such as convexity, differentiability, or stability. We derive some theoretical guarantees for the optimal solution based on these properties.
+  \item Chapter~\ref{chap: dual} is dedicated to the dual forms of formulations from Table~\ref{tab: summary formulations}. In this chapter, we again assume a linear model only and show that all formulations can be split into two families based on their similarities. Then we derive dual formulations for these two families and show that these formulations are very similar to standard SVM. Using this observation, we use kernel trick to employ non-linearity into the formulations. Finally, we derive an efficient algorithm for solving the formulations.
+  \item In Chapter~\ref{chap: deep}, we assume a nonlinear model. A prototypical example of such a model can be a neural network. The resulting formulations are not decomposable since the decision threshold is always a function of all classification scores. Therefore, it is impossible to use the stochastic descent algorithm directly to solve them. In Chapter~\ref{chap: deep}, we present two approaches to deal with this problem.
+  \item Chapter~\ref{chap: experiments} is dedicated to all numerical experiments.
+\end{itemize}
+Chapters~\ref{chap: binary classification} and~\ref{chap: framework} are crucial for the whole work since they introduce all formulations that are studied in the rest of the work. On the other hand, Chapters~\ref{chap: linear}, \ref{chap: dual}, and~\ref{chap: deep} study the properties of these formulations in three different settings. Therefore, these three chapters can be read separately. 
+
+\begin{note}
+  To improve the readability of the main part of the work, we postpone many results into appendices. Main results are presented in the main part, but all auxiliary results and proofs are located in appendices.
+\end{note}
