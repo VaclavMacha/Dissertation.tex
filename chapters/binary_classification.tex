@@ -1,8 +1,10 @@
-\chapter{Binary Classification}\label{chap: binary classification}
+\chapter{Introduction to Classification at the Top}\label{chap: binary classification}
 
-In the previous chapter, we introduced classification. We also showed that classification is a very important problem that can be found in many fields such as medical diagnosis, internet security, or marketing. In this chapter (and the rest of the work), we focus on a special case of classification called binary classification.  
+In the previous chapter, we briefly introduced binary classification and what it is good for. In this chapter, we introduce binary classification in a more formal way and we also define the notation that is used in the rest of the work. Moreover, we discuss several approaches how to measure the performance of binary classifiers. Finally, we present the problem of classification at the top, which is closely related to binary classification. This problem is the main topic of the entire work.
 
-The binary classification is a special case of classification in which the number of classes is~$2.$ These two classes are usually referred to as negative and positive classes. Moreover, the positive class is usually the one we are more interested. In Notation~\ref{not: dataset}, we describe the notation used in the rest of the work.
+\section{Binary Classification}
+
+As we discussed before, binary classification is the special case of classification in which the number of classes is~$2.$ Although these classes can have arbitrary names, we call the class we are interested in the positive class and the other class the negative class. Moreover, we use the label~$y=1$ to denote the positive class and~$y=0$ to denote the negative class. The notation used in the rest of the work is summarized in Notation~\ref{not: dataset}.
 
 \begin{notation}[Dataset]\label{not: dataset}
   In this work, we use label~$0$ to encode the negative class and label~$1$ to encode the positive class. By a dataset of size~$n \in \N$ we mean a set of pairs in the following form
@@ -32,9 +34,7 @@ where~$C_1, C_2 \in \R,$ the function~$f \colon \R^d \to \R$ is called model and
     1 & \quad \text{if } x \text{ is true}.
   \end{cases}
 \end{equation}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ represents a decision threshold. The parameters~$\bm{w}$ are determined from training data during the training phase of the algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases, it is fixed. For example, many algorithms assume that the classification score~$s_i = f(\bm{x}_i; \bm{w})$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, the decision threshold is set to~$t = 0.5,$ and the sample is classified as positive if its classification score is larger than this threshold. In Notation~\ref{not: classifier}, we summarize the notation that is used in the rest of the work.
-
-\pagebreak
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ represents a decision threshold. The parameters~$\bm{w}$ are determined from training set during the training phase of the algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases, it is fixed. For example, many algorithms assume that the classification score~$s_i = f(\bm{x}_i; \bm{w})$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, the decision threshold is set to~$t = 0.5,$ and the sample is classified as positive if its classification score is larger than this threshold. In Notation~\ref{not: classifier}, we summarize the notation that is used in the rest of the work.
 
 \begin{notation}[Classifier]\label{not: classifier}
   By classifier, we always mean pair of model~$f$ and corresponding decision threshold~$t$. By model, we mean a function $f \colon \R^d \to \R$ which maps samples~$\bm{x}$ to its classification scores~$s$, i.e. for all~$i \in \I$ the classification score is defined as
@@ -49,6 +49,14 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
     \end{cases}
   \end{equation}
 \end{notation}
+
+In the introduction, we briefly described how to find the best classifier. However, this process is more complicated in the real world. We can split this process into the following four phases:
+\begin{itemize}
+  \item \textbf{Training:} The first phase is the actual training of the classifier. In this phase, we use some algorithm to find the trainable parameters of the classifier based on the provided training set. Returning to the formulation of binary classification~\ref{eq: Binary classification}, in this phase, we want to find weights~$\bm{w}$ and the threshold~$t.$ However, most formulations have some hyper-parameters, such as~$C_1$ and~$C_2$ in~\ref{eq: Binary classification}. These hyperparameters are fixed for training. Typically, multiple classifiers with different hyperparameter values are trained in the training phase.
+  \item \textbf{Validation:} The validation phase is used to select the best hyper-parameter values that lead to the most performant and robust classifier. In this phase, the performance of classifiers from the training phase is evaluated on the so-called validation set. The validation set has the same structure as the training set but contains different samples. 
+  \item \textbf{Testing:} In the testing phase, the classifier with the best values of hyper-parameters is tested against different classifiers. For the testing, the testing set is used. The testing set also has the same structure as the training set (it contains the labels) but contains different samples.
+  \item \textbf{Inference:} This phase is the actual usage of the best classifier obtained from the previous phases.
+\end{itemize}
 
 \section{Performance Evaluation}\label{sec: performance evaluation}
 
@@ -315,3 +323,7 @@ This formulation is very similar to the one for Accuracy at the Top~\eqref{eq: a
 \section{Summary}
 
 In this chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} for binary classification and discussed how to measure the performance of binary classifiers. The first approach for performance evaluation is based on the confusion matrix. This approach is very straightforward. Moreover, it is possible to derive many different classification matrices from the confusion matrix. Table~\ref{tab: classification metrics} summarizes classification matrices derived from the confusion matrix used in the upcoming chapters. The second approach introduced in this chapter uses the ROC space to visualize the ability of classifiers to rank positive samples above negative ones. Since standard binary classification focuses on optimizing the overall performance, we discussed that there are many problems closely tied to the binary classification that focuses on the performance only of the most relevant samples. Such problems occur in many applications, from search engines to drug development. We also introduced Ranking problems, the problem of Accuracy at the Top, and the Neyman-Pearson problem and discussed their relation to the binary classification.
+
+\begin{note}
+  To improve the readability of the main part of the work, we postpone many results into appendices. Main results are presented in the main part, but all auxiliary results and proofs are located in appendices.
+\end{note}
