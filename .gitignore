@@ -26,6 +26,9 @@ results_tmp.*
 *.blg
 *.synctex(busy)
 *.tdo
+*.xml
+*.bcf
+*-blx.bib
 
 ## Intermediate documents:
 *.dvi
