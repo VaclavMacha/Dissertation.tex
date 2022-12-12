@@ -1,6 +1,6 @@
 \chapter{Introduction to Classification at the Top}\label{chap: binary classification}
 
-In the previous chapter, we briefly introduced binary classification and what it is good for. In this chapter, we introduce binary classification in a more formal way and we also define the notation that is used in the rest of the work. Moreover, we discuss several approaches how to measure the performance of binary classifiers. Finally, we present the problem of classification at the top, which is closely related to binary classification. This problem is the main topic of the entire work.
+In the previous chapter, we briefly introduced binary classification and what it is suitable for. In this chapter, we introduce binary classification more formally and define the notation used in the rest of the work. Moreover, we discuss several approaches that can be used to measure the performance of binary classifiers. Finally, we present the problem of classification at the top, which is closely related to binary classification. This problem is the main topic of the entire work.
 
 \section{Binary Classification}
 
@@ -21,7 +21,7 @@ As we discussed before, binary classification is the special case of classificat
   We also denote the number of negative samples in~$\mathcal{D}$ as~$\nneg = \Brac[v]{\Ineg}$ and the number of positive samples in~$\mathcal{D}$ as~$\npos = \Brac[v]{\Ipos}.$ The total number of samples is~$n = \nneg + \npos.$ 
 \end{notation}
 
-The goal of any classification problem is to classify given samples with the highest possible accuracy or, in other words, with the lowest possible error. In the case of binary classification, there are two types of error: positive sample is classified as negative and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
+The goal of any classification problem is to classify given samples with the highest possible accuracy or, in other words, with the lowest possible error. In the case of binary classification, there are two types of error: a positive sample is classified as negative, and vice versa. Formally, using the Notation~\ref{not: dataset}, the minimization of these two types of errors can be written as follows
 \begin{mini}{\bm{w}, t}{
     C_1 \sum_{i \in \Ineg} \Iverson{s_i \geq t} + C_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
   }{\label{eq: Binary classification}}{}
@@ -34,7 +34,7 @@ where~$C_1, C_2 \in \R,$ the function~$f \colon \R^d \to \R$ is called model and
     1 & \quad \text{if } x \text{ is true}.
   \end{cases}
 \end{equation}
-Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ represents a decision threshold. The parameters~$\bm{w}$ are determined from training set during the training phase of the algorithm. Although the decision threshold~$t$ can also be determined from the training data, in many cases, it is fixed. For example, many algorithms assume that the classification score~$s_i = f(\bm{x}_i; \bm{w})$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, the decision threshold is set to~$t = 0.5,$ and the sample is classified as positive if its classification score is larger than this threshold. In Notation~\ref{not: classifier}, we summarize the notation that is used in the rest of the work.
+Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights) of the model~$f$ and~$t \in R$ represents a decision threshold. The parameters~$\bm{w}$ are determined from the training set. Although the decision threshold~$t$ can also be determined from the training data, in many cases, it is fixed. For example, many training algorithms assume that the classification score~$s_i = f(\bm{x}_i; \bm{w})$ given by the model~$f$ represents the probability that the sample~$\bm{x}_i$ belongs to the positive class. Therefore, the decision threshold is set to~$t = 0.5,$ and the sample is classified as positive if its classification score is larger than this threshold. In Notation~\ref{not: classifier}, we summarize the notation used in the rest of the work.
 
 \begin{notation}[Classifier]\label{not: classifier}
   By classifier, we always mean pair of model~$f$ and corresponding decision threshold~$t$. By model, we mean a function $f \colon \R^d \to \R$ which maps samples~$\bm{x}$ to its classification scores~$s$, i.e. for all~$i \in \I$ the classification score is defined as
@@ -50,12 +50,12 @@ Moreover, the vector~$\bm{w} \in \R^d$ represents trainable parameters (weights)
   \end{equation}
 \end{notation}
 
-In the introduction, we briefly described how to find the best classifier. However, this process is more complicated in the real world. We can split this process into the following four phases:
+In the introduction, we briefly described how to find the best classifier. However, this process is more complicated in the real world. The whole process can be split into the four phases:
 \begin{itemize}
-  \item \textbf{Training:} The first phase is the actual training of the classifier. In this phase, we use some algorithm to find the trainable parameters of the classifier based on the provided training set. Returning to the formulation of binary classification~\ref{eq: Binary classification}, in this phase, we want to find weights~$\bm{w}$ and the threshold~$t.$ However, most formulations have some hyper-parameters, such as~$C_1$ and~$C_2$ in~\ref{eq: Binary classification}. These hyperparameters are fixed for training. Typically, multiple classifiers with different hyperparameter values are trained in the training phase.
-  \item \textbf{Validation:} The validation phase is used to select the best hyper-parameter values that lead to the most performant and robust classifier. In this phase, the performance of classifiers from the training phase is evaluated on the so-called validation set. The validation set has the same structure as the training set but contains different samples. 
+  \item \textbf{Training:} The first phase is the actual training of the classifier. In this phase, we use some algorithm to find the trainable parameters of the classifier based on the provided training set. Returning to the formulation of binary classification~\ref{eq: Binary classification}, in this phase, we want to find weights~$\bm{w}$ and the threshold~$t.$ However, most formulations have some hyper-parameters, such as~$C_1$ and~$C_2$ in~\ref{eq: Binary classification}. These hyperparameters are fixed for training. Multiple classifiers with different hyperparameter values are typically trained in the training phase.
+  \item \textbf{Validation:} The validation phase selects the best hyper-parameter values that lead to the most performant and robust classifier. In this phase, the performance of classifiers from the training phase is evaluated on the so-called validation set. The validation set has the same structure as the training set but contains different samples.
   \item \textbf{Testing:} In the testing phase, the classifier with the best values of hyper-parameters is tested against different classifiers. For the testing, the testing set is used. The testing set also has the same structure as the training set (it contains the labels) but contains different samples.
-  \item \textbf{Inference:} This phase is the actual usage of the best classifier obtained from the previous phases.
+  \item \textbf{Inference:} In the previous phases, we trained multiple classifiers and selected the best one for our specific task. In the inference phase, we apply this classifier to actual unlabeled data.
 \end{itemize}
 
 \section{Performance Evaluation}\label{sec: performance evaluation}
