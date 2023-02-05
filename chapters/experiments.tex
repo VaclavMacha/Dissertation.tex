@@ -307,53 +307,53 @@ The two previous metrics are specific to the formulations from our framework. Ho
     \midrule
     \BaseLine
       & \yesmark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
+      & ---
+      & ---
+      & ---
+      & ---
+      & --- \\
     \SVM
       & \yesmark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
+      & ---
+      & ---
+      & ---
+      & ---
+      & --- \\
     \midrule
     \TopPush
-      & \nomark
+      & ---
       & \yesmark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark \\
+      & ---
+      & ---
+      & ---
+      & --- \\
     \TopPushK(5)
-      & \nomark
-      & \nomark
+      & ---
+      & ---
       & \yesmark
-      & \nomark
-      & \nomark
-      & \nomark \\
+      & ---
+      & ---
+      & --- \\
     \TopPushK(10)
-      & \nomark
-      & \nomark
-      & \nomark
+      & ---
+      & ---
+      & ---
       & \yesmark
-      & \nomark
-      & \nomark \\
+      & ---
+      & --- \\
     \tauFPL(0.01) and \PatMatNP(0.01)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark
+      & ---
+      & ---
+      & ---
+      & ---
       & \yesmark
-      & \nomark \\
+      & --- \\
     \tauFPL(0.05) and \PatMatNP(0.05)
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark
-      & \nomark
+      & ---
+      & ---
+      & ---
+      & ---
+      & ---
       & \yesmark \\
     \bottomrule
   \end{NiceTabular}
@@ -1405,7 +1405,7 @@ In the previous section, we presented results from the domain of steganalysis. A
 
 In this section, we present results on a real-world dataset provided by a renowned cybersecurity company. The dataset consists of malware analysis reports of executable files. The dataset is extremely tough as individual samples are JSON files whose size ranges from 1kB to 2.5MB. The sample structure is highly complicated because each sample has a different number of features, and features may have a complicated structure, such as a list of ports to which the file connects. This contrasts sharply with standard datasets, where each sample has the same number of features, and each feature is a real number. The usual approach to processing such complicated data is to manually create feature vectors and use them for training instead of the original data. However, such an approach is extremely time-demanding and requires expert knowledge of the original data. For this reason, we decided to use a different approach called Hierarchical Multiple Instance Learning (HMIL)~\cite{pevny2017using}. For the training, we use a publicly available implementation of HMIL~\cite{mandlik2021mill}, which allows training models directly from JSON files without requiring complicated feature extraction.
 
-Due to the immense dataset size (see Table~\ref{tab: datasets summary}), we train each formulation only once. Moreover, we use only the formulations that worked the best in the previous experiments, i.e., we use only the \BaseLine, \PatMatNP($10^{-2}$), \PatMatNP($10^{-3}$) and \DeepTopPush. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use balanced mini-batches of size 2000, which allows us to obtain a very good estimate of the true thresholds as discussed in Section~\ref{sec: biased threshold estimate}. Finally, we fix the number of epochs to 100 for all formulations.
+Due to the immense dataset size (see Table~\ref{tab: datasets summary}), we train each formulation only once. Moreover, we use only the formulations that worked the best in the previous experiments, i.e., we use only the \BaseLine, \PatMatNP($10^{-2}$), \PatMatNP($10^{-3}$) and \DeepTopPush. As an optimizer, we use the ADAM~\cite{kingma2014adam} with default settings and fixed step length~$\alpha = 0.01.$ We also use balanced mini-batches of size 2000, which allows us to obtain a very good estimate of the true thresholds as discussed in Section~\ref{sec: biased threshold estimate}. Finally, we fix the number of epochs to 100.
 
 Figure~\ref{fig: malware detection} shows the ROC curves for all formulations. It is clear that \DeepTopPush is the best at low false-positive rates. Even at the extremely low false positive rate $\tau=10^{-5}$, \DeepTopPush correctly identified $46\%$ of malware. We can also see that \PatMatNP($10^{-3}$) is the best at false-positive rate~$10^{-3}$, which is exactly the point for which the formulation should be optimized. However, at this false-positive rate, \DeepTopPush performs almost as well as \PatMatNP($10^{-3}$). Finally, all formulations perform equally well at the false-positive rate~$10^{-2}$.
 
