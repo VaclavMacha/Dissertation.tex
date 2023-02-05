@@ -16,7 +16,6 @@
 \pgfplotstableread[col sep = comma]{../data/stego_jmipod_deeptoppush.csv}\StegoDeepTP
 \pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-3.csv}\StegoPatMatA
 \pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-4.csv}\StegoPatMatB
-\pgfplotstableread[col sep = comma]{../data/stego_jmipod_patmatnp_1e-5.csv}\StegoPatMatC
 
 % ------------------------------------------------------------------------------
 % Document
@@ -54,8 +53,6 @@
     \addlegendentry{\PatMatNP($ 10^{-3} $)}
     \addplot [linePatMat2]  table[x index=4, y index=5] {\StegoPatMatB};
     \addlegendentry{\PatMatNP($ 10^{-4} $)}
-    \addplot [linePatMat3] table[x index=4, y index=5] {\StegoPatMatC};
-    \addlegendentry{\PatMatNP($ 10^{-5} $)}
     \addplot [lineBaseLine]  table[x index=4, y index=5] {\StegoBaseline};
     \addlegendentry{\BaseLine}
   \end{axis}
