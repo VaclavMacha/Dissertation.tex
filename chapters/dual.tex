@@ -283,7 +283,7 @@ Plugging the conjugate~\eqref{eq: conjugate hinge} of the hinge loss into the du
   \addConstraint{0 \leq \beta_j}{\leq \frac{1}{K} \sum_{i = 1}^{\npos} \alpha_i, \quad}{j = 1, 2, \ldots, \ntil.
   \label{eq: Top dual hinge c3}}
 \end{maxi!}
-The form of~$\K$ and~$\ntil$ depends on the used formulation as discussed in Theorem~\ref{thm: toppushk family dual}. Moreover, the upper bound in~\eqref{eq: Top dual hinge c3} can be omitted for~$K = 1.$ Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show how to compute~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules}. The following three propositions provide closed-form formulas for all three update rules. To keep the presentation as simple as possible, we postpone all proofs to Appendix~\ref{sec: toppushk family coordinate proofs}.
+The form of~$\K$ and~$\ntil$ depends on the used formulation as discussed in Theorem~\ref{thm: toppushk family dual}. Moreover, the upper bound in~\eqref{eq: Top dual hinge c3} can be omitted for~$K = 1.$ Since we know the form of the optimal solution~\eqref{eq: Delta optimal}, we only need to show how to compute~$\Delta_{lb},$~$\Delta_{ub}$ and~$\gamma$ for all update rules~\eqref{eq: update rules}. The following three propositions provide closed-form formulae for all three update rules. To keep the presentation as simple as possible, we postpone all proofs to Appendix~\ref{sec: toppushk family coordinate proofs}.
 
 \begin{restatable}[Update rule~\eqref{eq: update rule a,a} for problem~\eqref{eq: Top dual hinge}]{proposition}{topruleaa}\label{prop: toppushk family hinge update a,a}
   Consider problem~\eqref{eq: Top dual hinge}, update rule~\eqref{eq: update rule a,a}, indices~$1 \leq k \leq \npos$ and~$1 \leq l \leq \npos$ and Notation~\ref{not: dual update rules}. Then the optimal solution~$\Delta^{\star}$ is given by~\eqref{eq: Delta optimal} where
@@ -413,7 +413,7 @@ Then the system of equations~\eqref{eq: toppushk family init alg} is equivalent 
 
 \section{Summary}
 
-In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derived simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulas, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. For \TopPushK family with hinge loss, we showed the derivation in the previous section, while the derivations for \PatMat family are in Appendix~\ref{sec: Pat coordinate descent}. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
+In this chapter, we derived dual formulation for \TopPushK and \PatMat family of formulations. Moreover, we derived simple update rules that can be used to improve the current feasible solution. We also showed that these update rules have closed-form formulae, and therefore they are simple to compute. Finally, we showed how to find an initial feasible solution. For \TopPushK family with hinge loss, we showed the derivation in the previous section, while the derivations for \PatMat family are in Appendix~\ref{sec: Pat coordinate descent}. This section combines all these intermediate results into Algorithm~\ref{alg:Coordinate descent} and discusses its computational complexity.
 
 \begin{algorithm*}
   \begin{minipage}{0.48\textwidth}
