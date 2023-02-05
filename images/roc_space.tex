@@ -47,9 +47,9 @@
       legend pos=south east,
     ]
       \addplot [linestandard] table[x index=2, y index=3] {\StandardAATPComparisonROC};
-      \addlegendentry{\textbf{Classifier 1}: AUC = 95\%}
+      \addlegendentry{\textbf{Classifier 1}: $\auroc$ = 95\%}
       \addplot [lineaatp] table[x index=0, y index=1] {\StandardAATPComparisonROC};
-      \addlegendentry{\textbf{Classifier 2}: AUC = 77\%}
+      \addlegendentry{\textbf{Classifier 2}: $\auroc$ = 77\%}
       \addplot[mark=none, thick, dashed, myred] {x};
       \addplot[mark=*, mygreen, mark size=3pt] coordinates {(0.01, 0.53)} node{};
       \addplot[mark=*, cyan, mark size=3pt] coordinates {(0.1, 1.0)} node{};
