@@ -1,0 +1,53 @@
+\documentclass[12pt, a4paper]{book}
+\usepackage{geometry}
+\geometry{
+  verbose,
+  tmargin    = 2cm,
+  bmargin    = 2cm,
+  lmargin    = 2cm,
+  rmargin    = 2cm,
+  headheight = 0cm,
+  headsep    = 0cm,
+  footskip   = 0cm
+}
+
+\input{preamble.tex}
+\input{styles.tex}
+\input{affiliations.tex}
+
+\usepackage{natbib}
+\usepackage{bibentry}
+
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+\bibliographystyle{abbrv}
+\nobibliography{references.bib}
+
+\ListOfPublications{}
+
+\subsection*{Publication related to the doctoral thesis:}
+
+\begin{enumerate}
+  \item \bibentry{adam2020projections} \\
+  \textbf{(??? citations)}
+  \item \bibentry{adam2021general} \\
+  \textbf{(??? citations)}
+\end{enumerate}
+
+\subsection*{Other publications:}
+
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item \bibentry{vsmidl2015predictive} \\
+  \textbf{(??? citations)}
+  \item \bibentry{vsmidl2016analysis} \\
+  \textbf{(??? citations)}
+  \item \bibentry{macha2017implementation} \\
+  \textbf{(??? citations)}
+\end{enumerate}
+
+\clearpage
+
+\end{document}

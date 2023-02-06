@@ -458,3 +458,78 @@
     \fi
   \fi
 }
+
+% ------------------------------------------------------------------------------
+% List of Publications
+% ------------------------------------------------------------------------------
+\newcommand*{\ListOfPublications}{
+  \newpage
+  \pagestyle{empty}
+  % Header
+  \noindent
+  \begin{minipage}[c][0.20\textheight]{0.20\textwidth}
+    \includegraphics[width=\textwidth]{images/logocvut.pdf}
+  \end{minipage}
+  \begin{minipage}[c][0.20\textheight]{0.59\textwidth}
+    \centering \doccol \large
+    \textbf{Czech Technical University in Prague} \par
+    \textbf{Faculty of Nuclear Sciences and} \par
+    \textbf{Physical Engineering}
+  \end{minipage}
+  \begin{minipage}[c][0.20\textheight]{0.20\textwidth}
+    \includegraphics[width=\textwidth]{images/logofjfi.pdf}
+  \end{minipage}
+  % title
+  \begin{minipage}[c]{\textwidth}
+    \doccol 
+    \rule{\textwidth}{2pt}
+  \end{minipage} \par
+  \vspace{0.25cm}
+  \noindent
+  \begin{minipage}[c]{\textwidth}
+    \centering \doccol \huge
+    \textbf{List of Publications}
+  \end{minipage} \par
+  \vspace{0.25cm}
+  \noindent
+  \begin{minipage}[c]{\textwidth}
+    \doccol 
+    \rule{\textwidth}{2pt}
+  \end{minipage}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Author:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@author
+  \end{minipage} \par
+  \vspace{0.25cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Supervisor:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@Supervisor
+  \end{minipage} \par
+  \vspace{0.25cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Supervisor Specialist:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@SupervisorSpec
+  \end{minipage} \par
+  \vspace{0.25cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Academic Year:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@AcademicYear
+  \end{minipage} \par
+  \vspace{0.5cm}
+}
