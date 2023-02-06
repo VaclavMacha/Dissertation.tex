@@ -51,13 +51,13 @@ In total, we have nine different formulations for experiments, as seen in Table~
 
 \pagebreak
 
-\subsection{Hyperparameters}
+\subsection{Hyper-parameters}
 
-The selected formulations differ in the number of available hyper-parameters. Therefore, we decided to use a fixed value for all but one of the hyper-parameters for each formulation. For most of the considered formulations, the only hyper-parameter is the regularization constant~$\lambda$. Therefore, we use the following six values of this hyper-parameter
+The selected formulations differ in the number of available hyper-parameters. Therefore, we decided to use a fixed value for all but one of the hyper-parameters for each formulation. For most of the considered formulations, the only hyper-parameter is the regularization constant~$\lambda$. In our experiments, we used the following six values of this hyper-parameter
 \begin{equation*}
-  \lambda \in \Brac[c]{10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}, 0}
+  \lambda \in \Brac[c]{0, 10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}}.
 \end{equation*}
-The only exceptions are the formulations derived from \PatMatNP since they also have the scaling parameter~$\vartheta.$ Since this parameter is essential for the approximation quality of the threshold, we decided to fine-tune this hyper-parameter instead of the regularization constant~$\lambda$. Therefore, we fixed~$\lambda$ to~$10^{-3}$ for \PatMatNP formulations and we use the following six different values of the scaling parameter
+The only exceptions are the formulations derived from \PatMatNP since they also have the scaling parameter~$\vartheta.$ Since the parameter is essential for the approximation quality of the threshold, we decided to fine-tune this hyper-parameter instead of the regularization constant~$\lambda$. Therefore, we fixed~$\lambda$ to~$10^{-3}$ for \PatMatNP formulations and used the following six different values of the scaling parameter
 \begin{equation*}
   \vartheta \in \Brac[c]{10^{-5}, 10^{-4}, 10^{-3}, 10^{-2}, 10^{-1}, 1}.
 \end{equation*}
@@ -129,7 +129,7 @@ where~$\ntil = \nall$ for \SVM and~$\ntil = \npos$ otherwise. In all experiments
       & \yesmark \\
     \bottomrule
   \end{NiceTabular}
-  \caption{Summary of all formulations used for experiments. The first column shows the aliases used for the formulations when describing the experiment results. The second column shows fixed parameters used for each formulation, while the third column shows which hyper-parameters are tuned using validation data. The last two columns indicate whether the formulation is used in the experiments with primal forms, dual forms, or both.}
+  \caption{Summary of all formulations used for experiments. The first column shows the aliases used for the formulations when describing the experiment results. The second column shows fixed parameters used for each formulation, while the third column shows which hyper-parameters are tuned using the validation set. The last two columns indicate whether the formulation is used in the experiments with primal forms, dual forms, or both.}
   \label{tab: formulations experiments summary}
 \end{table}
 
@@ -143,7 +143,7 @@ We consider various datasets summarized in Table~\ref{tab: datasets summary} for
   \item \textbf{Steganalysis:} In this category, we use selected formulations in the domain of steganalysis. In this domain, the problem of maximizing the true-positive rate at the specific level of the false-positive rate is well-known and essential, as we show at the beginning of Section~\ref{sec: steganalysis}.
   \item \textbf{Malware Detection:} In this category, we use selected formulations for malware detection. Like in steganalysis, maximizing the true-positive rate at the specific level of the false-positive rate is crucial for malware detection, as discussed at the beginning of Section~\ref{sec: malware detection}.
 \end{enumerate}
-Each category has a separate section later in the text. It is worth mentioning that not all datasets used in the experiments are primarily designed for the classification at the top. For example, all datasets from the first category are general-purpose image classification datasets. We use these datasets since they are publicly available and well-known. Since all these datasets are multi-class, we need to adjust the labels to get binary classification problems. Therefore, for each data set, we select one class as the positive class and consider the rest as the negative class. It is also worth noting that the Malware Detection dataset does not include a validation set. The computational demands of training on this dataset were so large that we were only able to train four formulations without any hyperparameter tuning. Therefore, there were no need for a validation set.
+Each category has a separate section later in the text. It is worth mentioning that not all datasets used in the experiments are primarily designed for the classification at the top. For example, all datasets from the first category are general-purpose image classification datasets. We use these datasets since they are publicly available and well-known. Since all these datasets are multiclass, we need to adjust the labels to get a binary classification problem. Therefore, for each data set, we select one class as the positive class and consider the rest as the negative class. It is also worth noting that the Malware Detection dataset does not include a validation set. The computational demands of training on this dataset were so large that we were only able to train four formulations without any hyperparameter tuning. Therefore, there was no need for a validation set.
 
 \begin{table}[!ht]
   \centering
@@ -390,7 +390,7 @@ None of these datasets are primarily designed for the problem of classification 
 
 For comparison we use critical difference diagrams introduced in Section~\ref{sec: cd evaluation}. One of the basic assumptions of the critical difference diagrams to work appropriately is a large number of used datasets. Since we performed all experiments for each formulation and each dataset ten times with different random seeds for train/valid/test split, we decided to consider each of these runs as a separate dataset. It is important to say that we use this setting only for the critical difference diagrams. Since the critical diagrams show the relative performance of the formulations against each other, we can easily see if any formulation is significantly worse or better. However, the critical diagrams do not provide any information on the actual performance of the formulations. Therefore, even if one formulation outperforms other tested formulations, it does not mean that its performance is good.
 
-To address the issue above, we also compare concrete performance metrics on each dataset separately. Since we have six hyperparameters for each formulation, we always select the best result for each formulation on the validation set based on the criterion for which the specific formulation is optimized. Then for each formulation, we select the median of the best results from ten independent runs. Moreover, the best result for each dataset is highlighted in green, while the worst result is highlighted in red.
+To address the issue above, we also compare concrete performance metrics on each dataset separately. Since we have six hyper-parameters for each formulation, we always select the best result for each formulation on the validation set based on the criterion for which the specific formulation is optimized. Then for each formulation, we select the median of the best results from ten independent runs. Moreover, the best result for each dataset is highlighted in green, while the worst result is highlighted in red.
 
 
 \subsection{Primal Formulation: Linear Model}\label{sec: results primal linear}
@@ -686,7 +686,7 @@ In this section, we present results for a dual form of formulations from Table~\
 \begin{equation*}
   k(\bm{x}_i, \bm{x}_j) = \exp\Brac[c]{- \frac{\norm{\bm{x}_i - \bm{x}_j}^2}{d}},
 \end{equation*}
-where~$d$ is the dimension of the primal problem. We used this since it is the default setting for radial basis kernel type in LIBSVM~\cite{chang2011libsvm}. We use only one kernel function for computational reasons. Moreover, we are more interested in the comparison of methods between each other than in obtaining the best results possible.
+where~$d$ is the dimension of the primal problem. We used this value of~$d$ since it is the default setting for the Gaussian kernel function in LIBSVM~\cite{chang2011libsvm}. We only use one kernel function for computational reasons. In addition, we are more interested in the comparison of methods between each other than in obtaining the best results possible.
 
 In Figure~\ref{fig: dual convergence}, we investigate the convergence of the coordinate descend algorithm introduced in Section~\ref{sec: coordinate descent} for three formulations, namely \TopPush, \TopPushK, and \PatMatNP. In each column, we show the primal and dual objective function convergence for one formulation. To solve the primal problem, we used full gradient descent. Computation of the full gradient is computationally intensive, even for relatively small datasets such as MNIST. Therefore, for this experiment (and only for this experiment) we use the Ionosphere dataset~\cite{sigillito1989classification}, which is small. We can see that \TopPush and \TopPushK converge to the same objective for primal and dual problems. It means that both problems were solved to optimality. However, there is a little gap between the optimal primal and dual form solution for \PatMatNP. In other words, \PatMatNP may suffer from convergence issues when solving the proposed coordinate descent algorithm.  
 
