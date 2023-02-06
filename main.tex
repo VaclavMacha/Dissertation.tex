@@ -7,33 +7,74 @@
 % ------------------------------------------------------------------------------
 \title{General Framework for Classification at the Top}
 \subtitle{Dissertation}
-
-\author{Ing. Václav Mácha}
-\branch{Matematické inženýrství}
-\academicyear{2022/2023}
 \date{1. prosince 2022}
-\supervisor{doc. Ing Václav Šmídl, Ph.D.}
-\supervisorspec{Mgr. Lukáš Adam, Ph.D.}
 
-\acknowledgment{Thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks}
+\NumberOfPages{137}
+\Year{2023}
+\AcademicYear{2022/2023}
 
-\titleCZE{Title title title title title title}
+% author
+\author{Ing. Václav Mácha}
+\AuthorAffCZE{
+  České vysoké učení technické v Praze, \\
+  Fakulta jaderná a fyzikálně inženýrská, \\
+  Katedra matematiky
+}
+\AuthorAffENG{
+  Czech Technical University in Prague, \\
+  Faculty of Nuclear Sciences and Physical Engineering, \\
+  Department of Mathematics
+}
+\DegreeProgrammeCZE{Aplikace přírodních věd}
+\DegreeProgrammeENG{Application of Natural Sciences}
+\FieldCZE{Matematické inženýrství}
+\FieldENG{Mathematical Engineering}
 
-\thesistype{Disertační práce}
+% Supervisor
+\Supervisor{doc. Ing Václav Šmídl, Ph.D.}
+\SupervisorAffCZE{
+  České vysoké učení technické v Praze, \\
+  Fakulta elektrotechnická, \\
+  Katedra počítačů
+}
+\SupervisorAffENG{
+  Czech Technical University in Prague, \\
+  Faculty of Electrical Engineering, \\
+  Department of Computer Science
+}
 
-\abstractCZE{Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract}
+% Supervisor specialist
+\SupervisorSpec{Mgr. Lukáš Adam, Ph.D.}
+\SupervisorSpecAffCZE{
+  České vysoké učení technické v Praze, \\
+  Fakulta elektrotechnická, \\
+  Katedra počítačů
+}
+\SupervisorSpecAffENG{
+  Czech Technical University in Prague, \\
+  Faculty of Electrical Engineering, \\
+  Department of Computer Science
+}
 
-\keywordsCZE{Keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords}
+% Title
+\TitleCZE{Title title title title title title}
+\TitleENG{General Framework for Classification at the Top}
 
-\titleENG{General Framework for Classification at the Top}
+\Acknowledgment{Thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks thanks}
 
-\abstractENG{
+% Abstracts
+\AbstractCZE{Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract}
+
+\AbstractENG{
   In standard binary classification, the goal is to classify all samples with the lowest possible error. However, in many applications, the error for one class is more serious than the other. Especially if the classes are not balanced. A prototypical example is cancer detection. Classifying a sick patient as healthy is definitely a more serious error in this case than the other way around. However, we still want to minimize both errors since trying to cure a healthy patient is also not ideal. Therefore the ultimate goal is to minimize the number of sick patients classified as healthy with some constraint on the number of healthy patients classified as sick. This formulation belongs to the class of problems where the performance is evaluated only on a small number of relevant (top) samples. We call this class a classification at the top, and it is the main object of this work. 
 
   Many well-known categories of problems, such as ranking, accuracy at the top, or hypothesis testing, are closely related to classification at the top. In this work we introduce a unified framework for classification at the topand show that several known formulations fall into the framework. We also propose completely new formulations (\PatMat, \PatMatNP) that also fall into the framework. We provide a theoretical analysis of the framework for the primal form when a linear model is used. We also discuss the theoretical properties of individual formulations and potential pitfalls that some formulations may encounter. Besides that, we show the convergence of the stochastic gradient descent for selected formulations (\PatMat, \PatMatNP) even though the gradient estimate is inherently biased. Moreover, we deriv dual forms of selected formulations and show how to incorporate non-linear kernels into these forms. We also derive an efficient coordinate descent algorithm to solve them. Finally, we also study the primal formulations with non-linear models. We show that when we use a non-linear model, the resulting formulations are non-decomposable. This property prevents us from using stochastic gradient descent in a standard way. We introduced modified stochastic gradient descent and show that this modification leads to a biased estimate of the true gradient. To mitigate this issue, we propose a new formulation \DeepTopPush. We demonstrate the performance of proposed formulations on visual recognition datasets and a real-world application on steganalysis and malware detection.
 }
 
-\keywordsENG{Binary classification, ranking, accuracy at the top, Neyman-Pearson, hypothesis testing}
+%  keywords
+\KeywordsCZE{Keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords keywords}
+
+\KeywordsENG{Binary classification, ranking, accuracy at the top, Neyman-Pearson, hypothesis testing}
 
 
 % ------------------------------------------------------------------------------

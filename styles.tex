@@ -109,21 +109,33 @@
 % ------------------------------------------------------------------------------
 % Page formating
 % ------------------------------------------------------------------------------
-\newcommand{\thesistype}[1]{\newcommand\@thesistype{#1}}
-\newcommand{\branch}[1]{\newcommand\@branch{#1}}
-\newcommand{\academicyear}[1]{\newcommand\@academicyear{#1}}
-\newcommand{\acknowledgment}[1]{\newcommand\@acknowledgment{#1}}
+\newcommand{\NumberOfPages}[1]{\newcommand\@NumberOfPages{#1}}
+\newcommand{\Year}[1]{\newcommand\@Year{#1}}
+\newcommand{\AcademicYear}[1]{\newcommand\@AcademicYear{#1}}
+\newcommand{\Acknowledgment}[1]{\newcommand\@Acknowledgment{#1}}
 
-\newcommand{\supervisor}[1]{\newcommand\@supervisor{#1}}
-\newcommand{\supervisorspec}[1]{\newcommand\@supervisorspec{#1}}
+\newcommand{\AuthorAffCZE}[1]{\newcommand\@AuthorAffCZE{#1}}
+\newcommand{\AuthorAffENG}[1]{\newcommand\@AuthorAffENG{#1}}
 
-\newcommand{\titleCZE}[1]{\newcommand\@titleCZE{#1}}
-\newcommand{\abstractCZE}[1]{\newcommand\@abstractCZE{#1}}
-\newcommand{\keywordsCZE}[1]{\newcommand\@keywordsCZE{#1}}
+\newcommand{\Supervisor}[1]{\newcommand\@Supervisor{#1}}
+\newcommand{\SupervisorAffCZE}[1]{\newcommand\@SupervisorAffCZE{#1}}
+\newcommand{\SupervisorAffENG}[1]{\newcommand\@SupervisorAffENG{#1}}
 
-\newcommand{\titleENG}[1]{\newcommand\@titleENG{#1}}
-\newcommand{\abstractENG}[1]{\newcommand\@abstractENG{#1}}
-\newcommand{\keywordsENG}[1]{\newcommand\@keywordsENG{#1}}
+\newcommand{\SupervisorSpec}[1]{\newcommand\@SupervisorSpec{#1}}
+\newcommand{\SupervisorSpecAffCZE}[1]{\newcommand\@SupervisorSpecAffCZE{#1}}
+\newcommand{\SupervisorSpecAffENG}[1]{\newcommand\@SupervisorSpecAffENG{#1}}
+
+\newcommand{\TitleCZE}[1]{\newcommand\@TitleCZE{#1}}
+\newcommand{\DegreeProgrammeCZE}[1]{\newcommand\@DegreeProgrammeCZE{#1}}
+\newcommand{\FieldCZE}[1]{\newcommand\@FieldCZE{#1}}
+\newcommand{\AbstractCZE}[1]{\newcommand\@AbstractCZE{#1}}
+\newcommand{\KeywordsCZE}[1]{\newcommand\@KeywordsCZE{#1}}
+
+\newcommand{\TitleENG}[1]{\newcommand\@TitleENG{#1}}
+\newcommand{\DegreeProgrammeENG}[1]{\newcommand\@DegreeProgrammeENG{#1}}
+\newcommand{\FieldENG}[1]{\newcommand\@FieldENG{#1}}
+\newcommand{\AbstractENG}[1]{\newcommand\@AbstractENG{#1}}
+\newcommand{\KeywordsENG}[1]{\newcommand\@KeywordsENG{#1}}
 
 \newcommand{\subtitle}[1]{\renewcommand\@subtitle{#1}}
 \newcommand\@subtitle{}
@@ -152,23 +164,17 @@
       \end{minipage} \par
       \vfill
       \begin{minipage}[b]{\textwidth}
-        \centering  \doccol \Huge \textbf{\@title}
+        \centering \doccol \huge \textsc{Doctoral Thesis}
       \end{minipage} \par
       \vspace{1cm}
       \begin{minipage}[b]{\textwidth}
-        \centering \doccol \Large \textit{\@subtitle}
+        \centering  \doccol \huge \textbf{\@title}
       \end{minipage} \par
       \vfill
-      \begin{minipage}[b]{0.3\textwidth}
-        \doccol
-        \textbf{Author:} \par
-        \textbf{Academic year:}
-      \end{minipage}
-      \hspace{0.05\textwidth}
-      \begin{minipage}[b]{0.65\textwidth}
-        \doccol
-        \@author \par
-        \@academicyear
+      \begin{minipage}[b]{0.95\textwidth}
+        Prague, \@Year
+        \hfill
+        \@author
       \end{minipage}
     \end{minipage}
   \end{titlepage}
@@ -183,7 +189,7 @@
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{\textwidth}\vspace{0pt}%
-    \@acknowledgment
+    \@Acknowledgment
   \end{minipage} \par
   \vfill
   \noindent
@@ -203,44 +209,46 @@
   \begin{minipage}[t]{0.3\textwidth}\vspace{0pt}%
     \centering ~ \par \textbf{\dotfill} \par \@author
   \end{minipage}
-  \cleardoublepage
+  \clearpage
 
-  % Czech abstract
+  % Czech bibliography entry
   \thispagestyle{plain}
-  \noindent
-  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Název:}
-  \end{minipage}
-  \hspace{0.05\textwidth}
-  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \textbf{\@titleCZE}
-  \end{minipage} \par
-  \vspace{0.5cm}
+  \section*{Bibliografický záznam}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
     \doccol \textbf{Autor:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@author
+    \@author, \par
+    \@AuthorAffCZE
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Obor:}
+    \doccol \textbf{Název práce:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@branch
+    \textbf{\@TitleCZE}
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Druh práce:}
+    \doccol \textbf{Studijní program:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@thesistype
+    \@DegreeProgrammeCZE
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Studijní obor:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@FieldCZE
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
@@ -249,7 +257,8 @@
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@supervisor
+    \@Supervisor, \par
+    \@SupervisorAffCZE
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
@@ -258,16 +267,26 @@
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@supervisorspec
+    \@SupervisorSpec, \par
+    \@SupervisorSpecAffCZE 
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Abstrakt:}
+    \doccol \textbf{Akademický rok:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@abstractCZE
+    \@AcademicYear
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Počet stran:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@NumberOfPages
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
@@ -276,29 +295,95 @@
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@keywordsCZE
+    \@KeywordsCZE
   \end{minipage} \par
   \vfill
-  \cleardoublepage
+  \clearpage
 
-  % English abstract
+  % Czech abstract
   \thispagestyle{plain}
+  \section*{Abstrakt}
+  \noindent
+  \@AbstractCZE
+  \vfill
+  \clearpage
+
+  % English bibliography entry
+  \thispagestyle{plain}
+  \section*{Bibliographic Entry}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Title:}
+    \doccol \textbf{Author:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \textbf{\@titleENG}
+    \@author, \par
+    \@AuthorAffENG
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
-    \doccol \textbf{Abstract:}
+    \doccol \textbf{Title of Dissertation:}
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@abstractENG
+    \textbf{\@TitleENG}
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Degree Programme:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@DegreeProgrammeENG
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Field of Study:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@FieldENG
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Supervisor:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@Supervisor, \par
+    \@SupervisorAffENG
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Supervisor Specialist:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@SupervisorSpec, \par
+    \@SupervisorSpecAffENG 
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Academic Year:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@AcademicYear
+  \end{minipage} \par
+  \vspace{0.5cm}
+  \noindent
+  \begin{minipage}[t]{0.25\textwidth}\vspace{0pt}%
+    \doccol \textbf{Number of Pages:}
+  \end{minipage}
+  \hspace{0.05\textwidth}
+  \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
+    \@NumberOfPages
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
@@ -307,10 +392,19 @@
   \end{minipage}
   \hspace{0.05\textwidth}
   \begin{minipage}[t]{0.7\textwidth}\vspace{0pt}%
-    \@keywordsENG
+    \@KeywordsENG
   \end{minipage} \par
   \vfill
+  \clearpage
+
+  % English abstract
+  \thispagestyle{plain}
+  \section*{Abstract}
+  \noindent
+  \@AbstractENG
+  \vfill
   \cleardoublepage
+
   \hypersetup{pageanchor=true}
   \tableofcontents
   \cleardoublepage
