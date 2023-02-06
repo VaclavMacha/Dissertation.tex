@@ -1,16 +1,3 @@
-\usepackage{geometry}
-\geometry{
-  verbose,
-  marginparwidth = 0.5cm,
-  tmargin = 2.5cm,
-  bmargin = 2.5cm,
-  lmargin = 3cm,
-  rmargin = 2cm,
-  headheight = 1cm,
-  headsep = 0.5cm,
-  footskip = 1cm
-}
-
 % ------------------------------------------------------------------------------
 % Math
 % ------------------------------------------------------------------------------
@@ -107,12 +94,13 @@
 }
 
 % ------------------------------------------------------------------------------
-% Page formating
+% Optional arguments
 % ------------------------------------------------------------------------------
 \newcommand{\NumberOfPages}[1]{\newcommand\@NumberOfPages{#1}}
 \newcommand{\Year}[1]{\newcommand\@Year{#1}}
 \newcommand{\AcademicYear}[1]{\newcommand\@AcademicYear{#1}}
 \newcommand{\Acknowledgment}[1]{\newcommand\@Acknowledgment{#1}}
+\newcommand{\Declaration}[1]{\newcommand\@Declaration{#1}}
 
 \newcommand{\AuthorAffCZE}[1]{\newcommand\@AuthorAffCZE{#1}}
 \newcommand{\AuthorAffENG}[1]{\newcommand\@AuthorAffENG{#1}}
@@ -141,7 +129,9 @@
 \newcommand\@subtitle{}
 \renewcommand\@date{}
 
+% ------------------------------------------------------------------------------
 % Title page
+% ------------------------------------------------------------------------------
 \renewcommand*{\maketitle}{
   \pagenumbering{Roman}
   \hypersetup{pageanchor=false}
@@ -184,7 +174,7 @@
   \thispagestyle{plain}
   \noindent
   \begin{minipage}[t]{\textwidth}\vspace{0pt}%
-    \doccol \Large \textbf{Poděkování:}
+    \doccol \Large \textbf{Acknowledgements:}
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
@@ -194,12 +184,12 @@
   \vfill
   \noindent
   \begin{minipage}[t]{\textwidth}\vspace{0pt}%
-    \doccol \Large \textbf{Čestné prohlášení:}
+    \doccol \Large \textbf{Declaration:}
   \end{minipage} \par
   \vspace{0.5cm}
   \noindent
   \begin{minipage}[t]{\textwidth}\vspace{0pt}%
-    Prohlašuji na tomto místě, že jsem předloženou práci vypracoval samostatně, a že jsem uvedl veškerou použitou literaturu.
+    \@Declaration
   \end{minipage} \par
   \vspace{1.5cm}
   \noindent
