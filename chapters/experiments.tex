@@ -380,7 +380,7 @@ where critical values~$q_{\alpha}$ are based on the Studentized range statistic 
 
 \subsection{Implementation}
 
-For the implementation of all experiments, we use the Julia programming language~\cite{bezanson2017julia}. The dual formulations are implemented from scratch, while the primal formulations are implemented using Flux.jl~\cite{innes:2018, Flux.jl-2018} library. This library provides all the necessary tools for building neural networks. Moreover, the library allows the implementation of a custom gradient for any function, which allows us to implement all formulations from Table~\ref{tab: summary formulations}. For experiments with SVM, we use the Julia wrapper for the LIBSVM library~\cite{chang2011libsvm}.
+For the implementation of all experiments, we use the Julia programming language~\cite{bezanson2017julia}. The dual formulations are implemented from scratch, while the primal formulations are implemented using Flux.jl~\cite{innes2018flux, innes2018fashionable} library. This library provides all the necessary tools for building neural networks. Moreover, the library allows the implementation of a custom gradient for any function, which allows us to implement all formulations from Table~\ref{tab: summary formulations}. For experiments with SVM, we use the Julia wrapper for the LIBSVM library~\cite{chang2011libsvm}.
 
 \section{Image Recognition}\label{sec: image recognition}
 
