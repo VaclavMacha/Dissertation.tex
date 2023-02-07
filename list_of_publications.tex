@@ -15,34 +15,31 @@
 \input{styles.tex}
 \input{affiliations.tex}
 
-\usepackage{natbib}
-\usepackage{bibentry}
+\usepackage{biblatex}
+\addbibresource{references.bib}
 
 % ------------------------------------------------------------------------------
 % Document
 % ------------------------------------------------------------------------------
 \begin{document}
-\bibliographystyle{abbrv}
-\nobibliography{references.bib}
-
 \ListOfPublications{}
 
 \subsection*{Publication related to the doctoral thesis:}
 \subsubsection*{reviewed}
 
 \begin{enumerate}
-  \item \bibentry{adam2020projections} \\
+  \item \fullcite{adam2020projections} \\
   \textbf{(??? citations)}
-  \item \bibentry{adam2021general} \\
+  \item \fullcite{adam2021general} \\
   \textbf{(??? citations)}
 \end{enumerate}
 
 \subsubsection*{non reviewed}
 \begin{enumerate}
   \setcounter{enumi}{2}
-  \item \bibentry{macha2020nonlinear} \\
+  \item \fullcite{macha2020nonlinear} \\
   \textbf{(??? citations)}
-  \item \bibentry{adam2020deeptoppush} \\
+  \item \fullcite{adam2020deeptoppush} \\
   \textbf{(??? citations)}
 \end{enumerate}
 
@@ -51,14 +48,17 @@
 
 \begin{enumerate}
   \setcounter{enumi}{4}
-  \item \bibentry{vsmidl2015predictive} \\
+  \item \fullcite{vsmidl2015predictive} \\
   \textbf{(??? citations)}
-  \item \bibentry{vsmidl2016analysis} \\
+  \item \fullcite{vsmidl2016analysis} \\
   \textbf{(??? citations)}
-  \item \bibentry{macha2017implementation} \\
+  \item \fullcite{macha2017implementation} \\
   \textbf{(??? citations)}
 \end{enumerate}
 
 \clearpage
+
+\nocite{*}
+\printbibliography
 
 \end{document}

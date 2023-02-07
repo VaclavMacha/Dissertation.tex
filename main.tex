@@ -16,6 +16,9 @@
 \input{styles.tex}
 \input{affiliations.tex}
 
+\usepackage[style=numeric]{biblatex}
+\addbibresource{references.bib}
+
 % ------------------------------------------------------------------------------
 % Document
 % ------------------------------------------------------------------------------
@@ -49,7 +52,6 @@
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliography}
-\bibliography{references.bib}
-\bibliographystyle{unsrt}
+\printbibliography
 
 \end{document}
