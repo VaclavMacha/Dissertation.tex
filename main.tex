@@ -16,7 +16,7 @@
 \input{styles.tex}
 \input{affiliations.tex}
 
-\usepackage[style=numeric]{biblatex}
+\usepackage[style=numeric, sorting=nyt]{biblatex}
 \addbibresource{references.bib}
 
 % ------------------------------------------------------------------------------
@@ -50,8 +50,9 @@
 % Bibliography
 % ------------------------------------------------------------------------------
 \cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Bibliography}
-\printbibliography
+\printbibliography[
+  heading=bibintoc,
+  title={Bibliography}
+]
 
 \end{document}
