@@ -1,6 +1,6 @@
 \chapter{Framework for Classification at the Top}\label{chap: framework}
 
-In the previous chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} and fundamental evaluation matrices for the binary classification problems. Furthermore, in Section~\ref{sec: related problems}, we introduced three problems closely related to binary classification but focused on specific performance criteria, namely: \emph{Accuracy at the top} problem, \emph{Ranking problems}, and the problem of \emph{Hypothesis testing}. Even though these problems are usually considered separately, they all aim to minimize the number of misclassified samples below (or above) a certain threshold. In the rest of the chapter, we focus on this common property and show that all these problems fall into the following unified framework for binary classification at the top
+In the previous chapter, we introduced the general formulation~\eqref{eq: Binary classification counts} and fundamental evaluation matrices for the binary classification problems. Furthermore, in Section~\ref{sec: related problems}, we introduced three problems closely related to binary classification but focused on specific performance criteria, namely: \emph{accuracy at the top} problem, \emph{ranking problems}, and the problem of \emph{hypothesis testing}. Even though these problems are usually considered separately, they all aim to minimize the number of misclassified samples below (or above) a certain threshold. In the rest of the chapter, we focus on this common property and show that all these problems fall into the following unified framework for binary classification at the top
 \begin{mini}{\bm{w}}{
   C_1 \cdot \fp(\bm{s}, t) + C_2 \cdot \fn(\bm{s}, t)
 }{\label{eq: aatp counts}}{}
@@ -99,11 +99,11 @@ To emphasize the similarity with the \TopPush, we call this formulation \TopPush
 
 \section{Accuracy at the Top}\label{sec: aatp}
 
-The second problem from Section~\ref{sec: related problems} is the problem of Accuracy at the Top~\cite{boyd2012accuracy}. This problem aims to find an ordering of samples so that samples whose scores are among the top $\tau$-quantile are as relevant as possible. In statistics, the~$\tau$-quantile of all scores is defined as follows
+The second problem from Section~\ref{sec: related problems} is the problem of accuracy at the top~\cite{boyd2012accuracy}. This problem aims to find an ordering of samples so that samples whose scores are among the top $\tau$-quantile are as relevant as possible. In statistics, the~$\tau$-quantile of all scores is defined as follows
 \begin{equation}\label{eq: aatp quantile} 
   t = \max \Set{t}{\frac{1}{\nall} \sum_{i \in \I} \Iverson{s_i \geq t} \geq \tau}.
 \end{equation}
-All relevant samples should be ranked above the quantile~$t$ and all irrelevant samples below the quantile~$t$ in an ideal case. Thus, the main difference to the ranking problems is that the problem of Accuracy at the Top considers both classification errors and does not focus only on false-negative samples. The original formulation~\cite{boyd2012accuracy} considers a balanced dataset with the same number of positive and negative samples. Paper~\cite{grill2016learning} reformulated the problem for the unbalanced dataset and derived the following formulation
+All relevant samples should be ranked above the quantile~$t$ and all irrelevant samples below the quantile~$t$ in an ideal case. Thus, the main difference to the ranking problems is that the problem of accuracy at the top considers both classification errors and does not focus only on false-negative samples. The original formulation~\cite{boyd2012accuracy} considers a balanced dataset with the same number of positive and negative samples. Paper~\cite{grill2016learning} reformulated the problem for the unbalanced dataset and derived the following formulation
 \begin{mini}{\bm{w}}{
   \frac{1}{\nneg} \fp(\bm{s}, t) + \frac{1}{\npos} \fn(\bm{s}, t)
   }{\label{eq: aatp}}{}
@@ -143,7 +143,7 @@ where~$\vartheta > 0$ is fixed scaling parameter. Due to the properties of the s
   \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad i \in \I}
   \addConstraint{t}{\;\; \text{solves} \;\; \frac{1}{\nall}\sum_{i \in \I} l\Brac{\vartheta(s_i - t)} = \tau.}
 \end{mini}
-This formulation also used only false negatives in the objective to preserve the convexity for the linear model. In such a case, the formulation is easily solvable due to the convexity and requires almost no tuning. Together with the fact that formulation~\eqref{eq: patmat} provides a good approximation to the Accuracy at the Top problem, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
+This formulation also used only false negatives in the objective to preserve the convexity for the linear model. In such a case, the formulation is easily solvable due to the convexity and requires almost no tuning. Together with the fact that formulation~\eqref{eq: patmat} provides a good approximation to the accuracy at the top problem, we named it \PatMat (Precision At the Top \& Mostly Automated Tuning).
 
 \subsection{Threshold Comparison}\label{sec: threshold comparison aatp}
 
