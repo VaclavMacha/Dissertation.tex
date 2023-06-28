@@ -29,6 +29,8 @@ results_tmp.*
 *.xml
 *.bcf
 *-blx.bib
+*.nav
+*.snm
 
 ## Intermediate documents:
 *.dvi
