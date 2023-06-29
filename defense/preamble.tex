@@ -1,0 +1,192 @@
+% ------------------------------------------------------------------------------
+% Packages
+% ------------------------------------------------------------------------------
+\usepackage[ddmmyyyy]{datetime}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% Fonts
+\usepackage{amsthm}
+% \usepackage{kpfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage{pifont}
+
+% Graphics and colors
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{import}
+
+\definecolor{myred}{RGB}{150,0,0}
+\definecolor{mygreen}{RGB}{0,150,0}
+\definecolor{myblue}{RGB}{0, 101, 189}
+\definecolor{myyellow}{RGB}{220, 206, 0}
+\definecolor{myorange}{RGB}{255, 153, 51}
+\definecolor{mycyan}{RGB}{51, 204, 204}
+\definecolor{mypurple}{RGB}{204, 0, 153}
+
+\newcommand{\doccol}{\color{myblue}}
+
+% Tables, Algs ...
+% \usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{nicematrix}
+
+\renewcommand{\arraystretch}{1.5}
+
+\newcommand{\headercol}{myblue!20}
+\newcommand{\rowcol}{myblue!10}
+
+% Math
+\usepackage{nicefrac}
+\usepackage{bm}
+\usepackage{thm-restate}
+\usepackage{optidef}
+\usepackage{xspace}
+
+
+% ------------------------------------------------------------------------------
+% Math declarations
+% ------------------------------------------------------------------------------
+\newcommand{\Brac}[2][r]{%
+  \ifx r#1 \left(       #2 \right)       \else
+  \ifx c#1 \left\{      #2 \right\}      \else
+  \ifx s#1 \left[       #2 \right]       \else
+  \ifx v#1 \left\vert   #2 \right\vert   \else
+  \ifx a#1 \left\langle #2 \right\rangle \else
+  \ifx t#1 \left\lceil  #2 \right\rceil  \else
+  \ifx b#1 \left\lfloor #2 \right\rfloor \else
+  \ifx n#1 \left\|      #2 \right\|      \else
+  \mathrm{Illegal~option}%
+  \fi\fi\fi\fi\fi\fi\fi\fi
+}
+
+\newcommand{\clip}[4][s]{
+  \ifx s#1 \mathrm{clip}_{\Brac[s]{#2,\; #3}}\Brac{#4} \else
+  \ifx u#1 \mathrm{clip}_{\left[#2,\; #3\right)}\Brac{#4} \else
+  \ifx l#1 \mathrm{clip}_{\left(#2,\; #3\right]}\Brac{#4} \else
+  \mathrm{Illegal~option}%
+  \fi\fi\fi
+}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\yesmark}{\textcolor{mygreen}{\ding{51}}}%
+\newcommand{\nomark}{\textcolor{myred}{\ding{55}}}
+\newcommand{\good}[1]{\textcolor{mygreen}{#1}}
+\newcommand{\bad}[1]{\textcolor{myred}{#1}}
+
+\newcommand{\best}[1]{\Block[fill=mygreen!50]{1-1}{#1}}
+\newcommand{\worst}[1]{\Block[fill=myred!50]{1-1}{#1}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\X}{\mathbb{X}}
+
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\Itil}{\tilde{\mathcal{I}}}
+\newcommand{\Ineg}{\I_{-}}
+\newcommand{\Ipos}{\I_{+}}
+
+\newcommand{\Imb}{\I_{\text{mb}}}
+\newcommand{\Imbneg}{\I_{\text{mb},-}}
+\newcommand{\Imbpos}{\I_{\text{mb},+}}
+
+\newcommand{\indmax}{j^{\star}}
+\newcommand{\indmaxmb}{j^{\star}_{\text{mb}}}
+
+\newcommand{\nall}{n}
+\newcommand{\nneg}{n_{-}}
+\newcommand{\npos}{n_{+}}
+\newcommand{\ntil}{\tilde{n}}
+
+\newcommand{\nmb}{n_{\text{mb}}}
+\newcommand{\nmbneg}{n_{\text{mb},-}}
+\newcommand{\nmbpos}{n_{\text{mb},+}}
+
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\Kall}{\K^{\pm}}
+\newcommand{\Kneg}{\K^{-}}
+
+\newcommand{\alphak}{\alpha_{\hat{k}}}
+\newcommand{\alphal}{\alpha_{\hat{l}}}
+\newcommand{\betak}{\beta_{\hat{k}}}
+\newcommand{\betal}{\beta_{\hat{l}}}
+
+\newcommand{\norm}[1]{\Brac[n]{#1}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\inner}[2]{\Brac[a]{#1, \; #2}}
+\newcommand{\dd}[1]{\mathop{}\!\mathrm{d}#1}
+
+\newcommand{\Iverson}[1]{\mathds{1}_{\Brac[s]{#1}}}
+
+\newcommand{\EE}{\mathbb{E}}
+\newcommand{\PP}{\mathbb{P}}
+\newcommand{\bias}{\operatorname{bias}}
+
+\newcommand{\Matrix}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\Set}[2]{\Brac[c]{#1 \; \middle\vert \; #2}}
+\newcommand{\domain}{\operatorname*{dom}}
+
+\newcommand{\repeatloop}{\texttt{repeat}\xspace}
+\newcommand{\forloop}{\texttt{for}\xspace}
+
+\newcommand{\vecab}{\Matrix{\bm{\alpha} \\ \bm{\beta}}}
+
+% models
+\newcommand{\TopPush}{\emph{TopPush}\xspace}
+\newcommand{\TopPushK}{\emph{TopPushK}\xspace}
+\newcommand{\tauFPL}{{\emph{$\tau$-FPL}}\xspace}
+\newcommand{\TopMeanK}{\emph{TopMeanK}\xspace}
+\newcommand{\PatMat}{\emph{Pat}\&\emph{Mat}\xspace}
+\newcommand{\PatMatNP}{{\emph{Pat}\&\emph{Mat-NP}}\xspace}
+\newcommand{\Grill}{\emph{Grill}\xspace}
+\newcommand{\GrillNP}{\emph{Grill-NP}\xspace}
+\newcommand{\DeepTopPush}{\emph{DeepTopPush}\xspace}
+\newcommand{\TFCO}{\emph{TFCO}\xspace}
+\newcommand{\APPerf}{\emph{Ap-Perf}\xspace}
+\newcommand{\BaseLine}{\emph{BinCross}\xspace}
+\newcommand{\SVM}{\emph{SVM}\xspace}
+
+% counts and rates
+\DeclareMathOperator{\tp}{tp}
+\DeclareMathOperator{\tn}{tn}
+\DeclareMathOperator{\fp}{fp}
+\DeclareMathOperator{\fn}{fn}
+\DeclareMathOperator{\tpr}{tpr}
+\DeclareMathOperator{\tnr}{tnr}
+\DeclareMathOperator{\fpr}{fpr}
+\DeclareMathOperator{\fnr}{fnr}
+
+\DeclareMathOperator{\tps}{\overline{tp}}
+\DeclareMathOperator{\tns}{\overline{tn}}
+\DeclareMathOperator{\fps}{\overline{fp}}
+\DeclareMathOperator{\fns}{\overline{fn}}
+
+\DeclareMathOperator{\accuracy}{acc}
+\DeclareMathOperator{\baccuracy}{bacc}
+\DeclareMathOperator{\precision}{precision}
+\DeclareMathOperator{\recall}{recall}
+\DeclareMathOperator{\pratrec}{Precision@Recall}
+\DeclareMathOperator{\postop}{pos@top}
+
+\newcommand{\tpratk}{\operatorname{TPR@}K}
+\newcommand{\tpratfpr}{\operatorname{TPR@}\tau}
+\newcommand{\auroc}{\operatorname{AUC}}
+
+% github link
+\urlstyle{same}
+
+\newcommand{\github}{
+  \begin{center}
+  \href{
+    https://github.com/VaclavMacha/ClassificationAtTopExperiments.jl
+  }{
+    \small{https://github.com/VaclavMacha/ClassificationAtTopExperiments.jl}
+  }
+  \end{center}
+}

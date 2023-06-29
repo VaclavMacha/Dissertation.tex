@@ -1,0 +1,46 @@
+\documentclass{standalone}
+\input{../preamble.tex}
+
+% ------------------------------------------------------------------------------
+% Tikz + PGFPlots styles
+% ------------------------------------------------------------------------------
+\pgfplotsset{
+  lineaatp/.style  = {mygreen, very thick, dashed},
+  linestandard/.style  = {cyan, very thick},
+}
+
+\pgfplotstableread[col sep = comma]{../data/standard_aatp_comparison_roc.csv}\StandardAATPComparisonROC
+% ------------------------------------------------------------------------------
+% Document
+% ------------------------------------------------------------------------------
+\begin{document}
+\begin{tikzpicture}
+  \begin{axis}[
+    group style = {
+      group size = 2 by 1,
+      horizontal sep = 0.5cm,
+    },
+    xmin = -0.01,
+    xmax = 1.01,
+    ymin = 0,
+    ymax = 1.01,
+    xlabel = False-positive rate,
+    grid=both,
+    major grid style={
+      dotted,
+      gray,
+    },
+    enlargelimits=false,
+    ylabel = True-positive rate,
+    legend pos=south east,
+  ]
+      \addplot [linestandard] table[x index=2, y index=3] {\StandardAATPComparisonROC};
+      \addlegendentry{\textbf{Classifier 1}: $\auroc$ = 95\%}
+      \addplot [lineaatp] table[x index=0, y index=1] {\StandardAATPComparisonROC};
+      \addlegendentry{\textbf{Classifier 2}: $\auroc$ = 77\%}
+      \addplot[mark=none, thick, dashed, myred] {x};
+      \addplot[mark=*, mygreen, mark size=3pt] coordinates {(0.01, 0.53)} node{};
+      \addplot[mark=*, cyan, mark size=3pt] coordinates {(0.1, 1.0)} node{};
+  \end{axis}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,379 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+\usetheme[
+  sectionpage=progressbar,
+  numbering=fraction,
+  progressbar=none,
+  block=fill,
+]{metropolis} % Use metropolis theme
+
+\input{preamble.tex}
+
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{alerted text}{fg=myblue}
+\setbeamercolor{example text}{fg=myblue}
+
+\setbeamercolor{palette primary}{fg=white, bg=myblue}
+\setbeamercolor{titlelike}{fg=myblue, bg=myblue}
+
+% Affiliation
+\title{General Framework for \\ Classification at the Top}
+\date{\today}
+\author{\textbf{Václav Mácha}}
+\institute{
+  Czech Technical University in Prague \\
+  Faculty of Nuclear Sciences and Physical Engineering \\
+  Department of Mathematics
+}
+
+
+\begin{document}
+\maketitle
+
+\section{Motivation}
+
+\begin{frame}{Binary classification}
+  \begin{itemize}
+    \item<1-> Two group of samples:
+    \begin{itemize}
+      \item negative samples with label~$y = 0,$
+      \item positive samples with label~$y = 1.$
+    \end{itemize}
+    \item<2-> Classifier usually has two parts:
+    \begin{itemize}
+      \item model~$f$ maps a sample~$\bm{x}$ to its classification score~$s \in \R,$
+      \item decision threshold~$t \in \R$ decides whether a sample is classified as positive or not
+      \begin{equation*}
+        \hat{y} = \begin{cases}
+          1 & \quad \text{if } s \geq t, \\
+          0 & \quad \text{otherwise.}
+        \end{cases}
+      \end{equation*}
+    \end{itemize}
+    \item<2-> Usually, the model returns the probability that the sample is from the positive class and the threshold is 0.5.
+    \item<3-> \textbf{Goal:} find classifier which predicts labels for unknown samples with the lowest possible error.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Confusion matrix}
+  \begin{center}
+  \resizebox{0.65\columnwidth}{!}{% 
+  \begin{NiceTabular}{cccccc}[cell-space-limits = 7pt]
+    && \Block[draw=black, line-width=2pt, rounded-corners]{1-2}{
+      \textbf{Predicted label}
+    } \\
+    && $\hat{y} = 0$
+    &  $\hat{y} = 1$
+    && \Block{1-1}{\textbf{Row total:}} \\
+    \Block[draw=black, line-width=2pt, rounded-corners]{2-1}{
+      \rotate \textbf{Actual} \\ \textbf{label}
+    }
+    & $y = 0$
+    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
+      true \\ negatives \\ (\textbf{tn})
+    }
+    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
+      false \\ positives \\ (\textbf{fp})
+    }
+    & $\rightarrow$
+    & \Block[draw=black, rounded-corners]{1-1}{all \\ negatives \\ ($\nneg$)} \\
+    & $y = 1$
+    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
+      false \\ negatives \\ (\textbf{fn})
+    }
+    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
+      true \\ positives \\ (\textbf{tp})
+    }
+    & $\rightarrow$
+    & \Block[draw=black, rounded-corners]{1-1}{all \\ positives \\ ($\npos$)} \\
+    && $\downarrow$
+    &  $\downarrow$ \\
+    \Block{1-2}{\textbf{Column} \\ \textbf{total:}}
+    && \Block[draw=black, rounded-corners]{1-1}{all predicted \\ negatives}
+    & \Block[draw=black, rounded-corners]{1-1}{all predicted \\ positives}
+  \end{NiceTabular}
+  }
+  \end{center}
+\end{frame}
+
+\begin{frame}{Binary Classification}
+  \begin{itemize}
+    \item General form of binary classification
+    \begin{mini*}{\bm{w}, t}{
+      \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} + \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i < t}
+      }{}{}
+      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
+    \end{mini*}
+    \item $\I = \Ineg \cup \Ipos$ is a set of indices of all sample where
+    \begin{equation*}
+      \begin{aligned}
+        \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
+        \Ipos & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1},
+      \end{aligned}
+    \end{equation*}
+    \item $\Iverson{\cdot{}}$ is Iverson function defined by
+    \begin{equation*}
+      \Iverson{x} = \begin{cases}
+        0 & \quad \text{if } x \text{ is false}, \\
+        1 & \quad \text{if } x \text{ is true}.
+      \end{cases}
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ROC curves}
+  \begin{center}
+    \includegraphics{../images/confusion_rates.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}{ROC curves}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/roc_space_presentation.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}{Classifier 1 is better ... or not?}
+  \begin{itemize}
+    \item<1-> If the goal is to classify all samples with the lowest possible error then \textbf{Classifier 1} is better.
+    \item<2-> What if some samples are more relevant than others?
+    \begin{itemize}
+      \item Search engines: relevant results should be on the first few pages.
+      \item Malware detection: false-alarms are disruptive to the user.
+      \item Expensive post-processing: development of new drugs.
+    \end{itemize}
+    \item<3-> In such cases, \textbf{Classifier 2} may be better.
+    \item<4-> \textbf{Classifier 1} maximizes accuracy
+    \begin{equation*}
+      \accuracy(\bm{s}) = \frac{1}{\nall} \sum_{i \in \I} \Iverson{y_i = \hat{y}_i}.
+    \end{equation*}
+    \item<4-> \textbf{Classifier 2} maximizes the number of positive samples at the top
+    \begin{equation*}
+      \postop(\bm{s}) = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \geq \max_{j \in \Ineg}s_j}.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ROC curves}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/standard_aatp_comparison.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}{ROC curves}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/roc_space_log.pdf
+    }
+  \end{center}
+\end{frame}
+
+\section{Classification at the Top}
+
+\begin{frame}{Problem formulation}
+  \begin{itemize}
+    \item<1-> \textbf{Goal:} classify correctly only the most relevant samples.
+    \item<2-> The most relevant samples are samples with the highest scores.
+    \item<3-> General formulation
+    \begin{mini*}{\bm{w}}{
+      \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} + \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i < t}
+    }{}{}
+      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}},}
+    \end{mini*}
+    where threshold~$t$ is a function of all scores.
+    \item<4-> Difficult problem: constrained, discontinuous, non-convex, and non-decomposable.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ROC curves}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/surrogates.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}{Surrogate approximation}
+  \begin{itemize}
+    \item General surrogate formulation
+    \begin{mini*}{\bm{w}}{
+      \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+    }{}{}
+      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+    \end{mini*}
+    \item<2-> \TopPush maximizes the number of positive samples at the top 
+    \begin{equation*}
+      t = \max_{j \in \Ineg} s_j.
+    \end{equation*}
+    \item<3-> \PatMatNP maximizes true-positive rate with fixed false-positive rate 
+    \begin{equation*}
+      t \;\; \text{solves} \;\; \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\section{Classification at the Top: \\ Linear Model}
+
+\begin{frame}
+  \begin{itemize}
+    \item Linear model~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$
+    \item General surrogate formulation with linear model
+    \begin{mini*}{\bm{w}}{
+      \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+    }{}{}
+      \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+    \end{mini*}
+    \item Properties that we are interested in:
+    \begin{itemize}
+      \item Convexity of the objective function.
+      \item Robustness to outliers.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Convexity of the objective function}
+  \begin{block}{Theorem}
+    If the threshold $t$ is a convex function of the weights $\bm{w},$ then function
+    \begin{equation*}
+      L(\bm{w}) = \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+    \end{equation*}
+    is convex.
+  \end{block}
+  \begin{itemize}
+    \item Both formulations \TopPush and \PatMatNP have convex thresholds.
+    \item Both formulations are convex and continuous.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{When convexity is not enough...}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/toppush_convergence.pdf
+    }    
+  \end{center}
+\end{frame}
+
+\begin{frame}{How to solve it?}
+  \begin{itemize}
+    \item Using gradient descent
+    \begin{equation*}
+      \bm{w}^{k+1} \gets \bm{w}^k - \alpha^k \cdot \nabla L(\bm{w}^k),
+    \end{equation*}
+    where~$\alpha^k > 0$ is a learning rate, and~$\nabla L(\bm{w}^k)$ is a gradient of the objective function
+    \begin{equation*}
+      \nabla L(\bm{w})
+        = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla t(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
+    \end{equation*}
+  \end{itemize}
+\end{frame}
+
+\section{Classification at the Top: \\ Non-linear Model}
+
+\begin{frame}{???}
+  \begin{itemize}
+    \item General surrogate formulation with non-linear model
+    \begin{mini*}{\bm{w}}{
+      \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+    }{}{}
+      \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+    \end{mini*}
+    \item<2-> Disadvantages:
+    \begin{itemize}
+      \item Objective function is not convex.
+      \item Non-linear models are usually large and expensive to train.
+    \end{itemize}
+    \item<3-> What to do if the dataset is too large to fit in memory?
+    \item<4-> Stochastic gradient descent: the gradient is computed only on a small subset of all data called minibatch.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Issues when passing to mini-batches}
+  \begin{itemize}
+    \item Problems:
+    \begin{itemize}
+      \item The threshold is a function of all scores $\rightarrow$ the loss function is non-decomposable.
+      \item As a result, stochastic gradient descent provides a biased gradient estimate.
+    \end{itemize}
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.6\textheight, keepaspectratio]{
+      ../images/deep_threshold_bias.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}{How to reduce bias?}
+  \begin{itemize}
+    \item Increase size of minibatch $\rightarrow$ \PatMatNP.
+    \item Add threshold from last minibatch $\rightarrow$ \DeepTopPush.
+  \end{itemize}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.75\textheight, keepaspectratio]{
+      ../images/deep_thresholds.pdf
+    }
+  \end{center}
+\end{frame}
+
+\section{How does it work?}
+
+\begin{frame}{Steganography}
+  \begin{itemize}
+    \item Dataset: 205 579 samples, 9\% of samples are positive.
+    \item Each sample consists of 22 510 features.
+    \item Only linear model.
+    \item \textbf{Goals:}
+    \begin{itemize}
+      \item Maximize the true-positive rate at extremely low levels of the false-positive rate.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Steganography}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/stego_nsft5.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}{AVAST: Malware detection}
+  \begin{itemize}
+    \item Dataset: 6 580 166 samples, 87\% of samples are positive.
+    \item Hierarchical data structure:
+    \begin{itemize}
+      \item Each sample is a JSON file, which may consist of other JSON files.
+      \item Each sample is of a different size (from 1 KB to 2.5 MB).
+      \item \DeepTopPush and \PatMatNP used as an extension for hierarchical multi-instance learning (HMIL).
+    \end{itemize}
+    \item \textbf{Goals:}
+    \begin{itemize}
+      \item Maximize the true-positive rate at extremely low levels of the false-positive rate.
+      \item The false-positive rate must be as low as possible to avoid disruptive false alarms for the end-user.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{AVAST: Malware detection}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/malware_detection.pdf
+    }
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \vfill \par
+  \begin{center}
+    \textbf{\Large{Thank you for your attention.}}
+  \end{center}\par
+  \vfill
+\end{frame}
+
+\end{document}
