@@ -16,117 +16,57 @@
 \setbeamercolor{titlelike}{fg=myblue, bg=myblue}
 
 % Affiliation
-\title{General Framework for \\ Classification at the Top}
-\date{\today}
-\author{\textbf{Václav Mácha}}
+\title{Classification at the Top}
+\date{September 20, 2023}
+\author{\textbf{Ing. Václav Mácha}}
 \institute{
-  Czech Technical University in Prague \\
-  Faculty of Nuclear Sciences and Physical Engineering \\
-  Department of Mathematics
+  \textbf{Supervisor:} doc. Ing. Václav \v{S}mídl, Ph.D. \\
+  \textbf{Supervisor specialist:} Mgr. Luká\v{s} Adam, Ph.D.
 }
-
+  
 
 \begin{document}
 \maketitle
 
 \section{Motivation}
 
-\begin{frame}{Binary classification}
-  \begin{itemize}
-    \item<1-> Two group of samples:
-    \begin{itemize}
-      \item negative samples with label~$y = 0,$
-      \item positive samples with label~$y = 1.$
-    \end{itemize}
-    \item<2-> Classifier usually has two parts:
-    \begin{itemize}
-      \item model~$f$ maps a sample~$\bm{x}$ to its classification score~$s \in \R,$
-      \item decision threshold~$t \in \R$ decides whether a sample is classified as positive or not
-      \begin{equation*}
-        \hat{y} = \begin{cases}
-          1 & \quad \text{if } s \geq t, \\
-          0 & \quad \text{otherwise.}
-        \end{cases}
-      \end{equation*}
-    \end{itemize}
-    \item<2-> Usually, the model returns the probability that the sample is from the positive class and the threshold is 0.5.
-    \item<3-> \textbf{Goal:} find classifier which predicts labels for unknown samples with the lowest possible error.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Confusion matrix}
-  \begin{center}
-  \resizebox{0.65\columnwidth}{!}{% 
-  \begin{NiceTabular}{cccccc}[cell-space-limits = 7pt]
-    && \Block[draw=black, line-width=2pt, rounded-corners]{1-2}{
-      \textbf{Predicted label}
-    } \\
-    && $\hat{y} = 0$
-    &  $\hat{y} = 1$
-    && \Block{1-1}{\textbf{Row total:}} \\
-    \Block[draw=black, line-width=2pt, rounded-corners]{2-1}{
-      \rotate \textbf{Actual} \\ \textbf{label}
-    }
-    & $y = 0$
-    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
-      true \\ negatives \\ (\textbf{tn})
-    }
-    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
-      false \\ positives \\ (\textbf{fp})
-    }
-    & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{all \\ negatives \\ ($\nneg$)} \\
-    & $y = 1$
-    & \Block[draw=myred, fill=myred!50, rounded-corners]{1-1}{
-      false \\ negatives \\ (\textbf{fn})
-    }
-    & \Block[draw=mygreen, fill=mygreen!50, rounded-corners]{1-1}{
-      true \\ positives \\ (\textbf{tp})
-    }
-    & $\rightarrow$
-    & \Block[draw=black, rounded-corners]{1-1}{all \\ positives \\ ($\npos$)} \\
-    && $\downarrow$
-    &  $\downarrow$ \\
-    \Block{1-2}{\textbf{Column} \\ \textbf{total:}}
-    && \Block[draw=black, rounded-corners]{1-1}{all predicted \\ negatives}
-    & \Block[draw=black, rounded-corners]{1-1}{all predicted \\ positives}
-  \end{NiceTabular}
-  }
-  \end{center}
-\end{frame}
-
 \begin{frame}{Binary Classification}
   \begin{itemize}
     \item General form of binary classification
     \begin{mini*}{\bm{w}, t}{
-      \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} + \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i < t}
+      C_1 \sum_{i \in \Ineg} \Iverson{s_i \geq t} + C_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
       }{}{}
-      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I,}
+      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
     \end{mini*}
+    \item $\bm{x}_i \in \R^{d}$ is a sample and~$y_i \in \{0, 1\}$ its corresponding label, $C_1, C_2 \in \R$ are constants
     \item $\I = \Ineg \cup \Ipos$ is a set of indices of all sample where
     \begin{equation*}
       \begin{aligned}
-        \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0}, \\
-        \Ipos & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1},
+        \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0} \\
+        \Ipos & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 1}
       \end{aligned}
     \end{equation*}
     \item $\Iverson{\cdot{}}$ is Iverson function defined by
     \begin{equation*}
       \Iverson{x} = \begin{cases}
-        0 & \quad \text{if } x \text{ is false}, \\
-        1 & \quad \text{if } x \text{ is true}.
+        0 & \quad \text{if } x \text{ is false} \\
+        1 & \quad \text{if } x \text{ is true}
       \end{cases}
     \end{equation*}
+    \item Classifier consists of two parts: model~$f: \R^{d} \mapsto \R$ with trainable parameters~$\bm{w}$ that maps samples~$\bm{x}$ to scores~$s$ and decision threshold~$t \in \R$
   \end{itemize}
 \end{frame}
 
-\begin{frame}{ROC curves}
+\begin{frame}{False rates}
+  \begin{itemize}
+    \item Inference: Sample~$\bm{x}$ is classified as positive if~$s = f(\bm{x}; \bm{w}) \geq t$
+  \end{itemize}
   \begin{center}
     \includegraphics{../images/confusion_rates.pdf}
   \end{center}
 \end{frame}
 
-\begin{frame}{ROC curves}
+\begin{frame}{Classifier 1 is better ... or not?}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
       ../images/roc_space_presentation.pdf
@@ -134,28 +74,8 @@
   \end{center}
 \end{frame}
 
-\begin{frame}{Classifier 1 is better ... or not?}
-  \begin{itemize}
-    \item<1-> If the goal is to classify all samples with the lowest possible error then \textbf{Classifier 1} is better.
-    \item<2-> What if some samples are more relevant than others?
-    \begin{itemize}
-      \item Search engines: relevant results should be on the first few pages.
-      \item Malware detection: false-alarms are disruptive to the user.
-      \item Expensive post-processing: development of new drugs.
-    \end{itemize}
-    \item<3-> In such cases, \textbf{Classifier 2} may be better.
-    \item<4-> \textbf{Classifier 1} maximizes accuracy
-    \begin{equation*}
-      \accuracy(\bm{s}) = \frac{1}{\nall} \sum_{i \in \I} \Iverson{y_i = \hat{y}_i}.
-    \end{equation*}
-    \item<4-> \textbf{Classifier 2} maximizes the number of positive samples at the top
-    \begin{equation*}
-      \postop(\bm{s}) = \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i \geq \max_{j \in \Ineg}s_j}.
-    \end{equation*}
-  \end{itemize}
-\end{frame}
 
-\begin{frame}{ROC curves}
+\begin{frame}{Sometimes Classifier 2 is the better one...}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
       ../images/standard_aatp_comparison.pdf
@@ -163,76 +83,83 @@
   \end{center}
 \end{frame}
 
-\begin{frame}{ROC curves}
-  \begin{center}
-    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
-      ../images/roc_space_log.pdf
-    }
-  \end{center}
-\end{frame}
-
 \section{Classification at the Top}
 
-\begin{frame}{Problem formulation}
+\begin{frame}{General problem formulation}
   \begin{itemize}
-    \item<1-> \textbf{Goal:} classify correctly only the most relevant samples.
-    \item<2-> The most relevant samples are samples with the highest scores.
-    \item<3-> General formulation
+    \item \textbf{Goal:} classify correctly only the most relevant samples. The most relevant samples are samples with the highest scores
+    \item General formulation
     \begin{mini*}{\bm{w}}{
-      \frac{1}{\nneg} \sum_{i \in \Ineg} \Iverson{s_i \geq t} + \frac{1}{\npos} \sum_{i \in \Ipos} \Iverson{s_i < t}
+      C_1 \sum_{i \in \Ineg} \Iverson{s_i \geq t} + C_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
     }{}{}
       \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
-      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}},}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
     \end{mini*}
-    where threshold~$t$ is a function of all scores.
-    \item<4-> Difficult problem: constrained, discontinuous, non-convex, and non-decomposable.
+    where threshold~$t$ is a function of all scores
+    \item Difficult problem: constrained, discontinuous, non-convex, and non-decomposable
   \end{itemize}
 \end{frame}
 
-\begin{frame}{ROC curves}
+\begin{frame}{How to get continuous objective function?}
+  \begin{itemize}
+    \item By replacing~$\Iverson{\cdot{}}$ Iverson function with its surrogate approximation
+  \end{itemize}
   \begin{center}
-    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+    \includegraphics[width=\linewidth, height=0.7\textheight, keepaspectratio]{
       ../images/surrogates.pdf
     }
   \end{center}
 \end{frame}
 
-\begin{frame}{Surrogate approximation}
+
+\begin{frame}{General surrogate formulation}
   \begin{itemize}
-    \item General surrogate formulation
+    \item Using the surrogate approximation lead to general surrogate formulation
+    \begin{mini*}{\bm{w}}{
+      C_1 \sum_{i \in \Ineg} l(s_i - t) + C_2 \sum_{i \in \Ipos} l(t - s_i)
+    }{}{}
+      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
+    \end{mini*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{How to choose the decision threshold?}
+  \begin{itemize}
+    \item For simplicity, we focus only on formulations that minimizes false-negative rate and compute the threshold only from negative samples
     \begin{mini*}{\bm{w}}{
       \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
     }{}{}
       \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
-      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+      \addConstraint{t}{= {\color{mygreen}G\Brac{\bm{s}, \bm{y}}}}
     \end{mini*}
+    where we use~$C_1 = 0$ and~$C_2 = \frac{1}{\npos}.$ Normalization is added for numerical stability.
     \item<2-> \TopPush maximizes the number of positive samples at the top 
     \begin{equation*}
-      t = \max_{j \in \Ineg} s_j.
+      t = {\color{mygreen}G_{TopPush}\Brac{\bm{s}, \bm{y}}} = \max_{j \in \Ineg} s_j
     \end{equation*}
     \item<3-> \PatMatNP maximizes true-positive rate with fixed false-positive rate 
     \begin{equation*}
-      t \;\; \text{solves} \;\; \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{\vartheta(s_i - t)} = \tau.
+      t \;\; \text{solves} \;\; {\color{mygreen}G_{Pat\&Mat-NP}\Brac{\bm{s}, \bm{y}}} = \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{s_i - t} = \tau
     \end{equation*}
   \end{itemize}
 \end{frame}
 
 \section{Classification at the Top: \\ Linear Model}
 
-\begin{frame}
+\begin{frame}{Linear Model}
   \begin{itemize}
-    \item Linear model~$f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}.$
-    \item General surrogate formulation with linear model
+    \item General surrogate formulation with linear model~${\color{mypurple}f(\bm{x}; \bm{w}) = \bm{w}^{\top} \bm{x}}$
     \begin{mini*}{\bm{w}}{
       \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
     }{}{}
-      \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad}{i \in \I}
-      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+      \addConstraint{s_i}{= {\color{mypurple}\bm{w}^{\top} \bm{x}_i}, \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
     \end{mini*}
     \item Properties that we are interested in:
     \begin{itemize}
-      \item Convexity of the objective function.
-      \item Robustness to outliers.
+      \item Convexity of the objective function
+      \item Robustness to outliers
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -241,22 +168,19 @@
   \begin{block}{Theorem}
     If the threshold $t$ is a convex function of the weights $\bm{w},$ then function
     \begin{equation*}
-      L(\bm{w}) = \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
+      L(\bm{w}) = \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t(\bm{w}) - \bm{w}^{\top} \bm{x}_i)
     \end{equation*}
     is convex.
   \end{block}
   \begin{itemize}
-    \item Both formulations \TopPush and \PatMatNP have convex thresholds.
-    \item Both formulations are convex and continuous.
+    \item What does it mean? 
+    \begin{itemize}
+      \item Both formulations \TopPush and \PatMatNP have convex thresholds
+      \item Both formulations are convex and continuous
+      \item We can solve both formulations using gradient descent algorithm
+    \end{itemize}
+    
   \end{itemize}
-\end{frame}
-
-\begin{frame}{When convexity is not enough...}
-  \begin{center}
-    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
-      ../images/toppush_convergence.pdf
-    }    
-  \end{center}
 \end{frame}
 
 \begin{frame}{How to solve it?}
@@ -268,51 +192,72 @@
     where~$\alpha^k > 0$ is a learning rate, and~$\nabla L(\bm{w}^k)$ is a gradient of the objective function
     \begin{equation*}
       \nabla L(\bm{w})
-        = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{t(\bm{w}) - f(\bm{x}_i; \bm{w})}\Brac{\nabla t(\bm{w}) - \nabla f(\bm{x}_i; \bm{w})}.
+        = \bm{w} + \frac{1}{\npos} \sum_{i \in \Ipos} l'\Brac{{\color{mygreen}t(\bm{w})} - {\color{mypurple}\bm{w}^{\top} \bm{x}_i}}\Brac{{\color{mygreen}\nabla t(\bm{w})} - {\color{mypurple}\bm{x}_i}}
     \end{equation*}
+    \item How to compute gradient of the threshold~${\color{mygreen}\nabla t(\bm{w})}$?
+    \begin{itemize}
+      \item For \TopPush it is easy
+      \begin{equation*}
+        j^{\star} = \arg \max_{j \in \Ineg} s_j \quad \rightarrow \quad 
+        t = s_{j^{\star}}\quad \rightarrow \quad 
+        {\color{mygreen}\nabla t(\bm{w})} = \nabla f(\bm{x}_{j^{\star}}; \bm{w}) = \bm{x}_{j^{\star}}
+      \end{equation*}
+      \item For \PatMatNP we have to use implicit function theorem.
+    \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}{When convexity is not enough...}
+  \begin{center}
+    \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
+      ../images/toppush_convergence.pdf
+    }    
+  \end{center}
 \end{frame}
 
 \section{Classification at the Top: \\ Non-linear Model}
 
-\begin{frame}{???}
+\begin{frame}{Non-linear Model}
   \begin{itemize}
-    \item General surrogate formulation with non-linear model
+    \item General surrogate formulation with non-linear model~${\color{mypurple}f(\bm{x}; \bm{w})}$
     \begin{mini*}{\bm{w}}{
       \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
     }{}{}
-      \addConstraint{s_i}{= \bm{w}^{\top} \bm{x}_i, \quad}{i \in \I}
-      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}.}
+      \addConstraint{s_i}{= {\color{mypurple}f(\bm{x}_i; \bm{w})}, \quad}{i \in \I}
+      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
     \end{mini*}
-    \item<2-> Disadvantages:
+    \item Disadvantages:
     \begin{itemize}
-      \item Objective function is not convex.
-      \item Non-linear models are usually large and expensive to train.
+      \item Objective function is not convex
+      \item Non-linear models are usually large and expensive to train
     \end{itemize}
-    \item<3-> What to do if the dataset is too large to fit in memory?
-    \item<4-> Stochastic gradient descent: the gradient is computed only on a small subset of all data called minibatch.
+    \item What to do if the dataset is too large to fit in memory? Stochastic gradient descent.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Issues when passing to mini-batches}
+\begin{frame}{Issues with stochastic gradient descent}
   \begin{itemize}
-    \item Problems:
-    \begin{itemize}
-      \item The threshold is a function of all scores $\rightarrow$ the loss function is non-decomposable.
-      \item As a result, stochastic gradient descent provides a biased gradient estimate.
-    \end{itemize}
+    \item The threshold is a function of all scores $\rightarrow$ the loss function is non-decomposable
+    \item As a result, stochastic gradient descent provides a biased gradient estimate
   \end{itemize}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.6\textheight, keepaspectratio]{
       ../images/deep_threshold_bias.pdf
     }
   \end{center}
+  \begin{itemize}
+    \item How to reduce bias? Increase size of minibatch ...
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{How to reduce bias?}
+\begin{frame}{Is there a better way to reduce bias?}
   \begin{itemize}
-    \item Increase size of minibatch $\rightarrow$ \PatMatNP.
-    \item Add threshold from last minibatch $\rightarrow$ \DeepTopPush.
+    \item \DeepTopPush: Add threshold from last minibatch
+    \begin{equation*}
+      j^{\star} = \arg \max_{j \in \Ineg} s_j \quad \rightarrow \quad 
+      t = s_{j^{\star}}\quad \rightarrow \quad 
+      \nabla t(\bm{w}) = \nabla f(\bm{x}_{j^{\star}}; \bm{w})
+    \end{equation*}
   \end{itemize}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.75\textheight, keepaspectratio]{
@@ -323,19 +268,20 @@
 
 \section{How does it work?}
 
-\begin{frame}{Steganography}
+\begin{frame}{Steganalysis}
   \begin{itemize}
-    \item Dataset: 205 579 samples, 9\% of samples are positive.
-    \item Each sample consists of 22 510 features.
-    \item Only linear model.
-    \item \textbf{Goals:}
+    \item Train data: 186 583 samples, 9.1\% of samples are positive
+    \item Test data: 248 776 samples, 9.1\% of samples are positive
+    \item Each sample consists of 22 510 features
+    \item Only linear model
+    \item \textbf{Goal:}
     \begin{itemize}
-      \item Maximize the true-positive rate at extremely low levels of the false-positive rate.
+      \item Maximize the true-positive rate at very low levels of the false-positive rate
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Steganography}
+\begin{frame}{Steganalysis}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.9\textheight, keepaspectratio]{
       ../images/stego_nsft5.pdf
@@ -345,17 +291,17 @@
 
 \begin{frame}{AVAST: Malware detection}
   \begin{itemize}
-    \item Dataset: 6 580 166 samples, 87\% of samples are positive.
+    \item Train data: 6 580 166 samples, 87.2\% of samples are positive
+    \item Test data: 800 346 samples, 91.8\% of samples are positive
     \item Hierarchical data structure:
     \begin{itemize}
-      \item Each sample is a JSON file, which may consist of other JSON files.
-      \item Each sample is of a different size (from 1 KB to 2.5 MB).
-      \item \DeepTopPush and \PatMatNP used as an extension for hierarchical multi-instance learning (HMIL).
+      \item Each sample is a JSON file, which may consist of other JSON files
+      \item Each sample is of a different size (from 1 KB to 2.5 MB)
+      \item \DeepTopPush and \PatMatNP used as an extension for hierarchical multi-instance learning (HMIL)
     \end{itemize}
-    \item \textbf{Goals:}
+    \item \textbf{Goal:}
     \begin{itemize}
-      \item Maximize the true-positive rate at extremely low levels of the false-positive rate.
-      \item The false-positive rate must be as low as possible to avoid disruptive false alarms for the end-user.
+      \item Maximize the true-positive rate at extremely low levels of the false-positive rate to avoid disruptive false alarms for the end-user.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -368,12 +314,20 @@
   \end{center}
 \end{frame}
 
-\begin{frame}
-  \vfill \par
-  \begin{center}
-    \textbf{\Large{Thank you for your attention.}}
-  \end{center}\par
-  \vfill
+\section{Contributions}
+
+\begin{frame}{Contributions}
+  \begin{itemize}
+    \item Introduction of a unified framework for classification at the top
+    \item Introduction of \PatMat and \PatMatNP formulations
+    \item Derivation of theoretical properties for a linear classifier
+    \item Derivation of dual forms and use of non-linear kernels
+    \item Derivation of an efficient algorithm for solving dual forms
+    \item Introduction of a modified stochastic gradient descent
+    \item Introduction of \DeepTopPush formulation
+  \end{itemize}
 \end{frame}
+
+\section{Thank you for your attention.}
 
 \end{document}
