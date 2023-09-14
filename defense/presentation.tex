@@ -114,9 +114,9 @@
 
 \begin{frame}{General surrogate formulation}
   \begin{itemize}
-    \item Using the surrogate approximation lead to general surrogate formulation
+    \item Using the surrogate approximation to replace~${\color{myorange}\Iverson{\cdot{}}}$  lead to general surrogate formulation
     \begin{mini*}{\bm{w}}{
-      C_1 \sum_{i \in \Ineg} l(s_i - t) + C_2 \sum_{i \in \Ipos} l(t - s_i)
+      C_1 \sum_{i \in \Ineg} {\color{myorange}l(s_i - t)} + C_2 \sum_{i \in \Ipos} {\color{myorange}l(t - s_i)}
     }{}{}
       \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
       \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
@@ -133,14 +133,14 @@
       \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
       \addConstraint{t}{= {\color{mygreen}G\Brac{\bm{s}, \bm{y}}}}
     \end{mini*}
-    where we use~$C_1 = 0$ and~$C_2 = \frac{1}{\npos}.$ Normalization is added for numerical stability.
+    where we use~$C_1 = 0$ and~$C_2 = \frac{1}{\npos}.$ Regularization is added for numerical stability.
     \item<2-> \TopPush maximizes the number of positive samples at the top 
     \begin{equation*}
       t = {\color{mygreen}G_{TopPush}\Brac{\bm{s}, \bm{y}}} = \max_{j \in \Ineg} s_j
     \end{equation*}
     \item<3-> \PatMatNP maximizes true-positive rate with fixed false-positive rate 
     \begin{equation*}
-      t \;\; \text{solves} \;\; {\color{mygreen}G_{Pat\&Mat-NP}\Brac{\bm{s}, \bm{y}}} = \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{s_i - t} = \tau
+      t = {\color{mygreen}G_{Pat\&Mat-NP}\Brac{\bm{s}, \bm{y}}} \;\; \iff \;\;  t \;\; \text{solves} \;\; \frac{1}{\nneg}\sum_{i \in \Ineg} l\Brac{s_i - t} = \tau
     \end{equation*}
   \end{itemize}
 \end{frame}
@@ -202,7 +202,7 @@
         t = s_{j^{\star}}\quad \rightarrow \quad 
         {\color{mygreen}\nabla t(\bm{w})} = \nabla f(\bm{x}_{j^{\star}}; \bm{w}) = \bm{x}_{j^{\star}}
       \end{equation*}
-      \item For \PatMatNP we have to use implicit function theorem.
+      \item For \PatMatNP we have to use {\color{mygreen}\textbf{implicit function theorem}}.
     \end{itemize}
   \end{itemize}
 \end{frame}
@@ -268,18 +268,18 @@
 
 \section{How does it work?}
 
-\begin{frame}{Steganalysis}
-  \begin{itemize}
-    \item Train data: 186 583 samples, 9.1\% of samples are positive
-    \item Test data: 248 776 samples, 9.1\% of samples are positive
-    \item Each sample consists of 22 510 features
-    \item Only linear model
-    \item \textbf{Goal:}
-    \begin{itemize}
-      \item Maximize the true-positive rate at very low levels of the false-positive rate
-    \end{itemize}
-  \end{itemize}
-\end{frame}
+% \begin{frame}{Steganalysis}
+%   \begin{itemize}
+%     \item Train data: 186 583 samples, 9.1\% of samples are positive
+%     \item Test data: 248 776 samples, 9.1\% of samples are positive
+%     \item Each sample consists of 22 510 features
+%     \item Only linear model
+%     \item \textbf{Goal:}
+%     \begin{itemize}
+%       \item Maximize the true-positive rate at very low levels of the false-positive rate
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}{Steganalysis}
   \begin{center}
@@ -289,22 +289,22 @@
   \end{center}
 \end{frame}
 
-\begin{frame}{AVAST: Malware detection}
-  \begin{itemize}
-    \item Train data: 6 580 166 samples, 87.2\% of samples are positive
-    \item Test data: 800 346 samples, 91.8\% of samples are positive
-    \item Hierarchical data structure:
-    \begin{itemize}
-      \item Each sample is a JSON file, which may consist of other JSON files
-      \item Each sample is of a different size (from 1 KB to 2.5 MB)
-      \item \DeepTopPush and \PatMatNP used as an extension for hierarchical multi-instance learning (HMIL)
-    \end{itemize}
-    \item \textbf{Goal:}
-    \begin{itemize}
-      \item Maximize the true-positive rate at extremely low levels of the false-positive rate to avoid disruptive false alarms for the end-user.
-    \end{itemize}
-  \end{itemize}
-\end{frame}
+% \begin{frame}{AVAST: Malware detection}
+%   \begin{itemize}
+%     \item Train data: 6 580 166 samples, 87.2\% of samples are positive
+%     \item Test data: 800 346 samples, 91.8\% of samples are positive
+%     \item Hierarchical data structure:
+%     \begin{itemize}
+%       \item Each sample is a JSON file, which may consist of other JSON files
+%       \item Each sample is of a different size (from 1 KB to 2.5 MB)
+%       \item \DeepTopPush and \PatMatNP used as an extension for hierarchical multi-instance learning (HMIL)
+%     \end{itemize}
+%     \item \textbf{Goal:}
+%     \begin{itemize}
+%       \item Maximize the true-positive rate at extremely low levels of the false-positive rate to avoid disruptive false alarms for the end-user.
+%     \end{itemize}
+%   \end{itemize}
+% \end{frame}
 
 \begin{frame}{AVAST: Malware detection}
   \begin{center}
@@ -318,13 +318,23 @@
 
 \begin{frame}{Contributions}
   \begin{itemize}
-    \item Introduction of a unified framework for classification at the top
-    \item Introduction of \PatMat and \PatMatNP formulations
-    \item Derivation of theoretical properties for a linear classifier
-    \item Derivation of dual forms and use of non-linear kernels
-    \item Derivation of an efficient algorithm for solving dual forms
-    \item Introduction of a modified stochastic gradient descent
-    \item Introduction of \DeepTopPush formulation
+    \item \textbf{Unification Contributions:}
+    \begin{itemize}
+      \item Introduction of a unified framework for classification at the top
+      \item Shoewd that problems such as Ranking or Accuracy at the Top fall into the framework
+      \item Introduction of \PatMat and \PatMatNP formulations
+    \end{itemize}
+    \item \textbf{Theoretical Contributions:}
+    \begin{itemize}      
+      \item Derivation of theoretical properties of formulations from the framework with linear model
+      \item Derivation of dual forms and use of non-linear kernels
+    \end{itemize}
+    \item \textbf{Algorithmic Contributions:}
+    \begin{itemize}
+      \item Derivation of an efficient algorithm for solving dual forms
+      \item Introduction of a modified stochastic gradient descent
+      \item Introduction of \DeepTopPush formulation
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
