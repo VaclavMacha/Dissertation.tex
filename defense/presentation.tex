@@ -90,19 +90,19 @@
     \item \textbf{Goal:} classify correctly only the most relevant samples. The most relevant samples are samples with the highest scores
     \item General formulation
     \begin{mini*}{\bm{w}}{
-      C_1 \sum_{i \in \Ineg} \Iverson{s_i \geq t} + C_2 \sum_{i \in \Ipos} \Iverson{s_i < t}
+      C_1 \sum_{i \in \Ineg} {\color{myorange}\Iverson{s_i \geq t}} + C_2 \sum_{i \in \Ipos} {\color{myorange}\Iverson{s_i < t}}
     }{}{}
-      \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
-      \addConstraint{t}{= G\Brac{\bm{s}, \bm{y}}}
+      \addConstraint{s_i}{= {\color{mypurple}f(\bm{x}_i; \bm{w})}, \quad}{i \in \I}
+      \addConstraint{t}{= {\color{mygreen}G\Brac{\bm{s}, \bm{y}}}}
     \end{mini*}
     where threshold~$t$ is a function of all scores
-    \item Difficult problem: constrained, discontinuous, non-convex, and non-decomposable
+    \item Difficult problem: constrained, {\color{myorange}discontinuous}, generally {\color{mypurple}non-convex}, and {\color{mygreen}non-decomposable}
   \end{itemize}
 \end{frame}
 
 \begin{frame}{How to get continuous objective function?}
   \begin{itemize}
-    \item By replacing~$\Iverson{\cdot{}}$ Iverson function with its surrogate approximation
+    \item By replacing~${\color{myorange}\Iverson{\cdot{}}}$ Iverson function with its surrogate approximation
   \end{itemize}
   \begin{center}
     \includegraphics[width=\linewidth, height=0.7\textheight, keepaspectratio]{
@@ -126,7 +126,7 @@
 
 \begin{frame}{How to choose the decision threshold?}
   \begin{itemize}
-    \item For simplicity, we focus only on formulations that minimizes false-negative rate and compute the threshold only from negative samples
+    \item For simplicity, we focus only on formulations that minimizes false-negative rate and threshold function~${\color{mygreen}G}$ depends only on negative samples
     \begin{mini*}{\bm{w}}{
       \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
     }{}{}
