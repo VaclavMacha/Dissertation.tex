@@ -16,7 +16,7 @@
 \setbeamercolor{titlelike}{fg=myblue, bg=myblue}
 
 % Affiliation
-\title{Classification at the Top}
+\title{General Framework for Classification at the Top}
 \date{September 20, 2023}
 \author{\textbf{Ing. Václav Mácha}}
 \institute{
@@ -39,7 +39,7 @@
       \addConstraint{s_i}{= f(\bm{x}_i; \bm{w}), \quad}{i \in \I}
     \end{mini*}
     \item $\bm{x}_i \in \R^{d}$ is a sample and~$y_i \in \{0, 1\}$ its corresponding label, $C_1, C_2 \in \R$ are constants
-    \item $\I = \Ineg \cup \Ipos$ is a set of indices of all sample where
+    \item $\I = \Ineg \cup \Ipos$ is a set of indices of all samples where
     \begin{equation*}
       \begin{aligned}
         \Ineg & = \Set{i}{i \in \{1, 2, \ldots, n\} \; \land \; y_i = 0} \\
@@ -53,7 +53,7 @@
         1 & \quad \text{if } x \text{ is true}
       \end{cases}
     \end{equation*}
-    \item Classifier consists of two parts: model~$f: \R^{d} \mapsto \R$ with trainable parameters~$\bm{w}$ that maps samples~$\bm{x}$ to scores~$s$ and decision threshold~$t \in \R$
+    \item Classifier consists of two parts: model~$f: \R^{d} \mapsto \R$ with trainable parameters~$\bm{w}$ that maps samples~$\bm{x}$ to scores~$s$ and a decision threshold~$t \in \R$
   \end{itemize}
 \end{frame}
 
@@ -87,7 +87,7 @@
 
 \begin{frame}{General problem formulation}
   \begin{itemize}
-    \item \textbf{Goal:} classify correctly only the most relevant samples. The most relevant samples are samples with the highest scores
+    \item \textbf{Goal:} correctly classify only the most relevant samples. The most relevant samples are samples with the highest scores
     \item General formulation
     \begin{mini*}{\bm{w}}{
       C_1 \sum_{i \in \Ineg} {\color{myorange}\Iverson{s_i \geq t}} + C_2 \sum_{i \in \Ipos} {\color{myorange}\Iverson{s_i < t}}
@@ -114,7 +114,7 @@
 
 \begin{frame}{General surrogate formulation}
   \begin{itemize}
-    \item Using the surrogate approximation to replace~${\color{myorange}\Iverson{\cdot{}}}$  lead to general surrogate formulation
+    \item Using the surrogate approximation to replace~${\color{myorange}\Iverson{\cdot{}}}$  leads to the general surrogate formulation
     \begin{mini*}{\bm{w}}{
       C_1 \sum_{i \in \Ineg} {\color{myorange}l(s_i - t)} + C_2 \sum_{i \in \Ipos} {\color{myorange}l(t - s_i)}
     }{}{}
@@ -126,7 +126,7 @@
 
 \begin{frame}{How to choose the decision threshold?}
   \begin{itemize}
-    \item For simplicity, we focus only on formulations that minimizes false-negative rate and threshold function~${\color{mygreen}G}$ depends only on negative samples
+    \item For simplicity, we focus only on formulations that minimize the false-negative rate and the threshold function~${\color{mygreen}G}$ depends only on negative samples
     \begin{mini*}{\bm{w}}{
       \frac{1}{2} \norm{\bm{w}}^2 + \frac{1}{\npos} \sum_{i \in \Ipos} l(t - s_i)
     }{}{}
@@ -314,14 +314,14 @@
   \end{center}
 \end{frame}
 
-\section{Contributions}
+\section{Main contributions}
 
 \begin{frame}{Contributions}
   \begin{itemize}
     \item \textbf{Unification Contributions:}
     \begin{itemize}
-      \item Introduction of a unified framework for classification at the top
-      \item Shoewd that problems such as Ranking or Accuracy at the Top fall into the framework
+      \item Introduction of a unified framework for Classification at the Top
+      \item Showed that problems such as Ranking or Accuracy at the Top fall into the framework
       \item Introduction of \PatMat and \PatMatNP formulations
     \end{itemize}
     \item \textbf{Theoretical Contributions:}
